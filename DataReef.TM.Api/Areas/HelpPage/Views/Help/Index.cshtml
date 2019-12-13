@@ -1,0 +1,61 @@
+@{
+    ViewBag.Title = "Territory Manager API";
+}
+
+<div id="dashboard" data-url="@Url.Action("ApiDescriptionDashboard", "Help")">
+    <div class="input-group row well well-sm">
+        <input data-bind="textInput: searchPhraseComputed" type="search" class="form-control" placeholder="API Search">
+        <div class="input-group-btn">
+            <button data-bind="click: searchApiData" class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10 nopadding">
+            <table class="table table-bordered table-hover">
+                <thead class="bg-grayed">
+                    <tr>
+                        <th class="col-md-2">API Object</th>
+                        <th class="col-md-10">Description</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: apiDescriptions">
+                    <tr data-bind="click: openApiDetails, visible: visible">
+                        <td data-bind="text: name, css: getTypeColorClass"></td>
+                        <td data-bind="text: description, css: getTypeColorClass"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2 nopadding-right">
+            <div class="well well-sm form-horizontal">
+                <p>Default display</p>
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-11">
+                        <div class="checkbox">
+                            <label><input type="checkbox" data-bind="checked: showControllersComputed"> Controllers</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" data-bind="checked: showModelsComputed"> Models</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="well well-sm">
+                <p>Legend</p>
+                <div class="bg-success">
+                    <p class="text-center">Controllers</p>
+                </div>
+                <div class="bg-info">
+                    <p class="text-center">Complex Types</p>
+                </div>
+                <div class="bg-warning">
+                    <p class="text-center">Enums</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src=@Url.Content("~/Areas/HelpPage/Resources/Js/Index.js")></script>
+}

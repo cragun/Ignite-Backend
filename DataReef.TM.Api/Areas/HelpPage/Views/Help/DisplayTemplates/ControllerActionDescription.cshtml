@@ -1,0 +1,42 @@
+﻿@using DataReef.TM.Api.Areas.HelpPage.Views.Help
+@using DataReef.TM.Api.Areas.HelpPage.Models
+
+@model HelpPageControllerActionDescriptionModel
+
+<div class="panel panel-@CommonFunctions.GetAssociatedActionColor(Model.ActionType)">
+    @* Panel header *@
+    <div class="panel-heading panel-title">
+        <span class="padding-right-medium border-right">@Model.ActionType.ToString()</span>
+        <span class="padding-left-small">@Model.ActionName</span>
+
+        <a data-function="togle-display, load-api-interaction" data-apidataurl="@Url.Action("ActionInteraction", "Help", new { actionIdentifier = Model.ActionType + "-" + ViewData["controllerName"] + "-" + Model.ActionName }, Request.Url.Scheme)" class="pull-right border-left padding-left-medium" href="#@(GetContainerActionId("interaction", Model))">Interact</a>
+        <a data-function="togle-display" class="pull-right border-left padding-horizontal-medium" href="#@(GetContainerActionId("data", Model))">Data</a>
+        <a data-function="togle-display" class="pull-right padding-right-medium" href="#@(GetContainerActionId("description", Model))">Description</a>
+    </div>
+
+    @* Panel body *@
+    <div class="panel-body hidden">
+        @* Action description content *@
+        <div id="@(GetContainerActionId("description", Model))" class="hidden">
+            @Html.DisplayFor(m => Model, "HelpPageEndpointModelDescription")
+        </div>
+
+        @* Action model content *@
+        <div id="@(GetContainerActionId("data", Model))" class="hidden">
+            @Html.DisplayFor(m => Model, "HelpPageEndpointModelData")
+        </div>
+
+        @* Action interaction content *@
+        <div id="@(GetContainerActionId("interaction", Model))" class="hidden">
+            @Html.DisplayFor(m => Model, "HelpPageEndpointInteraction")
+        </div>
+    </div>
+</div>
+
+@functions
+{
+    private string GetContainerActionId(string containerSufix, HelpPageControllerActionDescriptionModel action)
+    {
+        return action.ActionType + "-" + action.ActionName + "-" + containerSufix;
+    }
+}

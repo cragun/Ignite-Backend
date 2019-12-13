@@ -1,0 +1,27 @@
+﻿Selected solution: Custom
+	ASP.NET Web API ApiExplorer + Custom extensions for additional metadata + Custom UI
+	This will result into a custom API doc customized for the projects needs
+
+Looked into:
+	1) Swashbuckle + Swagger + Swagger-UI
+	Pro:
+		- Swagger standard could help with API documentation consumption from other consumer clients that know the standard
+		- Swagger-UI is a fully fledged solution that can use the Swagger API and render a API explorer page that allows API calls and documentation
+		- Swashbuckle is easy to include and configure
+
+	Cons:
+		- Swagger standard is limited. Polymorphic types are improperly implemented (subtype discriminator required on supertype). Custom annotations syntax is poor at best only basic stuff like 'required' they expect the description to also include these
+		- Swagger-UI is apparently most of the time trailing behind the standard. In the last version it has no support for polymorphism and thus the test tools won't work with complex inherited types (must manually fill in data)
+		- Swagger-UI is "not easy" to modify as it's dependent on as lot of non MS stack technologies/frameworks (requires: handlebars, java and nodejs just to compile). Written in less + coffeescript
+		- Swashbuckle integrated Swagger documentation generator and out of the box Swagger-UI can't be separated. You cant customize the Swagger-UI to its full extend, just some basic configurations. (tho you can add a manually compiled swagger-ui in the project and point it to the documentation API url and just ignore the in build one)
+
+	Conclusion:
+		Use? No.
+		While swagger seems to be on the right track the current version is somewhat clunky and missing features of interest (proper object metadata provided byte custom annotations).
+		The swagger-ui was of particular interest as it provides a useful easy to use UI with out of the box API calling tools. It's also one of the main reasons I've opted not to use this solution.
+		The UI is harder to extend and customize (feature wise) and in doing so you will need to manually keep it up to date with the standard. Building the UI requires a set of 3'rd party technologies that just add to the technical complexity of the project.
+		On a finally note swagger is worth looking into after they release 2.0 and the associated swagger-ui
+
+	2) Other: RAML, IO Docs ...
+		Use? No.
+		- More mature API documentation standards but are either technology bound or lack a features that could expedite the process (like out of the box UI tools)

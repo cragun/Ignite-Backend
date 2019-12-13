@@ -1,0 +1,10 @@
+@model DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<b>@Model.Name</b>
+<p>@Model.Documentation</p>
+<section>
+    @Html.DisplayFor(m => Model)
+</section>

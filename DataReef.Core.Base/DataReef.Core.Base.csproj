@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8B0773F4-E04A-40EA-8C02-8ECFE1DCD428}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataReef.Core</RootNamespace>
+    <AssemblyName>DataReef.Core.Base</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\DayCareAPI\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\DataReef.Core.Base.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <OutputPath>bin\QA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+    <OutputPath>bin\Stage\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\AttachOnUpdateAttribute.cs" />
+    <Compile Include="Attributes\BootstrapExcludedAttribute.cs" />
+    <Compile Include="Attributes\CascadeSoftDeleteAttribute.cs" />
+    <Compile Include="Attributes\ModelTypeAttribute.cs" />
+    <Compile Include="Attributes\PropertyDescriptorAttribute.cs" />
+    <Compile Include="Attributes\RoutingAttribute.cs" />
+    <Compile Include="Attributes\MailAttribute.cs" />
+    <Compile Include="Attributes\ServiceAttribute.cs" />
+    <Compile Include="Attributes\ServiceScope.cs" />
+    <Compile Include="Attributes\SoftDeleteAttribute.cs" />
+    <Compile Include="Attributes\NotSyncableAttribute.cs" />
+    <Compile Include="Attributes\StreamedAttribute.cs" />
+    <Compile Include="Attributes\SyncDomainAttribute.cs" />
+    <Compile Include="Attributes\TemplateNameAttribute.cs" />
+    <Compile Include="Attributes\Validation\ValidGuidAttribute.cs" />
+    <Compile Include="Attributes\VersionedAttribute.cs" />
+    <Compile Include="Classes\CryptographyHelper.cs" />
+    <Compile Include="Classes\GuidRefJsonConverter.cs" />
+    <Compile Include="Classes\UnixDateTime.cs" />
+    <Compile Include="Classes\VersionArchive.cs" />
+    <Compile Include="Classes\DbEntity.cs" />
+    <Compile Include="Classes\EntityFilter.cs" />
+    <Compile Include="Classes\ISyncable.cs" />
+    <Compile Include="Classes\OfTypeOnly.cs" />
+    <Compile Include="Classes\PredicateBuilder.cs" />
+    <Compile Include="Classes\ReferencePreservingDataContract.cs" />
+    <Compile Include="Classes\SaveResult.cs" />
+    <Compile Include="Attributes\IncludeableAttribute.cs" />
+    <Compile Include="Attributes\NotPatchableAttribute.cs" />
+    <Compile Include="Classes\VersionedItem.cs" />
+    <Compile Include="Common\AssemblyLoader.cs" />
+    <Compile Include="Common\Check.cs" />
+    <Compile Include="Common\CustomJsonDateFormatConverter.cs" />
+    <Compile Include="Common\SequentialGuidFactory.cs" />
+    <Compile Include="Common\Serialization.cs" />
+    <Compile Include="Configuration\ConfigurationKeys.cs" />
+    <Compile Include="Enums\CrudAction.cs" />
+    <Compile Include="Enums\DataAction.cs" />
+    <Compile Include="Enums\DeviceType.cs" />
+    <Compile Include="Extensions\Base36.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Extensions\FrameworkExtensions.cs" />
+    <Compile Include="Extensions\ImageExpensions.cs" />
+    <Compile Include="Extensions\NumericExtensions.cs" />
+    <Compile Include="Helpers\TypeHelpers.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Other\EmptyStringToJsonDeserializer.cs" />
+    <Compile Include="Other\EncodeExtensions.cs" />
+    <Compile Include="Other\EnumExtensions.cs" />
+    <Compile Include="Other\StringExtensions.cs" />
+    <Compile Include="Pluralization\BidirectionalDictionary.cs" />
+    <Compile Include="Pluralization\CustomPluralizationEntry.cs" />
+    <Compile Include="Pluralization\EnglishPluralizationService.cs" />
+    <Compile Include="Pluralization\IPluralizationService.cs" />
+    <Compile Include="Pluralization\PluralizationServiceUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Other\Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataReef.CodeGenerator\DataReef.CodeGenerator.Core.csproj">
+      <Project>{201cb42a-0579-49d0-955a-bd5a1660119e}</Project>
+      <Name>DataReef.CodeGenerator.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

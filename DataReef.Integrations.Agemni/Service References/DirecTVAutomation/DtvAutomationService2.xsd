@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/DtvAutomation.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/DtvAutomation.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="SalesOrder">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BillingAddress" nillable="true" type="tns:BillingAddress" />
+      <xs:element minOccurs="0" name="Comments" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ContactInfo" nillable="true" type="tns:CustomerContactInfo" />
+      <xs:element minOccurs="0" name="CreditConsent" nillable="true" type="tns:CreditConsent" />
+      <xs:element minOccurs="0" name="CustomerInfo" nillable="true" type="tns:CustomerInfo" />
+      <xs:element minOccurs="0" name="EmployeeInfo" nillable="true" type="tns:EmployeeInfo" />
+      <xs:element minOccurs="0" name="InstallAddress" nillable="true" type="tns:InstallAddress" />
+      <xs:element minOccurs="0" name="OfferOption" type="tns:OfferOption" />
+      <xs:element minOccurs="0" name="ReferralInfo" nillable="true" type="tns:ReferralInfo" />
+      <xs:element minOccurs="0" name="StoreInfo" nillable="true" type="tns:StoreInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SalesOrder" nillable="true" type="tns:SalesOrder" />
+  <xs:complexType name="BillingAddress">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AddressInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="SameAsInstallAddress" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BillingAddress" nillable="true" type="tns:BillingAddress" />
+  <xs:complexType name="AddressInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StreetName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StreetNo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnitNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ZipCode" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AddressInfo" nillable="true" type="tns:AddressInfo" />
+  <xs:complexType name="CustomerContactInfo">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ContactInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="RequireSpecialOffersByEmail" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CustomerContactInfo" nillable="true" type="tns:CustomerContactInfo" />
+  <xs:complexType name="ContactInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AlternatePhoneNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DriverLicense" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DrivingLicenseState" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PhoneNumber" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContactInfo" nillable="true" type="tns:ContactInfo" />
+  <xs:complexType name="CreditConsent">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AllowToPerformCreditCheck" type="xs:boolean" />
+      <xs:element minOccurs="0" name="SSN" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CreditConsent" nillable="true" type="tns:CreditConsent" />
+  <xs:complexType name="CustomerInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MiddleName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SearchForExistingCustomer" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Suffix" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomerInfo" nillable="true" type="tns:CustomerInfo" />
+  <xs:complexType name="EmployeeInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EmployeeId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmployeeName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="EmployeeInfo" nillable="true" type="tns:EmployeeInfo" />
+  <xs:complexType name="InstallAddress">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AddressInfo">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="InstallAddress" nillable="true" type="tns:InstallAddress" />
+  <xs:simpleType name="OfferOption">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LeasedOption" />
+      <xs:enumeration value="PurchasedOption" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="OfferOption" nillable="true" type="tns:OfferOption" />
+  <xs:complexType name="ReferralInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AccountNumber" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReferralInfo" nillable="true" type="tns:ReferralInfo" />
+  <xs:complexType name="StoreInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DirecTvId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StoreLocation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StoreName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StoreNumber" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StoreInfo" nillable="true" type="tns:StoreInfo" />
+  <xs:complexType name="PlaceSalesOrderResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AccountNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ErrorDetails" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ErrorMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Success" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PlaceSalesOrderResult" nillable="true" type="tns:PlaceSalesOrderResult" />
+</xs:schema>

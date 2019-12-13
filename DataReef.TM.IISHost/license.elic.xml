@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<License Key="C7WUHomJOIbBf3x8AQDLLNlCQutiFsQ5YkZol4WSKDZ7C2sG7OA65mAqoBO0t8vp3x2O/hQWfVXYp245ut0Vw3wMlw+0e+5rw5Jy24X43i6zpc3wRQ5F8/j9u59PkTXGiRmqG51f1DkLWzsxtKqdZ0v64kycG8GsFl/UKYqIdc42BFkc7jVqaQCKqHtbEF75gl5pox1KO361cZ7Whv5ZDVKJUgiHxKuqccyFcHy7ArppeccaplesePElohQOaZ9a6vTxI/yfK02+myWp/RnnNnJY67O+yV1qbiGAmeBGfO+25NrLNRlb5sNvQ5jBFgnI4bEMTTDq+IyhyReRBpgpRrJB8MbOD0UfHMPbCXu0HQgrSzRlA6Kb+UTwqs+QLMl9qpdWvrXayfJnitTxiZwo2oW7jf8YWmrEdNd15Ax7aD+ZehCtQKRPNpFf9WnE+iKW48O3s7UYQhbc1D7LyN+dV6wI18jVjHNRm0u8qW49HMpPBCtAJTmThxqmTkTOu8R3o4Bd3gJ/jseDpcB4LfEsJTezOSE8VjIesH/Qc2WVecCbGVH+tT5vxWCL0CgyuvfdYpvitlRjpfvs3C2THC+wdX4vAarKUJc6Cb83PKqQYEacXblAgbpWouWyXPQiBYbFDu06yOhgACks6UaUeTIlmcfc4JSaSKlmympbcEZ3EpcLe/rGVLOVfFu4HV+hnEN2384pySF2YutuZo2/bWU0R1b7aYyakROEenAED80csuz9iXVTXr0mIEsy4THvne+hwL3V9s9HhJf1BMOW6WAsrQwX38GFTW09aYBLA/70ycuNSuTfVtiFt0+jP33dHCFkUYO8BQX4yOvR1BlyHR+6/QF1tancFpMZsiOa7U4vKKetzPK/gvqFn9e2V5MNPSdLo9eTJfAlwo1kJs5f6oJks6C2KCn1IueNWsE5p7BoaIh49jd/gT+DOj1W7+TafWT4UQC1Geo2rk8PCaQ8GpDG/7Hfdm+saqOa7C0a/8IAS0FUijEEDFBKrvdy8avnzi4q+NbY7MUkpA+xyJE6d7D2+YDt4bHbGp7Wg2Xzy22ILCzgYpViPa+b6BFosdZxakQqABcEl+aNsBBn22fLsoLgIleQn9MigJ2nVUk5QMG1gsopBQ6P1IhqIpDFmI/EeDJXL4LNi4OnrLyg0xhrkXdi0TN3h2zn1C48wuFjhpnp3W/uyhus6q49mDu4J5BaLTPIJWp1vXxitJVdwEHACUhF1RmslNlorjE1qFCoyCejeMTPhn5mhIOAexpcjIoriYZlPa9FWdSNZs/Lopn5k6xrhlB5yb1DTw3nyaEob2WJoDssTnAIDiOnIV13m9f823jniWtu1SGpggR/iCw+zULYeZE8JA75HHiNfRW24C6vrl9cvsfYB31zTP4+O5KTjO+1vx/n81W6Z1s8rYZ2JaAw/PbWrWy09GeqkZWMEttQ32zAFu82bGy5iRGp0Fpi3XTNeOFzTKQm5E1kL/0RJIjjEqI+kax8vyPhlvEHjMWweR4=" Version="1.3">
+    <Type>Runtime</Type>
+    <Username>datareef</Username>
+    <Email>beth.wilding@datareef.com</Email>
+    <Organization>Datareef</Organization>
+    <LicensedDate>2016-01-08T00:00:00Z</LicensedDate>
+    <ExpiredDate>2017-01-08T00:00:00Z</ExpiredDate>
+    <Products>
+        <Product>
+            <Name>Spire.Doc Pro Edition</Name>
+            <Version>5.5</Version>
+            <Subscription>
+                <NumberOfPermittedDeveloper>2147483647</NumberOfPermittedDeveloper>
+                <NumberOfPermittedSite>10</NumberOfPermittedSite>
+            </Subscription>
+        </Product>
+    </Products>
+    <Issuer>
+        <Name>e-iceblue</Name>
+        <Email>sales@e-iceblue.com</Email>
+        <Url>http://www.e-iceblue.com</Url>
+    </Issuer>
+</License>

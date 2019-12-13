@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>DataReef.TM.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{3748bf12-294c-4aa3-a7df-7b50d7e818d9}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql120DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>DataReef.TM.Database</RootNamespace>
+    <AssemblyName>DataReef.TM.Database</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="reporting\" />
+    <Folder Include="reporting\Tables\" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="survey\" />
+    <Folder Include="survey\Tables\" />
+    <Folder Include="solar\" />
+    <Folder Include="solar\Tables\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="Security\" />
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\User Defined Types\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="reporting\Tables\OUReports.sql" />
+    <Build Include="reporting\Tables\Reports.sql" />
+    <Build Include="reporting\Tables\Columns.sql" />
+    <Build Include="reporting\Tables\Parameters.sql" />
+    <Build Include="dbo\Tables\AccountAssociations.sql" />
+    <Build Include="dbo\Tables\Accounts.sql" />
+    <Build Include="dbo\Tables\OUs.sql" />
+    <Build Include="dbo\Tables\Addresses.sql" />
+    <Build Include="dbo\Tables\OULayers.sql" />
+    <Build Include="dbo\Tables\People.sql" />
+    <Build Include="dbo\Tables\Layers.sql" />
+    <Build Include="dbo\Tables\Assignments.sql" />
+    <Build Include="dbo\Tables\Territories.sql" />
+    <Build Include="dbo\Tables\TerritoryShapes.sql" />
+    <Build Include="dbo\Tables\Occupants.sql" />
+    <Build Include="dbo\Tables\Fields.sql" />
+    <Build Include="dbo\Tables\PropertyAttributes.sql" />
+    <Build Include="dbo\Tables\Inquiries.sql" />
+    <Build Include="dbo\Tables\Users.sql" />
+    <Build Include="dbo\Tables\Credentials.sql" />
+    <Build Include="dbo\Tables\UserDevices.sql" />
+    <Build Include="dbo\Tables\Devices.sql" />
+    <Build Include="dbo\Tables\__MigrationHistory.sql" />
+    <Build Include="dbo\Tables\Reminders.sql" />
+    <Build Include="dbo\Tables\Attachments.sql" />
+    <Build Include="dbo\Tables\OUCustomFields.sql" />
+    <Build Include="dbo\Tables\PrescreenRawMatches.sql" />
+    <Build Include="dbo\Tables\PersonalConnections.sql" />
+    <Build Include="dbo\Tables\PrescreensRaw.sql" />
+    <Build Include="dbo\Tables\OUCustomValues.sql" />
+    <Build Include="dbo\Tables\Identifications.sql" />
+    <Build Include="dbo\Tables\TRACE-TM.sql" />
+    <Build Include="dbo\Tables\Notes.sql" />
+    <Build Include="dbo\Tables\OUAssociations.sql" />
+    <Build Include="dbo\Tables\OURoles.sql" />
+    <Build Include="dbo\Tables\PropertyPhoneNumbers.sql" />
+    <Build Include="dbo\Tables\PhoneNumbers.sql" />
+    <Build Include="survey\Tables\Survey72.sql" />
+    <Build Include="dbo\Tables\PropertyAttributesBak.sql" />
+    <Build Include="dbo\Tables\OUSettingDefinitions.sql" />
+    <Build Include="dbo\Tables\OUSettingValues.sql" />
+    <Build Include="dbo\Tables\AgreementParts.sql" />
+    <Build Include="dbo\Tables\Agreements.sql" />
+    <Build Include="dbo\Tables\OUMediaItems.sql" />
+    <Build Include="dbo\Tables\ExecutedAgreements.sql" />
+    <Build Include="dbo\Tables\SEReconcile2.sql" />
+    <Build Include="dbo\Tables\ExecutedAgreementParts.sql" />
+    <Build Include="dbo\Tables\CurrentLocations.sql" />
+    <Build Include="dbo\Tables\LoginAttempts.sql" />
+    <Build Include="dbo\Tables\MediaItems.sql" />
+    <Build Include="dbo\Tables\PersonSettings.sql" />
+    <Build Include="dbo\Tables\PasswordResets.sql" />
+    <Build Include="solar\Tables\SystemsProduction.sql" />
+    <Build Include="dbo\Tables\TokenAdjustments.sql" />
+    <Build Include="dbo\Tables\AppSettings.sql" />
+    <Build Include="solar\Tables\SystemProductionMonths.sql" />
+    <Build Include="dbo\Tables\TokenLedgers.sql" />
+    <Build Include="dbo\Tables\TokenExpenses.sql" />
+    <Build Include="dbo\Tables\TokenPurchases.sql" />
+    <Build Include="dbo\Tables\TokenTransfers.sql" />
+    <Build Include="dbo\Tables\UserInvitations.sql" />
+    <Build Include="dbo\Tables\Properties.sql" />
+    <Build Include="solar\Tables\Tariffs.sql" />
+    <Build Include="dbo\Tables\Blocks.sql" />
+    <Build Include="dbo\Tables\PrescreensRawBak.sql" />
+    <Build Include="dbo\Tables\BlockGroups.sql" />
+    <Build Include="dbo\Tables\CensusTracts.sql" />
+    <Build Include="dbo\Tables\Counties.sql" />
+    <Build Include="dbo\Tables\Names92683.sql" />
+    <Build Include="solar\Tables\FinancePlans.sql" />
+    <Build Include="dbo\Tables\PrescreenDetails.sql" />
+    <Build Include="dbo\Tables\States.sql" />
+    <Build Include="solar\Tables\Systems.sql" />
+    <Build Include="solar\Tables\PowerConsumption.sql" />
+    <Build Include="dbo\Tables\SEReconcile2Details.sql" />
+    <Build Include="solar\Tables\Proposals.sql" />
+    <Build Include="dbo\Tables\PrescreenBatches.sql" />
+    <Build Include="solar\Tables\Arrays.sql" />
+    <Build Include="solar\Tables\ArrayPanels.sql" />
+    <Build Include="solar\Tables\Inverters.sql" />
+    <Build Include="solar\Tables\Panels.sql" />
+    <Build Include="solar\Tables\ArraySegments.sql" />
+    <Build Include="dbo\Tables\PrescreenInstants.sql" />
+    <Build Include="dbo\Tables\NukeMeTerritoryShapeIssue1.sql" />
+    <Build Include="dbo\Tables\OUShapes.sql" />
+    <Build Include="dbo\Views\vwTerritorySummariesAllSunEdison.sql" />
+    <Build Include="dbo\Views\vwInquiriesAllSunEdison.sql" />
+    <Build Include="dbo\Views\vwInquiriesLastEvolve.sql" />
+    <Build Include="dbo\Views\vwLastInquiries.sql" />
+    <Build Include="dbo\Views\vwInquiriesLastSunEdison.sql" />
+    <Build Include="dbo\Views\vwInquiriesLastCompleteSolar.sql" />
+    <Build Include="dbo\Views\vwTerritorySummariesAllCompleteSolar.sql" />
+    <Build Include="dbo\Views\vwTerritorySummariesAllEvolve.sql" />
+    <Build Include="dbo\Views\vwInquiriesAllEvolve.sql" />
+    <Build Include="dbo\Views\vwInquiriesAllCompleteSolar.sql" />
+    <Build Include="Security\sunedison.sql" />
+    <Build Include="Security\completesolar.sql" />
+    <Build Include="Security\reportingadmin.sql" />
+    <Build Include="dbo\Functions\OURoot.sql" />
+    <Build Include="dbo\Functions\OUTree.sql" />
+    <Build Include="dbo\Functions\OUTreePath.sql" />
+    <Build Include="dbo\Functions\FlatHierarchy.sql" />
+    <Build Include="dbo\Functions\OUGuidTreePath.sql" />
+    <Build Include="dbo\Functions\FlatGuidHierarchy.sql" />
+    <Build Include="dbo\Stored Procedures\proc_BatchPrescreen.sql" />
+    <Build Include="dbo\Stored Procedures\prLayersForOU.sql" />
+    <Build Include="dbo\Stored Procedures\proc_LayersForOU.sql" />
+    <Build Include="dbo\Stored Procedures\proc_AddChildOUAssociations.sql" />
+    <Build Include="dbo\Stored Procedures\proc_RemoveChildOUAssociations.sql" />
+    <Build Include="dbo\Stored Procedures\proc_CascadeDeletePerson.sql" />
+    <Build Include="dbo\Stored Procedures\proc_OUsForPerson.sql" />
+    <Build Include="dbo\Stored Procedures\proc_MediaItems.sql" />
+    <Build Include="dbo\Stored Procedures\proc_PropertiyGuidsByOUAndStatusPaged.sql" />
+    <Build Include="dbo\Stored Procedures\proc_TerritoryAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\proc_OUAndChildrenGuids.sql" />
+    <Build Include="dbo\Stored Procedures\proc_OUExistsInHierarchy.sql" />
+    <Build Include="dbo\Stored Procedures\proc_SelectOUHierarchy.sql" />
+    <Build Include="dbo\Stored Procedures\proc_OUMediaItems2.sql" />
+    <Build Include="dbo\Stored Procedures\proc_PersonAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\proc_OUAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\proc_OUMediaItems.sql" />
+    <Build Include="dbo\Stored Procedures\prETLAssignBlockIDsFromShapeID.sql" />
+    <Build Include="dbo\Stored Procedures\proc_PropertiesForTerritoryAndRect.sql" />
+    <Build Include="dbo\User Defined Types\BatchPrescreenInputTableType.sql" />
+    <Build Include="dbo\User Defined Types\GuidList.sql" />
+    <Build Include="Security\reporting.sql" />
+    <Build Include="Security\solar.sql" />
+    <Build Include="Security\survey.sql" />
+    <Build Include="dbo\Tables\ous_backup.sql" />
+    <Build Include="dbo\Tables\AreaPurchases_1.sql" />
+    <Build Include="Security\vladzeciu.sql" />
+    <Build Include="Security\datareefadmin.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="dbo\Stored Procedures\prAuthenticationSummary.sql" />
+    <Build Include="dbo\Stored Procedures\proc_WebHooks.sql" />
+    <Build Include="dbo\Stored Procedures\proc_PeopelLiteForOU.sql" />
+    <Build Include="dbo\Stored Procedures\proc_ProposalsLiteForOu.sql" />
+  </ItemGroup>
+</Project>

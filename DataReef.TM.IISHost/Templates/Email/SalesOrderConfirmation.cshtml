@@ -1,0 +1,348 @@
+﻿@model DataReef.TM.Classes.SalesOrderConfirmationTemplate
+@{
+    Layout = "_Layout.cshml";
+}
+
+<div class="content salesOrderConfirmation">
+    <div class="row">
+        Thank you for your recent order with Direct TV. Please see the details of the order below:
+    </div>
+
+    <div class="row">
+        <div class="subrow">
+            First Name: @Model.FirstName
+        </div>
+        <div class="subrow">
+            Last Name: @Model.LastName
+        </div>
+        <div class="subrow">
+            Phone: @Model.Phone
+        </div>
+        <div class="subrow">
+            Phone 2: @Model.Phone2
+        </div>
+        <div class="subrow">
+            Street: @Model.Street
+        </div>
+        <div class="subrow">
+            City: @Model.City
+        </div>
+        <div class="subrow">
+            State: @Model.State
+        </div>
+        <div class="subrow">
+            Zip: @Model.Zip
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.SSN))
+		{
+        <div class="subrow">
+            SSN: @Model.SSN
+        </div>
+		}
+    </div>
+
+    @if (Model.IsBillingAddressDifferentThanInstallAddress)
+    {
+        <div class="row">
+            <div class="subrow">
+                Billing Address is different than Install Address
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(Model.BillingAddress))
+		{
+        <div class="subrow">
+            Address: @Model.BillingAddress
+        </div>
+		}
+
+            @if (!string.IsNullOrWhiteSpace(Model.BillingAddress2))
+		{
+        <div class="subrow">
+            Address 2: @Model.BillingAddress2
+        </div>
+		}
+
+            @if (!string.IsNullOrWhiteSpace(Model.BillingCity))
+		{
+        <div class="subrow">
+            City: @Model.BillingCity
+        </div>
+		}
+
+            @if (!string.IsNullOrWhiteSpace(Model.BillingState))
+		{
+        <div class="subrow">
+            State: @Model.BillingState
+        </div>
+		}
+
+            @if (!string.IsNullOrWhiteSpace(Model.BillingZip))
+		{
+        <div class="subrow">
+            Zip: @Model.BillingZip
+        </div>
+		}
+        </div>
+    }
+
+    <div class="row">
+        @if (!string.IsNullOrWhiteSpace(Model.SalesPerson))
+		{
+        <div class="subrow">
+            Sales Person: @Model.SalesPerson
+        </div>
+		}
+
+        <div class="subrow">
+            Office: @Model.Office
+        </div>
+
+        <div class="subrow">
+            Language: @Model.Language
+        </div>
+
+        <div class="subrow">
+            Base Package: @Model.BasePackage
+        </div>
+
+        <div class="subrow">
+            TV Count: @Model.TVCount
+        </div>
+
+        @if (Model.MiniReceiverCount > 0)
+		{
+        <div class="subrow">
+            Mini Receiver Count: @Model.MiniReceiverCount
+        </div>
+		}
+
+        @if (Model.WirelessMiniReceiverCount > 0)
+		{
+        <div class="subrow">
+            Wireless Mini Receiver Count: @Model.WirelessMiniReceiverCount
+        </div>
+		}
+
+        @if (Model.GenieReceiverCount > 0)
+		{
+        <div class="subrow">
+            Genie Receivers: @Model.GenieReceiverCount
+        </div>
+		}
+
+        @if (Model.DVRReceiverCount > 0)
+		{
+        <div class="subrow">
+            DVR Receivers: @Model.DVRReceiverCount
+        </div>
+		}
+
+        @if (Model.HDDVRReceiverCount > 0)
+		{
+        <div class="subrow">
+            HD DVR Receivers: @Model.HDDVRReceiverCount
+        </div>
+		}
+
+        @if (Model.HDReceiverCount > 0)
+		{
+        <div class="subrow">
+            HD Receivers: @Model.HDReceiverCount
+        </div>
+		}
+
+        @if (Model.StandardReceiverCount > 0)
+		{
+        <div class="subrow">
+            Standard Receivers: @Model.StandardReceiverCount
+        </div>
+		}
+    </div>
+
+    @if (
+        ((Model.DTVAddons != null) && (Model.DTVAddons.Length > 0)) ||
+        ((Model.PremiumAddOns != null) && (Model.PremiumAddOns.Length > 0)) ||
+        ((Model.InternationalPrograms != null) && (Model.InternationalPrograms.Length > 0)) ||
+        ((Model.SportsPackages != null) && (Model.SportsPackages.Length > 0)) ||
+        ((Model.SpanishAddOns != null) && (Model.SpanishAddOns.Length > 0)) ||
+        ((Model.OtherEquipments != null) && (Model.OtherEquipments.Length > 0))
+        )
+    {
+        <div class="row">
+            @if ((Model.DTVAddons != null) && (Model.DTVAddons.Length > 0))
+			{
+            <div class="subrow">
+                DirecTV Add-ons:
+            </div>
+				foreach (string item in Model.DTVAddons)
+				{
+            <div class="subrow">
+                @item
+            </div>
+				}
+			}
+
+            @if ((Model.PremiumAddOns != null) && (Model.PremiumAddOns.Length > 0))
+			{
+            <div class="subrow">
+                Premium Add-ons:
+            </div>
+				foreach (string item in Model.PremiumAddOns)
+				{
+            <div class="subrow">
+                @item
+            </div>
+				}
+			}
+
+            @if ((Model.InternationalPrograms != null) && (Model.InternationalPrograms.Length > 0))
+			{
+            <div class="subrow">
+                International Programs:
+            </div>
+				foreach (string item in Model.InternationalPrograms)
+				{
+            <div class="subrow">
+                @item
+            </div>
+				}
+			}
+
+            @if ((Model.SportsPackages != null) && (Model.SportsPackages.Length > 0))
+			{
+            <div class="subrow">
+                Sports Packages:
+            </div>
+				foreach (string item in Model.SportsPackages)
+				{
+            <div class="subrow">
+                @item
+            </div>
+				}
+			}
+
+            @if ((Model.SpanishAddOns != null) && (Model.SpanishAddOns.Length > 0))
+			{
+            <div class="subrow">
+                Spanish Addons:
+            </div>
+				foreach (string item in Model.SpanishAddOns)
+				{
+            <div class="subrow">
+                @item
+            </div>
+				}
+			}
+
+            @if ((Model.OtherEquipments != null) && (Model.OtherEquipments.Length > 0))
+			{
+            <div class="subrow">
+                Other Equipment:
+            </div>
+				foreach (string item in Model.OtherEquipments)
+				{
+            <div class="subrow">
+                @item
+            </div>
+				}
+			}
+        </div>
+    }
+
+    <div class="row">
+        <div class="subrow">
+            Payment Info:
+        </div>
+
+        <div class="subrow">
+            Name: @Model.PaymentName
+        </div>
+
+        <div class="subrow">
+            Address: @Model.PaymentAddress
+        </div>
+
+        <div class="subrow">
+            City: @Model.PaymentCity
+        </div>
+
+        <div class="subrow">
+            State: @Model.PaymentState
+        </div>
+
+        <div class="subrow">
+            Zip: @Model.PaymentZip
+        </div>
+
+        <div class="subrow">
+            AutoPay: @Model.AcceptsAutoPay
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.PaymentEmailAddress))
+		{
+        <div class="subrow">
+            Email: @Model.PaymentEmailAddress
+        </div>
+		}
+
+        @if (!string.IsNullOrWhiteSpace(Model.SSN))
+		{
+        <div class="subrow">
+            SSN: @Model.SSN
+        </div>
+		}
+
+        @if (!string.IsNullOrWhiteSpace(Model.ProtectionPlan))
+		{
+        <div class="subrow">
+            Protection Plan: @Model.ProtectionPlan
+        </div>
+		}
+
+        <div class="subrow">&nbsp;</div>
+
+        <div class="subrow">
+            Amount Due at Install: @Model.EquipmentAndProcessingFee
+        </div>
+
+        <div class="subrow">
+            Monthly Fee: @Model.MonthlyFeeTotal
+        </div>
+    </div>
+
+    <div class="row">
+        <table cellpadding="0" cellspacing="0" width="100%" class="dotted-border">
+            <tbody>
+                <tr>
+                    <td>
+                        <p>
+                            <center><b>BUYER'S RIGHT TO CANCEL</b></center>
+                        </p>
+
+                        <p>You, the buyer, may cancel this transaction at any time prior to midnight of the third business day after the date of this transaction. See the attached notice of cancellation form for an explanation of this right.</p>
+
+                        <p>NOTICE OF CANCELLATION</p>
+
+                        <p>You may CANCEL this transaction, without any Penalty or Obligation, within THREE BUSINESS DAYS from the above date.</p>
+
+                        <p>If you cancel, any property traded in, any payments made by you under the contract or sale, and any negotiable instrument executed by you will be returned within TEN BUSINESS DAYS following receipt by the seller of your cancellation notice, and any security interest arising out of the transaction will be cancelled.</p>
+
+                        <p>If you cancel, you must make available to the seller at your residence, in substantially as good condition as when received, any goods delivered to you under this contract or sale, or you may, if you wish, comply with the instructions of the seller regarding the return shipment of the goods at the seller’s expense and risk.</p>
+
+                        <p>If you do make the goods available to the seller and the seller does not pick them up within 20 days of the date of your Notice of Cancellation, you may retain or dispose of the goods without any further obligation. If you fail to make the goods available to the seller, or if you agree to return the goods to the seller and fail to do so, then you remain liable for performance of all obligations under the contract.</p>
+
+                        <p>To cancel this transaction, mail or deliver a signed and dated copy of this Cancellation Notice or any other written notice, or send a telegram, to Clear Satellite, 135 Mountain Way Dr. Orem, UT 84058, NOT LATER THAN MIDNIGHT OF Date on reverse side. </p>
+
+                        <p>I HEREBY CANCEL THIS TRANSACTION. (Date) ___________ </p>
+
+                        <p>Buyer's Signature___________________________________________</p>
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>

@@ -1,0 +1,225 @@
+<html>
+	<head>
+		<title>Ignite - Process Payments</title>
+		<script src="//code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" />
+		<style media="screen" type="text/css">
+			.align_right {
+				text-align:right!important;
+			}
+			input[type=button] {
+				width:12%;
+				min-width:200px;
+				height:4%;
+				min-height:20px;
+			}
+			.footer {
+				padding-top:3%;
+			}
+			.approved {
+				color:green;
+				font-weight:bold;
+			}
+			.denied {
+				color:red;
+				font-weight:bold;			
+			}
+		</style>
+		<script type = "text/javascript">
+			var AreaPurchaseStatus = {
+				Pending : 0,
+				Denied : 1,
+				Completed : 2
+			};
+			var baseURL = "//" + window.location.host + "/api/v1/";
+			var authenticationToken = null;
+			var pendingPurchasesData = null;
+			function apiRequest(endpoint, type, data) {
+				return $.ajax({
+					url:baseURL + endpoint, 
+					type:type,
+					headers: { 
+						"Content-Type": "application/json; charset=utf-8",
+						"DataReef-FullVersion": "100.0.0",
+						"Authorization": authenticationToken
+					},
+					data: data
+				});
+			}
+			function approvaAllPurchases() {
+				for (var i=0; i < pendingPurchasesData.length; i++) {
+					pendingPurchasesData[i].Status = AreaPurchaseStatus.Completed;
+					pendingPurchasesData[i].ErrorString = "";
+				}
+				refreshDataTable();
+			}
+			function approvePurchase(purchaseId) {
+				var pendingPurchase = getPendingPurchaseById(purchaseId);
+				if (pendingPurchase == null) alert("Invalid pending purchase Id " + purchaseId);
+				
+				pendingPurchase.Status = AreaPurchaseStatus.Completed;
+				pendingPurchase.ErrorString = "";
+				
+				refreshDataTable();
+			}
+			function rejectPurchase(purchaseId) {
+				var pendingPurchase = getPendingPurchaseById(purchaseId);
+				if (pendingPurchase == null) alert("Invalid pending purchase Id " + purchaseId);
+
+				var rejectReason = prompt("Please select a reason for rejecting the payment", pendingPurchase.ErrorString);
+
+				if (!!rejectReason) {
+					pendingPurchase.Status = AreaPurchaseStatus.Denied;
+					pendingPurchase.ErrorString = rejectReason;
+							
+					refreshDataTable();
+				}
+				else {
+					//alert("Cannot mark a purchase as rejected until you specify a reason.");
+				}
+			}
+			function getPendingPurchaseById(purchaseId) {
+				for (var i=0; i < pendingPurchasesData.length; i++) {
+					if (pendingPurchasesData[i].Guid == purchaseId)
+					{
+						return pendingPurchasesData[i];
+					}
+				}
+				return null;
+			}
+			function refreshDataTable() {
+				var unprocessedPaymentsTable = $('#unprocessedPayments').dataTable();
+				unprocessedPaymentsTable.fnClearTable();
+				unprocessedPaymentsTable.fnAddData(pendingPurchasesData);
+				unprocessedPaymentsTable.fnDraw();
+			}
+			function processingMessageShow(message) {
+				var processingMessage = $("#processingMessage");
+				processingMessage.html(message || "Processing...");
+				processingMessage.show();
+			}
+			function processingMessageHide() {
+				var processingMessage = $("#processingMessage");
+				processingMessage.hide();
+			}
+			function displayUnprocessedPayments(data) {
+				$('#unprocessedPayments').DataTable( {
+					destroy: true,
+					data: data,
+					columns: [
+					    { title: "Reject", sWidth:"5%", mRender: function(data, type, row){ return '<a href=\"javascript:rejectPurchase(\'' + row.Guid + '\');\">Reject</a>'; } },
+						{ title: "Guid", sWidth:"0%", mData: "Guid" },
+						{ title: "Status", sWidth:"0%", mData: "Status" },
+						{ title: "ErrorString", sWidth:"0%", mData: "ErrorString" },
+						{ title: "OUID", sWidth:"0%", mData: "OUID" },
+						{ title: "OUName", sWidth:"25%", mData: "OUName" },
+						{ title: "BuyerName", sWidth:"25%", mData: "BuyerName" },
+						{ title: "ZipAreaName", sWidth:"10%", mData: "ZipAreaName" },
+						{ title: "NumberOfTokens", sWidth:"5%", mData: "NumberOfTokens", className: "align_right" },
+						{ title: "TokenPriceInDollars", sWidth:"5%", mData: "TokenPriceInDollars", className: "align_right" },
+						{ title: "TotalPrice", sWidth:"10%", mRender: function(data, type, row){ return (row.NumberOfTokens * row.TokenPriceInDollars).toFixed(2); }, className: "align_right" },
+						{ title: "DateCreated", sWidth:"10%", mData: "DateCreated" },
+						{ title: "Approve", sWidth:"5%", mRender: function(data, type, row){ return '<a href=\"javascript:approvePurchase(\'' + row.Guid + '\');\">Approve</a>'; } }
+					],
+					fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+						switch(aData["Status"]){
+							case AreaPurchaseStatus.Denied: $(nRow).addClass("denied");break;
+							case AreaPurchaseStatus.Completed: $(nRow).addClass("approved");break;
+							default: $(nRow).css("color", "black");break;
+						}
+					},
+					columnDefs: [
+					{
+						"targets": [ 1, 2, 3, 4 ],
+						"visible": false
+					}],
+					"order": [[ 10, "desc" ]]
+				} );
+				$("#unprocessedPayments").show();
+			}
+			function loadUnprocessedPayments()
+			{
+				$("#unprocessedPayments").hide();
+				processingMessageShow("Loading unprocessed payment requests...");
+				apiRequest("/areapurchases/pending", "GET")
+					.done(function(data, textStatus, jqXHR) {
+						for (var i=0; i < data.length; i++) {
+							data[i].Status = AreaPurchaseStatus.Pending;
+							data[i].ErrorString = "";
+						}
+						pendingPurchasesData = data;
+						displayUnprocessedPayments(data);
+					})
+					.fail(function(jqXHR, textStatus, errorThrown) {
+						LoanResponseJSON
+					})
+					.always(function(jqXHR, textStatus) {
+						processingMessageHide();
+					});
+			}
+			$(function() {
+				$("#processDiv").hide();
+				$("#login").click(function() {
+					var credentials = JSON.stringify({ "UserName":$("#username").val(), "Password":$("#password").val() });
+					processingMessageShow("Logging in...");
+					apiRequest("/authentication", "POST", credentials)
+						.done(function(data, textStatus, jqXHR) {
+							authenticationToken = data.Token;
+							$("#loginDiv").hide();
+							$("#processDiv").show();
+							loadUnprocessedPayments();
+						})
+						.fail(function(jqXHR, textStatus, errorThrown) {
+							LoanResponseJSON
+						})
+						.always(function(jqXHR, textStatus) {
+							processingMessageHide();
+						});
+				});
+				
+				$("#approvaAll").click(function() {
+					approvaAllPurchases();
+				});
+				
+				$("#process").click(function() {
+					$("#process").prop("disabled", true);
+					apiRequest("/areapurchases/process", "PUT", JSON.stringify(pendingPurchasesData))
+						.always(function(jqXHR, textStatus) {
+							loadUnprocessedPayments();
+							processingMessageHide();
+						});
+					$("#process").prop("disabled", false);
+				});
+				
+				$("#logout").click(function() {
+					authenticationToken = null;
+					$("#processDiv").hide();
+					$("#loginDiv").show();
+				});
+				
+				$("#refresh").click(function() {
+					loadUnprocessedPayments();
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="processingMessage"></div>
+		<div id="loginDiv" class="display">
+			<input type="text" id="username" />
+			<input type="password" id="password" />
+			<input type="button" id="login" value="Log in" />
+		</div>
+		<div id="processDiv" class="hide">
+			<table id="unprocessedPayments" class="hover" width="100%"></table>
+			<div style="padding-top:2%;float:right;"><input type="button" id="approvaAll" value="Approve all" /></div>
+			<div style="padding-top:2%;clear:both;width:100%"><input type="button" id="process" style="display: block;margin: 0 auto;" value="Finish processing payments" /></div>
+			<div id="footer">
+				<hr />
+				<input type="button" id="refresh" value="Refresh" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" id="logout" value="Log out" />
+			</div>
+		</div>
+	</body>
+</html>

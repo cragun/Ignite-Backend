@@ -1,0 +1,681 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F5644194-5AB2-4FBA-8632-46630FB5DDD3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataReef.TM.Models</RootNamespace>
+    <AssemblyName>DataReef.TM.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\DataReef.TM.Api\App_Data\DataReef.TM.Models.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\DataReef.TM.Api\App_Data\DataReef.TM.Models.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <OutputPath>bin\QA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Smart.DayCare.Api\App_Data\Smart.DayCare.Models.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+    <OutputPath>bin\Stage\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Smart.DayCare.Api\App_Data\Smart.DayCare.Models.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.12.1.2\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Validation, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.Validation.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.Validation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.1\lib\net40\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApiKey.cs" />
+    <Compile Include="ApiLogEntry.cs" />
+    <Compile Include="ApiToken.cs" />
+    <Compile Include="Appointment.cs" />
+    <Compile Include="Authentication.cs" />
+    <Compile Include="Account.cs" />
+    <Compile Include="AccountAssociation.cs" />
+    <Compile Include="Accounting\TokenAdjustment.cs" />
+    <Compile Include="Accounting\TokenExpense.cs" />
+    <Compile Include="Accounting\TokenLedger.cs" />
+    <Compile Include="Accounting\TokenPurchase.cs" />
+    <Compile Include="Accounting\TokenTransfer.cs" />
+    <Compile Include="Address.cs" />
+    <Compile Include="Agreements\Agreement.cs" />
+    <Compile Include="Agreements\AgreementPart.cs" />
+    <Compile Include="Agreements\ExecutedAgreement.cs" />
+    <Compile Include="Agreements\ExecutedAgreementPart.cs" />
+    <Compile Include="AppSetting.cs" />
+    <Compile Include="AreaPurchase.cs" />
+    <Compile Include="Assignment.cs" />
+    <Compile Include="Attachment.cs" />
+    <Compile Include="BaseShape.cs" />
+    <Compile Include="Client\ApiEvent.cs" />
+    <Compile Include="Client\IntegrationToken.cs" />
+    <Compile Include="Commerce\Order.cs" />
+    <Compile Include="Commerce\OrderDetail.cs" />
+    <Compile Include="Credential.cs" />
+    <Compile Include="Credit\PrescreenInstant.cs" />
+    <Compile Include="CRUDAudit.cs" />
+    <Compile Include="DataViews\ClientAPI\KeyValuesCrud.cs" />
+    <Compile Include="DataViews\ClientAPI\ProposalCloneCoreParams.cs" />
+    <Compile Include="DataViews\ClientAPI\ProposalUpdateRequest.cs" />
+    <Compile Include="DataViews\ClientAPI\RoofPlaneEditDataView.cs" />
+    <Compile Include="DataViews\ClientAPI\TagsCrud.cs" />
+    <Compile Include="DataViews\Commerce\LeadOrderDetail.cs" />
+    <Compile Include="DataViews\CustomerLite.cs" />
+    <Compile Include="DataViews\Financing\FinancePlanDataModel.cs" />
+    <Compile Include="DataViews\Financing\FinancePlanIntegrationsModel.cs" />
+    <Compile Include="DataViews\Financing\FinancePlanSmartBOARDMeta.cs" />
+    <Compile Include="DataViews\Financing\LoanPal\FinancePlanIntegrationsModel.cs" />
+    <Compile Include="DataViews\Financing\LoanPal\LoanPalFinancingPlanData.cs" />
+    <Compile Include="DataViews\Financing\PaymentFactors\FinancePlanIntegrationsModel.cs" />
+    <Compile Include="DataViews\Financing\PaymentFactors\PaymentFactorsPlanData.cs" />
+    <Compile Include="DataViews\Financing\SalalCreditUnion\FinancePlanIntegrationsModel.cs" />
+    <Compile Include="DataViews\Financing\SalalCreditUnion\SalalCreditUnionFinancingPlanData.cs" />
+    <Compile Include="DataViews\Financing\Sunnova\FinancePlanIntegrationsModel.cs" />
+    <Compile Include="DataViews\Financing\Sunnova\SunnovaFinancingPlanData.cs" />
+    <Compile Include="DataViews\Geo\AreaViewBounds.cs" />
+    <Compile Include="DataViews\Geo\BasicResponse.cs" />
+    <Compile Include="DataViews\Geo\GeoField.cs" />
+    <Compile Include="DataViews\Geo\GeoOccupant.cs" />
+    <Compile Include="DataViews\Geo\GeoPoint.cs" />
+    <Compile Include="DataViews\Geo\GeoProperty.cs" />
+    <Compile Include="DataViews\Geo\IdAndCountResponse.cs" />
+    <Compile Include="DataViews\Geo\TerritoryIdAndWKTRequest.cs" />
+    <Compile Include="DataViews\GuidNamePair.cs" />
+    <Compile Include="DataViews\Inquiries\InquiryStatisticsByDate.cs" />
+    <Compile Include="DataViews\Inquiries\InquiryStatisticsForPerson.cs" />
+    <Compile Include="DataViews\Inquiries\InquiryStatisticsForOrganization.cs" />
+    <Compile Include="DataViews\OnBoarding\FinancePlanDataView.cs" />
+    <Compile Include="DataViews\OnBoarding\LookupDataView.cs" />
+    <Compile Include="DataViews\OnBoarding\OnboardingOUSettingsDataView.cs" />
+    <Compile Include="DataViews\OnBoarding\OnboardingOUDataView.cs" />
+    <Compile Include="DataViews\OnBoarding\OffsetDataView.cs" />
+    <Compile Include="DataViews\SelfTrackedKPIs\SelfTrackedKPIByDate.cs" />
+    <Compile Include="DataViews\PersonLite.cs" />
+    <Compile Include="DataViews\ProposalLite.cs" />
+    <Compile Include="DataViews\SelfTrackedKPIs\SelfTrackedStatistics.cs" />
+    <Compile Include="DataViews\Settings\AdderItemDynamicOptionDataView.cs" />
+    <Compile Include="DataViews\Settings\AdderItemDynamicUserDataDataView.cs" />
+    <Compile Include="DataViews\Settings\DispositionV1DataView.cs" />
+    <Compile Include="DataViews\Settings\DispositionV2DataView.cs" />
+    <Compile Include="DataViews\Settings\EnableableSettingDataView.cs" />
+    <Compile Include="DataViews\Settings\FinancingSettingsDataView.cs" />
+    <Compile Include="DataViews\Settings\OrgSettingDataView.cs" />
+    <Compile Include="DataViews\Settings\OUActiveUsersCSV.cs" />
+    <Compile Include="DataViews\Settings\OUEventHandlerDataView.cs" />
+    <Compile Include="DataViews\Settings\SolarPanelsSettingDataView.cs" />
+    <Compile Include="DataViews\Solar\Proposal\PowerMetaDataConsumptionDataView.cs" />
+    <Compile Include="DataViews\Solar\Proposal\PowerMetaDataDataView.cs" />
+    <Compile Include="DataViews\ValueTypePair.cs" />
+    <Compile Include="DTOs\Charting\Chart.cs" />
+    <Compile Include="DTOs\Charting\ChartType.cs" />
+    <Compile Include="DTOs\Charting\Point.cs" />
+    <Compile Include="DTOs\Charting\Series.cs" />
+    <Compile Include="DTOs\Commerce\CreateLeadEnhancementDto.cs" />
+    <Compile Include="DTOs\Commerce\CreateLeadsDto.cs" />
+    <Compile Include="DTOs\Commerce\LeadOrderDetailDto.cs" />
+    <Compile Include="DTOs\Common\PaginatedResult.cs" />
+    <Compile Include="DTOs\CreateProposalDataResponse.cs" />
+    <Compile Include="DTOs\EPC\ActionItemInput.cs" />
+    <Compile Include="DTOs\EPC\EpcStatusInput.cs" />
+    <Compile Include="DTOs\FinanceAdapters\Enums.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBIntegrationLoginModel.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBLeadCreate.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBProposalAttachRequest.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBProposalDataModel.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBUsageAttribute.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBUserTokenResponse.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SstRequest.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SstResponse.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SstRequestCustomer.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SstRequestEnergyUsage.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SstRequestLead.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SstRequestLeadKwh.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SstRequestProposal.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SST\SSTSettings.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SubmitApplicationRequest.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SubmitApplicationResponse.cs" />
+    <Compile Include="DTOs\GetPropertiesRequest.cs" />
+    <Compile Include="DTOs\Inquiries\CRMDisposition.cs" />
+    <Compile Include="DTOs\Inquiries\CRMFilterRequest.cs" />
+    <Compile Include="DTOs\Integrations\IntegrationOption.cs" />
+    <Compile Include="DTOs\Integrations\IntegrationOptionData.cs" />
+    <Compile Include="DTOs\Integrations\IntegrationOptionSettings.cs" />
+    <Compile Include="DTOs\Integrations\SelectedIntegrationOption.cs" />
+    <Compile Include="DTOs\Integrations\SMARTBoardIntegrationOptionData.cs" />
+    <Compile Include="DTOs\ListPropertiesRequest.cs" />
+    <Compile Include="DTOs\Mortgage\EsRequest.cs" />
+    <Compile Include="DTOs\Mortgage\MortgageDetailItem.cs" />
+    <Compile Include="DTOs\Mortgage\MortgageDetail.cs" />
+    <Compile Include="DTOs\Mortgage\EsResponse.cs" />
+    <Compile Include="DTOs\Mortgage\MortgageRequest.cs" />
+    <Compile Include="DTOs\Mortgage\MortgageSource.cs" />
+    <Compile Include="DTOs\OuShapeVersion.cs" />
+    <Compile Include="DTOs\OUs\OrgIdSetting.cs" />
+    <Compile Include="DTOs\OUs\OUChildrenAndTerritories.cs" />
+    <Compile Include="DTOs\OUs\EntityWithShape.cs" />
+    <Compile Include="DTOs\OUs\OUsAndRoleTree.cs" />
+    <Compile Include="DTOs\OUs\OUTreePath.cs" />
+    <Compile Include="DTOs\OUs\OUWithAncestors.cs" />
+    <Compile Include="DTOs\OUs\SBTerritoryDTO.cs" />
+    <Compile Include="DTOs\OUs\SBOUDTO.cs" />
+    <Compile Include="DTOs\Persons\ActiveUserDTO.cs" />
+    <Compile Include="DTOs\Persons\PersonDTO.cs" />
+    <Compile Include="DTOs\Persons\PersonKPIScreenshotRequest.cs" />
+    <Compile Include="DTOs\Properties\CanCreateAppointmentRequest.cs" />
+    <Compile Include="DTOs\Properties\CanCreateAppointmentResponse.cs" />
+    <Compile Include="DTOs\Properties\PropertyNoteTagDTO.cs" />
+    <Compile Include="DTOs\Properties\PropertyNoteUserQueryRequest.cs" />
+    <Compile Include="DTOs\Properties\PropertySurveyDTO.cs" />
+    <Compile Include="DTOs\PropertyAttachments\AttachmentOptionDefinition.cs" />
+    <Compile Include="DTOs\PropertyAttachments\AuditItem.cs" />
+    <Compile Include="DTOs\PropertyAttachments\Customer.cs" />
+    <Compile Include="DTOs\PropertyAttachments\EditPropertyAttachmentImageNotesRequest.cs" />
+    <Compile Include="DTOs\PropertyAttachments\DeleteImageFromPropertyAttachmentRequest.cs" />
+    <Compile Include="DTOs\PropertyAttachments\EditPropertyAttachmentRequest.cs" />
+    <Compile Include="DTOs\PropertyAttachments\ExtendedPropertyAttachmentDTO.cs" />
+    <Compile Include="DTOs\PropertyAttachments\ExtendedPropertyAttachmentItemDTO.cs" />
+    <Compile Include="DTOs\PropertyAttachments\Image.cs" />
+    <Compile Include="DTOs\PropertyAttachments\ImageBase64WithNotes.cs" />
+    <Compile Include="DTOs\PropertyAttachments\PhotosDefinition.cs" />
+    <Compile Include="DTOs\PropertyAttachments\PropertyAttachmentDTO.cs" />
+    <Compile Include="DTOs\PropertyAttachments\PropertyAttachmentItemDTO.cs" />
+    <Compile Include="DTOs\PropertyAttachments\Header.cs" />
+    <Compile Include="DTOs\PropertyAttachments\PropertyAttachmentSubmitReviewRequest.cs" />
+    <Compile Include="DTOs\PropertyAttachments\SBAttachmentDataDTO.cs" />
+    <Compile Include="DTOs\PropertyAttachments\SBAttachmentsDTO.cs" />
+    <Compile Include="DTOs\PropertyAttachments\Thumbnail.cs" />
+    <Compile Include="DTOs\PropertyAttachments\UploadImageToPropertyAttachmentRequest.cs" />
+    <Compile Include="DTOs\Proposals\GenabilityIntegrationAuditDataView.cs" />
+    <Compile Include="DTOs\Proposals\MediaItemData.cs" />
+    <Compile Include="DTOs\Proposals\ProposalMediaUploadRequest.cs" />
+    <Compile Include="DTOs\Proposals\ProposalUnformattedDataViewConstructor.cs" />
+    <Compile Include="DTOs\Proposals\SignedDocumentDTO.cs" />
+    <Compile Include="DTOs\Reports\OrganizationSelfTrackedReportRow.cs" />
+    <Compile Include="DTOs\Reports\SalesRepresentativeSelfTrackedReportRow.cs" />
+    <Compile Include="DTOs\Reports\SimplePersonKPI.cs" />
+    <Compile Include="DTOs\SBNoteDTO.cs" />
+    <Compile Include="DTOs\Signatures\AdderDataView.cs" />
+    <Compile Include="DTOs\Signatures\DocumentSignRequest.cs" />
+    <Compile Include="DTOs\Signatures\KeyValueDataView.cs" />
+    <Compile Include="DTOs\Signatures\PowerConsumptionDataView.cs" />
+    <Compile Include="DTOs\Signatures\ProposalMediaItemDataView.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\Proposal2DataView.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalBasicInfo.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalDVConstructor.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalEnergy.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalEnergyCosts.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalFinancePlanOption.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalFinancing.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalForecast.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalMediaItemDataView.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalSolution.cs" />
+    <Compile Include="DTOs\Signatures\DispositionDataView.cs" />
+    <Compile Include="DTOs\Signatures\InverterDataView.cs" />
+    <Compile Include="DTOs\Signatures\PropertyDataView.cs" />
+    <Compile Include="DTOs\Signatures\Proposals\ProposalSystemCosts.cs" />
+    <Compile Include="DTOs\Signatures\RoofPlaneDataView.cs" />
+    <Compile Include="DTOs\Signatures\RoofPlaneEdgeDataView.cs" />
+    <Compile Include="DTOs\Signatures\RoofPlaneObstructionDataView.cs" />
+    <Compile Include="DTOs\Signatures\RoofPlanePanelDataView.cs" />
+    <Compile Include="DTOs\Signatures\RoofPlanePointDataView.cs" />
+    <Compile Include="DTOs\Signatures\SolarPanelDataView.cs" />
+    <Compile Include="DTOs\Signatures\SolciusPayload.cs" />
+    <Compile Include="DTOs\SmartBoard\SBAppointmentDTO.cs" />
+    <Compile Include="DTOs\SmartBoard\SBCreatePropertyRequest.cs" />
+    <Compile Include="DTOs\SmartBoard\SBSetAppointmentStatusRequest.cs" />
+    <Compile Include="DTOs\SmartBoard\SBEditAppointmentRequest.cs" />
+    <Compile Include="DTOs\SmartBoard\SBCreateAppointmentRequest.cs" />
+    <Compile Include="DTOs\SmartBoard\SBPropertyDTO.cs" />
+    <Compile Include="DTOs\Solar\EnergyAveragesRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\Incentive.cs" />
+    <Compile Include="DTOs\Solar\Finance\ComparisonFinancePlanRequestData.cs" />
+    <Compile Include="DTOs\Solar\Finance\DealerIncentive.cs" />
+    <Compile Include="DTOs\Solar\Finance\LeaseParameters.cs" />
+    <Compile Include="DTOs\Solar\Finance\ProductionPrice.cs" />
+    <Compile Include="DTOs\Solar\Genability\BaseResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\UsageProfileRequest.cs" />
+    <Compile Include="DTOs\Solar\Proposal\CloneSettings.cs" />
+    <Compile Include="DTOs\Solar\Proposal\ProposalDataMetaInformation.cs" />
+    <Compile Include="Enums\IgniteNotificationSeenStatus.cs" />
+    <Compile Include="Enums\IgniteNotificationType.cs" />
+    <Compile Include="Enums\AdderItemCalculatedPerType.cs" />
+    <Compile Include="Enums\AdderItemRecurrenceType.cs" />
+    <Compile Include="Enums\AppointmentStatus.cs" />
+    <Compile Include="Enums\Class1.cs" />
+    <Compile Include="DTOs\Signatures\TerritoryDataView.cs" />
+    <Compile Include="Enums\ActionItemStatus.cs" />
+    <Compile Include="Enums\CsvReportType.cs" />
+    <Compile Include="Enums\EpcStatusProgress.cs" />
+    <Compile Include="Enums\FilterLinkingOperator.cs" />
+    <Compile Include="Enums\FinancePlanIntegrationProvider.cs" />
+    <Compile Include="Enums\FinanceProviderProposalFlowType.cs" />
+    <Compile Include="Enums\AdderItemType.cs" />
+    <Compile Include="Enums\IntegrationType.cs" />
+    <Compile Include="Enums\PermissionType.cs" />
+    <Compile Include="Enums\OURoleType.cs" />
+    <Compile Include="Enums\PersonType.cs" />
+    <Compile Include="Enums\PropertyAttachments\ItemStatus.cs" />
+    <Compile Include="Enums\PowerInformationSource.cs" />
+    <Compile Include="Enums\ProposalCreditStatus.cs" />
+    <Compile Include="Enums\ProposalMediaItemType.cs" />
+    <Compile Include="Enums\ReportingPeriod.cs" />
+    <Compile Include="Enums\SmartBOARD\SBRedirectType.cs" />
+    <Compile Include="Enums\VelocifyRequestSourceType.cs" />
+    <Compile Include="EpcStatus.cs" />
+    <Compile Include="Extensions\DataViewsExtensions.cs" />
+    <Compile Include="Extensions\ModelExtensions.cs" />
+    <Compile Include="FinancialIntegration\AdapterRequest.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalAddressModel.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalApplicantModel.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalApplicationRequest.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalApplicationResponse.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalErrorModel.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalLoanOptionModel.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalSalesRepModel.cs" />
+    <Compile Include="FinancialIntegration\LoanPal\LoanPalStipulationModel.cs" />
+    <Compile Include="FinancialIntegration\SmartBOARD\GetPageRequest.cs" />
+    <Compile Include="KeyValue.cs" />
+    <Compile Include="Notification.cs" />
+    <Compile Include="PropertyNote.cs" />
+    <Compile Include="PropertySurvey.cs" />
+    <Compile Include="PersonKPI.cs" />
+    <Compile Include="PropertyAttachments\PropertyAttachment.cs" />
+    <Compile Include="PropertyAttachments\PropertyAttachmentItem.cs" />
+    <Compile Include="PRMI\VelocifyRequest.cs" />
+    <Compile Include="PRMI\VelocifyResponse.cs" />
+    <Compile Include="DTOs\Reports\AuthenticationSummary.cs" />
+    <Compile Include="DTOs\Signatures\Callback.cs" />
+    <Compile Include="DTOs\Signatures\MergeAlias.cs" />
+    <Compile Include="DTOs\Signatures\MergeField.cs" />
+    <Compile Include="DTOs\Signatures\MergeFieldResponse.cs" />
+    <Compile Include="DTOs\Signatures\ProposalYearDataView.cs" />
+    <Compile Include="DTOs\Signatures\ProposalUnformattedDataView.cs" />
+    <Compile Include="DTOs\Signatures\ProposalDataView.cs" />
+    <Compile Include="DTOs\Signatures\Recipients.cs" />
+    <Compile Include="DTOs\Signatures\SignDocumentRequestHancock.cs" />
+    <Compile Include="DTOs\Signatures\SignDocumentResponseHancock.cs" />
+    <Compile Include="DTOs\Signatures\SignerLink.cs" />
+    <Compile Include="DTOs\Signatures\SignDocumentResponse.cs" />
+    <Compile Include="DTOs\Signatures\UserInput.cs" />
+    <Compile Include="DTOs\Solar\EnergyMonthDetails.cs" />
+    <Compile Include="DTOs\Solar\Finance\BasePayment.cs" />
+    <Compile Include="DTOs\Solar\Finance\FinanceEstimate.cs" />
+    <Compile Include="DTOs\Solar\Finance\FinanceEstimateComparisonRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\FinancialPlanDefinition_Extended.cs" />
+    <Compile Include="DTOs\Solar\Finance\LoanRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\LoanRequestSunEdison.cs" />
+    <Compile Include="DTOs\Solar\Finance\LoanResponse.cs" />
+    <Compile Include="DTOs\Solar\Finance\LoanResponseSunEdison.cs" />
+    <Compile Include="DTOs\Solar\Finance\MortgageAnalysisRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\MortgageCalculationResponse.cs" />
+    <Compile Include="DTOs\Solar\Finance\PaymentMonth.cs" />
+    <Compile Include="DTOs\Solar\Finance\PaymentYear.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\ClipBy.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\GetPVWatts5UsageProfilePropertyInputs.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\GetTariffsRequestParameters.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\ModuleType.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\PVWatts5UsageProfilePropertyInputs.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\SourceIdOptions.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\TariffTypes.cs" />
+    <Compile Include="DTOs\Solar\Genability\GetTariffsResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\PVWatts5UsageProfile.cs" />
+    <Compile Include="DTOs\Solar\Genability\PVWatts5UsageProfileProperties.cs" />
+    <Compile Include="DTOs\Solar\Genability\SavingAnalysisRequestModel.cs" />
+    <Compile Include="DTOs\Solar\Genability\UpsertPVWattsUsageProfileRequestModel.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\CalculateCostPropertyInput.cs" />
+    <Compile Include="DTOs\Solar\Finance\MortgageDetails.cs" />
+    <Compile Include="DTOs\Tables\Cell.cs" />
+    <Compile Include="DTOs\Tables\Row.cs" />
+    <Compile Include="DTOs\Tables\Table.cs" />
+    <Compile Include="DTOs\Tables\VisibleBorders.cs" />
+    <Compile Include="DTOs\TerritoryShapeVersion.cs" />
+    <Compile Include="DTOs\ZipCodes\AreaPurchaseDto.cs" />
+    <Compile Include="Enums\AreaPurchaseStatus.cs" />
+    <Compile Include="Enums\ClientApiStuff.cs" />
+    <Compile Include="Enums\FinanceDocumentType.cs" />
+    <Compile Include="Enums\ObstructionType.cs" />
+    <Compile Include="Enums\PrescreenSource.cs" />
+    <Compile Include="Enums\BlobAccessRights.cs" />
+    <Compile Include="DTOs\Reports\OrganizationReportRow.cs" />
+    <Compile Include="DTOs\Reports\SalesRepresentativeReportRow.cs" />
+    <Compile Include="DTOs\Signatures\SignDocumentRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\Enums\BenefitType.cs" />
+    <Compile Include="DTOs\Solar\Finance\Enums\IncentivePaymentFrequency.cs" />
+    <Compile Include="DTOs\Solar\Finance\Enums\RelativeAmountType.cs" />
+    <Compile Include="DTOs\Solar\Finance\Enums\SolarIncentivesSource.cs" />
+    <Compile Include="DTOs\Solar\Finance\FinancingType.cs" />
+    <Compile Include="DTOs\Solar\Finance\LCOESummary.cs" />
+    <Compile Include="DTOs\Solar\Finance\LoanSummaryItem.cs" />
+    <Compile Include="DTOs\Solar\Finance\SolarFinancingDefinition.cs" />
+    <Compile Include="DTOs\Solar\Finance\SolarIncentive.cs" />
+    <Compile Include="DTOs\Solar\Finance\SolarSystemDefinition.cs" />
+    <Compile Include="DTOs\Solar\Genability\AccountAddress.cs" />
+    <Compile Include="DTOs\Solar\Genability\AccountAnalysis.cs" />
+    <Compile Include="DTOs\Solar\Genability\AccountAnalysisSummary.cs" />
+    <Compile Include="DTOs\Solar\Genability\AccountProperties.cs" />
+    <Compile Include="DTOs\Solar\Genability\AccountProperty.cs" />
+    <Compile Include="DTOs\Solar\Genability\BaselineMeasure.cs" />
+    <Compile Include="DTOs\Solar\Genability\CalculatedCost.cs" />
+    <Compile Include="DTOs\Solar\Genability\CalculatedCostItem.cs" />
+    <Compile Include="DTOs\Solar\Genability\CalculatedCostSummaryMap.cs" />
+    <Compile Include="DTOs\Solar\Genability\ChangeAccountPropertyResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\CostCalculatorRequest.cs" />
+    <Compile Include="DTOs\Solar\Genability\CostCalculatorResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\CreateAccountRequest.cs" />
+    <Compile Include="DTOs\Solar\Genability\CreateAccountResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\ChargeType.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\CustomerClass.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\DetailLevel.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\GenabilityResponseStatus.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\GroupBy.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\QuantityKey.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\SalesPeriod.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\SavingAnalysisPropertyInputs.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\SavingAnalysisScenarios.cs" />
+    <Compile Include="DTOs\Solar\Genability\Enums\ServiceType.cs" />
+    <Compile Include="DTOs\Solar\Genability\GenabilityAccount.cs" />
+    <Compile Include="DTOs\Solar\Genability\GetAccountRecommendedPrice.cs" />
+    <Compile Include="DTOs\Solar\Genability\GetLSEsResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\GetUsageProfileResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\LoadServingEntity.cs" />
+    <Compile Include="DTOs\Solar\Genability\Price.cs" />
+    <Compile Include="DTOs\Solar\Genability\PriceChange.cs" />
+    <Compile Include="DTOs\Solar\Genability\PriceResult.cs" />
+    <Compile Include="DTOs\Solar\Genability\PropertyData.cs" />
+    <Compile Include="DTOs\Solar\Genability\ReadingData.cs" />
+    <Compile Include="DTOs\Solar\Genability\ReadingDataSummary.cs" />
+    <Compile Include="DTOs\Solar\Genability\SavingAnalysisPropertyData.cs" />
+    <Compile Include="DTOs\Solar\Genability\SavingAnalysisTariffRate.cs" />
+    <Compile Include="DTOs\Solar\Genability\SavingsAnalysisRequest.cs" />
+    <Compile Include="DTOs\Solar\Genability\SavingsAnalysisResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\Scenario.cs" />
+    <Compile Include="DTOs\Solar\Genability\Source.cs" />
+    <Compile Include="DTOs\Solar\Genability\Series.cs" />
+    <Compile Include="DTOs\Solar\Genability\SeriesCosts.cs" />
+    <Compile Include="DTOs\Solar\Genability\SeriesMeasure.cs" />
+    <Compile Include="DTOs\Solar\Genability\Tariff.cs" />
+    <Compile Include="DTOs\Solar\Genability\TariffProperty.cs" />
+    <Compile Include="DTOs\Solar\Genability\TariffRate.cs" />
+    <Compile Include="DTOs\Solar\Genability\TariffRateBand.cs" />
+    <Compile Include="DTOs\Solar\Genability\UpsertUsageProfileResponse.cs" />
+    <Compile Include="DTOs\Solar\Genability\UsageProfile.cs" />
+    <Compile Include="DTOs\Solar\MonthlyPower.cs" />
+    <Compile Include="DTOs\Solar\Finance\AmortizationTableRowPPA.cs" />
+    <Compile Include="DTOs\Solar\Finance\CustomerValuePropositionPPA.cs" />
+    <Compile Include="DTOs\Solar\Proposal\AmmortizationYear.cs" />
+    <Compile Include="DTOs\Solar\Proposal\AmortizationMonth.cs" />
+    <Compile Include="DTOs\Solar\Proposal\AmortizationRow.cs" />
+    <Compile Include="DTOs\Solar\Proposal\AmortizationTable.cs" />
+    <Compile Include="DTOs\Solar\Finance\LoanSummary.cs" />
+    <Compile Include="DTOs\Solar\Proposal\MonthSummary.cs" />
+    <Compile Include="DTOs\Solar\Finance\PowerPurchaseAgreementRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\PowerPurchaseAgreementResponse.cs" />
+    <Compile Include="DTOs\Solar\Proposal\PVWattsOutput.cs" />
+    <Compile Include="DTOs\Solar\Proposal\RoofPlaneInfo.cs" />
+    <Compile Include="DTOs\Solar\Proposal\SolarProposalRequest.cs" />
+    <Compile Include="DTOs\Solar\Proposal\SolarProposalResponse.cs" />
+    <Compile Include="Enums\ProposalImagerySource.cs" />
+    <Compile Include="Enums\RoofPanelEdgeType.cs" />
+    <Compile Include="Enums\SettingValueType.cs" />
+    <Compile Include="Enums\SolarProviderType.cs" />
+    <Compile Include="Enums\LoanPricePerWattPricingOption.cs" />
+    <Compile Include="Enums\OUType.cs" />
+    <Compile Include="Enums\ProposalStatus.cs" />
+    <Compile Include="Enums\FinancePlanType.cs" />
+    <Compile Include="Enums\RootOUNames.cs" />
+    <Compile Include="Enums\ZIPAreaStatus.cs" />
+    <Compile Include="Enums\ActivityType.cs" />
+    <Compile Include="Finance\FinanceDetail.cs" />
+    <Compile Include="Finance\FinancePlanDefinition.cs" />
+    <Compile Include="Finance\FinanceProvider.cs" />
+    <Compile Include="Finance\OUFinanceAssociation.cs" />
+    <Compile Include="Imagery\HighResolutionImage.cs" />
+    <Compile Include="Imagery\ImagePurchase.cs" />
+    <Compile Include="Layers\LayerDefinition.cs" />
+    <Compile Include="Layers\LayerFolder.cs" />
+    <Compile Include="DataViews\Geo\AddressMapping.cs" />
+    <Compile Include="DataViews\Geo\ShapeCollectionRequest.cs" />
+    <Compile Include="DataViews\OUMembersRequest.cs" />
+    <Compile Include="DataViews\OUSummary.cs" />
+    <Compile Include="DataViews\PersonSummary.cs" />
+    <Compile Include="DataViews\Reporting\InquirySummary.cs" />
+    <Compile Include="Enums\PrescreenStatus.cs" />
+    <Compile Include="CurrentLocation.cs" />
+    <Compile Include="DataViews\Analytic.cs" />
+    <Compile Include="DataViews\Geo\CoordinateGeoRequest.cs" />
+    <Compile Include="DataViews\Geo\DataFilter.cs" />
+    <Compile Include="DataViews\Geo\GeoRequest.cs" />
+    <Compile Include="DataViews\Geo\ShapeSummary.cs" />
+    <Compile Include="DataViews\KeyValue.cs" />
+    <Compile Include="DataViews\Ledgers\LedgerDataView.cs" />
+    <Compile Include="DataViews\Ledgers\LedgerItemDataView.cs" />
+    <Compile Include="DataViews\Ledgers\TransferDataCommand.cs" />
+    <Compile Include="DataViews\NewUser.cs" />
+    <Compile Include="DataViews\NewUserRegistration.cs" />
+    <Compile Include="DataViews\StreetSummary.cs" />
+    <Compile Include="DataViews\TerritorySummary.cs" />
+    <Compile Include="Enums\BloodType.cs" />
+    <Compile Include="Enums\Ethnicity.cs" />
+    <Compile Include="Enums\Gender.cs" />
+    <Compile Include="Enums\ItemSyncStatus.cs" />
+    <Compile Include="Enums\SyncStatus.cs" />
+    <Compile Include="Geo\Field.cs" />
+    <Compile Include="Geo\Occupant.cs" />
+    <Compile Include="Geo\PropertyBase.cs" />
+    <Compile Include="Device.cs" />
+    <Compile Include="Inquiry.cs" />
+    <Compile Include="DataIntegration.cs" />
+    <Compile Include="Layers\Layer.cs" />
+    <Compile Include="LoginAttempt.cs" />
+    <Compile Include="MediaItem.cs" />
+    <Compile Include="OUAssociation.cs" />
+    <Compile Include="Layers\OULayer.cs" />
+    <Compile Include="OUMediaItem.cs" />
+    <Compile Include="EntityBase.cs" />
+    <Compile Include="Identification.cs" />
+    <Compile Include="OUSetting.cs" />
+    <Compile Include="PasswordReset.cs" />
+    <Compile Include="PersonalConnection.cs" />
+    <Compile Include="Credit\PrescreenBatch.cs" />
+    <Compile Include="Credit\PrescreenDetail.cs" />
+    <Compile Include="PersonSetting.cs" />
+    <Compile Include="Property.cs" />
+    <Compile Include="PropertyActionItem.cs" />
+    <Compile Include="PropertyAttribute.cs" />
+    <Compile Include="PropertyRating.cs" />
+    <Compile Include="PubSubMessaging\EventActionType.cs" />
+    <Compile Include="PubSubMessaging\EventMessage.cs" />
+    <Compile Include="PushNotifications\PushSubscription.cs" />
+    <Compile Include="Reporting\Column.cs" />
+    <Compile Include="Reporting\OUReport.cs" />
+    <Compile Include="Reporting\Parameter.cs" />
+    <Compile Include="Reporting\Report.cs" />
+    <Compile Include="Reporting\Settings\OUReportingSettings.cs" />
+    <Compile Include="Solar\AdderItem.cs" />
+    <Compile Include="Solar\CustomUtilityRate.cs" />
+    <Compile Include="Solar\ObstructionPoint.cs" />
+    <Compile Include="Solar\PropertyPowerConsumption.cs" />
+    <Compile Include="Solar\ProposalData.cs" />
+    <Compile Include="Solar\ProposalDocument.cs" />
+    <Compile Include="Solar\FinancePlan.cs" />
+    <Compile Include="Solar\Inverter.cs" />
+    <Compile Include="Solar\PowerConsumption.cs" />
+    <Compile Include="Solar\Proposal.cs" />
+    <Compile Include="Enums\AdderItemReducedAmountType.cs" />
+    <Compile Include="Enums\AdderItemRateType.cs" />
+    <Compile Include="Solar\ProposalIntegrationAudit.cs" />
+    <Compile Include="Solar\ProposalMediaItem.cs" />
+    <Compile Include="Solar\RoofPlane.cs" />
+    <Compile Include="Solar\RoofPlaneDetail.cs" />
+    <Compile Include="Solar\RoofPlaneEdge.cs" />
+    <Compile Include="Solar\RoofPlaneObstruction.cs" />
+    <Compile Include="Solar\RoofPlanePanel.cs" />
+    <Compile Include="Solar\RoofPlanePoint.cs" />
+    <Compile Include="Solar\SolarPanel.cs" />
+    <Compile Include="Solar\SolarSystem.cs" />
+    <Compile Include="Reminder.cs" />
+    <Compile Include="Solar\SolarSystemPowerConsumption.cs" />
+    <Compile Include="Solar\SolarTariff.cs" />
+    <Compile Include="Solar\SystemProduction.cs" />
+    <Compile Include="Solar\SystemProductionMonth.cs" />
+    <Compile Include="DTOs\Blobs\BlobModel.cs" />
+    <Compile Include="Spruce\ConsumerAcceptance.cs" />
+    <Compile Include="Spruce\ConsumerConfirmationCall.cs" />
+    <Compile Include="Spruce\CreditDecision.cs" />
+    <Compile Include="Spruce\EnvelopeRecipient.cs" />
+    <Compile Include="Spruce\EsignEnvelope.cs" />
+    <Compile Include="Spruce\FinalCompletion.cs" />
+    <Compile Include="Spruce\FinalFunding.cs" />
+    <Compile Include="Spruce\Funding.cs" />
+    <Compile Include="Spruce\FundingRequirement.cs" />
+    <Compile Include="Spruce\GenDocsRequest.cs" />
+    <Compile Include="Spruce\SpruceCallbackRequestModel.cs" />
+    <Compile Include="Spruce\LoanTerms.cs" />
+    <Compile Include="Spruce\Milestones.cs" />
+    <Compile Include="Spruce\SpruceProperty.cs" />
+    <Compile Include="Spruce\IncomeDebt.cs" />
+    <Compile Include="Spruce\Employment.cs" />
+    <Compile Include="Spruce\CoApplicant.cs" />
+    <Compile Include="Spruce\Applicant.cs" />
+    <Compile Include="Spruce\Init.cs" />
+    <Compile Include="Spruce\QuoteResponse.cs" />
+    <Compile Include="Spruce\QuoteRequest.cs" />
+    <Compile Include="Spruce\SubstantialCompletion.cs" />
+    <Compile Include="Spruce\Tier.cs" />
+    <Compile Include="Surveys\Survey72.cs" />
+    <Compile Include="Sync\SyncPutRequest.cs" />
+    <Compile Include="Sync\SyncResponse.cs" />
+    <Compile Include="Note.cs" />
+    <Compile Include="OU.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="PhoneNumber.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OURole.cs" />
+    <Compile Include="Sync\DataPacket\CenterDataPacket.cs" />
+    <Compile Include="Sync\SyncItem.cs" />
+    <Compile Include="Sync\DataPacket\InitDataPacket.cs" />
+    <Compile Include="Sync\DataPacket\BaseDataPacket.cs" />
+    <Compile Include="Sync\DataPacket\EmployeeDataPacket.cs" />
+    <Compile Include="Territory.cs" />
+    <Compile Include="Enums\TimeUnit.cs" />
+    <Compile Include="OUShape.cs" />
+    <Compile Include="TerritoryShape.cs" />
+    <Compile Include="ExternalCredential.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserDevice.cs" />
+    <Compile Include="UserInvitation.cs" />
+    <Compile Include="WebHook.cs" />
+    <Compile Include="Zip5Shape.cs" />
+    <Compile Include="ZipArea.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataReef.CodeGenerator\DataReef.CodeGenerator.Core.csproj">
+      <Project>{201cb42a-0579-49d0-955a-bd5a1660119e}</Project>
+      <Name>DataReef.CodeGenerator.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Core.Base\DataReef.Core.Base.csproj">
+      <Project>{8b0773f4-e04a-40ea-8c02-8ecfe1dcd428}</Project>
+      <Name>DataReef.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Core.Infrastructure\DataReef.Core.Infrastructure.csproj">
+      <Project>{71D628D4-24AB-4493-A7BA-8C5565870A17}</Project>
+      <Name>DataReef.Core.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Common\DataReef.Integrations.Common.csproj">
+      <Project>{11d0aecc-f9a7-4ce9-b833-1e31b67da267}</Project>
+      <Name>DataReef.Integrations.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataViews\Credit\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,67 @@
+﻿@using DataReef.TM.Api.Areas.HelpPage.Views.Help
+@model DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel
+
+<div class="border-callout border-callout-@(CommonFunctions.GetAssociatedActionColor(Model.ActionType))">
+    <div class="border-callout-head">
+        <span class="label pull-left label-@(CommonFunctions.GetAssociatedActionColor(Model.ActionType))">Request</span>
+    </div>
+    @if (Model.UriParameters != null && Model.UriParameters.Any())
+    {
+        <div>
+            <h4><i>Uri Parameters</i></h4>
+            <table class="table table-bordered table-hover">
+                <thead class="bg-@(CommonFunctions.GetAssociatedActionColor(Model.ActionType))">
+                    <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+                </thead>
+                <tbody>
+                    @Html.DisplayFor(m => m.UriParameters, "Parameters")
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (Model.RequestModelDescription != null)
+    {
+        <div>
+            <h4><i>Body data</i></h4>
+            <p>@Model.RequestDocumentation</p>
+
+            @Html.DisplayFor(m => m.RequestModelDescription.ModelType, "ModelDescriptionLink", new { modelDescription = Model.RequestModelDescription })
+            @if (Model.RequestBodyParameters != null)
+            {
+                <table class="table table-bordered table-hover">
+                    <thead class="bg-@(CommonFunctions.GetAssociatedActionColor(Model.ActionType))">
+                        <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+                    </thead>
+                    <tbody>
+                        @Html.DisplayFor(m => m.RequestBodyParameters, "Parameters")
+                    </tbody>
+                </table>
+            }
+        </div>
+    }
+</div>
+<div class="border-callout border-callout-@(CommonFunctions.GetAssociatedActionColor(Model.ActionType))">
+    <div class="border-callout-head">
+        <span class="label pull-left label-@(CommonFunctions.GetAssociatedActionColor(Model.ActionType))">Response</span>
+    </div>
+
+    @if (Model.ResourceDescription != null)
+    {
+        @Html.DisplayFor(m => m.ResourceDescription.ModelType, "ModelDescriptionLink", new { modelDescription = Model.ResourceDescription })
+        if (Model.ResourceProperties != null && Model.ResourceProperties.Any())
+        {
+            <table class="table table-bordered table-hover">
+                <thead class="bg-@(CommonFunctions.GetAssociatedActionColor(Model.ActionType))">
+                    <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+                </thead>
+                <tbody>
+                    @Html.DisplayFor(m => m.ResourceProperties, "Parameters")
+                </tbody>
+            </table>
+        }
+    }
+    else
+    {
+        <p>None.</p>
+    }
+</div>

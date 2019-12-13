@@ -1,0 +1,92 @@
+2014-09-12 14:40:55.4874 Error IIS APPPOOL\SmartCare API There was no endpoint listening at http://local.services.smartcare.net/PersonService.svc that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. | System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://local.services.smartcare.net/PersonService.svc that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpChannelUtilities.ProcessGetResponseWebException(WebException webException, HttpWebRequest request, HttpAbortReason abortReason)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at Smart.DayCare.Contracts.Services.IDataService`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String filter, String include, String fields)
+   at Smart.DayCare.Api.Controllers.ControllerBase`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String include, String fields) in c:\Projects\Source\Repos\DayCare_Services\Smart.DayCare.Api\Controllers\ControllerBase.cs:line 153
+2014-09-12 14:41:29.2434 Error IIS APPPOOL\SmartCare API There was no endpoint listening at http://local.services.smartcare.net/PersonService.svc that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. | System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://local.services.smartcare.net/PersonService.svc that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpChannelUtilities.ProcessGetResponseWebException(WebException webException, HttpWebRequest request, HttpAbortReason abortReason)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at Smart.DayCare.Contracts.Services.IDataService`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String filter, String include, String fields)
+   at Smart.DayCare.Api.Controllers.ControllerBase`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String include, String fields) in c:\Projects\Source\Repos\DayCare_Services\Smart.DayCare.Api\Controllers\ControllerBase.cs:line 153
+2014-09-12 14:44:33.5974 Error IIS APPPOOL\SmartCare API There was no endpoint listening at http://local.services.smartcare.net/PersonService.svc that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. | System.ServiceModel.EndpointNotFoundException: There was no endpoint listening at http://local.services.smartcare.net/PersonService.svc that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details. ---> System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.HttpChannelUtilities.ProcessGetResponseWebException(WebException webException, HttpWebRequest request, HttpAbortReason abortReason)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at Smart.DayCare.Contracts.Services.IDataService`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String filter, String include, String fields)
+   at Smart.DayCare.Api.Controllers.ControllerBase`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String include, String fields) in c:\Projects\Source\Repos\DayCare_Services\Smart.DayCare.Api\Controllers\ControllerBase.cs:line 153
+2014-09-12 15:00:27.7294 Error IIS APPPOOL\SmartCare API Activation error occurred while trying to get instance of type EntityDataService`1, key "" | System.ServiceModel.FaultException`1[System.ServiceModel.ExceptionDetail]: Activation error occurred while trying to get instance of type EntityDataService`1, key "" (Fault Detail is equal to An ExceptionDetail, likely created by IncludeExceptionDetailInFaults=true, whose value is:
+Microsoft.Practices.ServiceLocation.ActivationException: Activation error occurred while trying to get instance of type EntityDataService`1, key "" ----> Microsoft.Practices.Unity.ResolutionFailedException: Resolution of the dependency failed, type = "Smart.DayCare.Services.EntityDataService`1[Smart.DayCare.Models.Person]", name = "(none)".
+Exception occurred while: Calling constructor Smart.Core.Infrastructure.Logging.SmartLogger().
+Exception is: TypeInitializationException - The type initializer for 'Smart.Core.Infrastructure.Logging.SmartLogger' threw an exception.
+-----------------------------------------------
+At the time of the exception, the container was:
+
+  Resolving Smart.DayCare.Services.EntityDataService`1[Smart.DayCare.Models.Person],(none)
+  Resolving parameter "logger" of constructor Smart.DayCare.Services.EntityDataService`1[[Smart.DayCare.Models.Person, Smart.DayCare.Models, Version=1.0.0.0, C...).
+2014-09-12 15:00:47.8464 Error IIS APPPOOL\SmartCare API Activation error occurred while trying to get instance of type EntityDataService`1, key "" | System.ServiceModel.FaultException`1[System.ServiceModel.ExceptionDetail]: Activation error occurred while trying to get instance of type EntityDataService`1, key "" (Fault Detail is equal to An ExceptionDetail, likely created by IncludeExceptionDetailInFaults=true, whose value is:
+Microsoft.Practices.ServiceLocation.ActivationException: Activation error occurred while trying to get instance of type EntityDataService`1, key "" ----> Microsoft.Practices.Unity.ResolutionFailedException: Resolution of the dependency failed, type = "Smart.DayCare.Services.EntityDataService`1[Smart.DayCare.Models.Person]", name = "(none)".
+Exception occurred while: Calling constructor Smart.Core.Infrastructure.Logging.SmartLogger().
+Exception is: TypeInitializationException - The type initializer for 'Smart.Core.Infrastructure.Logging.SmartLogger' threw an exception.
+-----------------------------------------------
+At the time of the exception, the container was:
+
+  Resolving Smart.DayCare.Services.EntityDataService`1[Smart.DayCare.Models.Person],(none)
+  Resolving parameter "logger" of constructor Smart.DayCare.Services.EntityDataService`1[[Smart.DayCare.Models.Person, Smart.DayCare.Models, Version=1.0.0.0, C...).
+2014-09-12 15:02:47.7930 Error IIS APPPOOL\SmartCare API The request channel timed out while waiting for a reply after 00:00:59.9990000. Increase the timeout value passed to the call to Request or increase the SendTimeout value on the Binding. The time allotted to this operation may have been a portion of a longer timeout. | System.TimeoutException: The request channel timed out while waiting for a reply after 00:00:59.9990000. Increase the timeout value passed to the call to Request or increase the SendTimeout value on the Binding. The time allotted to this operation may have been a portion of a longer timeout. ---> System.TimeoutException: The HTTP request to 'http://local.services.smartcare.net/PersonService.svc' has exceeded the allotted timeout of 00:01:00. The time allotted to this operation may have been a portion of a longer timeout. ---> System.Net.WebException: The operation has timed out
+   at System.Net.HttpWebRequest.GetResponse()
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   --- End of inner exception stack trace ---
+   at System.ServiceModel.Channels.HttpChannelUtilities.ProcessGetResponseWebException(WebException webException, HttpWebRequest request, HttpAbortReason abortReason)
+   at System.ServiceModel.Channels.HttpChannelFactory`1.HttpRequestChannel.HttpChannelRequest.WaitForReply(TimeSpan timeout)
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   --- End of inner exception stack trace ---
+
+Server stack trace: 
+   at System.ServiceModel.Channels.RequestChannel.Request(Message message, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannel.Call(String action, Boolean oneway, ProxyOperationRuntime operation, Object[] ins, Object[] outs, TimeSpan timeout)
+   at System.ServiceModel.Channels.ServiceChannelProxy.InvokeService(IMethodCallMessage methodCall, ProxyOperationRuntime operation)
+   at System.ServiceModel.Channels.ServiceChannelProxy.Invoke(IMessage message)
+
+Exception rethrown at [0]: 
+   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)
+   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData& msgData, Int32 type)
+   at Smart.DayCare.Contracts.Services.IDataService`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String filter, String include, String fields)
+   at Smart.DayCare.Api.Controllers.ControllerBase`1.List(Int64 tenantID, Boolean deletedItems, Int32 pageNumber, Int32 itemsPerPage, String include, String fields) in c:\Projects\Source\Repos\DayCare_Services\Smart.DayCare.Api\Controllers\ControllerBase.cs:line 153

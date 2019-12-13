@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/AgemniWebService/Service1" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/AgemniWebService/Service1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/AgemniWebService/Service1">
+      <s:element name="getExeptionReportObject">
+        <s:complexType />
+      </s:element>
+      <s:element name="getExeptionReportObjectResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getExeptionReportObjectResult" type="tns:ExceptionReport" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ExceptionReport">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="statusCode" type="tns:statusCodes" />
+          <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="errorNumber" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="xmlResult" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="EntityValidated" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EntityCreated" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EntityUpdated" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EntityIDCreated" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="isloggedIn" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="statusCodes">
+        <s:restriction base="s:string">
+          <s:enumeration value="Succeeded" />
+          <s:enumeration value="CompanyNameNotIdentified" />
+          <s:enumeration value="CouldNotFindSpecificServer" />
+          <s:enumeration value="CouldNotConnectToInternal" />
+          <s:enumeration value="InvalidUsernamePassword" />
+          <s:enumeration value="ProblemDuringPasswordValidation" />
+          <s:enumeration value="EntityAlreadyExists" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ValidateEntity">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="objecttype" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="keys" type="tns:ArrayOfAnyType" />
+            <s:element minOccurs="0" maxOccurs="1" name="values" type="tns:ArrayOfAnyType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfAnyType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="anyType" nillable="true" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ValidateEntityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ValidateEntityResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getTypes">
+        <s:complexType />
+      </s:element>
+      <s:complexType name="Types">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_Account_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_Lead_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_Invoice_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_Appointment_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_Note_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_CreditCard_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_ACH_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_Payroll_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_TechArriveDepart_Type" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Entity_Employee_Type" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Type_AC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Type_CH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Type_TC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_DIRECTV" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_DISH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_SAI" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_HUGHESNET" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Acceller" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Monitronics" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Vector" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Counterforce" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Siren" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_ADT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Brinks" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Security_Networks" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Alltel" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_ATT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Qwest_Broadband" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Cingular" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_ClearWire" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Comcast_Broadband" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Comcast_TV" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Cricket" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_DISH_Network" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_DISH_Commercial" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_DSI_Fulfillment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_DIRECTV_Commercial" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_EarthLink" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_WorldTV" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_HSP_Fulfillment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_HughesNet_Fulfillment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Nextel" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Perfect_10_Fulfillment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Qwest" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Qwest_Wireless" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_SIRIUS" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Sky_Angel" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Sprint" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_SunCom" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_TMobile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_US_DTV" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Verizon" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_Vonage" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_WildBlue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_WildBlue_Fulfillment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_SatelliteProvider_XM_Radio" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Status_Pending" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Status_Completed" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Status_Cancelled" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Status_NotScheduled" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Invoice_Status_Chargeback" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Appointment_Results_Open" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Appointment_Results_Rescheduled" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Appointment_Results_Completed" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Appointment_Results_Cancelled" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Appointment_Results_Closed" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCard_Type_Visa" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCard_Type_Mastercard" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCard_Type_AmericanExpress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCard_Type_Discover" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Accounting" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Ticket" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Complaint" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Follow_up_2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Processing" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Follow_up_3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Reconciliation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Lead_Flow" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Manual_Update" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Route" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Pre_Call" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Follow_up_1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Trouble_Call" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Callback" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note_Type_Billing" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="getTypesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getTypesResult" type="tns:Types" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountIDFromLeadID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LeadID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountIDFromLeadIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAccountIDFromLeadIDResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountIDFromPhone">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountIDFromPhoneResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAccountIDFromPhoneResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLeadIDFromPhone">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLeadIDFromPhoneResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLeadIDFromPhoneResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateEntity">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="objecttype" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="keys" type="tns:ArrayOfAnyType" />
+            <s:element minOccurs="0" maxOccurs="1" name="values" type="tns:ArrayOfAnyType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateEntityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateEntityResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UploadProviderDocument">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strProvider" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strClaimId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strAccountNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strDoc" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strEmployeeId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UploadProviderDocumentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UploadProviderDocumentResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateEntity">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="objecttype" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="keys" type="tns:ArrayOfAnyType" />
+            <s:element minOccurs="0" maxOccurs="1" name="values" type="tns:ArrayOfAnyType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateEntityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateEntityResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCampaignNameFromLeadID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LeadID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCampaignNameFromLeadIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCampaignNameFromLeadIDResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCampaignNameFromAccountID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccountID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getCampaignNameFromAccountIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCampaignNameFromAccountIDResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getProviderFromLeadID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LeadID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getProviderFromLeadIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getProviderFromLeadIDResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getProviderFromAccountID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strUsername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strCompanyName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccountID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getProviderFromAccountIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getProviderFromAccountIDResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="getExeptionReportObjectSoapIn">
+    <wsdl:part name="parameters" element="tns:getExeptionReportObject" />
+  </wsdl:message>
+  <wsdl:message name="getExeptionReportObjectSoapOut">
+    <wsdl:part name="parameters" element="tns:getExeptionReportObjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidateEntitySoapIn">
+    <wsdl:part name="parameters" element="tns:ValidateEntity" />
+  </wsdl:message>
+  <wsdl:message name="ValidateEntitySoapOut">
+    <wsdl:part name="parameters" element="tns:ValidateEntityResponse" />
+  </wsdl:message>
+  <wsdl:message name="getTypesSoapIn">
+    <wsdl:part name="parameters" element="tns:getTypes" />
+  </wsdl:message>
+  <wsdl:message name="getTypesSoapOut">
+    <wsdl:part name="parameters" element="tns:getTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountIDFromLeadIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccountIDFromLeadID" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountIDFromLeadIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccountIDFromLeadIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountIDFromPhoneSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccountIDFromPhone" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountIDFromPhoneSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccountIDFromPhoneResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLeadIDFromPhoneSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLeadIDFromPhone" />
+  </wsdl:message>
+  <wsdl:message name="GetLeadIDFromPhoneSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLeadIDFromPhoneResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateEntitySoapIn">
+    <wsdl:part name="parameters" element="tns:CreateEntity" />
+  </wsdl:message>
+  <wsdl:message name="CreateEntitySoapOut">
+    <wsdl:part name="parameters" element="tns:CreateEntityResponse" />
+  </wsdl:message>
+  <wsdl:message name="UploadProviderDocumentSoapIn">
+    <wsdl:part name="parameters" element="tns:UploadProviderDocument" />
+  </wsdl:message>
+  <wsdl:message name="UploadProviderDocumentSoapOut">
+    <wsdl:part name="parameters" element="tns:UploadProviderDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateEntitySoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateEntity" />
+  </wsdl:message>
+  <wsdl:message name="UpdateEntitySoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateEntityResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCampaignNameFromLeadIDSoapIn">
+    <wsdl:part name="parameters" element="tns:getCampaignNameFromLeadID" />
+  </wsdl:message>
+  <wsdl:message name="getCampaignNameFromLeadIDSoapOut">
+    <wsdl:part name="parameters" element="tns:getCampaignNameFromLeadIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCampaignNameFromAccountIDSoapIn">
+    <wsdl:part name="parameters" element="tns:getCampaignNameFromAccountID" />
+  </wsdl:message>
+  <wsdl:message name="getCampaignNameFromAccountIDSoapOut">
+    <wsdl:part name="parameters" element="tns:getCampaignNameFromAccountIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="getProviderFromLeadIDSoapIn">
+    <wsdl:part name="parameters" element="tns:getProviderFromLeadID" />
+  </wsdl:message>
+  <wsdl:message name="getProviderFromLeadIDSoapOut">
+    <wsdl:part name="parameters" element="tns:getProviderFromLeadIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="getProviderFromAccountIDSoapIn">
+    <wsdl:part name="parameters" element="tns:getProviderFromAccountID" />
+  </wsdl:message>
+  <wsdl:message name="getProviderFromAccountIDSoapOut">
+    <wsdl:part name="parameters" element="tns:getProviderFromAccountIDResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Service1Soap">
+    <wsdl:operation name="getExeptionReportObject">
+      <wsdl:input message="tns:getExeptionReportObjectSoapIn" />
+      <wsdl:output message="tns:getExeptionReportObjectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateEntity">
+      <wsdl:input message="tns:ValidateEntitySoapIn" />
+      <wsdl:output message="tns:ValidateEntitySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getTypes">
+      <wsdl:input message="tns:getTypesSoapIn" />
+      <wsdl:output message="tns:getTypesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountIDFromLeadID">
+      <wsdl:input message="tns:GetAccountIDFromLeadIDSoapIn" />
+      <wsdl:output message="tns:GetAccountIDFromLeadIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountIDFromPhone">
+      <wsdl:input message="tns:GetAccountIDFromPhoneSoapIn" />
+      <wsdl:output message="tns:GetAccountIDFromPhoneSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLeadIDFromPhone">
+      <wsdl:input message="tns:GetLeadIDFromPhoneSoapIn" />
+      <wsdl:output message="tns:GetLeadIDFromPhoneSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateEntity">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">For the Campaign ID or the Provider Name , pass key as (Campaignid)/(Provider) and value as the actual Campaignid value/Provider Name value. For providername the objecttype would be Invoice table</wsdl:documentation>
+      <wsdl:input message="tns:CreateEntitySoapIn" />
+      <wsdl:output message="tns:CreateEntitySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadProviderDocument">
+      <wsdl:input message="tns:UploadProviderDocumentSoapIn" />
+      <wsdl:output message="tns:UploadProviderDocumentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEntity">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">For the Campaign ID or the Provider Name , pass key as (Campaignid)/(Provider) and value as the actual Campaignid value/Provider Name value.For providername the objecttype would be Invoice table</wsdl:documentation>
+      <wsdl:input message="tns:UpdateEntitySoapIn" />
+      <wsdl:output message="tns:UpdateEntitySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCampaignNameFromLeadID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the Campaign Name by passing in the LeadID as String</wsdl:documentation>
+      <wsdl:input message="tns:getCampaignNameFromLeadIDSoapIn" />
+      <wsdl:output message="tns:getCampaignNameFromLeadIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getCampaignNameFromAccountID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the Campaign Name by passing in the AccountID as String</wsdl:documentation>
+      <wsdl:input message="tns:getCampaignNameFromAccountIDSoapIn" />
+      <wsdl:output message="tns:getCampaignNameFromAccountIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getProviderFromLeadID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the Provider Name by passing in the LeadID as String</wsdl:documentation>
+      <wsdl:input message="tns:getProviderFromLeadIDSoapIn" />
+      <wsdl:output message="tns:getProviderFromLeadIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getProviderFromAccountID">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets the Provider Name by passing in the AccountID as String</wsdl:documentation>
+      <wsdl:input message="tns:getProviderFromAccountIDSoapIn" />
+      <wsdl:output message="tns:getProviderFromAccountIDSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Service1Soap" type="tns:Service1Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getExeptionReportObject">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getExeptionReportObject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateEntity">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/ValidateEntity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTypes">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getTypes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountIDFromLeadID">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/GetAccountIDFromLeadID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountIDFromPhone">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/GetAccountIDFromPhone" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLeadIDFromPhone">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/GetLeadIDFromPhone" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEntity">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/CreateEntity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadProviderDocument">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/UploadProviderDocument" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEntity">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/UpdateEntity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCampaignNameFromLeadID">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getCampaignNameFromLeadID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCampaignNameFromAccountID">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getCampaignNameFromAccountID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProviderFromLeadID">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getProviderFromLeadID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProviderFromAccountID">
+      <soap:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getProviderFromAccountID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Service1Soap12" type="tns:Service1Soap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getExeptionReportObject">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getExeptionReportObject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateEntity">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/ValidateEntity" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTypes">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getTypes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountIDFromLeadID">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/GetAccountIDFromLeadID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountIDFromPhone">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/GetAccountIDFromPhone" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLeadIDFromPhone">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/GetLeadIDFromPhone" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEntity">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/CreateEntity" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadProviderDocument">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/UploadProviderDocument" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateEntity">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/UpdateEntity" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCampaignNameFromLeadID">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getCampaignNameFromLeadID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCampaignNameFromAccountID">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getCampaignNameFromAccountID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProviderFromLeadID">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getProviderFromLeadID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProviderFromAccountID">
+      <soap12:operation soapAction="http://tempuri.org/AgemniWebService/Service1/getProviderFromAccountID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service1">
+    <wsdl:port name="Service1Soap" binding="tns:Service1Soap">
+      <soap:address location="https://www.agemni.com/AgemniWebservices/service1.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Service1Soap12" binding="tns:Service1Soap12">
+      <soap12:address location="https://www.agemni.com/AgemniWebservices/service1.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

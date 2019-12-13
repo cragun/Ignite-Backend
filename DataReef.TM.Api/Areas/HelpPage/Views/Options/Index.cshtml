@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Options";
+}
+
+<h4 class="margin-bottom-large"><i>API interaction options:</i></h4>
+
+<p><b>Authorization token.</b> Insert a token that will be used when building interaction requests</p>
+<div class="padding-bottom-large margin-bottom-spaciouse border-bottom">
+    <div class="input-group">
+        <textarea class="form-control" rows="1" data-bind="textInput: authToken" id="AuthToken"></textarea>
+        <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" id="addNewHeaderValue" data-toggle="modal" data-target="#authToken-modal">Get auth token</button>
+        </span>
+    </div>
+</div>
+
+<p><b>Additional header values.</b> These values will be sent to the server when interaction requests are composed</p>
+<div class="form-horizontal">
+    <div class="input-group margin-bottom-large border-bottom padding-bottom-large">
+        <input class="form-control" type="text" placeholder="Header name" data-bind="textInput: newAdditionalHeaderName">
+        <span class="input-group-btn">
+            <button class="btn bt btn-primary" type="button" id="addNewHeaderValue" data-bind="click: addNewAdditionalHeader, enable: (newAdditionalHeaderName() && newAdditionalHeaderName().length > 0)">Add new header</button>
+        </span>
+    </div>
+
+    <!-- ko foreach: additionalHeaders -->
+    <div class="margin-bottom-medium">
+        <label class="col-sm-3 control-label" data-bind="text: name"></label>
+        <div class="col-sm-9 input-group">
+            <input type="text" class="form-control" placeholder="Insert header value" data-bind="textInput: value">
+            <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" id="addNewHeaderValue" data-bind="click: $parent.removeAdditioanlHeaderValue">Remove</button>
+            </span>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
+
+<div id="authToken-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Get auth token</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal" role="form">
+                    <p class="bg-danger">Code that retrieves the auth token was not implemented due to upcoming changes in the auth mechanism. Will implement a quick token retrieve mechanism after the new authentication mechanism is up and running. <br /><b>Please insert the current auth token manually</b></p>
+                    <div class="form-group">
+                        <label for="username" class="col-sm-4 control-label">User name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="username" placeholder="Username" data-bind="textInput: userName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-4 control-label">Password</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="password" placeholder="Password" data-bind="textInput: password">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bind="click: getAuthenticationToken">Get Token</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src=@Url.Content("~/Areas/HelpPage/Resources/Js/Options.js")></script>
+}

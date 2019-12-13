@@ -1,0 +1,41 @@
+﻿@using System.Web.Optimization
+@using DataReef.TM.Api.Areas.HelpPage.Models
+@model HelpPageControllerModel
+
+@{
+    ViewBag.Title = "Controller " + Model.ControllerName;
+}
+
+
+@foreach (var action in this.Model.Actions.Where(a => !a.IsPartOfCrudApi).OrderByDescending(OrderActionsByType()).ThenBy(a => a.ActionName))
+{
+    Html.RenderPartial("DisplayTemplates/ControllerActionDescription", action, new ViewDataDictionary {{"controllerName", Model.ControllerName}});
+}
+@{
+    var helpPageControllerActionDescriptionModels = this.Model.Actions.Where(a => a.IsPartOfCrudApi).OrderByDescending(OrderActionsByType()).ThenBy(a => a.ActionName);
+    if(helpPageControllerActionDescriptionModels.Any())
+    {
+    <div class="border-bottom margin-bottom-large"><h5>Crud actions:</h5></div>
+    }
+}
+
+@foreach (var action in helpPageControllerActionDescriptionModels)
+{
+    Html.RenderPartial("DisplayTemplates/ControllerActionDescription", action, new ViewDataDictionary {{"controllerName", Model.ControllerName}});
+}
+
+@{ Html.RenderPartial("DisplayTemplates/HelpPageEndpointInteractionTemplates");}
+
+@functions
+{
+    private static Func<HelpPageControllerActionDescriptionModel, int> OrderActionsByType()
+    {
+        return a => a.ActionType.Method.StartsWith("GET") ? 3 : a.ActionType.Method.StartsWith("POST") ? 2 : 1;
+    }
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/clipboard")
+    <script src=@Url.Content("~/Areas/HelpPage/Resources/Js/Endpoint.js")></script>
+    <script src=@Url.Content("~/Areas/HelpPage/Resources/Js/Modules/Endpoint-Interaction.js")></script>
+}

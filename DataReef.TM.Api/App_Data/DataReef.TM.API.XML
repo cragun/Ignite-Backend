@@ -1,0 +1,1693 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DataReef.TM.Api</name>
+    </assembly>
+    <members>
+        <member name="P:DataReef.TM.Api.Classes.Infrastructure.InMemoryMultipartFormDataStreamProvider.FormData">
+            <summary>
+            Gets a <see cref="T:System.Collections.Specialized.NameValueCollection"/> of form data passed as part of the multipart form data.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.Infrastructure.InMemoryMultipartFormDataStreamProvider.Files">
+            <summary>
+            Gets list of <see cref="T:System.Net.Http.HttpContent"/>s which contain uploaded files as in-memory representation.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Classes.Infrastructure.InMemoryMultipartFormDataStreamProvider.ExecutePostProcessingAsync">
+            <summary>
+            Read the non-file contents as form data.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Classes.Infrastructure.InMemoryMultipartFormDataStreamProvider.UnquoteToken(System.String)">
+            <summary>
+            Remove bounding quotes on a token if present
+            </summary>
+            <param name="token">Token to unquote.</param>
+            <returns>Unquoted token.</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Classes.ViewModels.IntegrationParameters">
+            <summary>
+            Class used to pass parameters to the client.
+            The client will use these parameters to replace placeholders in the Legion.LeftMenu.WebViewItems OU Setting.
+            (e.g. for the following value http://somewebsite.com?legionToken={LegionToken}, the client will replace {property} with the value)
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Classes.WarningCode">
+            <summary>
+            Warning codes, see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Classes.WarningCode.ResponseIsStale">
+            <summary>
+            Warning code 110: response is stale. MUST be included whenever the returned response is stale.
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Classes.WarningCode.RevalidationFailed">
+            <summary>
+            Warning code 111: revalidation failed. MUST be included if a cache returns a stale response because an attempt to revalidate the response failed, due to an inability to reach the server.
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Classes.WarningCode.DisconnectedOperation">
+            <summary>
+            Warning code 112: disconnected operation. SHOULD be included if the cache is intentionally disconnected from the rest of the network for a period of time.
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Classes.WarningCode.HeuristicExpiration">
+            <summary>
+            Warning code 113: heuristic expiration. MUST be included if the cache heuristically chose a freshness lifetime greater than 24 hours and the response's age is greater than 24 hours.
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Classes.WarningCode.MiscellaneousWarning">
+            <summary>
+            Warning code 199: miscellaneous warning. The warning text MAY include arbitrary information to be presented to a human user, or logged. A system receiving this warning MUST NOT take any automated action, besides presenting the warning to the user.
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Classes.WarningCode.TransformationApplied">
+            <summary>
+            Warning code 214: transformation applied. MUST be added by an intermediate cache or proxy if it applies any transformation changing the content-coding (as specified in the Content-Encoding header) or media-type (as specified in the Content-Type header) of the response, or the entity-body of the response, unless this Warning code already appears in the response.
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Classes.WarningCode.MiscellaneousPersistentWarning">
+            <summary>
+            Warning code 299: miscellaneous persistent warning. The warning text MAY include arbitrary information to be presented to a human user, or logged. A system receiving this warning MUST NOT take any automated action.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Classes.PasswordChange">
+            <summary>
+            This class is to be used to change your password.  When a password expires you cannot authenticate.  But you can call (unauthenticated) a change password
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookup">
+            <summary>
+            The class that deals with retrieving the looked up charge value.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookup.ChargeLookupList">
+            <summary>
+            The list of look up elements.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookup.LookupCharge(System.String,System.String,System.Decimal,System.Double)">
+            <summary>
+            Static method for retrieving charge value.
+            </summary>
+            <param name="market">The state.</param>
+            <param name="escalationRate">The escalation rate.</param>
+            <param name="yield">The yield value.</param>
+            <returns>Returns the charge value.</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookupItem">
+            <summary>
+            Item of the lookup list.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookupItem.UtilityID">
+            <summary>
+            The Genability name of the Utility
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookupItem.State">
+            <summary>
+            The state for which the lookup is being made.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookupItem.RequiredYield">
+            <summary>
+            The yield interval.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookupItem.EscalationRate">
+            <summary>
+            The escalation rate.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.Solar.Proposal.ChargeLookupItem.Charge">
+            <summary>
+            The charge value that is looked up.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.BlobPost.Guid">
+            <summary>
+            Is the guid of the blob you wish to save.  So that can be a Persons Guid, an Attachments Guid, or the OU's guid
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.BlobPost.Name">
+            <summary>
+            The name of the blob to be saved. If not empty, this overrides the Guid value. The Guid is kept for backwards compatibility
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.BlobPost.Content">
+            <summary>
+            Base64 Encoding of the Image
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.BlobPost.ContentType">
+            <summary>
+            The MimeType of the binary
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Classes.BlobPost.AccessRights">
+            <summary>
+            Wether the blob is private or it has public access rights
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:DataReef.TM.Api.Classes.DeltaContractResolver" -->
+        <member name="T:DataReef.TM.Api.Classes.PluralizationExtenstions">
+            <summary>
+            String extensions to pluralize using the EF pluralization services
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.GetAppointmentsForProperty(System.Int64,System.String)">
+            <summary>
+            Get method used by SmartBoard to retrieve appointments for the specified property
+            </summary>
+            <param name="propertyID"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.GetAppointmentsForOU(System.Guid,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get method used by SmartBoard to retrieve appointments all properties linked to a specified ou
+            </summary>
+            <param name="ouID">the ID for the OU </param>
+            <param name="apiKey"></param>
+            <param name="pageNumber"></param>
+            <param name="itemsPerPage"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.GetAppointmentsAssignedToSmartboardUser(System.String,System.String)">
+            <summary>
+            Get method used by SmartBoard to retrieve appointments for the specified property
+            </summary>
+            <param name="smartboardUserId"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.CreateNewAppointmentFromSmartBoard(DataReef.TM.Models.DTOs.SmartBoard.SBCreateAppointmentRequest,System.String)">
+            <summary>
+            POST method used by SmartBoard to create a new appointment for a specified property
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.EditAppointmentFromSmartBoard(DataReef.TM.Models.DTOs.SmartBoard.SBEditAppointmentRequest,System.Guid,System.String)">
+            <summary>
+            PATCH method used by SmartBoard to edit an appointment for a specified property
+            </summary>
+            <param name="request"></param>
+            <param name="appointmentID"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.RemoveAppointmentSmartBoard(System.Guid,System.String)">
+            <summary>
+            DELETE method used by SmartBoard to remove the specified appointment from the system
+            </summary>
+            <param name="appointmentID"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.SetAppointmentStatusSmartBoard(DataReef.TM.Models.DTOs.SmartBoard.SBSetAppointmentStatusRequest,System.String)">
+            <summary>
+            POST method used by SmartBoard to create a new appointment for a specified property
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.ImageryController">
+            <summary>
+            Manages HiRes Imagery Purchases and Retrieval
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ImageryController.GetExistingImage(System.Guid,System.Single,System.Single,System.Single,System.Single,System.String)">
+            <summary>
+            Gets a prevoiusly purchased image for a given property
+            </summary>
+            <param name="propertyID">property id for the purchase</param>
+            <param name="top">Lat of the top cropping box side</param>
+            <param name="left">Lon of the left cropping box side</param>
+            <param name="bottom">Lat of the bottom cropping box side</param>
+            <param name="right">Lon of the Right cropping box side</param>
+            <param name="direction">Direction of Image.  Default is Down=Orthogonal</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ImageryController.PurchaseImage(System.Guid,System.Single,System.Single,System.Single,System.Single,System.String)">
+            <summary>
+            Purchases a high res image for the current cuser and given property
+            </summary>
+            <param name="propertyID">property id for the purchase</param>
+            <param name="top">Lat of the top cropping box side</param>
+            <param name="left">Lon of the left cropping box side</param>
+            <param name="bottom">Lat of the bottom cropping box side</param>
+            <param name="right">Lon of the Right cropping box side</param>
+            <param name="direction">Direction of Image.  Default is Down=Orthogonal</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ImageryController.GetAvailableOrientations(System.Single,System.Single)">
+            <summary>
+            Returns a list of strings of the avaialable hi res image orientations for the given lat lon
+            </summary>
+            <param name="lat"></param>
+            <param name="lon"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ImageryController.MigrateHiResImagesToGeo">
+            <summary>
+            Method that will migrate existing HiResImages from this database to Geo.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.IntegrationsController.CreatePVWatts5UsageProfileAsync(DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo,System.String,DataReef.Integrations.Genability.IntegrationProvider,System.String,System.String,System.Collections.Generic.Dictionary{System.String,DataReef.TM.Models.DataViews.ValueTypePair{DataReef.TM.Models.Enums.SettingValueType,System.String}})">
+            <summary>
+            Creates a PVWatts5UsageProfile.
+            </summary>
+            <param name="property">The SolarArrayProperty.</param>
+            <param name="providerAccountId">The providerAccountId.</param>
+            <param name="provider">The integration provider.</param>
+            <param name="genabilityAppID">The genabilityAppID.</param>
+            <param name="genabilityAppKey">The genabilityAppKey.</param>
+            <returns>Returns a Task of <see cref="T:DataReef.TM.Models.DTOs.Solar.Genability.UpsertUsageProfileResponse"/> .</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PersonKPIsController">
+            <summary>
+            Managers CRUD for PersonKPI.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PersonKPIsController.GetMyKPIsForToday(System.Nullable{System.DateTime})">
+            <summary>
+            Gets all Tallies for current user starting on the specified date
+            </summary>
+            <param name="date">Date from which to show Tallies. If not specified, the current date will be used</param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PersonKPIsController.SaveScreenshot(DataReef.TM.Models.DTOs.Persons.PersonKPIScreenshotRequest,System.Nullable{System.DateTime})">
+            <summary>
+            Used for uploading in a specific location a screenshot of the tallies 
+            </summary>
+            <param name="request">Contains the image to be saved in base64 format</param>
+            <param name="date">Date for which the tallies screenshot is uploaded. If not specified, the current date will be used</param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.Properties2Controller.CreateNewPropertyFromSmartBoard(DataReef.TM.Models.DTOs.SmartBoard.SBCreatePropertyRequest,System.String)">
+            <summary>
+            POST method used by SmartBoard to create a new appointment for a specified property
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.NotificationsController">
+            <summary>
+            Managers CRUD for Properties
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.GetAllForProperty(System.Guid,System.Nullable{DataReef.TM.Models.IgniteNotificationSeenStatus},System.Int32,System.Int32)">
+            <summary>
+            Gets all notifications for user
+            </summary>
+            <param name="personID"></param>
+            <param name="status"></param>
+            <param name="pageNumber"></param>
+            <param name="itemsPerPage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.MarkAllUserNotificationsAsRead(System.Guid)">
+            <summary>
+            Mark all notifications for user as seen
+            </summary>
+            <param name="personID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.MarkNotificationAsRead(System.Guid)">
+            <summary>
+            Mark Notification as read
+            </summary>
+            <param name="notificationID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.CountUnreadForPerson(System.Guid)">
+            <summary>
+            Count unread notifications for user
+            </summary>
+            <param name="personID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.MarkNotificationAsReadFromSmartboard(System.String,System.String)">
+            <summary>
+            Dismiss Notification from smartboard
+            </summary>
+            <param name="notificationID"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PropertyNotesController">
+            <summary>
+            Managers CRUD for Properties
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetAllForProperty(System.Guid)">
+            <summary>
+            Gets all PropertyNotes found for the specified propertyID
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.QueryUsersForProperty(System.Guid,DataReef.TM.Models.DTOs.Properties.PropertyNoteUserQueryRequest)">
+            <summary>
+            Finds all users with access to the property by partial match on email and name
+            </summary>
+            <param name="propertyID"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetAllForSmartboard(System.Int64,System.String,System.Nullable{System.Int64})">
+            <summary>
+            / Gets the notes linked to the specified smartboard lead Id
+            </summary>
+            <param name="leadId"></param>
+            <param name="apiKey"></param>
+            <param name="igniteId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CreateNoteFromSmartboard(DataReef.TM.Models.DTOs.SBNoteDTO,System.String)">
+            <summary>
+            creates a new note from smartboard
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(DataReef.TM.Models.DTOs.SBNoteDTO,System.String)">
+            <summary>
+            edits a note from smartboard
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(System.Guid,System.String,System.String)">
+            <summary>
+            deletes a note by its specified id
+            </summary>
+            <param name="noteId"></param>
+            <param name="userID"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
+            <summary>
+            Managers CRUD for Properties
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertYSurveysController.GetAllForUser(System.Guid,System.Int32,System.Int32)">
+            <summary>
+            / Gets paged property surveys for the specified userID
+            </summary>
+            <param name="userID"></param>
+            <param name="pageIndex"></param>
+            <param name="itemsPerPage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertYSurveysController.GetAllForCurrentUser(System.Int32,System.Int32)">
+            <summary>
+            / Gets paged property surveys for the currently logged in user
+            </summary>
+            <param name="pageIndex"></param>
+            <param name="itemsPerPage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertYSurveysController.GetSingle(System.Guid)">
+            <summary>
+            / Gets the property survey DTO for the specified guid
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.VelocifyController">
+            <summary>
+            Manages integration with velocify
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.AccountsController">
+            <summary>
+            Managers CRUD for Person
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ExternalCredentialsController.SetCredentials(DataReef.Integrations.Core.Models.Credential,System.Guid)">
+            <summary>
+            This method is here to allow Credentials change for a given Guid
+            </summary>
+            <param name="req"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="F:DataReef.TM.Api.Controllers.FinancialEngineController.ComparisonOrder">
+            <summary>
+            Quick way of sorting results on comparison. Will probably switch to attributes on FinancePlanType elements to be cleaner.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.DevicesController.RegisterAPNToken(DataReef.TM.Api.Classes.Requests.GenericRequest{System.String})">
+            <summary>
+            Register the APN device token
+            </summary>
+            <param name="request">Generic request that contains the APN Device Token </param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.DevicesController.UnregisterAPNToken">
+            <summary>
+            Unregister current device from APN.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.DevicesController.SubscribeToPushNotification(System.String,System.Guid,DataReef.TM.Models.PushNotifications.NotificationType)">
+            <summary>
+            Subscribe to receive notifications when someting changes for given entity type.
+            </summary>
+            <param name="entity">Name of the entity (e.g. Territory, Property, OU, ... )</param>
+            <param name="entityID">The Guid of the entity to watch for changes for</param>
+            <param name="notificationType">Type of notification. Regular or Silent.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.AuthenticationController">
+            <summary>
+            Use this controller for all authentication request.. creating a user, resetting password. etc.  this controller does not require an auth header for some actions
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.Authenticate(DataReef.TM.Api.Classes.AuthenticationPost)">
+            <summary>
+            Authenticates UserName and Password and returns an Authentication Token
+            </summary>
+            <param name="post"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.AcceptInvitation(DataReef.TM.Models.DataViews.NewUser)">
+            <summary>
+            Creates a new user and returns an authentication token
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CompleteResetPassword(DataReef.TM.Api.Classes.PasswordResetCompletion)">
+            <summary>
+            Using the reset guid sent in the email, accepts a new password and completes the reset process
+            </summary>
+            <param name="completionObject"></param>
+            <returns>AuthenticationToken</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.ResetPassword(DataReef.TM.Models.PasswordReset)">
+            <summary>
+             Inititiates a PassReset that is completed via email
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.HealthController.GetHealth">
+            <summary>
+            This method fails if CORE is unreachable or fails.
+            We should avoid using this method in AWS. If something's wrong w/ CORE it will remove API instances from Load Balancer.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.HealthController.CheckHealth">
+            <summary>
+            This method checks if this API instance is healthy.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.LayersController">
+            <summary>
+            Managers CRUD for Person
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.MediaItemsController.#ctor(DataReef.TM.Contracts.Services.IMediaItemService,DataReef.Core.Logging.ILogger)">
+            <summary>
+            
+            </summary>
+            <param name="service"></param>
+            <param name="logger"></param>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.OUAssociationsController">
+            <summary>
+            Managers CRUD for OUAssociations
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUAssociationsController.#ctor(DataReef.TM.Contracts.Services.IOUAssociationService,DataReef.TM.Contracts.Services.IOUService,DataReef.Core.Logging.ILogger)">
+            <summary>
+            Default constructor
+            </summary>
+            <param name="dataService"></param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUAssociationsController.SmartList(System.Boolean,System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            This method will strip the response of any Association that is redundant because of the role
+            </summary>
+            <param name="deletedItems"></param>
+            <param name="pageNumber"></param>
+            <param name="itemsPerPage"></param>
+            <param name="include"></param>
+            <param name="exclude"></param>
+            <param name="fields"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUAssociationsController.OUsControllerCacheInvalidation">
+            <summary>
+            Invalidate cache for OUsController GET methods.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetAllOUsForUser">
+            <summary>
+            Retuns all OUs for the given user.  Does not return the OU shapes or WellKnownText. This api is meant for performanace
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetAllOUsForUserBySetting(System.String)">
+            <summary>
+            Returns all OUs that a user has access to filtered by whether they have a certain setting
+            </summary>
+            <param name="settingName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOus(System.Guid,System.String)">
+            <summary>
+            Get method used by SmartBoard to retrieve the specified OU
+            </summary>
+            <param name="ouID"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetAllAccessibleOus(System.String)">
+            <summary>
+            Get method used by SmartBoard to retrieve all accessible OUs
+            </summary>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.CheckOUValidity(DataReef.TM.Models.OU)">
+            <summary>
+            Checks whether an OU is valid: has WKT and Shapes.
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PersonSettingsController">
+            <summary>
+            Managers CRUD for PersonSetting.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PersonalConnectionsController">
+            <summary>
+            Manages PersonalConnections ( Following )
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PrescreenInstantsController">
+            <summary>
+            Allows to to create and list Batch Prescreens
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PrescreenBatchesController">
+            <summary>
+            Allows to to create and list Batch Prescreens
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PropertiesController">
+            <summary>
+            Managers CRUD for Properties
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetInquiriesForProperty(System.Guid)">
+            <summary>
+            / Gets all inquiries regardless of person, for a property
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetPropertyAttachments(System.Int64,System.String)">
+            <summary>
+            Get method used by SmartBoard to retrieve all the attachments for a property
+            </summary>
+            <param name="propertyID"></param>
+            <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.OUsControllerCacheInvalidation">
+            <summary>
+            Invalidate cache for OUsController GET methods.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.SignaturesController.SignCompleted">
+            <summary>
+            The requests should not reach this endpoint, as the client app should intercept the RightSignature redirect and close the signature screen.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ProposalsController.UpdateProposalDataJSON(System.Guid)">
+            <summary>
+            Update ProposalData.ProposalDataJSON for given proposalDataId.
+            The ProposalDataJSON will be read from the Body of the request.
+            </summary>
+            <param name="proposalDataId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ProposalsController.UploadProposalMedia(System.Guid)">
+            <summary>
+            Upload multiple images using a multi-part body
+            </summary>
+            <param name="proposalID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.ReportsController.GenerateReport(System.String,System.Guid,System.Nullable{System.DateTime})">
+            <summary>
+            Gets the data needed for the specified report
+            </summary>
+            <param name="reportName">the name of the report</param>
+            <param name="ouID">the organizational unit guid</param>
+            <param name="specifiedDay">The date of a day that will be added to the report dates along with Today, WeekToDate, MonthToDate, YearToDate</param>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.TerritoriesController">
+            <summary>
+            Managers CRUD for Territories
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.TerritoriesController.CheckTerritoryValidity(DataReef.TM.Models.Territory)">
+            <summary>
+            Checks whether a Territory is valid: has WKT and Shapes.
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.UsersController.#ctor(DataReef.TM.Contracts.Services.IDataService{DataReef.TM.Models.User},DataReef.TM.Contracts.Services.IDataService{DataReef.TM.Models.Person},DataReef.TM.Contracts.Services.IDataService{DataReef.TM.Models.Territory},DataReef.TM.Contracts.Services.IOUService)">
+            <summary>
+            
+            </summary>
+            <param name="userDataService"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.Web.HomeController.Redirect">
+            <summary>
+            This action is used as a proxy from an email messages to custom URLs intended for the mobile app to handle
+            You'll need to send the action and the parameters
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.Web.HomeController.Logs(System.String)">
+            <summary>
+            This method is used to retrieve a text file stored in App_Data
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.EntityCrudController`1">
+            <summary>
+            Entity controller that handles default CRUD operations.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.#ctor(DataReef.TM.Contracts.Services.IDataService{`0},DataReef.Core.Logging.ILogger)">
+            <summary>
+            Default <see cref="T:DataReef.TM.Api.Controllers.EntityCrudController`1" /> constructor.
+            </summary>
+            <param name="dataService">Data service of type {T}</param>
+            <param name="logger"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.List(System.Boolean,System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            The list action provides pagination and filtering for a type of entity.
+            </summary>
+            <param name="deletedItems">Include deleted items.</param>
+            <param name="pageNumber">The page number. The number of pages is dependent on the displayer <see cref="!:itemsPerPage"/> amount.</param>
+            <param name="itemsPerPage">How many items per page.</param>
+            <param name="include">Included related complex types.</param>
+            <param name="exclude">Included related complex types.</param>
+            <param name="fields">Only select a specific set of fields.</param>
+            <returns>Returns a collection of entities.</returns>
+            <exception cref="T:System.Exception">Generic exception</exception>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.Get(System.Guid,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Returns an entity.
+            </summary>
+            <param name="guid">The unique entity id.</param>
+            <param name="include">List of Navigation Properties to include in the return data.</param>
+            <param name="exclude">The explicit fields that should not get returned.</param>
+            <param name="fields">The explicit fields that should get returned.</param>
+            <returns>The entity identified by the unique id or a NotFound exception.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.GetMany(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Return a list of entities corresponding to there specific ids.
+            </summary>
+            <param name="delimitedStringOfGuids">A list of comma (,) or pipe (|) separated unique ids.</param>
+            <param name="exclude">List of Navigation Properties to include in the return data.</param>
+            <param name="include">List of Navigation Properties to include in the return data.</param>
+            <param name="fields">The explicit fields that should get returned.</param>
+            <returns>A list of entities.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.GetCollection(System.Guid,System.String,System.Int32,System.Int32,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Returns an associated collection belonging to the <typeparamref name="T"/> type.
+            </summary>
+            <param name="guid">The unique id of the entity</param>
+            <param name="collectionName">The name of the associated collection parameter.</param>
+            <param name="pageNumber">The page number. The number of pages is dependent on the displayer <see cref="!:itemsPerPage"/> amount.</param>
+            <param name="itemsPerPage">How many items per page.</param>
+            <param name="include">Included related complex types.</param>
+            <param name="exclude">Included related complex types.</param>
+            <param name="fields">Only select a specific set of fields.</param>
+            <returns>A list of objects corresponding to the collection.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.GetDeletedIDs(DataReef.TM.Api.Classes.Requests.IDsListWrapperRequest)">
+            <summary>
+            Returns deleted entities IDs.
+            </summary>
+            <param name="request">The request oject containing the IDs list from which to filter the deleted ones.</param>
+            <returns>The collection of IDs for the deleted entities.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.Post(`0)">
+            <summary>
+            The post method adds a new entity of type T.
+            </summary>
+            <param name="item">The item.</param>
+            <returns>The persisted item and OK if the operation is successful. Returns InternalServerError if the operation has failed or BadRequest if the request is faulty.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.PostMany(System.Collections.Generic.List{`0})">
+            <summary>
+            The post method adds a list of new entity of type T.
+            </summary>
+            <param name="items">The items.</param>
+            <returns>The persisted items and OK if the operation is successful. Returns InternalServerError if the operation has failed or BadRequest if the request is faulty.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.Delete(`0)">
+            <summary>
+            Delete a entity.
+            </summary>
+            <param name="item">The object to delete.</param>
+            <returns>Returns Accepted if the operation is successful or InternalServerError if the object could not be deleted or BadRequest if the request is faulty.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.DeleteByGuid(System.Guid)">
+            <summary>
+            Delete a entity.
+            </summary>
+            <param name="guid">The unique id of the object to delete.</param>
+            <returns>Returns Accepted if the operation is successful or InternalServerError if the object could not be deleted or BadRequest if the request is faulty.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.DeleteMany(DataReef.TM.Api.Classes.Requests.IDsListWrapperRequest)">
+            <summary>
+            Using POST because RestKit won't allow DELETE with body
+            </summary>
+            <param name="req">Because of RestKit (who cannot send a plain array) we need to wrap the list in an object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.Put(`0)">
+            <summary>
+            Update a existing entity by overwriting the data.
+            </summary>
+            <param name="item">The already persisted item to be overwritten.</param>
+            <returns>Returns the updated entity and OK if success. Returns InternalServerError if the operation has failed or BadRequest if the request is faulty.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.Patch(System.Web.Http.OData.Delta{`0})">
+            <summary>
+            Performs a partial update of the entity.
+            </summary>
+            <param name="item">The entity cantoning just the modified data.</param>
+            <returns>Returns the updated entity and OK if success. Returns InternalServerError if the operation has failed or BadRequest if the request is faulty.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.ClearProperty(System.Object,System.Object[])">
+            <summary>
+            Clear references that point to the specific objects.
+            </summary>
+            <param name="entity">The object to have its references cleared</param>
+            <param name="objects">Objects to clear</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.ClearProperty(System.Object,System.String[])">
+            <summary>
+            Remove properties from the specific object. Nullable become null. Non nullable become default.
+            </summary>
+            <param name="entity">The object to have its properties cleared</param>
+            <param name="propertyNames">Properties to clear</param>
+        </member>
+        <member name="T:DataReef.TM.Api.Controllers.PeopleController">
+            <summary>
+            Managers CRUD for Person
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PeopleController.Reactivate(System.Guid)">
+            <summary>
+            Method used to undelete a person, w/ associated User and Credential
+            This method will also send an email letting the person know that the account has been reactivated
+            </summary>
+            <param name="personID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PeopleController.OUsControllerCacheInvalidation">
+            <summary>
+            Invalidate cache for OUsController GET methods.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.HelpPageConfig">
+            <summary>
+            Use this class to customize the Help Page.
+            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> to supply the documentation
+            or you can provide the samples for the requests/responses.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Controllers.ChangesetController">
+            <summary>
+            The controller that will handle version updates
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.ChangesetController.Index">
+            <summary>
+            Action that returns application changeset details
+            </summary>
+            <returns>The <see cref="T:System.Web.Mvc.ActionResult"/> for the changeset page</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Controllers.FeedbackController">
+            <summary>
+            The controller that will handle the API feedback
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.FeedbackController.Index">
+            <summary>
+            Action that returns help API feedback page
+            </summary>
+            <returns>The <see cref="T:System.Web.Mvc.ActionResult"/> for the feedback page</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController">
+            <summary>
+            The controller that will handle requests for the help page
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController.#ctor(DataReef.TM.Api.Areas.HelpPage.Services.IApiObjectSampleGeneratorService,DataReef.TM.Api.Areas.HelpPage.Services.IApiModelDescriptionGenerator)">
+            <summary>
+            Actual constructor
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController.Configuration">
+            <summary>
+            HttpConfiguration
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController.Index">
+            <summary>
+            Basic controller action that returns data for the main index page
+            </summary>
+            <returns>The <see cref="T:System.Web.Mvc.ActionResult"/> for the index page</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController.Controller(System.String)">
+            <summary>
+            Retrieve information about a specific controller
+            </summary>
+            <param name="controllerName">The name of the controller</param>
+            <returns>The <see cref="T:System.Web.Mvc.ActionResult"/> for the controller description page</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController.ResourceModel(System.String)">
+            <summary>
+            Retrieve information about a entity type
+            </summary>
+            <param name="modelName">The name of the model</param>
+            <returns>The <see cref="T:System.Web.Mvc.ActionResult"/> containing the model description</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController.ActionInteraction(System.String)">
+            <summary>
+            Retrieve information about a specific controller action
+            </summary>
+            <param name="actionIdentifier">The action identifier composed of: HttpRequestType-ControllerName-ActionName</param>
+            <returns>The <see cref="T:System.Web.Mvc.JsonResult"/> corresponding to the controller action</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Controllers.HelpController.ApiDescriptionDashboard">
+            <summary>
+            Retrieve information about all the controllers and models the API exposes
+            </summary>
+            <returns>The <see cref="T:System.Web.Mvc.JsonResult"/> containing the full API description</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Extensions.PathExtensions">
+            <summary>
+            Simple set of path/url/uri extensions
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Extensions.PathExtensions.ToAbsoluteUrl(System.String)">
+            <summary>
+            Converts the provided app-relative path into an absolute Url containing the 
+            full host name
+            </summary>
+            <param name="relativeUrl">App-Relative path</param>
+            <returns>Provided relativeUrl parameter as fully qualified Url</returns>
+            <example>~/path/to/foo to http://www.web.com/path/to/foo</example>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleObjects(System.Web.Http.HttpConfiguration,System.Collections.Generic.IDictionary{System.Type,System.Object})">
+            <summary>
+            Sets the objects that will be used by the formatters to produce sample requests/responses.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleObjects">The sample objects.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type and action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample request directly for the specified media type and action with parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type of the action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample response directly for the specified media type of the action with specific parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForMediaType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Sets the sample directly for all actions with the specified media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Sets the sample directly for all actions with the specified type and media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The parameter type or return type of an action.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <returns>The help page sample generator.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.SetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration,DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator)">
+            <summary>
+            Sets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleGenerator">The help page sample generator.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.GetModelDescriptionGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the model description generator.
+            </summary>
+            <param name="config">The configuration.</param>
+            <returns>The <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.IApiObjectSampleGeneratorService"/></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.HelpPageConfigurationExtensions.LoadHelpPageControllerActionModel(System.Web.Http.HttpConfiguration,DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel,System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the model that represents an API displayed on the help page. The model is initialized on the first call and cached for subsequent calls.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="model">The model <see cref="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel"/> to be enriched</param>
+            <param name="apiDescription">The API description</param>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription">
+            <summary>
+            Describes a type model.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelNameAttribute">
+            <summary>
+            Use this attribute to change the name of the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription"/> generated for a type.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.ApiModelDescriptionGenerator">
+            <summary>
+            Generates model descriptions for given types.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.IApiModelDescriptionGenerator">
+            <summary>
+            An interface that provides description for API models
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.IApiModelDescriptionGenerator.GetOrCreateModelDescription(System.Type)">
+            <summary>
+            Provides a solution for retrieving the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription" /> for an API model
+            </summary>
+            <param name="modelType">The type of the model</param>
+            <returns>The <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription"/> for the specific <see cref="!:modelType"/></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.IApiModelDescriptionGenerator.GetOrCreateModelDescription(System.String)">
+            <summary>
+            Provides a solution for retrieving the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription" /> for an API model
+            </summary>
+            <param name="modelName">The name of the model</param>
+            <returns>The <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription"/> for the specific <see cref="!:modelName"/></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.IApiModelDescriptionGenerator.GetAllModelDescriptions">
+            <summary>
+            Retrieve get all API registered model descriptions
+            </summary>
+            <returns>A list of models</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator">
+            <summary>
+            This class will generate the samples for the help page.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.#ctor(DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.IObjectGenerator[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator"/> class.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.ObjectGenerators">
+            <summary>
+            An array of object generators
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.ActualHttpMessageTypes">
+            <summary>
+            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.ActionSamples">
+            <summary>
+            Gets the objects that are used directly as samples for certain actions.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.SampleObjects">
+            <summary>
+            Gets the objects that are serialized as samples by the supported formatters.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.SampleDirection)">
+            <summary>
+            Gets the request or response body samples.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.SampleDirection)">
+            <summary>
+            Search for samples that are provided directly through <see cref="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.ActionSamples"/>.
+            </summary>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="type">The CLR type.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The sample that matches the parameters.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.GetSampleObject(System.Type)">
+            <summary>
+            Gets the sample object that will be serialized by the formatters. 
+            First, it will look at the <see cref="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create
+            one using <see cref="!:DefaultSampleObjectFactory"/> (which wraps an <see cref="N:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator"/>) and other
+            factories in <see cref="!:SampleObjectFactories"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The sample object.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.ResolveHttpRequestMessageType(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Resolves the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The type.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
+            <summary>
+            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
+            <param name="formatters">The formatters.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Writes the sample object using formatter.
+            </summary>
+            <param name="formatter">The formatter.</param>
+            <param name="value">The value.</param>
+            <param name="type">The type.</param>
+            <param name="mediaType">Type of the media.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey">
+            <summary>
+            This is used to identify the place where the sample should be applied.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Creates a new <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey"/> based on media type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Creates a new <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey"/> based on media type and CLR type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The CLR type.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.#ctor(DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey"/> based on <see cref="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="sampleDirection">The <see cref="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey"/> based on media type, <see cref="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The <see cref="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.ControllerName">
+            <summary>
+            Gets the name of the controller.
+            </summary>
+            <value>
+            The name of the controller.
+            </value>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.ActionName">
+            <summary>
+            Gets the name of the action.
+            </summary>
+            <value>
+            The name of the action.
+            </value>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.MediaType">
+            <summary>
+            Gets the media type.
+            </summary>
+            <value>
+            The media type.
+            </value>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.ParameterNames">
+            <summary>
+            Gets the parameter names.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.SampleDirection">
+            <summary>
+            Gets the <see cref="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.HelpPageSampleKey.SampleDirection"/>.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ImageSample">
+            <summary>
+            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ImageSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ImageSample"/> class.
+            </summary>
+            <param name="src">The URL of an image.</param>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.InvalidSample">
+            <summary>
+            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.PredefinedObjectBuilders.BasePredefinedObjectBuilder`1.InternalBuild">
+            <summary>
+            The base build method that returns an object of type <typeparamref name="T"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.IObjectGenerator">
+            <summary>
+            Service that generates objects with sample data
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.IObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object with data.
+            </summary>
+            <param name="type">The type of the object</param>
+            <returns>An initialized object, null if the object could not be materialized</returns>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.IObjectGenerator.Priority">
+            <summary>
+            The generator priotity, smaller = higher priority
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.DefaultObjectGenerator">
+            <summary>
+            This class will create an object of a given type and populate it with sample data.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.DefaultObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
+            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
+            Complex types: POCO types.
+            Nullables: <see cref="T:System.Nullable`1"/>.
+            Arrays: arrays of simple types or complex types.
+            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>An object of the given type.</returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.IPredefinedObjectBuilder">
+            <summary>
+            Predefined object builder that returns a custom materialized instance of an object
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.ObjectGenerator.PredefinedObjectGenerator">
+            <summary>
+            An service that looks for predefined object generators and retrieves initialized objects based on that
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.SampleDirection">
+            <summary>
+            Indicates whether the sample is used for request or response
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.SampleGeneration.TextSample">
+            <summary>
+            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.IApiObjectSampleGeneratorService">
+            <summary>
+            Generates data required to communicate using an endpoint
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.IApiObjectSampleGeneratorService.GenerateResponseSampleForApi(System.Web.Http.Description.ApiDescription,System.Collections.Generic.ICollection{System.String},System.String)">
+            <summary>
+            Generates a sample response
+            </summary>
+            <param name="apiDescription">The <see cref="T:System.Web.Http.Description.ApiDescription"/> </param>
+            <param name="sampleGenerationErrors"></param>
+            <param name="mediaType">The output media type</param>
+            <returns>An object of type corresponding to the requested <paramref name="mediaType"/> based on <paramref name="apiDescription"/></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.IApiObjectSampleGeneratorService.GenerateRequestSampleForApi(System.Web.Http.Description.ApiDescription,System.Collections.Generic.ICollection{System.String},System.String)">
+            <summary>
+            Generates a sample response
+            </summary>
+            <param name="apiDescription">The <see cref="T:System.Web.Http.Description.ApiDescription"/> </param>
+            <param name="sampleGenerationErrors"></param>
+            <param name="mediaType"></param>
+            <returns>An object of type corresponding to the requested <paramref name="mediaType"/> based on <paramref name="apiDescription"/></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Services.XmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Services.XmlDocumentationProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.XmlDocumentationProvider"/> class.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel">
+            <summary>
+            Model describing an endpoint action
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.ActionName">
+            <summary>
+            The name of an endpoint action
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.ActionDescription">
+            <summary>
+            The description of an endpoint action
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.ActionUri">
+            <summary>
+            The Uri of an endpoint action with parameters
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.IsPartOfCrudApi">
+            <summary>
+            The action is part of the default CRUD API
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.AlternativeUris">
+            <summary>
+            Alternative Uri's of an endpoint action with parameters. Most of them should be longer and unfriendlier
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.ActionType">
+            <summary>
+            The type of action
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.UriParameters">
+            <summary>
+            Gets or sets the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ParameterDescription"/> collection that describes the URI parameters for the API.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.RequestDocumentation">
+            <summary>
+            Gets or sets the documentation for the request.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.RequestModelDescription">
+            <summary>
+            Gets or sets the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription"/> that describes the request body.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.RequestBodyParameters">
+            <summary>
+            Gets the request body parameter descriptions.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.ResourceDescription">
+            <summary>
+            Gets or sets the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ModelDescription"/> that describes the resource.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel.ResourceProperties">
+            <summary>
+            Gets the resource property descriptions.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel">
+            <summary>
+            This model denotes resources necessary to communicate with an endpoint action (ex: model samples, parameters samples, ...)
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel.ActionUrl">
+            <summary>
+            The full path to the action URL with parameters like {key} included
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel.HttpActionVerb">
+            <summary>
+            The HTTP verge used to call the action
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel.UriParameters">
+            <summary>
+            Gets or sets the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ParameterDescription"/> collection that describes the URI parameters for the API.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel.SampleRequests">
+            <summary>
+            Sample request object
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel.SampleResponses">
+            <summary>
+            Sample response object
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionInteractionModel.SampleGenerationErrors">
+            <summary>
+            Errors encounters when generating sample
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerModel">
+            <summary>
+            Model describing basic endpoint information 
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerModel.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerModel.ControllerName">
+            <summary>
+            The name of the endpoint
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerModel.Actions">
+            <summary>
+            List of actions that the endpoint can facilitate
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiDescriptionModel">
+            <summary>
+            The model for the main (dashboard) API help page
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiDescriptionModel.ResouceModels">
+            <summary>
+            Gets or sets the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceModel" /> collection that describes the available endpoints and models/>
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiDescriptionModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiDescriptionModel"/> class.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceModel">
+            <summary>
+            The model describing basic endpoint information
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceModel.Name">
+            <summary>
+            The name of the endpoint
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceModel.Description">
+            <summary>
+            Simple controller description
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceModel.Url">
+            <summary>
+            API URL 
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceModel.Type">
+            <summary>
+            The type of resource.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceType">
+            <summary>
+            Enum describing types of API resources
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceType.None">
+            <summary>
+            Not used
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceType.Controller">
+            <summary>
+            A controller
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceType.ComplexType">
+            <summary>
+            A complex object type
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Api.Areas.HelpPage.Models.HelpPageApiResourceType.Enum">
+            <summary>
+            A enum type
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Areas.HelpPage.Views.Help.CommonFunctions">
+            <summary>
+            Common functions used to render view content
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.Bootstrap.GenericDirectRouteProvider">
+            <summary>
+            A custom direct route provider that enables inheritance of routes(actions) from base controller
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Bootstrap.GenericControllerTypeResolver.BuildGenericControllerMappings(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+                Create a dictionary of model types and their generic controller
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:DataReef.TM.Api.Bootstrap.GenericRoutePrefixAttribute.Prefix">
+            <summary>
+            Gets the route prefix.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Api.Bootstrap.GenericRouteAttribute.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:DataReef.TM.Api.Bootstrap.GenericRouteAttribute.Order">
+            <inheritdoc />
+        </member>
+        <member name="P:DataReef.TM.Api.Bootstrap.GenericRouteAttribute.Template">
+            <inheritdoc />
+        </member>
+        <member name="M:DataReef.TM.Api.Bootstrap.GenericControllerSelector.#ctor(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},System.Web.Http.HttpConfiguration)">
+            <summary>
+            Public constructor
+            </summary>
+            <param name="assemblies"></param>
+            <param name="config"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Bootstrap.GenericControllerSelector.GetControllerMapping">
+            <summary>
+            Provide controller mappings. Also used by APIExporer.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Bootstrap.GenericControllerSelector.BuildGenericControllerMappings">
+            <summary>
+            Create a dictionary of model types and their generic controller
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Security.ClaimsTransformationHandler">
+            <summary>
+            Extracts the information from the request headers and adds them to the current user claims
+            claims are set by the Authorization token in the tokenValidationHandler... and here from headers (in addition to token)
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Security.VersionValidationHandler.GetVersionCache(DataReef.TM.Contracts.Services.IAppSettingService)">
+            <summary>
+            Caching Minimum Version for 5 minutes.
+            Otherwise every API request will hit the database first to get the Minimum Version
+            </summary>
+            <param name="appSettingService"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Api.Common.JsonNetResult">
+            <summary>
+            Custom implementation of <see cref="T:System.Web.Mvc.JsonResult"/> that uses Newtonsoft serialize
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Api.WebApiApplication">
+            <summary>
+            HttpApplication custom implementation. The entry point for the API startup
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.API.Controllers.ApplicationController.GetIpadApplicationBuild">
+            <summary>
+            Get the iPad version
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.API.Controllers.ApplicationController.SetIpadApplicationBuild(System.String)">
+            <summary>
+            Set the iPad version 
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.API.Controllers.BlobsController.SaveBytes(DataReef.TM.Api.Classes.BlobPost)">
+            <summary>
+            Saves an image blob to the blob cloud.  The Guid is the guid of the associated Attachment object. Content is the Base64 encoded image
+            </summary>
+            <param name="post"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.API.Controllers.BlobsController.GetBytes(System.Guid)">
+            <summary>
+            This method returns the binary content of the blob
+            </summary>
+            <param name="guid"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlServerTypes.Utilities">
+            <summary>
+            Utility methods related to CLR Types for SQL Server 
+            </summary>
+        </member>
+        <member name="M:SqlServerTypes.Utilities.LoadNativeAssemblies(System.String)">
+            <summary>
+            Loads the required native assemblies for the current architecture (x86 or x64)
+            </summary>
+            <param name="rootApplicationPath">
+            Root path of the current application. Use Server.MapPath(".") for ASP.NET applications
+            and AppDomain.CurrentDomain.BaseDirectory for desktop applications.
+            </param>
+        </member>
+    </members>
+</doc>

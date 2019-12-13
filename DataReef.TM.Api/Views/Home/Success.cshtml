@@ -1,0 +1,14 @@
+﻿@model string
+@{
+    Layout = "~/Views/Shared/_Layout-Legion.cshtml";
+    ViewBag.Title = "Ignite - Registration completed";
+}
+
+<div class="loginscreen-wrapper">
+    <div class="loginscreen registration-complete">
+        <div class="header-area">
+            <p>@(!string.IsNullOrEmpty(Model) ? Model : "Registration completed")</p>
+            <p>You're all set!</p>
+        </div>
+    </div>
+</div>

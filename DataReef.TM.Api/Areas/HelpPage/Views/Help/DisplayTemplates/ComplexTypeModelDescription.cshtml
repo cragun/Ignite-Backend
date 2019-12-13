@@ -1,0 +1,9 @@
+@model DataReef.TM.Api.Areas.HelpPage.Services.ModelDescriptions.ComplexTypeModelDescription
+<table class="table table-bordered table-hover">
+    <thead class="bg-grayed">
+        <tr><th>Name</th><th>Description</th><th>Type</th><th>Additional information</th></tr>
+    </thead>
+    <tbody>
+        @Html.DisplayFor(m => m.Properties, "Parameters")
+    </tbody>
+</table>

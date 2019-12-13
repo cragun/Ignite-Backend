@@ -1,0 +1,2194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D8C35AC6-25A6-46A8-9A6F-5DB8442EAD21}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataReef.TM.DataAccess</RootNamespace>
+    <AssemblyName>DataReef.TM.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <OutputPath>bin\QA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+    <OutputPath>bin\Stage\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\!Libs\EntityFramework.Extended.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Database\Configurations\SpruceQuoteRequestFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\LayerFolderFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\FluentEntityConfiguration.cs" />
+    <Compile Include="Database\Configurations\IFluentEntityConfiguration.cs" />
+    <Compile Include="Database\Configurations\OUBaseFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\ZipAreaFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\PersonFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\PropertyFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\SolarSystemFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\ProposalFluentConfiguration.cs" />
+    <Compile Include="Database\Configurations\TerritoryFluentConfiguration.cs" />
+    <Compile Include="Database\DataContext.cs" />
+    <Compile Include="Database\EntityFrameworkConfiguration.cs" />
+    <Compile Include="Database\Interceptors\AuthorizationQueryVisitor.cs" />
+    <Compile Include="Database\Interceptors\AuthorizationInterceptor.cs" />
+    <Compile Include="Exceptions\InterceptorException.cs" />
+    <Compile Include="Extensions\MigrationExtensions.cs" />
+    <Compile Include="Migrations\201508221205526_First Migration.cs" />
+    <Compile Include="Migrations\201508221205526_First Migration.Designer.cs">
+      <DependentUpon>201508221205526_First Migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508261340523_Removed Field.Value StringLength.cs" />
+    <Compile Include="Migrations\201508261340523_Removed Field.Value StringLength.Designer.cs">
+      <DependentUpon>201508261340523_Removed Field.Value StringLength.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509031149308_Add Survey72 model..cs" />
+    <Compile Include="Migrations\201509031149308_Add Survey72 model..Designer.cs">
+      <DependentUpon>201509031149308_Add Survey72 model..cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509160717131_Genability changes.cs" />
+    <Compile Include="Migrations\201509160717131_Genability changes.Designer.cs">
+      <DependentUpon>201509160717131_Genability changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509250756492_PropertyUsageProfileInfo.cs" />
+    <Compile Include="Migrations\201509250756492_PropertyUsageProfileInfo.Designer.cs">
+      <DependentUpon>201509250756492_PropertyUsageProfileInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510011430179_AddedElectricityAndSolarProfilesToProperty.cs" />
+    <Compile Include="Migrations\201510011430179_AddedElectricityAndSolarProfilesToProperty.Designer.cs">
+      <DependentUpon>201510011430179_AddedElectricityAndSolarProfilesToProperty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510031022058_AddShapesVersioning.cs" />
+    <Compile Include="Migrations\201510031022058_AddShapesVersioning.Designer.cs">
+      <DependentUpon>201510031022058_AddShapesVersioning.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510060852191_MovedUsageProfileIDsToProposal.cs" />
+    <Compile Include="Migrations\201510060852191_MovedUsageProfileIDsToProposal.Designer.cs">
+      <DependentUpon>201510060852191_MovedUsageProfileIDsToProposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510061244584_AddedGenabilityInfoToSolarSystem.cs" />
+    <Compile Include="Migrations\201510061244584_AddedGenabilityInfoToSolarSystem.Designer.cs">
+      <DependentUpon>201510061244584_AddedGenabilityInfoToSolarSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510211408249_AddAdvancedFinancePlanFields.cs" />
+    <Compile Include="Migrations\201510211408249_AddAdvancedFinancePlanFields.Designer.cs">
+      <DependentUpon>201510211408249_AddAdvancedFinancePlanFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510231111375_RemovedAdvancedFinancialRequestAndResponse.cs" />
+    <Compile Include="Migrations\201510231111375_RemovedAdvancedFinancialRequestAndResponse.Designer.cs">
+      <DependentUpon>201510231111375_RemovedAdvancedFinancialRequestAndResponse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510281534421_RemovingUnnecessaryFinancePlanFields.cs" />
+    <Compile Include="Migrations\201510281534421_RemovingUnnecessaryFinancePlanFields.Designer.cs">
+      <DependentUpon>201510281534421_RemovingUnnecessaryFinancePlanFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510301405264_AddedFieldsToSolarSystem.cs" />
+    <Compile Include="Migrations\201510301405264_AddedFieldsToSolarSystem.Designer.cs">
+      <DependentUpon>201510301405264_AddedFieldsToSolarSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510301455584_AddEscalationRateToSolarSystem.cs" />
+    <Compile Include="Migrations\201510301455584_AddEscalationRateToSolarSystem.Designer.cs">
+      <DependentUpon>201510301455584_AddEscalationRateToSolarSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511110951546_InstantPrescreen.cs" />
+    <Compile Include="Migrations\201511110951546_InstantPrescreen.Designer.cs">
+      <DependentUpon>201511110951546_InstantPrescreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511130808036_PropertyPrescreens.cs" />
+    <Compile Include="Migrations\201511130808036_PropertyPrescreens.Designer.cs">
+      <DependentUpon>201511130808036_PropertyPrescreens.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511131600187_PropertyRelationshipsSanity.cs" />
+    <Compile Include="Migrations\201511131600187_PropertyRelationshipsSanity.Designer.cs">
+      <DependentUpon>201511131600187_PropertyRelationshipsSanity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511261033431_LoanPricePerWattPricingOption.cs" />
+    <Compile Include="Migrations\201511261033431_LoanPricePerWattPricingOption.Designer.cs">
+      <DependentUpon>201511261033431_LoanPricePerWattPricingOption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511261140481_DecreasePersonEmailAddressTo900MaxIndexSize.cs" />
+    <Compile Include="Migrations\201511261140481_DecreasePersonEmailAddressTo900MaxIndexSize.Designer.cs">
+      <DependentUpon>201511261140481_DecreasePersonEmailAddressTo900MaxIndexSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511271701265_DecreasePersonEmailAddressTo450MaxIndexSize.cs" />
+    <Compile Include="Migrations\201511271701265_DecreasePersonEmailAddressTo450MaxIndexSize.Designer.cs">
+      <DependentUpon>201511271701265_DecreasePersonEmailAddressTo450MaxIndexSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512011420563_Change CurrentLocation.Accuracy from int to float.cs" />
+    <Compile Include="Migrations\201512011420563_Change CurrentLocation.Accuracy from int to float.Designer.cs">
+      <DependentUpon>201512011420563_Change CurrentLocation.Accuracy from int to float.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512150150202_LoanContractSign.cs" />
+    <Compile Include="Migrations\201512150150202_LoanContractSign.Designer.cs">
+      <DependentUpon>201512150150202_LoanContractSign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512150254165_LoanContractSign1.cs" />
+    <Compile Include="Migrations\201512150254165_LoanContractSign1.Designer.cs">
+      <DependentUpon>201512150254165_LoanContractSign1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512151400071_RemoveProposalContractId.cs" />
+    <Compile Include="Migrations\201512151400071_RemoveProposalContractId.Designer.cs">
+      <DependentUpon>201512151400071_RemoveProposalContractId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512151354583_AddedRootOrganizationNameToOU.cs" />
+    <Compile Include="Migrations\201512151354583_AddedRootOrganizationNameToOU.Designer.cs">
+      <DependentUpon>201512151354583_AddedRootOrganizationNameToOU.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512152004078_Merge.cs" />
+    <Compile Include="Migrations\201512152004078_Merge.Designer.cs">
+      <DependentUpon>201512152004078_Merge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512161418543_MakeDateSignedNullable.cs" />
+    <Compile Include="Migrations\201512161418543_MakeDateSignedNullable.Designer.cs">
+      <DependentUpon>201512161418543_MakeDateSignedNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512302018324_FixFinancePlanSolarSystemRelationship.cs" />
+    <Compile Include="Migrations\201512302018324_FixFinancePlanSolarSystemRelationship.Designer.cs">
+      <DependentUpon>201512302018324_FixFinancePlanSolarSystemRelationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601041354266_PersonSettingsReplaceSettingNameWithName.cs" />
+    <Compile Include="Migrations\201601041354266_PersonSettingsReplaceSettingNameWithName.Designer.cs">
+      <DependentUpon>201601041354266_PersonSettingsReplaceSettingNameWithName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601042228599_ProposalContractURLs.cs" />
+    <Compile Include="Migrations\201601042228599_ProposalContractURLs.Designer.cs">
+      <DependentUpon>201601042228599_ProposalContractURLs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601121320383_OUTokenPrice.cs" />
+    <Compile Include="Migrations\201601121320383_OUTokenPrice.Designer.cs">
+      <DependentUpon>201601121320383_OUTokenPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601130939453_PrescreenZipAreas.cs" />
+    <Compile Include="Migrations\201601130939453_PrescreenZipAreas.Designer.cs">
+      <DependentUpon>201601130939453_PrescreenZipAreas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601130950583_PrescreenZipAreas1.cs" />
+    <Compile Include="Migrations\201601130950583_PrescreenZipAreas1.Designer.cs">
+      <DependentUpon>201601130950583_PrescreenZipAreas1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601131117451_PrescreenZipAreas2.cs" />
+    <Compile Include="Migrations\201601131117451_PrescreenZipAreas2.Designer.cs">
+      <DependentUpon>201601131117451_PrescreenZipAreas2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601131134544_PrescreenZipAreas3.cs" />
+    <Compile Include="Migrations\201601131134544_PrescreenZipAreas3.Designer.cs">
+      <DependentUpon>201601131134544_PrescreenZipAreas3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601131622419_PrescreenZipAreas4.cs" />
+    <Compile Include="Migrations\201601131622419_PrescreenZipAreas4.Designer.cs">
+      <DependentUpon>201601131622419_PrescreenZipAreas4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601131948002_PrescreenZipAreas5.cs" />
+    <Compile Include="Migrations\201601131948002_PrescreenZipAreas5.Designer.cs">
+      <DependentUpon>201601131948002_PrescreenZipAreas5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601271254250_SolarArrayFloatToDouble.cs" />
+    <Compile Include="Migrations\201601271254250_SolarArrayFloatToDouble.Designer.cs">
+      <DependentUpon>201601271254250_SolarArrayFloatToDouble.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602061154422_Adding OUCapabilities.cs" />
+    <Compile Include="Migrations\201602061154422_Adding OUCapabilities.Designer.cs">
+      <DependentUpon>201602061154422_Adding OUCapabilities.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602081441041_ActivityTypeChanges.cs" />
+    <Compile Include="Migrations\201602081441041_ActivityTypeChanges.Designer.cs">
+      <DependentUpon>201602081441041_ActivityTypeChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602081734341_MakingActivityTypeAnEnum.cs" />
+    <Compile Include="Migrations\201602081734341_MakingActivityTypeAnEnum.Designer.cs">
+      <DependentUpon>201602081734341_MakingActivityTypeAnEnum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602090925569_AddedPropertiesMosaicSECustomerID.cs" />
+    <Compile Include="Migrations\201602090925569_AddedPropertiesMosaicSECustomerID.Designer.cs">
+      <DependentUpon>201602090925569_AddedPropertiesMosaicSECustomerID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602161117138_RemoveMosaicSECustomerID.cs" />
+    <Compile Include="Migrations\201602161117138_RemoveMosaicSECustomerID.Designer.cs">
+      <DependentUpon>201602161117138_RemoveMosaicSECustomerID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602181432493_PersistPropertyLatestStatus.cs" />
+    <Compile Include="Migrations\201602181432493_PersistPropertyLatestStatus.Designer.cs">
+      <DependentUpon>201602181432493_PersistPropertyLatestStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603011625551_GenabilitySolarProviderProfileID.cs" />
+    <Compile Include="Migrations\201603011625551_GenabilitySolarProviderProfileID.Designer.cs">
+      <DependentUpon>201603011625551_GenabilitySolarProviderProfileID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603030954218_ChangedSolarSystemSlopeProperties.cs" />
+    <Compile Include="Migrations\201603030954218_ChangedSolarSystemSlopeProperties.Designer.cs">
+      <DependentUpon>201603030954218_ChangedSolarSystemSlopeProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603081133495_AddSolarSystemIsPPAPricingB.cs" />
+    <Compile Include="Migrations\201603081133495_AddSolarSystemIsPPAPricingB.Designer.cs">
+      <DependentUpon>201603081133495_AddSolarSystemIsPPAPricingB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603151314124_AddExternalCredentials.cs" />
+    <Compile Include="Migrations\201603151314124_AddExternalCredentials.Designer.cs">
+      <DependentUpon>201603151314124_AddExternalCredentials.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603151643133_AddOUIDToSolarPanelsAndInverters.cs" />
+    <Compile Include="Migrations\201603151643133_AddOUIDToSolarPanelsAndInverters.Designer.cs">
+      <DependentUpon>201603151643133_AddOUIDToSolarPanelsAndInverters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603151657183_AddInverterModelAndManufacturer.cs" />
+    <Compile Include="Migrations\201603151657183_AddInverterModelAndManufacturer.Designer.cs">
+      <DependentUpon>201603151657183_AddInverterModelAndManufacturer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603171340537_UpdatedSolarPanelAndInverter.cs" />
+    <Compile Include="Migrations\201603171340537_UpdatedSolarPanelAndInverter.Designer.cs">
+      <DependentUpon>201603171340537_UpdatedSolarPanelAndInverter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603221523462_SolarSystemChanges.cs" />
+    <Compile Include="Migrations\201603221523462_SolarSystemChanges.Designer.cs">
+      <DependentUpon>201603221523462_SolarSystemChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603231019564_LogAuthentications.cs" />
+    <Compile Include="Migrations\201603231019564_LogAuthentications.Designer.cs">
+      <DependentUpon>201603231019564_LogAuthentications.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603242013389_AuthenticationUserRelationship.cs" />
+    <Compile Include="Migrations\201603242013389_AuthenticationUserRelationship.Designer.cs">
+      <DependentUpon>201603242013389_AuthenticationUserRelationship.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603310810159_FinancePlanChanges.cs" />
+    <Compile Include="Migrations\201603310810159_FinancePlanChanges.Designer.cs">
+      <DependentUpon>201603310810159_FinancePlanChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603311114325_FinancePlanChanges1.cs" />
+    <Compile Include="Migrations\201603311114325_FinancePlanChanges1.Designer.cs">
+      <DependentUpon>201603311114325_FinancePlanChanges1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603301714387_RemoveOUMediaItems.cs" />
+    <Compile Include="Migrations\201603301714387_RemoveOUMediaItems.Designer.cs">
+      <DependentUpon>201603301714387_RemoveOUMediaItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604041654435_Merge1.cs" />
+    <Compile Include="Migrations\201604041654435_Merge1.Designer.cs">
+      <DependentUpon>201604041654435_Merge1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604051558087_SolarSystemChanges1.cs" />
+    <Compile Include="Migrations\201604051558087_SolarSystemChanges1.Designer.cs">
+      <DependentUpon>201604051558087_SolarSystemChanges1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604061230536_FieldDisplayNameAndValueAreRequired.cs" />
+    <Compile Include="Migrations\201604061230536_FieldDisplayNameAndValueAreRequired.Designer.cs">
+      <DependentUpon>201604061230536_FieldDisplayNameAndValueAreRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604082022165_AddLayerFolderAndLayerDefinition.cs" />
+    <Compile Include="Migrations\201604082022165_AddLayerFolderAndLayerDefinition.Designer.cs">
+      <DependentUpon>201604082022165_AddLayerFolderAndLayerDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604111946079_IncreasePropertyAttributeValue.cs" />
+    <Compile Include="Migrations\201604111946079_IncreasePropertyAttributeValue.Designer.cs">
+      <DependentUpon>201604111946079_IncreasePropertyAttributeValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604121140363_SolarSystemChanges2.cs" />
+    <Compile Include="Migrations\201604121140363_SolarSystemChanges2.Designer.cs">
+      <DependentUpon>201604121140363_SolarSystemChanges2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604151211586_HardCreditCheck.cs" />
+    <Compile Include="Migrations\201604151211586_HardCreditCheck.Designer.cs">
+      <DependentUpon>201604151211586_HardCreditCheck.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604181447169_HardCreditCheck1.cs" />
+    <Compile Include="Migrations\201604181447169_HardCreditCheck1.Designer.cs">
+      <DependentUpon>201604181447169_HardCreditCheck1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604250746494_Reverted_Removing_OUMediaItems.cs" />
+    <Compile Include="Migrations\201604250746494_Reverted_Removing_OUMediaItems.Designer.cs">
+      <DependentUpon>201604250746494_Reverted_Removing_OUMediaItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604261128483_SolciusPrescreen.cs" />
+    <Compile Include="Migrations\201604261128483_SolciusPrescreen.Designer.cs">
+      <DependentUpon>201604261128483_SolciusPrescreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604290851025_Merge2.cs" />
+    <Compile Include="Migrations\201604290851025_Merge2.Designer.cs">
+      <DependentUpon>201604290851025_Merge2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605100735499_GetOUTreeTerritories.cs" />
+    <Compile Include="Migrations\201605100735499_GetOUTreeTerritories.Designer.cs">
+      <DependentUpon>201605100735499_GetOUTreeTerritories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605131011420_MadeSpruceFlagsNullable.cs" />
+    <Compile Include="Migrations\201605131011420_MadeSpruceFlagsNullable.Designer.cs">
+      <DependentUpon>201605131011420_MadeSpruceFlagsNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605161034063_AddedCompoundPropertyConstraint.cs" />
+    <Compile Include="Migrations\201605161034063_AddedCompoundPropertyConstraint.Designer.cs">
+      <DependentUpon>201605161034063_AddedCompoundPropertyConstraint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605241438094_Adding_Rank_to_SolarPanels_and_Inverters.cs" />
+    <Compile Include="Migrations\201605241438094_Adding_Rank_to_SolarPanels_and_Inverters.Designer.cs">
+      <DependentUpon>201605241438094_Adding_Rank_to_SolarPanels_and_Inverters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606031130144_Added_ProposalDocuments.cs" />
+    <Compile Include="Migrations\201606031130144_Added_ProposalDocuments.Designer.cs">
+      <DependentUpon>201606031130144_Added_ProposalDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606060730087_Remove_contract_properties_from_Proposal.cs" />
+    <Compile Include="Migrations\201606060730087_Remove_contract_properties_from_Proposal.Designer.cs">
+      <DependentUpon>201606060730087_Remove_contract_properties_from_Proposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606061229546_ProposalDocumentsChanges.cs" />
+    <Compile Include="Migrations\201606061229546_ProposalDocumentsChanges.Designer.cs">
+      <DependentUpon>201606061229546_ProposalDocumentsChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606070701087_InvertersSystemSizeRange.cs" />
+    <Compile Include="Migrations\201606070701087_InvertersSystemSizeRange.Designer.cs">
+      <DependentUpon>201606070701087_InvertersSystemSizeRange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606140853081_Add_IsManuallyEntered_to_PowerConsumption.cs" />
+    <Compile Include="Migrations\201606140853081_Add_IsManuallyEntered_to_PowerConsumption.Designer.cs">
+      <DependentUpon>201606140853081_Add_IsManuallyEntered_to_PowerConsumption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201606291428076_Contractor_vs_Consumer_Changes.cs" />
+    <Compile Include="Migrations\201606291428076_Contractor_vs_Consumer_Changes.Designer.cs">
+      <DependentUpon>201606291428076_Contractor_vs_Consumer_Changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607051211549_SolarArrayChanges.cs" />
+    <Compile Include="Migrations\201607051211549_SolarArrayChanges.Designer.cs">
+      <DependentUpon>201607051211549_SolarArrayChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607081151121_PropertiesRemoveSortOrder.cs" />
+    <Compile Include="Migrations\201607081151121_PropertiesRemoveSortOrder.Designer.cs">
+      <DependentUpon>201607081151121_PropertiesRemoveSortOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607081416108_PropertiesRelatedCleanup.cs" />
+    <Compile Include="Migrations\201607081416108_PropertiesRelatedCleanup.Designer.cs">
+      <DependentUpon>201607081416108_PropertiesRelatedCleanup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607131916207_Add_Type_To_MediaItem.cs" />
+    <Compile Include="Migrations\201607131916207_Add_Type_To_MediaItem.Designer.cs">
+      <DependentUpon>201607131916207_Add_Type_To_MediaItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607141409418_BatchPrescreenChanges.cs" />
+    <Compile Include="Migrations\201607141409418_BatchPrescreenChanges.Designer.cs">
+      <DependentUpon>201607141409418_BatchPrescreenChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607210709261_BatchPrescreenChanges1.cs" />
+    <Compile Include="Migrations\201607210709261_BatchPrescreenChanges1.Designer.cs">
+      <DependentUpon>201607210709261_BatchPrescreenChanges1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607261305084_QuoteResponseDecisionGetTimeNullable.cs" />
+    <Compile Include="Migrations\201607261305084_QuoteResponseDecisionGetTimeNullable.Designer.cs">
+      <DependentUpon>201607261305084_QuoteResponseDecisionGetTimeNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607281224051_SolarArrayAddedCenterLatLon.cs" />
+    <Compile Include="Migrations\201607281224051_SolarArrayAddedCenterLatLon.Designer.cs">
+      <DependentUpon>201607281224051_SolarArrayAddedCenterLatLon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607281233463_Adding_OUTreeUp_SQL_function.cs" />
+    <Compile Include="Migrations\201607281233463_Adding_OUTreeUp_SQL_function.Designer.cs">
+      <DependentUpon>201607281233463_Adding_OUTreeUp_SQL_function.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607281427104_Merge3.cs" />
+    <Compile Include="Migrations\201607281427104_Merge3.Designer.cs">
+      <DependentUpon>201607281427104_Merge3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608040804211_Adding_User.NumberOfDevicesAllowed.cs" />
+    <Compile Include="Migrations\201608040804211_Adding_User.NumberOfDevicesAllowed.Designer.cs">
+      <DependentUpon>201608040804211_Adding_User.NumberOfDevicesAllowed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608091512529_AddedCallbacksModels.cs" />
+    <Compile Include="Migrations\201608091512529_AddedCallbacksModels.Designer.cs">
+      <DependentUpon>201608091512529_AddedCallbacksModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608092051555_AddedGenDocsRequestModel.cs" />
+    <Compile Include="Migrations\201608092051555_AddedGenDocsRequestModel.Designer.cs">
+      <DependentUpon>201608092051555_AddedGenDocsRequestModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608111123286_ChangedQuoteResponseLoanRateDecimalPrecision.cs" />
+    <Compile Include="Migrations\201608111123286_ChangedQuoteResponseLoanRateDecimalPrecision.Designer.cs">
+      <DependentUpon>201608111123286_ChangedQuoteResponseLoanRateDecimalPrecision.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608111459488_SpruceModelUpdates.cs" />
+    <Compile Include="Migrations\201608111459488_SpruceModelUpdates.Designer.cs">
+      <DependentUpon>201608111459488_SpruceModelUpdates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608301457243_ApiLog.cs" />
+    <Compile Include="Migrations\201608301457243_ApiLog.Designer.cs">
+      <DependentUpon>201608301457243_ApiLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608121820252_Removing_OUSettingDefinition_and_OUSettingValue.cs" />
+    <Compile Include="Migrations\201608121820252_Removing_OUSettingDefinition_and_OUSettingValue.Designer.cs">
+      <DependentUpon>201608121820252_Removing_OUSettingDefinition_and_OUSettingValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608131148295_Adding_OUSettings.cs" />
+    <Compile Include="Migrations\201608131148295_Adding_OUSettings.Designer.cs">
+      <DependentUpon>201608131148295_Adding_OUSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608151200135_Removing_OUSetting.ValueIsDefault.cs" />
+    <Compile Include="Migrations\201608151200135_Removing_OUSetting.ValueIsDefault.Designer.cs">
+      <DependentUpon>201608151200135_Removing_OUSetting.ValueIsDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608151355314_Adding_OUSetting.ValueType.cs" />
+    <Compile Include="Migrations\201608151355314_Adding_OUSetting.ValueType.Designer.cs">
+      <DependentUpon>201608151355314_Adding_OUSetting.ValueType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608151750533_Adding_internaAPI_PersonAndUser.cs" />
+    <Compile Include="Migrations\201608151750533_Adding_internaAPI_PersonAndUser.Designer.cs">
+      <DependentUpon>201608151750533_Adding_internaAPI_PersonAndUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608171938389_Adding_FinanceProvider_and_PeriodInMonths_to_FinancePlans.cs" />
+    <Compile Include="Migrations\201608171938389_Adding_FinanceProvider_and_PeriodInMonths_to_FinancePlans.Designer.cs">
+      <DependentUpon>201608171938389_Adding_FinanceProvider_and_PeriodInMonths_to_FinancePlans.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608220920307_Merging_PPA_and_Loan_Contracts_enum_Values.cs" />
+    <Compile Include="Migrations\201608220920307_Merging_PPA_and_Loan_Contracts_enum_Values.Designer.cs">
+      <DependentUpon>201608220920307_Merging_PPA_and_Loan_Contracts_enum_Values.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608231755240_Removing_OUCustomFields_and_Values.cs" />
+    <Compile Include="Migrations\201608231755240_Removing_OUCustomFields_and_Values.Designer.cs">
+      <DependentUpon>201608231755240_Removing_OUCustomFields_and_Values.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608261245469_SolarSystemChanges3.cs" />
+    <Compile Include="Migrations\201608261245469_SolarSystemChanges3.Designer.cs">
+      <DependentUpon>201608261245469_SolarSystemChanges3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608311902328_Adding_LoanExtraCosts_and_LoanTaxRate_to_SolarSystem.cs" />
+    <Compile Include="Migrations\201608311902328_Adding_LoanExtraCosts_and_LoanTaxRate_to_SolarSystem.Designer.cs">
+      <DependentUpon>201608311902328_Adding_LoanExtraCosts_and_LoanTaxRate_to_SolarSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609141243553_Adding_FinancePlansSettingsJSON_To_SolarSystem.cs" />
+    <Compile Include="Migrations\201609141243553_Adding_FinancePlansSettingsJSON_To_SolarSystem.Designer.cs">
+      <DependentUpon>201609141243553_Adding_FinancePlansSettingsJSON_To_SolarSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609231700359_SolarProposalChanges.cs" />
+    <Compile Include="Migrations\201609231700359_SolarProposalChanges.Designer.cs">
+      <DependentUpon>201609231700359_SolarProposalChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609301913101_Removing_Genability_Data.cs" />
+    <Compile Include="Migrations\201609301913101_Removing_Genability_Data.Designer.cs">
+      <DependentUpon>201609301913101_Removing_Genability_Data.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610032040595_ProposalDocumentRename.cs" />
+    <Compile Include="Migrations\201610032040595_ProposalDocumentRename.Designer.cs">
+      <DependentUpon>201610032040595_ProposalDocumentRename.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610061426439_Merge4.cs" />
+    <Compile Include="Migrations\201610061426439_Merge4.Designer.cs">
+      <DependentUpon>201610061426439_Merge4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610180811381_FinanceDocumentErrorMessage.cs" />
+    <Compile Include="Migrations\201610180811381_FinanceDocumentErrorMessage.Designer.cs">
+      <DependentUpon>201610180811381_FinanceDocumentErrorMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610241244225_ClientAPI-Initial_Commit.cs" />
+    <Compile Include="Migrations\201610241244225_ClientAPI-Initial_Commit.Designer.cs">
+      <DependentUpon>201610241244225_ClientAPI-Initial_Commit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610250912109_AddedExpirationDateToToken.cs" />
+    <Compile Include="Migrations\201610250912109_AddedExpirationDateToToken.Designer.cs">
+      <DependentUpon>201610250912109_AddedExpirationDateToToken.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610250856007_TerritoryChanges.cs" />
+    <Compile Include="Migrations\201610250856007_TerritoryChanges.Designer.cs">
+      <DependentUpon>201610250856007_TerritoryChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610281200528_Misc_Pending_Changes.cs" />
+    <Compile Include="Migrations\201610281200528_Misc_Pending_Changes.Designer.cs">
+      <DependentUpon>201610281200528_Misc_Pending_Changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611011416359_WebHook_Added_QueueName.cs" />
+    <Compile Include="Migrations\201611011416359_WebHook_Added_QueueName.Designer.cs">
+      <DependentUpon>201611011416359_WebHook_Added_QueueName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611021125114_SolarSystemChanges4.cs" />
+    <Compile Include="Migrations\201611021125114_SolarSystemChanges4.Designer.cs">
+      <DependentUpon>201611021125114_SolarSystemChanges4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611021133384_SolarSystemProductionChanges.cs" />
+    <Compile Include="Migrations\201611021133384_SolarSystemProductionChanges.Designer.cs">
+      <DependentUpon>201611021133384_SolarSystemProductionChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611022252551_StoredProcs_For_Webhooks.cs" />
+    <Compile Include="Migrations\201611022252551_StoredProcs_For_Webhooks.Designer.cs">
+      <DependentUpon>201611022252551_StoredProcs_For_Webhooks.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611031625301_Merge5.cs" />
+    <Compile Include="Migrations\201611031625301_Merge5.Designer.cs">
+      <DependentUpon>201611031625301_Merge5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611041116321_NewSolarModels.cs" />
+    <Compile Include="Migrations\201611041116321_NewSolarModels.Designer.cs">
+      <DependentUpon>201611041116321_NewSolarModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611041158054_NewSolarModels1.cs" />
+    <Compile Include="Migrations\201611041158054_NewSolarModels1.Designer.cs">
+      <DependentUpon>201611041158054_NewSolarModels1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611041610319_Merge6.cs" />
+    <Compile Include="Migrations\201611041610319_Merge6.Designer.cs">
+      <DependentUpon>201611041610319_Merge6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611061818442_Proposal_OUID.cs" />
+    <Compile Include="Migrations\201611061818442_Proposal_OUID.Designer.cs">
+      <DependentUpon>201611061818442_Proposal_OUID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611081249092_RoofPlaneChanges.cs" />
+    <Compile Include="Migrations\201611081249092_RoofPlaneChanges.Designer.cs">
+      <DependentUpon>201611081249092_RoofPlaneChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611111903266_Add_ImagePurcase_Model.cs" />
+    <Compile Include="Migrations\201611111903266_Add_ImagePurcase_Model.Designer.cs">
+      <DependentUpon>201611111903266_Add_ImagePurcase_Model.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611121503513_Added HighResolutionImage model.cs" />
+    <Compile Include="Migrations\201611121503513_Added HighResolutionImage model.Designer.cs">
+      <DependentUpon>201611121503513_Added HighResolutionImage model.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611121607447_Fixing Some Data Fields.cs" />
+    <Compile Include="Migrations\201611121607447_Fixing Some Data Fields.Designer.cs">
+      <DependentUpon>201611121607447_Fixing Some Data Fields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611121614053_More Changes on Image Models.cs" />
+    <Compile Include="Migrations\201611121614053_More Changes on Image Models.Designer.cs">
+      <DependentUpon>201611121614053_More Changes on Image Models.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611121712078_More Image Model Changes.cs" />
+    <Compile Include="Migrations\201611121712078_More Image Model Changes.Designer.cs">
+      <DependentUpon>201611121712078_More Image Model Changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611121938273_Added Cropping Data.cs" />
+    <Compile Include="Migrations\201611121938273_Added Cropping Data.Designer.cs">
+      <DependentUpon>201611121938273_Added Cropping Data.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611251326211_RoofPlaneChanges1.cs" />
+    <Compile Include="Migrations\201611251326211_RoofPlaneChanges1.Designer.cs">
+      <DependentUpon>201611251326211_RoofPlaneChanges1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612080243543_HiResImagesUpdate.cs" />
+    <Compile Include="Migrations\201612080243543_HiResImagesUpdate.Designer.cs">
+      <DependentUpon>201612080243543_HiResImagesUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612091334015_TerritorySummary_AddAssignmentCount.cs" />
+    <Compile Include="Migrations\201612091334015_TerritorySummary_AddAssignmentCount.Designer.cs">
+      <DependentUpon>201612091334015_TerritorySummary_AddAssignmentCount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612121703183_ImagePurchase_RemoveUnusedCroppingColumns.cs" />
+    <Compile Include="Migrations\201612121703183_ImagePurchase_RemoveUnusedCroppingColumns.Designer.cs">
+      <DependentUpon>201612121703183_ImagePurchase_RemoveUnusedCroppingColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612221152243_ObstructionsModelUpdate.cs" />
+    <Compile Include="Migrations\201612221152243_ObstructionsModelUpdate.Designer.cs">
+      <DependentUpon>201612221152243_ObstructionsModelUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612221232517_ObstructionsModel_CenterUpdate.cs" />
+    <Compile Include="Migrations\201612221232517_ObstructionsModel_CenterUpdate.Designer.cs">
+      <DependentUpon>201612221232517_ObstructionsModel_CenterUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612291405420_Updating_PersonSettings.cs" />
+    <Compile Include="Migrations\201612291405420_Updating_PersonSettings.Designer.cs">
+      <DependentUpon>201612291405420_Updating_PersonSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701171511578_AddersModel.cs" />
+    <Compile Include="Migrations\201701171511578_AddersModel.Designer.cs">
+      <DependentUpon>201701171511578_AddersModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701190820153_Adding_AdderItem.TemplateID.cs" />
+    <Compile Include="Migrations\201701190820153_Adding_AdderItem.TemplateID.Designer.cs">
+      <DependentUpon>201701190820153_Adding_AdderItem.TemplateID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701191208345_RoofPlanePanel_AddGeoCoordinates.cs" />
+    <Compile Include="Migrations\201701191208345_RoofPlanePanel_AddGeoCoordinates.Designer.cs">
+      <DependentUpon>201701191208345_RoofPlanePanel_AddGeoCoordinates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701201300478_AdderItem_AddRoofPlaneDetails.cs" />
+    <Compile Include="Migrations\201701201300478_AdderItem_AddRoofPlaneDetails.Designer.cs">
+      <DependentUpon>201701201300478_AdderItem_AddRoofPlaneDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701300152040_Grid Offset and SystemJson.cs" />
+    <Compile Include="Migrations\201701300152040_Grid Offset and SystemJson.Designer.cs">
+      <DependentUpon>201701300152040_Grid Offset and SystemJson.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702011002144_Removing_SolarArrays.cs" />
+    <Compile Include="Migrations\201702011002144_Removing_SolarArrays.Designer.cs">
+      <DependentUpon>201702011002144_Removing_SolarArrays.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702061123437_FinanceDefinitions_PropertyRatings.cs" />
+    <Compile Include="Migrations\201702061123437_FinanceDefinitions_PropertyRatings.Designer.cs">
+      <DependentUpon>201702061123437_FinanceDefinitions_PropertyRatings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702070934032_Increasing_Precision_on_Coordinates.cs" />
+    <Compile Include="Migrations\201702070934032_Increasing_Precision_on_Coordinates.Designer.cs">
+      <DependentUpon>201702070934032_Increasing_Precision_on_Coordinates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702071002461_Increasing_precision_for_Obstruction_Points.cs" />
+    <Compile Include="Migrations\201702071002461_Increasing_precision_for_Obstruction_Points.Designer.cs">
+      <DependentUpon>201702071002461_Increasing_precision_for_Obstruction_Points.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702091026458_Property_IncreasePrecision_LatLon.cs" />
+    <Compile Include="Migrations\201702091026458_Property_IncreasePrecision_LatLon.Designer.cs">
+      <DependentUpon>201702091026458_Property_IncreasePrecision_LatLon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702092023440_Seeding_FinanceProvider.cs" />
+    <Compile Include="Migrations\201702092023440_Seeding_FinanceProvider.Designer.cs">
+      <DependentUpon>201702092023440_Seeding_FinanceProvider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702100711238_Updating_FinanceDetails_and_FinanceProvider.cs" />
+    <Compile Include="Migrations\201702100711238_Updating_FinanceDetails_and_FinanceProvider.Designer.cs">
+      <DependentUpon>201702100711238_Updating_FinanceDetails_and_FinanceProvider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702101421522_Adding_procOUFinanceAssociations.cs" />
+    <Compile Include="Migrations\201702101421522_Adding_procOUFinanceAssociations.Designer.cs">
+      <DependentUpon>201702101421522_Adding_procOUFinanceAssociations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702131433575_Reverse_shading_values.cs" />
+    <Compile Include="Migrations\201702131433575_Reverse_shading_values.Designer.cs">
+      <DependentUpon>201702131433575_Reverse_shading_values.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702131459326_Adding_FinanceDetail_IsSpruced.cs" />
+    <Compile Include="Migrations\201702131459326_Adding_FinanceDetail_IsSpruced.Designer.cs">
+      <DependentUpon>201702131459326_Adding_FinanceDetail_IsSpruced.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702141540284_Adding_FinancePlan_FinancePlanDefinitionId.cs" />
+    <Compile Include="Migrations\201702141540284_Adding_FinancePlan_FinancePlanDefinitionId.Designer.cs">
+      <DependentUpon>201702141540284_Adding_FinancePlan_FinancePlanDefinitionId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702141827163_Removing_FinancePlan_Unused_properties.cs" />
+    <Compile Include="Migrations\201702141827163_Removing_FinancePlan_Unused_properties.Designer.cs">
+      <DependentUpon>201702141827163_Removing_FinancePlan_Unused_properties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702161300075_Adding_PRMI_PhoneNumber.cs" />
+    <Compile Include="Migrations\201702161300075_Adding_PRMI_PhoneNumber.Designer.cs">
+      <DependentUpon>201702161300075_Adding_PRMI_PhoneNumber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702161509287_Adding_FinancePlanDefinition_TermInYears_Property.cs" />
+    <Compile Include="Migrations\201702161509287_Adding_FinancePlanDefinition_TermInYears_Property.Designer.cs">
+      <DependentUpon>201702161509287_Adding_FinancePlanDefinition_TermInYears_Property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702161749215_Seeding_Cash_FinanceOption.cs" />
+    <Compile Include="Migrations\201702161749215_Seeding_Cash_FinanceOption.Designer.cs">
+      <DependentUpon>201702161749215_Seeding_Cash_FinanceOption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702200915557_Seeding_internalAPI_credentials_and_settings.cs" />
+    <Compile Include="Migrations\201702200915557_Seeding_internalAPI_credentials_and_settings.Designer.cs">
+      <DependentUpon>201702200915557_Seeding_internalAPI_credentials_and_settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702201431410_Seeding_CanPerformHardCreditCheck_on_Solcius.cs" />
+    <Compile Include="Migrations\201702201431410_Seeding_CanPerformHardCreditCheck_on_Solcius.Designer.cs">
+      <DependentUpon>201702201431410_Seeding_CanPerformHardCreditCheck_on_Solcius.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702201529211_DataReefSolar_SetGenericProposal.cs" />
+    <Compile Include="Migrations\201702201529211_DataReefSolar_SetGenericProposal.Designer.cs">
+      <DependentUpon>201702201529211_DataReefSolar_SetGenericProposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702230946116_Adding_ImagerySource_to_Proposal.cs" />
+    <Compile Include="Migrations\201702230946116_Adding_ImagerySource_to_Proposal.Designer.cs">
+      <DependentUpon>201702230946116_Adding_ImagerySource_to_Proposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702241127503_Setting_FinancePlanDetails_FinanceOptionID_and_DealerFee.cs" />
+    <Compile Include="Migrations\201702241127503_Setting_FinancePlanDetails_FinanceOptionID_and_DealerFee.Designer.cs">
+      <DependentUpon>201702241127503_Setting_FinancePlanDetails_FinanceOptionID_and_DealerFee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703060750295_Adding_InterestType_and_PrincipalType_to_FinanceDetail.cs" />
+    <Compile Include="Migrations\201703060750295_Adding_InterestType_and_PrincipalType_to_FinanceDetail.Designer.cs">
+      <DependentUpon>201703060750295_Adding_InterestType_and_PrincipalType_to_FinanceDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703061752468_Leaving_Only_one_generic_mortgage_finance_plan.cs" />
+    <Compile Include="Migrations\201703061752468_Leaving_Only_one_generic_mortgage_finance_plan.Designer.cs">
+      <DependentUpon>201703061752468_Leaving_Only_one_generic_mortgage_finance_plan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703071320412_Add_PropertyPowerConsumption.cs" />
+    <Compile Include="Migrations\201703071320412_Add_PropertyPowerConsumption.Designer.cs">
+      <DependentUpon>201703071320412_Add_PropertyPowerConsumption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703091520560_Updating_Cash_FinanceDetails.cs" />
+    <Compile Include="Migrations\201703091520560_Updating_Cash_FinanceDetails.Designer.cs">
+      <DependentUpon>201703091520560_Updating_Cash_FinanceDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703100728051_Updating_finance_DeferredPeriod_InterestType.cs" />
+    <Compile Include="Migrations\201703100728051_Updating_finance_DeferredPeriod_InterestType.Designer.cs">
+      <DependentUpon>201703100728051_Updating_finance_DeferredPeriod_InterestType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703140804009_Seeding_CCBank_FinanceProvider.cs" />
+    <Compile Include="Migrations\201703140804009_Seeding_CCBank_FinanceProvider.Designer.cs">
+      <DependentUpon>201703140804009_Seeding_CCBank_FinanceProvider.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703151226517_Add_Property_Pitch.cs" />
+    <Compile Include="Migrations\201703151226517_Add_Property_Pitch.Designer.cs">
+      <DependentUpon>201703151226517_Add_Property_Pitch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703151500406_Remove_PropertyPowerConsumption.cs" />
+    <Compile Include="Migrations\201703151500406_Remove_PropertyPowerConsumption.Designer.cs">
+      <DependentUpon>201703151500406_Remove_PropertyPowerConsumption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703151508204_PowerConsumption_UnifyModel.cs" />
+    <Compile Include="Migrations\201703151508204_PowerConsumption_UnifyModel.Designer.cs">
+      <DependentUpon>201703151508204_PowerConsumption_UnifyModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703161523024_Adding_commerce_orders_table.cs" />
+    <Compile Include="Migrations\201703161523024_Adding_commerce_orders_table.Designer.cs">
+      <DependentUpon>201703161523024_Adding_commerce_orders_table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703180342385_Order Details.cs" />
+    <Compile Include="Migrations\201703180342385_Order Details.Designer.cs">
+      <DependentUpon>201703180342385_Order Details.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703180954346_Adding_OrderDetails.cs" />
+    <Compile Include="Migrations\201703180954346_Adding_OrderDetails.Designer.cs">
+      <DependentUpon>201703180954346_Adding_OrderDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703181334099_Adding_PersonID_to_Order.cs" />
+    <Compile Include="Migrations\201703181334099_Adding_PersonID_to_Order.Designer.cs">
+      <DependentUpon>201703181334099_Adding_PersonID_to_Order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703181419181_Order.OrderStatus.cs" />
+    <Compile Include="Migrations\201703181419181_Order.OrderStatus.Designer.cs">
+      <DependentUpon>201703181419181_Order.OrderStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703201129171_Add_Territory_PropertyCount.cs" />
+    <Compile Include="Migrations\201703201129171_Add_Territory_PropertyCount.Designer.cs">
+      <DependentUpon>201703201129171_Add_Territory_PropertyCount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703230756213_Updating_PropertyAttribute_Entity.cs" />
+    <Compile Include="Migrations\201703230756213_Updating_PropertyAttribute_Entity.Designer.cs">
+      <DependentUpon>201703230756213_Updating_PropertyAttribute_Entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703230956501_Remove_ExpireMinutes_from_PropertyAttribute.cs" />
+    <Compile Include="Migrations\201703230956501_Remove_ExpireMinutes_from_PropertyAttribute.Designer.cs">
+      <DependentUpon>201703230956501_Remove_ExpireMinutes_from_PropertyAttribute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703231036141_Updating_proc_TerritoryAnalytics_storedProcedure.sql.cs" />
+    <Compile Include="Migrations\201703231036141_Updating_proc_TerritoryAnalytics_storedProcedure.sql.Designer.cs">
+      <DependentUpon>201703231036141_Updating_proc_TerritoryAnalytics_storedProcedure.sql.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703241008298_AdderItem_HistoryModelUpdate.cs" />
+    <Compile Include="Migrations\201703241008298_AdderItem_HistoryModelUpdate.Designer.cs">
+      <DependentUpon>201703241008298_AdderItem_HistoryModelUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703241052020_AdderItem_AddDescription.cs" />
+    <Compile Include="Migrations\201703241052020_AdderItem_AddDescription.Designer.cs">
+      <DependentUpon>201703241052020_AdderItem_AddDescription.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703241115092_AdderItem_MakeHistoryFieldsNullable.cs" />
+    <Compile Include="Migrations\201703241115092_AdderItem_MakeHistoryFieldsNullable.Designer.cs">
+      <DependentUpon>201703241115092_AdderItem_MakeHistoryFieldsNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703300706426_Adding_missing_financeDetails_for_Spruce.cs" />
+    <Compile Include="Migrations\201703300706426_Adding_missing_financeDetails_for_Spruce.Designer.cs">
+      <DependentUpon>201703300706426_Adding_missing_financeDetails_for_Spruce.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704040843129_TerritoryPropertCount_Nullable.cs" />
+    <Compile Include="Migrations\201704040843129_TerritoryPropertCount_Nullable.Designer.cs">
+      <DependentUpon>201704040843129_TerritoryPropertCount_Nullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704041337050_Property_Add_ApplyConsumptionSlope.cs" />
+    <Compile Include="Migrations\201704041337050_Property_Add_ApplyConsumptionSlope.Designer.cs">
+      <DependentUpon>201704041337050_Property_Add_ApplyConsumptionSlope.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704111506231_Add_PrescreenBatchLogs.cs" />
+    <Compile Include="Migrations\201704111506231_Add_PrescreenBatchLogs.Designer.cs">
+      <DependentUpon>201704111506231_Add_PrescreenBatchLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704121024500_Remove_PrescreenBatchLogs.cs" />
+    <Compile Include="Migrations\201704121024500_Remove_PrescreenBatchLogs.Designer.cs">
+      <DependentUpon>201704121024500_Remove_PrescreenBatchLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704191124133_Velocify_Add_Request_Response.cs" />
+    <Compile Include="Migrations\201704191124133_Velocify_Add_Request_Response.Designer.cs">
+      <DependentUpon>201704191124133_Velocify_Add_Request_Response.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704200844040_VelocifyRequest_Add_BirthDate.cs" />
+    <Compile Include="Migrations\201704200844040_VelocifyRequest_Add_BirthDate.Designer.cs">
+      <DependentUpon>201704200844040_VelocifyRequest_Add_BirthDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704251057576_Adding_VelocifyRequest_Source.cs" />
+    <Compile Include="Migrations\201704251057576_Adding_VelocifyRequest_Source.Designer.cs">
+      <DependentUpon>201704251057576_Adding_VelocifyRequest_Source.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704281426340_Removed_unused_properties_on_panels_and_inverters.cs" />
+    <Compile Include="Migrations\201704281426340_Removed_unused_properties_on_panels_and_inverters.Designer.cs">
+      <DependentUpon>201704281426340_Removed_unused_properties_on_panels_and_inverters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705151648086_Adding_FinanceProvider_ProposalFlowType_property.cs" />
+    <Compile Include="Migrations\201705151648086_Adding_FinanceProvider_ProposalFlowType_property.Designer.cs">
+      <DependentUpon>201705151648086_Adding_FinanceProvider_ProposalFlowType_property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705191313577_Add_FinancialAdapters_Logging.cs" />
+    <Compile Include="Migrations\201705191313577_Add_FinancialAdapters_Logging.Designer.cs">
+      <DependentUpon>201705191313577_Add_FinancialAdapters_Logging.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705221205127_Adding_SolarPanel_Efficiency.cs" />
+    <Compile Include="Migrations\201705221205127_Adding_SolarPanel_Efficiency.Designer.cs">
+      <DependentUpon>201705221205127_Adding_SolarPanel_Efficiency.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705310812518_Adding_Description_Property_to_FinancePlanDefinition.cs" />
+    <Compile Include="Migrations\201705310812518_Adding_Description_Property_to_FinancePlanDefinition.Designer.cs">
+      <DependentUpon>201705310812518_Adding_Description_Property_to_FinancePlanDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705310907231_Adding_solar_ProposalData_Table.cs" />
+    <Compile Include="Migrations\201705310907231_Adding_solar_ProposalData_Table.Designer.cs">
+      <DependentUpon>201705310907231_Adding_solar_ProposalData_Table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705151018035_AdderItems_UpdateModel_Incentives.cs" />
+    <Compile Include="Migrations\201705151018035_AdderItems_UpdateModel_Incentives.Designer.cs">
+      <DependentUpon>201705151018035_AdderItems_UpdateModel_Incentives.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705311616463_MergeMigration.cs" />
+    <Compile Include="Migrations\201705311616463_MergeMigration.Designer.cs">
+      <DependentUpon>201705311616463_MergeMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706091047323_ProposalData_RemoveJsons.cs" />
+    <Compile Include="Migrations\201706091047323_ProposalData_RemoveJsons.Designer.cs">
+      <DependentUpon>201706091047323_ProposalData_RemoveJsons.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706121254524_Proposal_Add_ProposalURL.cs" />
+    <Compile Include="Migrations\201706121254524_Proposal_Add_ProposalURL.Designer.cs">
+      <DependentUpon>201706121254524_Proposal_Add_ProposalURL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706141030534_HtmlProposal_MigrateExistingDocuments.cs" />
+    <Compile Include="Migrations\201706141030534_HtmlProposal_MigrateExistingDocuments.Designer.cs">
+      <DependentUpon>201706141030534_HtmlProposal_MigrateExistingDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706210736460_Adding_DesignSystemType_to_Proposal_Model.cs" />
+    <Compile Include="Migrations\201706210736460_Adding_DesignSystemType_to_Proposal_Model.Designer.cs">
+      <DependentUpon>201706210736460_Adding_DesignSystemType_to_Proposal_Model.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706221001063_Add_EpcModels.cs" />
+    <Compile Include="Migrations\201706221001063_Add_EpcModels.Designer.cs">
+      <DependentUpon>201706221001063_Add_EpcModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708161631289_Adding_KeyValue.cs" />
+    <Compile Include="Migrations\201708161631289_Adding_KeyValue.Designer.cs">
+      <DependentUpon>201708161631289_Adding_KeyValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708171509399_Adding_IntegrationToken.cs" />
+    <Compile Include="Migrations\201708171509399_Adding_IntegrationToken.Designer.cs">
+      <DependentUpon>201708171509399_Adding_IntegrationToken.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708180927534_Removing_Inquiry_Notes_lenght_restriction.cs" />
+    <Compile Include="Migrations\201708180927534_Removing_Inquiry_Notes_lenght_restriction.Designer.cs">
+      <DependentUpon>201708180927534_Removing_Inquiry_Notes_lenght_restriction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708240814024_Adding_APNDeviceToken_to_Devices.cs" />
+    <Compile Include="Migrations\201708240814024_Adding_APNDeviceToken_to_Devices.Designer.cs">
+      <DependentUpon>201708240814024_Adding_APNDeviceToken_to_Devices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708310756599_Adding_Proposal_MetaInfo_Property.cs" />
+    <Compile Include="Migrations\201708310756599_Adding_Proposal_MetaInfo_Property.Designer.cs">
+      <DependentUpon>201708310756599_Adding_Proposal_MetaInfo_Property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709181321414_Adding_Inquiry_Disposition.cs" />
+    <Compile Include="Migrations\201709181321414_Adding_Inquiry_Disposition.Designer.cs">
+      <DependentUpon>201709181321414_Adding_Inquiry_Disposition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709211200408_Adding_SolarPanel_properties.cs" />
+    <Compile Include="Migrations\201709211200408_Adding_SolarPanel_properties.Designer.cs">
+      <DependentUpon>201709211200408_Adding_SolarPanel_properties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709211439496_Adding_SalesRepEmail_and_SalesRepCompanyName_to_VelocifyRequest.cs" />
+    <Compile Include="Migrations\201709211439496_Adding_SalesRepEmail_and_SalesRepCompanyName_to_VelocifyRequest.Designer.cs">
+      <DependentUpon>201709211439496_Adding_SalesRepEmail_and_SalesRepCompanyName_to_VelocifyRequest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709290954565_Velocify_AddSystemCost.cs" />
+    <Compile Include="Migrations\201709290954565_Velocify_AddSystemCost.Designer.cs">
+      <DependentUpon>201709290954565_Velocify_AddSystemCost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710021212249_Adding_VisibleToClients_Property_to_AppSetting.cs" />
+    <Compile Include="Migrations\201710021212249_Adding_VisibleToClients_Property_to_AppSetting.Designer.cs">
+      <DependentUpon>201710021212249_Adding_VisibleToClients_Property_to_AppSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710031049558_Adding_Adder_IsRebate.cs" />
+    <Compile Include="Migrations\201710031049558_Adding_Adder_IsRebate.Designer.cs">
+      <DependentUpon>201710031049558_Adding_Adder_IsRebate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710031120533_Removing_Unused_FinanceDetail_Properties.cs" />
+    <Compile Include="Migrations\201710031120533_Removing_Unused_FinanceDetail_Properties.Designer.cs">
+      <DependentUpon>201710031120533_Removing_Unused_FinanceDetail_Properties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710041506377_Adding_ProposalID_to_ProposalData_entity.cs" />
+    <Compile Include="Migrations\201710041506377_Adding_ProposalID_to_ProposalData_entity.Designer.cs">
+      <DependentUpon>201710041506377_Adding_ProposalID_to_ProposalData_entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710101201376_Adding_PushSubscriptions.cs" />
+    <Compile Include="Migrations\201710101201376_Adding_PushSubscriptions.Designer.cs">
+      <DependentUpon>201710101201376_Adding_PushSubscriptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710131403576_Adding_ProposalMediaItems.cs" />
+    <Compile Include="Migrations\201710131403576_Adding_ProposalMediaItems.Designer.cs">
+      <DependentUpon>201710131403576_Adding_ProposalMediaItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710170821468_Adding_ProposalIntegrationAudit.cs" />
+    <Compile Include="Migrations\201710170821468_Adding_ProposalIntegrationAudit.Designer.cs">
+      <DependentUpon>201710170821468_Adding_ProposalIntegrationAudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710191310174_Adding_PersonType_property_to_Person.cs" />
+    <Compile Include="Migrations\201710191310174_Adding_PersonType_property_to_Person.Designer.cs">
+      <DependentUpon>201710191310174_Adding_PersonType_property_to_Person.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710191843032_Empty_Migration_for_merge.cs" />
+    <Compile Include="Migrations\201710191843032_Empty_Migration_for_merge.Designer.cs">
+      <DependentUpon>201710191843032_Empty_Migration_for_merge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710191917341_Merge_fix.cs" />
+    <Compile Include="Migrations\201710191917341_Merge_fix.Designer.cs">
+      <DependentUpon>201710191917341_Merge_fix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710191924055_Merge_fix1.cs" />
+    <Compile Include="Migrations\201710191924055_Merge_fix1.Designer.cs">
+      <DependentUpon>201710191924055_Merge_fix1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710230855024_Adding_ProposalDataJSON_to_ProposalData.cs" />
+    <Compile Include="Migrations\201710230855024_Adding_ProposalDataJSON_to_ProposalData.Designer.cs">
+      <DependentUpon>201710230855024_Adding_ProposalDataJSON_to_ProposalData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710261400232_Adding_Cost_and_Usage_source_to_PowerConsumption.cs" />
+    <Compile Include="Migrations\201710261400232_Adding_Cost_and_Usage_source_to_PowerConsumption.Designer.cs">
+      <DependentUpon>201710261400232_Adding_Cost_and_Usage_source_to_PowerConsumption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711101529197_Making VelocifyRequest.Birthday nullable.cs" />
+    <Compile Include="Migrations\201711101529197_Making VelocifyRequest.Birthday nullable.Designer.cs">
+      <DependentUpon>201711101529197_Making VelocifyRequest.Birthday nullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711151103218_Adding Recurrence Properties To AdderItem.cs" />
+    <Compile Include="Migrations\201711151103218_Adding Recurrence Properties To AdderItem.Designer.cs">
+      <DependentUpon>201711151103218_Adding Recurrence Properties To AdderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712060823262_Adding_IntegrationProvider_and_Apr_To_FinancePlanDefinition.cs" />
+    <Compile Include="Migrations\201712060823262_Adding_IntegrationProvider_and_Apr_To_FinancePlanDefinition.Designer.cs">
+      <DependentUpon>201712060823262_Adding_IntegrationProvider_and_Apr_To_FinancePlanDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712071457391_Updating VelocifyRequest model.cs" />
+    <Compile Include="Migrations\201712071457391_Updating VelocifyRequest model.Designer.cs">
+      <DependentUpon>201712071457391_Updating VelocifyRequest model.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712071615426_Adding ResidentCount property to Shapes.cs" />
+    <Compile Include="Migrations\201712071615426_Adding ResidentCount property to Shapes.Designer.cs">
+      <DependentUpon>201712071615426_Adding ResidentCount property to Shapes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712111221386_Adding FinancePlanDefinition.MetaDataJSON property.cs" />
+    <Compile Include="Migrations\201712111221386_Adding FinancePlanDefinition.MetaDataJSON property.Designer.cs">
+      <DependentUpon>201712111221386_Adding FinancePlanDefinition.MetaDataJSON property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712141723121_Adding TermInMonths to FinancePlanDefinition.cs" />
+    <Compile Include="Migrations\201712141723121_Adding TermInMonths to FinancePlanDefinition.Designer.cs">
+      <DependentUpon>201712141723121_Adding TermInMonths to FinancePlanDefinition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712151243266_Adding OrderInFolder to OUMediaItem.cs" />
+    <Compile Include="Migrations\201712151243266_Adding OrderInFolder to OUMediaItem.Designer.cs">
+      <DependentUpon>201712151243266_Adding OrderInFolder to OUMediaItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712181159320_Adding MediaItemType to ProposalMediaItem.cs" />
+    <Compile Include="Migrations\201712181159320_Adding MediaItemType to ProposalMediaItem.Designer.cs">
+      <DependentUpon>201712181159320_Adding MediaItemType to ProposalMediaItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712191045258_Adding PowerMetaDataJSON to SolarSystem.cs" />
+    <Compile Include="Migrations\201712191045258_Adding PowerMetaDataJSON to SolarSystem.Designer.cs">
+      <DependentUpon>201712191045258_Adding PowerMetaDataJSON to SolarSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801051415560_Adding IsAppliedBeforeITC to AdderItem.cs" />
+    <Compile Include="Migrations\201801051415560_Adding IsAppliedBeforeITC to AdderItem.Designer.cs">
+      <DependentUpon>201801051415560_Adding IsAppliedBeforeITC to AdderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801090746403_Updating AdderItem.Quantity, from int to double.cs" />
+    <Compile Include="Migrations\201801090746403_Updating AdderItem.Quantity, from int to double.Designer.cs">
+      <DependentUpon>201801090746403_Updating AdderItem.Quantity, from int to double.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801181647528_Adding DynamicSettingsJSON to AdderItem.cs" />
+    <Compile Include="Migrations\201801181647528_Adding DynamicSettingsJSON to AdderItem.Designer.cs">
+      <DependentUpon>201801181647528_Adding DynamicSettingsJSON to AdderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802121347233_Adding Appointments.cs" />
+    <Compile Include="Migrations\201802121347233_Adding Appointments.Designer.cs">
+      <DependentUpon>201802121347233_Adding Appointments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802161123466_Adding Proposal.SignedDocumentsJSON property.cs" />
+    <Compile Include="Migrations\201802161123466_Adding Proposal.SignedDocumentsJSON property.Designer.cs">
+      <DependentUpon>201802161123466_Adding Proposal.SignedDocumentsJSON property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802161156451_Adding IsArchived for OU and Territory.cs" />
+    <Compile Include="Migrations\201802161156451_Adding IsArchived for OU and Territory.Designer.cs">
+      <DependentUpon>201802161156451_Adding IsArchived for OU and Territory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802161443023_Adding ProposalData.UsesNoSQLAggregatedData.cs" />
+    <Compile Include="Migrations\201802161443023_Adding ProposalData.UsesNoSQLAggregatedData.Designer.cs">
+      <DependentUpon>201802161443023_Adding ProposalData.UsesNoSQLAggregatedData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802190831277_Removing ProposalData nav properties.cs" />
+    <Compile Include="Migrations\201802190831277_Removing ProposalData nav properties.Designer.cs">
+      <DependentUpon>201802190831277_Removing ProposalData nav properties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808290807117_Adding SmartBoardId to PropertyBase.cs" />
+    <Compile Include="Migrations\201808290807117_Adding SmartBoardId to PropertyBase.Designer.cs">
+      <DependentUpon>201808290807117_Adding SmartBoardId to PropertyBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809110753279_PersonKPI.cs" />
+    <Compile Include="Migrations\201809110753279_PersonKPI.Designer.cs">
+      <DependentUpon>201809110753279_PersonKPI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811151440306_AddFinanceTypeToAdder.cs" />
+    <Compile Include="Migrations\201811151440306_AddFinanceTypeToAdder.Designer.cs">
+      <DependentUpon>201811151440306_AddFinanceTypeToAdder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811280938265_Adding MetaInformation to ProposalData.cs" />
+    <Compile Include="Migrations\201811280938265_Adding MetaInformation to ProposalData.Designer.cs">
+      <DependentUpon>201811280938265_Adding MetaInformation to ProposalData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812031208075_Adding CRUDAudit.cs" />
+    <Compile Include="Migrations\201812031208075_Adding CRUDAudit.Designer.cs">
+      <DependentUpon>201812031208075_Adding CRUDAudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901081239456_Adding Url and Headers To AdapterRequest.cs" />
+    <Compile Include="Migrations\201901081239456_Adding Url and Headers To AdapterRequest.Designer.cs">
+      <DependentUpon>201901081239456_Adding Url and Headers To AdapterRequest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901151328599_PropertyAttachment and PropertyAttachmentItem.cs" />
+    <Compile Include="Migrations\201901151328599_PropertyAttachment and PropertyAttachmentItem.Designer.cs">
+      <DependentUpon>201901151328599_PropertyAttachment and PropertyAttachmentItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901151404281_Adding AddressID to Property.cs" />
+    <Compile Include="Migrations\201901151404281_Adding AddressID to Property.Designer.cs">
+      <DependentUpon>201901151404281_Adding AddressID to Property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901151720375_Adding ESIndexName to Property.cs" />
+    <Compile Include="Migrations\201901151720375_Adding ESIndexName to Property.Designer.cs">
+      <DependentUpon>201901151720375_Adding ESIndexName to Property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901160837106_Adding Audit to PropertyAttachment.cs" />
+    <Compile Include="Migrations\201901160837106_Adding Audit to PropertyAttachment.Designer.cs">
+      <DependentUpon>201901160837106_Adding Audit to PropertyAttachment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901171335283_Adding RoleType on OURole.cs" />
+    <Compile Include="Migrations\201901171335283_Adding RoleType on OURole.Designer.cs">
+      <DependentUpon>201901171335283_Adding RoleType on OURole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901231557457_Adding Indices on Name and Address1.cs" />
+    <Compile Include="Migrations\201901231557457_Adding Indices on Name and Address1.Designer.cs">
+      <DependentUpon>201901231557457_Adding Indices on Name and Address1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901231641584_Renamed PropertyAttachment RejectionMessage.cs" />
+    <Compile Include="Migrations\201901231641584_Renamed PropertyAttachment RejectionMessage.Designer.cs">
+      <DependentUpon>201901231641584_Renamed PropertyAttachment RejectionMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901301218469_Add AttachmentTypeID to PropertyAttachment.cs" />
+    <Compile Include="Migrations\201901301218469_Add AttachmentTypeID to PropertyAttachment.Designer.cs">
+      <DependentUpon>201901301218469_Add AttachmentTypeID to PropertyAttachment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902131328296_Added navigation properties on appointment.cs" />
+    <Compile Include="Migrations\201902131328296_Added navigation properties on appointment.Designer.cs">
+      <DependentUpon>201902131328296_Added navigation properties on appointment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902210829290_Create Function and SP GetOUSettingsMany .cs" />
+    <Compile Include="Migrations\201902210829290_Create Function and SP GetOUSettingsMany .Designer.cs">
+      <DependentUpon>201902210829290_Create Function and SP GetOUSettingsMany .cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903051411011_Extended length of Address2.cs" />
+    <Compile Include="Migrations\201903051411011_Extended length of Address2.Designer.cs">
+      <DependentUpon>201903051411011_Extended length of Address2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903220852279_Extended Address2 field on PropertyBase.cs" />
+    <Compile Include="Migrations\201903220852279_Extended Address2 field on PropertyBase.Designer.cs">
+      <DependentUpon>201903220852279_Extended Address2 field on PropertyBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904050727092_Adding RoleType To OUAssociation.cs" />
+    <Compile Include="Migrations\201904050727092_Adding RoleType To OUAssociation.Designer.cs">
+      <DependentUpon>201904050727092_Adding RoleType To OUAssociation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904051141269_Added Utility Provider ID and Name to Property.cs" />
+    <Compile Include="Migrations\201904051141269_Added Utility Provider ID and Name to Property.Designer.cs">
+      <DependentUpon>201904051141269_Added Utility Provider ID and Name to Property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904151226572_Added GoogleEventID and Status on Appointment.cs" />
+    <Compile Include="Migrations\201904151226572_Added GoogleEventID and Status on Appointment.Designer.cs">
+      <DependentUpon>201904151226572_Added GoogleEventID and Status on Appointment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905090648340_Replace ProposalPresented Handler.cs" />
+    <Compile Include="Migrations\201905090648340_Replace ProposalPresented Handler.Designer.cs">
+      <DependentUpon>201905090648340_Replace ProposalPresented Handler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905091025349_Add PhotosAdmin role.cs" />
+    <Compile Include="Migrations\201905091025349_Add PhotosAdmin role.Designer.cs">
+      <DependentUpon>201905091025349_Add PhotosAdmin role.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905201118204_Adding post consumptions to SystemProduction.cs" />
+    <Compile Include="Migrations\201905201118204_Adding post consumptions to SystemProduction.Designer.cs">
+      <DependentUpon>201905201118204_Adding post consumptions to SystemProduction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906031010297_Adding Property.Notes.cs" />
+    <Compile Include="Migrations\201906031010297_Adding Property.Notes.Designer.cs">
+      <DependentUpon>201906031010297_Adding Property.Notes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906131429360_Adding CalculatedPer to AdderItem.cs" />
+    <Compile Include="Migrations\201906131429360_Adding CalculatedPer to AdderItem.Designer.cs">
+      <DependentUpon>201906131429360_Adding CalculatedPer to AdderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906241235446_Added ZoomLevel to Property.cs" />
+    <Compile Include="Migrations\201906241235446_Added ZoomLevel to Property.Designer.cs">
+      <DependentUpon>201906241235446_Added ZoomLevel to Property.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906271224147_Moved ZoomLevel from property to proposal.cs" />
+    <Compile Include="Migrations\201906271224147_Moved ZoomLevel from property to proposal.Designer.cs">
+      <DependentUpon>201906271224147_Moved ZoomLevel from property to proposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907021256373_Removed InquiryStatus.cs" />
+    <Compile Include="Migrations\201907021256373_Removed InquiryStatus.Designer.cs">
+      <DependentUpon>201907021256373_Removed InquiryStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907090744513_Switch InquiryStatus in PersonSummary stored proc.cs" />
+    <Compile Include="Migrations\201907090744513_Switch InquiryStatus in PersonSummary stored proc.Designer.cs">
+      <DependentUpon>201907090744513_Switch InquiryStatus in PersonSummary stored proc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907090802098_Refactor SP for OUAnalytics.cs" />
+    <Compile Include="Migrations\201907090802098_Refactor SP for OUAnalytics.Designer.cs">
+      <DependentUpon>201907090802098_Refactor SP for OUAnalytics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907301135380_Add Agreement Base Url Setting.cs" />
+    <Compile Include="Migrations\201907301135380_Add Agreement Base Url Setting.Designer.cs">
+      <DependentUpon>201907301135380_Add Agreement Base Url Setting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908291057408_Added GridCenter coordinates on RoofPlane.cs" />
+    <Compile Include="Migrations\201908291057408_Added GridCenter coordinates on RoofPlane.Designer.cs">
+      <DependentUpon>201908291057408_Added GridCenter coordinates on RoofPlane.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908301421348_Added TimeZone on Appointment.cs" />
+    <Compile Include="Migrations\201908301421348_Added TimeZone on Appointment.Designer.cs">
+      <DependentUpon>201908301421348_Added TimeZone on Appointment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909060828445_Added CreditStatus on Proposal.cs" />
+    <Compile Include="Migrations\201909060828445_Added CreditStatus on Proposal.Designer.cs">
+      <DependentUpon>201909060828445_Added CreditStatus on Proposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909270625566_Added the PropertySurvey entity.cs" />
+    <Compile Include="Migrations\201909270625566_Added the PropertySurvey entity.Designer.cs">
+      <DependentUpon>201909270625566_Added the PropertySurvey entity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910290957032_Added PropertyNote.cs" />
+    <Compile Include="Migrations\201910290957032_Added PropertyNote.Designer.cs">
+      <DependentUpon>201910290957032_Added PropertyNote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911070559477_SmartboardID on Person.cs" />
+    <Compile Include="Migrations\201911070559477_SmartboardID on Person.Designer.cs">
+      <DependentUpon>201911070559477_SmartboardID on Person.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911151001230_Added Notification.cs" />
+    <Compile Include="Migrations\201911151001230_Added Notification.Designer.cs">
+      <DependentUpon>201911151001230_Added Notification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911181339145_Updates to Notes.cs" />
+    <Compile Include="Migrations\201911181339145_Updates to Notes.Designer.cs">
+      <DependentUpon>201911181339145_Updates to Notes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911290644588_Added Permissions Field to OURole.cs" />
+    <Compile Include="Migrations\201911290644588_Added Permissions Field to OURole.Designer.cs">
+      <DependentUpon>201911290644588_Added Permissions Field to OURole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.cs" />
+    <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
+      <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Seeds.cs" />
+    <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
+    <Compile Include="Database\Interceptors\Utils.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\Seed\DbSchemaHelper.cs" />
+    <Compile Include="Migrations\Seed\DevelopmentSeed.cs" />
+    <Compile Include="Migrations\Seed\ExcelHelper.cs" />
+    <Compile Include="Migrations\Seed\SeedLogger.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Prototype\ApplicationRole.cs" />
+    <Compile Include="Prototype\AuthorizationContext.cs" />
+    <Compile Include="Prototype\AuthorizationProvider.cs" />
+    <Compile Include="Prototype\AuthorizationQueryable.cs" />
+    <Compile Include="Prototype\ContextTreePrototype.cs" />
+    <Compile Include="Prototype\OldCode\AuthorizationVisitor.cs" />
+    <Compile Include="Prototype\IAuthorizationProvider.cs" />
+    <Compile Include="Prototype\IRepository.cs" />
+    <Compile Include="Prototype\ReferenceLoader.cs" />
+    <Compile Include="Prototype\Repository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Database\Interceptors\SoftDeleteInterceptor.cs" />
+    <Compile Include="Repository\Interceptors\AuditFieldsInterceptor.cs" />
+    <Compile Include="Repository\Interceptors\InterceptorConstants.cs" />
+    <Compile Include="Repository\StoredProcedures\OUAndChildrenGuids.cs" />
+    <Compile Include="Repository\TmDataContextFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201508221205526_First Migration.resx">
+      <DependentUpon>201508221205526_First Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508261340523_Removed Field.Value StringLength.resx">
+      <DependentUpon>201508261340523_Removed Field.Value StringLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509031149308_Add Survey72 model..resx">
+      <DependentUpon>201509031149308_Add Survey72 model..cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509160717131_Genability changes.resx">
+      <DependentUpon>201509160717131_Genability changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509250756492_PropertyUsageProfileInfo.resx">
+      <DependentUpon>201509250756492_PropertyUsageProfileInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510011430179_AddedElectricityAndSolarProfilesToProperty.resx">
+      <DependentUpon>201510011430179_AddedElectricityAndSolarProfilesToProperty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510031022058_AddShapesVersioning.resx">
+      <DependentUpon>201510031022058_AddShapesVersioning.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510060852191_MovedUsageProfileIDsToProposal.resx">
+      <DependentUpon>201510060852191_MovedUsageProfileIDsToProposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510061244584_AddedGenabilityInfoToSolarSystem.resx">
+      <DependentUpon>201510061244584_AddedGenabilityInfoToSolarSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510211408249_AddAdvancedFinancePlanFields.resx">
+      <DependentUpon>201510211408249_AddAdvancedFinancePlanFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510231111375_RemovedAdvancedFinancialRequestAndResponse.resx">
+      <DependentUpon>201510231111375_RemovedAdvancedFinancialRequestAndResponse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510281534421_RemovingUnnecessaryFinancePlanFields.resx">
+      <DependentUpon>201510281534421_RemovingUnnecessaryFinancePlanFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510301405264_AddedFieldsToSolarSystem.resx">
+      <DependentUpon>201510301405264_AddedFieldsToSolarSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510301455584_AddEscalationRateToSolarSystem.resx">
+      <DependentUpon>201510301455584_AddEscalationRateToSolarSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511110951546_InstantPrescreen.resx">
+      <DependentUpon>201511110951546_InstantPrescreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511130808036_PropertyPrescreens.resx">
+      <DependentUpon>201511130808036_PropertyPrescreens.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511131600187_PropertyRelationshipsSanity.resx">
+      <DependentUpon>201511131600187_PropertyRelationshipsSanity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511261033431_LoanPricePerWattPricingOption.resx">
+      <DependentUpon>201511261033431_LoanPricePerWattPricingOption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511261140481_DecreasePersonEmailAddressTo900MaxIndexSize.resx">
+      <DependentUpon>201511261140481_DecreasePersonEmailAddressTo900MaxIndexSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511271701265_DecreasePersonEmailAddressTo450MaxIndexSize.resx">
+      <DependentUpon>201511271701265_DecreasePersonEmailAddressTo450MaxIndexSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512011420563_Change CurrentLocation.Accuracy from int to float.resx">
+      <DependentUpon>201512011420563_Change CurrentLocation.Accuracy from int to float.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512150150202_LoanContractSign.resx">
+      <DependentUpon>201512150150202_LoanContractSign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512150254165_LoanContractSign1.resx">
+      <DependentUpon>201512150254165_LoanContractSign1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512151400071_RemoveProposalContractId.resx">
+      <DependentUpon>201512151400071_RemoveProposalContractId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512151354583_AddedRootOrganizationNameToOU.resx">
+      <DependentUpon>201512151354583_AddedRootOrganizationNameToOU.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512152004078_Merge.resx">
+      <DependentUpon>201512152004078_Merge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512161418543_MakeDateSignedNullable.resx">
+      <DependentUpon>201512161418543_MakeDateSignedNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512302018324_FixFinancePlanSolarSystemRelationship.resx">
+      <DependentUpon>201512302018324_FixFinancePlanSolarSystemRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601041354266_PersonSettingsReplaceSettingNameWithName.resx">
+      <DependentUpon>201601041354266_PersonSettingsReplaceSettingNameWithName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601042228599_ProposalContractURLs.resx">
+      <DependentUpon>201601042228599_ProposalContractURLs.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601121320383_OUTokenPrice.resx">
+      <DependentUpon>201601121320383_OUTokenPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601130939453_PrescreenZipAreas.resx">
+      <DependentUpon>201601130939453_PrescreenZipAreas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601130950583_PrescreenZipAreas1.resx">
+      <DependentUpon>201601130950583_PrescreenZipAreas1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601131117451_PrescreenZipAreas2.resx">
+      <DependentUpon>201601131117451_PrescreenZipAreas2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601131134544_PrescreenZipAreas3.resx">
+      <DependentUpon>201601131134544_PrescreenZipAreas3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601131622419_PrescreenZipAreas4.resx">
+      <DependentUpon>201601131622419_PrescreenZipAreas4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601131948002_PrescreenZipAreas5.resx">
+      <DependentUpon>201601131948002_PrescreenZipAreas5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601271254250_SolarArrayFloatToDouble.resx">
+      <DependentUpon>201601271254250_SolarArrayFloatToDouble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602061154422_Adding OUCapabilities.resx">
+      <DependentUpon>201602061154422_Adding OUCapabilities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602081441041_ActivityTypeChanges.resx">
+      <DependentUpon>201602081441041_ActivityTypeChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602081734341_MakingActivityTypeAnEnum.resx">
+      <DependentUpon>201602081734341_MakingActivityTypeAnEnum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602090925569_AddedPropertiesMosaicSECustomerID.resx">
+      <DependentUpon>201602090925569_AddedPropertiesMosaicSECustomerID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602161117138_RemoveMosaicSECustomerID.resx">
+      <DependentUpon>201602161117138_RemoveMosaicSECustomerID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602181432493_PersistPropertyLatestStatus.resx">
+      <DependentUpon>201602181432493_PersistPropertyLatestStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603011625551_GenabilitySolarProviderProfileID.resx">
+      <DependentUpon>201603011625551_GenabilitySolarProviderProfileID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603030954218_ChangedSolarSystemSlopeProperties.resx">
+      <DependentUpon>201603030954218_ChangedSolarSystemSlopeProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603081133495_AddSolarSystemIsPPAPricingB.resx">
+      <DependentUpon>201603081133495_AddSolarSystemIsPPAPricingB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603151314124_AddExternalCredentials.resx">
+      <DependentUpon>201603151314124_AddExternalCredentials.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603151643133_AddOUIDToSolarPanelsAndInverters.resx">
+      <DependentUpon>201603151643133_AddOUIDToSolarPanelsAndInverters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603151657183_AddInverterModelAndManufacturer.resx">
+      <DependentUpon>201603151657183_AddInverterModelAndManufacturer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603171340537_UpdatedSolarPanelAndInverter.resx">
+      <DependentUpon>201603171340537_UpdatedSolarPanelAndInverter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603221523462_SolarSystemChanges.resx">
+      <DependentUpon>201603221523462_SolarSystemChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603231019564_LogAuthentications.resx">
+      <DependentUpon>201603231019564_LogAuthentications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603242013389_AuthenticationUserRelationship.resx">
+      <DependentUpon>201603242013389_AuthenticationUserRelationship.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603310810159_FinancePlanChanges.resx">
+      <DependentUpon>201603310810159_FinancePlanChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603311114325_FinancePlanChanges1.resx">
+      <DependentUpon>201603311114325_FinancePlanChanges1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603301714387_RemoveOUMediaItems.resx">
+      <DependentUpon>201603301714387_RemoveOUMediaItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604041654435_Merge1.resx">
+      <DependentUpon>201604041654435_Merge1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604051558087_SolarSystemChanges1.resx">
+      <DependentUpon>201604051558087_SolarSystemChanges1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604061230536_FieldDisplayNameAndValueAreRequired.resx">
+      <DependentUpon>201604061230536_FieldDisplayNameAndValueAreRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604082022165_AddLayerFolderAndLayerDefinition.resx">
+      <DependentUpon>201604082022165_AddLayerFolderAndLayerDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604111946079_IncreasePropertyAttributeValue.resx">
+      <DependentUpon>201604111946079_IncreasePropertyAttributeValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604121140363_SolarSystemChanges2.resx">
+      <DependentUpon>201604121140363_SolarSystemChanges2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604151211586_HardCreditCheck.resx">
+      <DependentUpon>201604151211586_HardCreditCheck.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604181447169_HardCreditCheck1.resx">
+      <DependentUpon>201604181447169_HardCreditCheck1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604250746494_Reverted_Removing_OUMediaItems.resx">
+      <DependentUpon>201604250746494_Reverted_Removing_OUMediaItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604261128483_SolciusPrescreen.resx">
+      <DependentUpon>201604261128483_SolciusPrescreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604290851025_Merge2.resx">
+      <DependentUpon>201604290851025_Merge2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605100735499_GetOUTreeTerritories.resx">
+      <DependentUpon>201605100735499_GetOUTreeTerritories.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605131011420_MadeSpruceFlagsNullable.resx">
+      <DependentUpon>201605131011420_MadeSpruceFlagsNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605161034063_AddedCompoundPropertyConstraint.resx">
+      <DependentUpon>201605161034063_AddedCompoundPropertyConstraint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605241438094_Adding_Rank_to_SolarPanels_and_Inverters.resx">
+      <DependentUpon>201605241438094_Adding_Rank_to_SolarPanels_and_Inverters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606031130144_Added_ProposalDocuments.resx">
+      <DependentUpon>201606031130144_Added_ProposalDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606060730087_Remove_contract_properties_from_Proposal.resx">
+      <DependentUpon>201606060730087_Remove_contract_properties_from_Proposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606061229546_ProposalDocumentsChanges.resx">
+      <DependentUpon>201606061229546_ProposalDocumentsChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606070701087_InvertersSystemSizeRange.resx">
+      <DependentUpon>201606070701087_InvertersSystemSizeRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606140853081_Add_IsManuallyEntered_to_PowerConsumption.resx">
+      <DependentUpon>201606140853081_Add_IsManuallyEntered_to_PowerConsumption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201606291428076_Contractor_vs_Consumer_Changes.resx">
+      <DependentUpon>201606291428076_Contractor_vs_Consumer_Changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607051211549_SolarArrayChanges.resx">
+      <DependentUpon>201607051211549_SolarArrayChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607081151121_PropertiesRemoveSortOrder.resx">
+      <DependentUpon>201607081151121_PropertiesRemoveSortOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607081416108_PropertiesRelatedCleanup.resx">
+      <DependentUpon>201607081416108_PropertiesRelatedCleanup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607131916207_Add_Type_To_MediaItem.resx">
+      <DependentUpon>201607131916207_Add_Type_To_MediaItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607141409418_BatchPrescreenChanges.resx">
+      <DependentUpon>201607141409418_BatchPrescreenChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607210709261_BatchPrescreenChanges1.resx">
+      <DependentUpon>201607210709261_BatchPrescreenChanges1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607261305084_QuoteResponseDecisionGetTimeNullable.resx">
+      <DependentUpon>201607261305084_QuoteResponseDecisionGetTimeNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607281224051_SolarArrayAddedCenterLatLon.resx">
+      <DependentUpon>201607281224051_SolarArrayAddedCenterLatLon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607281233463_Adding_OUTreeUp_SQL_function.resx">
+      <DependentUpon>201607281233463_Adding_OUTreeUp_SQL_function.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607281427104_Merge3.resx">
+      <DependentUpon>201607281427104_Merge3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608040804211_Adding_User.NumberOfDevicesAllowed.resx">
+      <DependentUpon>201608040804211_Adding_User.NumberOfDevicesAllowed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608091512529_AddedCallbacksModels.resx">
+      <DependentUpon>201608091512529_AddedCallbacksModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608092051555_AddedGenDocsRequestModel.resx">
+      <DependentUpon>201608092051555_AddedGenDocsRequestModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608111123286_ChangedQuoteResponseLoanRateDecimalPrecision.resx">
+      <DependentUpon>201608111123286_ChangedQuoteResponseLoanRateDecimalPrecision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608111459488_SpruceModelUpdates.resx">
+      <DependentUpon>201608111459488_SpruceModelUpdates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608301457243_ApiLog.resx">
+      <DependentUpon>201608301457243_ApiLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608121820252_Removing_OUSettingDefinition_and_OUSettingValue.resx">
+      <DependentUpon>201608121820252_Removing_OUSettingDefinition_and_OUSettingValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608131148295_Adding_OUSettings.resx">
+      <DependentUpon>201608131148295_Adding_OUSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608151200135_Removing_OUSetting.ValueIsDefault.resx">
+      <DependentUpon>201608151200135_Removing_OUSetting.ValueIsDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608151355314_Adding_OUSetting.ValueType.resx">
+      <DependentUpon>201608151355314_Adding_OUSetting.ValueType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608151750533_Adding_internaAPI_PersonAndUser.resx">
+      <DependentUpon>201608151750533_Adding_internaAPI_PersonAndUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608171938389_Adding_FinanceProvider_and_PeriodInMonths_to_FinancePlans.resx">
+      <DependentUpon>201608171938389_Adding_FinanceProvider_and_PeriodInMonths_to_FinancePlans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608220920307_Merging_PPA_and_Loan_Contracts_enum_Values.resx">
+      <DependentUpon>201608220920307_Merging_PPA_and_Loan_Contracts_enum_Values.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608231755240_Removing_OUCustomFields_and_Values.resx">
+      <DependentUpon>201608231755240_Removing_OUCustomFields_and_Values.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608261245469_SolarSystemChanges3.resx">
+      <DependentUpon>201608261245469_SolarSystemChanges3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608311902328_Adding_LoanExtraCosts_and_LoanTaxRate_to_SolarSystem.resx">
+      <DependentUpon>201608311902328_Adding_LoanExtraCosts_and_LoanTaxRate_to_SolarSystem.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609141243553_Adding_FinancePlansSettingsJSON_To_SolarSystem.resx">
+      <DependentUpon>201609141243553_Adding_FinancePlansSettingsJSON_To_SolarSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609231700359_SolarProposalChanges.resx">
+      <DependentUpon>201609231700359_SolarProposalChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609301913101_Removing_Genability_Data.resx">
+      <DependentUpon>201609301913101_Removing_Genability_Data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610032040595_ProposalDocumentRename.resx">
+      <DependentUpon>201610032040595_ProposalDocumentRename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610061426439_Merge4.resx">
+      <DependentUpon>201610061426439_Merge4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610180811381_FinanceDocumentErrorMessage.resx">
+      <DependentUpon>201610180811381_FinanceDocumentErrorMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610241244225_ClientAPI-Initial_Commit.resx">
+      <DependentUpon>201610241244225_ClientAPI-Initial_Commit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610250912109_AddedExpirationDateToToken.resx">
+      <DependentUpon>201610250912109_AddedExpirationDateToToken.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610250856007_TerritoryChanges.resx">
+      <DependentUpon>201610250856007_TerritoryChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610281200528_Misc_Pending_Changes.resx">
+      <DependentUpon>201610281200528_Misc_Pending_Changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611011416359_WebHook_Added_QueueName.resx">
+      <DependentUpon>201611011416359_WebHook_Added_QueueName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021125114_SolarSystemChanges4.resx">
+      <DependentUpon>201611021125114_SolarSystemChanges4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021133384_SolarSystemProductionChanges.resx">
+      <DependentUpon>201611021133384_SolarSystemProductionChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611022252551_StoredProcs_For_Webhooks.resx">
+      <DependentUpon>201611022252551_StoredProcs_For_Webhooks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611031625301_Merge5.resx">
+      <DependentUpon>201611031625301_Merge5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611041116321_NewSolarModels.resx">
+      <DependentUpon>201611041116321_NewSolarModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611041158054_NewSolarModels1.resx">
+      <DependentUpon>201611041158054_NewSolarModels1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611041610319_Merge6.resx">
+      <DependentUpon>201611041610319_Merge6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611061818442_Proposal_OUID.resx">
+      <DependentUpon>201611061818442_Proposal_OUID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611081249092_RoofPlaneChanges.resx">
+      <DependentUpon>201611081249092_RoofPlaneChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611111903266_Add_ImagePurcase_Model.resx">
+      <DependentUpon>201611111903266_Add_ImagePurcase_Model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611121503513_Added HighResolutionImage model.resx">
+      <DependentUpon>201611121503513_Added HighResolutionImage model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611121607447_Fixing Some Data Fields.resx">
+      <DependentUpon>201611121607447_Fixing Some Data Fields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611121614053_More Changes on Image Models.resx">
+      <DependentUpon>201611121614053_More Changes on Image Models.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611121712078_More Image Model Changes.resx">
+      <DependentUpon>201611121712078_More Image Model Changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611121938273_Added Cropping Data.resx">
+      <DependentUpon>201611121938273_Added Cropping Data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611251326211_RoofPlaneChanges1.resx">
+      <DependentUpon>201611251326211_RoofPlaneChanges1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612080243543_HiResImagesUpdate.resx">
+      <DependentUpon>201612080243543_HiResImagesUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612091334015_TerritorySummary_AddAssignmentCount.resx">
+      <DependentUpon>201612091334015_TerritorySummary_AddAssignmentCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612121703183_ImagePurchase_RemoveUnusedCroppingColumns.resx">
+      <DependentUpon>201612121703183_ImagePurchase_RemoveUnusedCroppingColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612221152243_ObstructionsModelUpdate.resx">
+      <DependentUpon>201612221152243_ObstructionsModelUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612221232517_ObstructionsModel_CenterUpdate.resx">
+      <DependentUpon>201612221232517_ObstructionsModel_CenterUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612291405420_Updating_PersonSettings.resx">
+      <DependentUpon>201612291405420_Updating_PersonSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701171511578_AddersModel.resx">
+      <DependentUpon>201701171511578_AddersModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701190820153_Adding_AdderItem.TemplateID.resx">
+      <DependentUpon>201701190820153_Adding_AdderItem.TemplateID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701191208345_RoofPlanePanel_AddGeoCoordinates.resx">
+      <DependentUpon>201701191208345_RoofPlanePanel_AddGeoCoordinates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701201300478_AdderItem_AddRoofPlaneDetails.resx">
+      <DependentUpon>201701201300478_AdderItem_AddRoofPlaneDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701300152040_Grid Offset and SystemJson.resx">
+      <DependentUpon>201701300152040_Grid Offset and SystemJson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702011002144_Removing_SolarArrays.resx">
+      <DependentUpon>201702011002144_Removing_SolarArrays.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702061123437_FinanceDefinitions_PropertyRatings.resx">
+      <DependentUpon>201702061123437_FinanceDefinitions_PropertyRatings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702070934032_Increasing_Precision_on_Coordinates.resx">
+      <DependentUpon>201702070934032_Increasing_Precision_on_Coordinates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702071002461_Increasing_precision_for_Obstruction_Points.resx">
+      <DependentUpon>201702071002461_Increasing_precision_for_Obstruction_Points.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702091026458_Property_IncreasePrecision_LatLon.resx">
+      <DependentUpon>201702091026458_Property_IncreasePrecision_LatLon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702092023440_Seeding_FinanceProvider.resx">
+      <DependentUpon>201702092023440_Seeding_FinanceProvider.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702100711238_Updating_FinanceDetails_and_FinanceProvider.resx">
+      <DependentUpon>201702100711238_Updating_FinanceDetails_and_FinanceProvider.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702101421522_Adding_procOUFinanceAssociations.resx">
+      <DependentUpon>201702101421522_Adding_procOUFinanceAssociations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702131433575_Reverse_shading_values.resx">
+      <DependentUpon>201702131433575_Reverse_shading_values.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702131459326_Adding_FinanceDetail_IsSpruced.resx">
+      <DependentUpon>201702131459326_Adding_FinanceDetail_IsSpruced.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702141540284_Adding_FinancePlan_FinancePlanDefinitionId.resx">
+      <DependentUpon>201702141540284_Adding_FinancePlan_FinancePlanDefinitionId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702141827163_Removing_FinancePlan_Unused_properties.resx">
+      <DependentUpon>201702141827163_Removing_FinancePlan_Unused_properties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702161300075_Adding_PRMI_PhoneNumber.resx">
+      <DependentUpon>201702161300075_Adding_PRMI_PhoneNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702161509287_Adding_FinancePlanDefinition_TermInYears_Property.resx">
+      <DependentUpon>201702161509287_Adding_FinancePlanDefinition_TermInYears_Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702161749215_Seeding_Cash_FinanceOption.resx">
+      <DependentUpon>201702161749215_Seeding_Cash_FinanceOption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702200915557_Seeding_internalAPI_credentials_and_settings.resx">
+      <DependentUpon>201702200915557_Seeding_internalAPI_credentials_and_settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702201431410_Seeding_CanPerformHardCreditCheck_on_Solcius.resx">
+      <DependentUpon>201702201431410_Seeding_CanPerformHardCreditCheck_on_Solcius.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702201529211_DataReefSolar_SetGenericProposal.resx">
+      <DependentUpon>201702201529211_DataReefSolar_SetGenericProposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702230946116_Adding_ImagerySource_to_Proposal.resx">
+      <DependentUpon>201702230946116_Adding_ImagerySource_to_Proposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702241127503_Setting_FinancePlanDetails_FinanceOptionID_and_DealerFee.resx">
+      <DependentUpon>201702241127503_Setting_FinancePlanDetails_FinanceOptionID_and_DealerFee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703060750295_Adding_InterestType_and_PrincipalType_to_FinanceDetail.resx">
+      <DependentUpon>201703060750295_Adding_InterestType_and_PrincipalType_to_FinanceDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703061752468_Leaving_Only_one_generic_mortgage_finance_plan.resx">
+      <DependentUpon>201703061752468_Leaving_Only_one_generic_mortgage_finance_plan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703071320412_Add_PropertyPowerConsumption.resx">
+      <DependentUpon>201703071320412_Add_PropertyPowerConsumption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703091520560_Updating_Cash_FinanceDetails.resx">
+      <DependentUpon>201703091520560_Updating_Cash_FinanceDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703100728051_Updating_finance_DeferredPeriod_InterestType.resx">
+      <DependentUpon>201703100728051_Updating_finance_DeferredPeriod_InterestType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703140804009_Seeding_CCBank_FinanceProvider.resx">
+      <DependentUpon>201703140804009_Seeding_CCBank_FinanceProvider.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703151226517_Add_Property_Pitch.resx">
+      <DependentUpon>201703151226517_Add_Property_Pitch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703151500406_Remove_PropertyPowerConsumption.resx">
+      <DependentUpon>201703151500406_Remove_PropertyPowerConsumption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703151508204_PowerConsumption_UnifyModel.resx">
+      <DependentUpon>201703151508204_PowerConsumption_UnifyModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703161523024_Adding_commerce_orders_table.resx">
+      <DependentUpon>201703161523024_Adding_commerce_orders_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703180342385_Order Details.resx">
+      <DependentUpon>201703180342385_Order Details.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703180954346_Adding_OrderDetails.resx">
+      <DependentUpon>201703180954346_Adding_OrderDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703181334099_Adding_PersonID_to_Order.resx">
+      <DependentUpon>201703181334099_Adding_PersonID_to_Order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703181419181_Order.OrderStatus.resx">
+      <DependentUpon>201703181419181_Order.OrderStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703201129171_Add_Territory_PropertyCount.resx">
+      <DependentUpon>201703201129171_Add_Territory_PropertyCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703230756213_Updating_PropertyAttribute_Entity.resx">
+      <DependentUpon>201703230756213_Updating_PropertyAttribute_Entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703230956501_Remove_ExpireMinutes_from_PropertyAttribute.resx">
+      <DependentUpon>201703230956501_Remove_ExpireMinutes_from_PropertyAttribute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703231036141_Updating_proc_TerritoryAnalytics_storedProcedure.sql.resx">
+      <DependentUpon>201703231036141_Updating_proc_TerritoryAnalytics_storedProcedure.sql.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703241008298_AdderItem_HistoryModelUpdate.resx">
+      <DependentUpon>201703241008298_AdderItem_HistoryModelUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703241052020_AdderItem_AddDescription.resx">
+      <DependentUpon>201703241052020_AdderItem_AddDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703241115092_AdderItem_MakeHistoryFieldsNullable.resx">
+      <DependentUpon>201703241115092_AdderItem_MakeHistoryFieldsNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703300706426_Adding_missing_financeDetails_for_Spruce.resx">
+      <DependentUpon>201703300706426_Adding_missing_financeDetails_for_Spruce.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704040843129_TerritoryPropertCount_Nullable.resx">
+      <DependentUpon>201704040843129_TerritoryPropertCount_Nullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704041337050_Property_Add_ApplyConsumptionSlope.resx">
+      <DependentUpon>201704041337050_Property_Add_ApplyConsumptionSlope.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704111506231_Add_PrescreenBatchLogs.resx">
+      <DependentUpon>201704111506231_Add_PrescreenBatchLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704121024500_Remove_PrescreenBatchLogs.resx">
+      <DependentUpon>201704121024500_Remove_PrescreenBatchLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704191124133_Velocify_Add_Request_Response.resx">
+      <DependentUpon>201704191124133_Velocify_Add_Request_Response.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704200844040_VelocifyRequest_Add_BirthDate.resx">
+      <DependentUpon>201704200844040_VelocifyRequest_Add_BirthDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704251057576_Adding_VelocifyRequest_Source.resx">
+      <DependentUpon>201704251057576_Adding_VelocifyRequest_Source.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704281426340_Removed_unused_properties_on_panels_and_inverters.resx">
+      <DependentUpon>201704281426340_Removed_unused_properties_on_panels_and_inverters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705151648086_Adding_FinanceProvider_ProposalFlowType_property.resx">
+      <DependentUpon>201705151648086_Adding_FinanceProvider_ProposalFlowType_property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705191313577_Add_FinancialAdapters_Logging.resx">
+      <DependentUpon>201705191313577_Add_FinancialAdapters_Logging.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705221205127_Adding_SolarPanel_Efficiency.resx">
+      <DependentUpon>201705221205127_Adding_SolarPanel_Efficiency.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705310812518_Adding_Description_Property_to_FinancePlanDefinition.resx">
+      <DependentUpon>201705310812518_Adding_Description_Property_to_FinancePlanDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705310907231_Adding_solar_ProposalData_Table.resx">
+      <DependentUpon>201705310907231_Adding_solar_ProposalData_Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705151018035_AdderItems_UpdateModel_Incentives.resx">
+      <DependentUpon>201705151018035_AdderItems_UpdateModel_Incentives.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705311616463_MergeMigration.resx">
+      <DependentUpon>201705311616463_MergeMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706091047323_ProposalData_RemoveJsons.resx">
+      <DependentUpon>201706091047323_ProposalData_RemoveJsons.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706121254524_Proposal_Add_ProposalURL.resx">
+      <DependentUpon>201706121254524_Proposal_Add_ProposalURL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706141030534_HtmlProposal_MigrateExistingDocuments.resx">
+      <DependentUpon>201706141030534_HtmlProposal_MigrateExistingDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706210736460_Adding_DesignSystemType_to_Proposal_Model.resx">
+      <DependentUpon>201706210736460_Adding_DesignSystemType_to_Proposal_Model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706221001063_Add_EpcModels.resx">
+      <DependentUpon>201706221001063_Add_EpcModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708161631289_Adding_KeyValue.resx">
+      <DependentUpon>201708161631289_Adding_KeyValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708171509399_Adding_IntegrationToken.resx">
+      <DependentUpon>201708171509399_Adding_IntegrationToken.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708180927534_Removing_Inquiry_Notes_lenght_restriction.resx">
+      <DependentUpon>201708180927534_Removing_Inquiry_Notes_lenght_restriction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708240814024_Adding_APNDeviceToken_to_Devices.resx">
+      <DependentUpon>201708240814024_Adding_APNDeviceToken_to_Devices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708310756599_Adding_Proposal_MetaInfo_Property.resx">
+      <DependentUpon>201708310756599_Adding_Proposal_MetaInfo_Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709181321414_Adding_Inquiry_Disposition.resx">
+      <DependentUpon>201709181321414_Adding_Inquiry_Disposition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709211200408_Adding_SolarPanel_properties.resx">
+      <DependentUpon>201709211200408_Adding_SolarPanel_properties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709211439496_Adding_SalesRepEmail_and_SalesRepCompanyName_to_VelocifyRequest.resx">
+      <DependentUpon>201709211439496_Adding_SalesRepEmail_and_SalesRepCompanyName_to_VelocifyRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709290954565_Velocify_AddSystemCost.resx">
+      <DependentUpon>201709290954565_Velocify_AddSystemCost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710021212249_Adding_VisibleToClients_Property_to_AppSetting.resx">
+      <DependentUpon>201710021212249_Adding_VisibleToClients_Property_to_AppSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710031049558_Adding_Adder_IsRebate.resx">
+      <DependentUpon>201710031049558_Adding_Adder_IsRebate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710031120533_Removing_Unused_FinanceDetail_Properties.resx">
+      <DependentUpon>201710031120533_Removing_Unused_FinanceDetail_Properties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710041506377_Adding_ProposalID_to_ProposalData_entity.resx">
+      <DependentUpon>201710041506377_Adding_ProposalID_to_ProposalData_entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710101201376_Adding_PushSubscriptions.resx">
+      <DependentUpon>201710101201376_Adding_PushSubscriptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710131403576_Adding_ProposalMediaItems.resx">
+      <DependentUpon>201710131403576_Adding_ProposalMediaItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710170821468_Adding_ProposalIntegrationAudit.resx">
+      <DependentUpon>201710170821468_Adding_ProposalIntegrationAudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710191310174_Adding_PersonType_property_to_Person.resx">
+      <DependentUpon>201710191310174_Adding_PersonType_property_to_Person.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710191843032_Empty_Migration_for_merge.resx">
+      <DependentUpon>201710191843032_Empty_Migration_for_merge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710191917341_Merge_fix.resx">
+      <DependentUpon>201710191917341_Merge_fix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710191924055_Merge_fix1.resx">
+      <DependentUpon>201710191924055_Merge_fix1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710230855024_Adding_ProposalDataJSON_to_ProposalData.resx">
+      <DependentUpon>201710230855024_Adding_ProposalDataJSON_to_ProposalData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710261400232_Adding_Cost_and_Usage_source_to_PowerConsumption.resx">
+      <DependentUpon>201710261400232_Adding_Cost_and_Usage_source_to_PowerConsumption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711101529197_Making VelocifyRequest.Birthday nullable.resx">
+      <DependentUpon>201711101529197_Making VelocifyRequest.Birthday nullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711151103218_Adding Recurrence Properties To AdderItem.resx">
+      <DependentUpon>201711151103218_Adding Recurrence Properties To AdderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712060823262_Adding_IntegrationProvider_and_Apr_To_FinancePlanDefinition.resx">
+      <DependentUpon>201712060823262_Adding_IntegrationProvider_and_Apr_To_FinancePlanDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712071457391_Updating VelocifyRequest model.resx">
+      <DependentUpon>201712071457391_Updating VelocifyRequest model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712071615426_Adding ResidentCount property to Shapes.resx">
+      <DependentUpon>201712071615426_Adding ResidentCount property to Shapes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712111221386_Adding FinancePlanDefinition.MetaDataJSON property.resx">
+      <DependentUpon>201712111221386_Adding FinancePlanDefinition.MetaDataJSON property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712141723121_Adding TermInMonths to FinancePlanDefinition.resx">
+      <DependentUpon>201712141723121_Adding TermInMonths to FinancePlanDefinition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712151243266_Adding OrderInFolder to OUMediaItem.resx">
+      <DependentUpon>201712151243266_Adding OrderInFolder to OUMediaItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712181159320_Adding MediaItemType to ProposalMediaItem.resx">
+      <DependentUpon>201712181159320_Adding MediaItemType to ProposalMediaItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712191045258_Adding PowerMetaDataJSON to SolarSystem.resx">
+      <DependentUpon>201712191045258_Adding PowerMetaDataJSON to SolarSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801051415560_Adding IsAppliedBeforeITC to AdderItem.resx">
+      <DependentUpon>201801051415560_Adding IsAppliedBeforeITC to AdderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801090746403_Updating AdderItem.Quantity, from int to double.resx">
+      <DependentUpon>201801090746403_Updating AdderItem.Quantity, from int to double.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801181647528_Adding DynamicSettingsJSON to AdderItem.resx">
+      <DependentUpon>201801181647528_Adding DynamicSettingsJSON to AdderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802121347233_Adding Appointments.resx">
+      <DependentUpon>201802121347233_Adding Appointments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802161123466_Adding Proposal.SignedDocumentsJSON property.resx">
+      <DependentUpon>201802161123466_Adding Proposal.SignedDocumentsJSON property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802161156451_Adding IsArchived for OU and Territory.resx">
+      <DependentUpon>201802161156451_Adding IsArchived for OU and Territory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802161443023_Adding ProposalData.UsesNoSQLAggregatedData.resx">
+      <DependentUpon>201802161443023_Adding ProposalData.UsesNoSQLAggregatedData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802190831277_Removing ProposalData nav properties.resx">
+      <DependentUpon>201802190831277_Removing ProposalData nav properties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808290807117_Adding SmartBoardId to PropertyBase.resx">
+      <DependentUpon>201808290807117_Adding SmartBoardId to PropertyBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809110753279_PersonKPI.resx">
+      <DependentUpon>201809110753279_PersonKPI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811151440306_AddFinanceTypeToAdder.resx">
+      <DependentUpon>201811151440306_AddFinanceTypeToAdder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811280938265_Adding MetaInformation to ProposalData.resx">
+      <DependentUpon>201811280938265_Adding MetaInformation to ProposalData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812031208075_Adding CRUDAudit.resx">
+      <DependentUpon>201812031208075_Adding CRUDAudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901081239456_Adding Url and Headers To AdapterRequest.resx">
+      <DependentUpon>201901081239456_Adding Url and Headers To AdapterRequest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901151328599_PropertyAttachment and PropertyAttachmentItem.resx">
+      <DependentUpon>201901151328599_PropertyAttachment and PropertyAttachmentItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901151404281_Adding AddressID to Property.resx">
+      <DependentUpon>201901151404281_Adding AddressID to Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901151720375_Adding ESIndexName to Property.resx">
+      <DependentUpon>201901151720375_Adding ESIndexName to Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901160837106_Adding Audit to PropertyAttachment.resx">
+      <DependentUpon>201901160837106_Adding Audit to PropertyAttachment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901171335283_Adding RoleType on OURole.resx">
+      <DependentUpon>201901171335283_Adding RoleType on OURole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901231557457_Adding Indices on Name and Address1.resx">
+      <DependentUpon>201901231557457_Adding Indices on Name and Address1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901231641584_Renamed PropertyAttachment RejectionMessage.resx">
+      <DependentUpon>201901231641584_Renamed PropertyAttachment RejectionMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901301218469_Add AttachmentTypeID to PropertyAttachment.resx">
+      <DependentUpon>201901301218469_Add AttachmentTypeID to PropertyAttachment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902131328296_Added navigation properties on appointment.resx">
+      <DependentUpon>201902131328296_Added navigation properties on appointment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902210829290_Create Function and SP GetOUSettingsMany .resx">
+      <DependentUpon>201902210829290_Create Function and SP GetOUSettingsMany .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903051411011_Extended length of Address2.resx">
+      <DependentUpon>201903051411011_Extended length of Address2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903220852279_Extended Address2 field on PropertyBase.resx">
+      <DependentUpon>201903220852279_Extended Address2 field on PropertyBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904050727092_Adding RoleType To OUAssociation.resx">
+      <DependentUpon>201904050727092_Adding RoleType To OUAssociation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904051141269_Added Utility Provider ID and Name to Property.resx">
+      <DependentUpon>201904051141269_Added Utility Provider ID and Name to Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904151226572_Added GoogleEventID and Status on Appointment.resx">
+      <DependentUpon>201904151226572_Added GoogleEventID and Status on Appointment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905090648340_Replace ProposalPresented Handler.resx">
+      <DependentUpon>201905090648340_Replace ProposalPresented Handler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905091025349_Add PhotosAdmin role.resx">
+      <DependentUpon>201905091025349_Add PhotosAdmin role.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905201118204_Adding post consumptions to SystemProduction.resx">
+      <DependentUpon>201905201118204_Adding post consumptions to SystemProduction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906031010297_Adding Property.Notes.resx">
+      <DependentUpon>201906031010297_Adding Property.Notes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906131429360_Adding CalculatedPer to AdderItem.resx">
+      <DependentUpon>201906131429360_Adding CalculatedPer to AdderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906241235446_Added ZoomLevel to Property.resx">
+      <DependentUpon>201906241235446_Added ZoomLevel to Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906271224147_Moved ZoomLevel from property to proposal.resx">
+      <DependentUpon>201906271224147_Moved ZoomLevel from property to proposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907021256373_Removed InquiryStatus.resx">
+      <DependentUpon>201907021256373_Removed InquiryStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907090744513_Switch InquiryStatus in PersonSummary stored proc.resx">
+      <DependentUpon>201907090744513_Switch InquiryStatus in PersonSummary stored proc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907090802098_Refactor SP for OUAnalytics.resx">
+      <DependentUpon>201907090802098_Refactor SP for OUAnalytics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907301135380_Add Agreement Base Url Setting.resx">
+      <DependentUpon>201907301135380_Add Agreement Base Url Setting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908291057408_Added GridCenter coordinates on RoofPlane.resx">
+      <DependentUpon>201908291057408_Added GridCenter coordinates on RoofPlane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908301421348_Added TimeZone on Appointment.resx">
+      <DependentUpon>201908301421348_Added TimeZone on Appointment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909060828445_Added CreditStatus on Proposal.resx">
+      <DependentUpon>201909060828445_Added CreditStatus on Proposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909270625566_Added the PropertySurvey entity.resx">
+      <DependentUpon>201909270625566_Added the PropertySurvey entity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910290957032_Added PropertyNote.resx">
+      <DependentUpon>201910290957032_Added PropertyNote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911070559477_SmartboardID on Person.resx">
+      <DependentUpon>201911070559477_SmartboardID on Person.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911151001230_Added Notification.resx">
+      <DependentUpon>201911151001230_Added Notification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911181339145_Updates to Notes.resx">
+      <DependentUpon>201911181339145_Updates to Notes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911290644588_Added Permissions Field to OURole.resx">
+      <DependentUpon>201911290644588_Added Permissions Field to OURole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
+      <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataReef.Core.Base\DataReef.Core.Base.csproj">
+      <Project>{8b0773f4-e04a-40ea-8c02-8ecfe1dcd428}</Project>
+      <Name>DataReef.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Core.Infrastructure\DataReef.Core.Infrastructure.csproj">
+      <Project>{71d628d4-24ab-4493-a7ba-8c5565870a17}</Project>
+      <Name>DataReef.Core.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.Models\DataReef.TM.Models.csproj">
+      <Project>{f5644194-5ab2-4fba-8632-46630fb5ddd3}</Project>
+      <Name>DataReef.TM.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Credit\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Database\SQL\Migrations\2017-03-23_01_01_Update_proc_TerritoryAnalytics.sql" />
+    <Content Include="Database\SQL\Migrations\2017-03-23_01_02_Revert_proc_TerritoryAnalytics.sql" />
+    <Content Include="Database\SQL\Migrations\2017-03-30_01_01_Update_Spruce_FinanceDetails.sql" />
+    <Content Include="Database\SQL\Migrations\2017-12-06_01_01_Add_LoanPal_FinancePlans.sql" />
+    <Content Include="Database\SQL\Migrations\Add_OUSettings.sql" />
+    <Content Include="Database\SQL\Migrations\Documents_migration.sql" />
+    <Content Include="Database\SQL\Migrations\FinancePlans_Adding_FinanceProvider_and_PeriodInMonths.sql" />
+    <Content Include="Database\SQL\Migrations\FinancePlans_Adding_FinanceProvider_and_PeriodInMonths_Rollback.sql" />
+    <Content Include="Database\SQL\Migrations\GetOUTreeTerritories.sql" />
+    <Content Include="Database\SQL\Migrations\Migrate_FinancePlanDefinitions.sql" />
+    <Content Include="Database\SQL\Migrations\OUCustomFields_and_Values_to_OUSettings.sql" />
+    <Content Include="Database\SQL\Migrations\OUTreeUP_SQL_Function.sql" />
+    <Content Include="Database\SQL\Migrations\proc_OUFinanceAssociations.sql" />
+    <Content Include="Database\SQL\Migrations\RemoveOUMediaItems.sql" />
+    <Content Include="Database\SQL\Migrations\Revert_RemoveOUMediaItems.sql" />
+    <Content Include="Database\SQL\Migrations\Seed_CCBank_FinancePlan_and_details.sql" />
+    <Content Include="Database\SQL\Migrations\Seed_FinanceProvider_Data.sql" />
+    <Content Include="Database\SQL\Migrations\Seed_FinanceProvider_Data_02.sql" />
+    <Content Include="Database\SQL\Migrations\Set_MediaType_To_MediaItems.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

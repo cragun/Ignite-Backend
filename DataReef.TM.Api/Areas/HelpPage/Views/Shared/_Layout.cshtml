@@ -1,0 +1,46 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link type="text/css" href="~/Areas/HelpPage/Resources/Css/HelpPage.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Territory Manager API</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="@Url.Action("Index", "Help")">Dashboard</a></li>
+                    <li><a href="@Url.Action("Index", "Changeset")">Changesets</a></li>
+                    <li><a href="@Url.Action("Index", "Feedback")">Feedback</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="@Url.Action("Index", "Options")">Options</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/common")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src=@Url.Content("~/Areas/HelpPage/Resources/Js/Modules/PersistenceModule.js")></script>
+    <script src=@Url.Content("~/Areas/HelpPage/Resources/Js/Modules/OptionsModule.js")></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

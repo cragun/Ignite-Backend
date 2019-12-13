@@ -1,0 +1,27 @@
+﻿@using DataReef.TM.Api.Areas.HelpPage.Views.Help
+@model DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel
+
+@if (!string.IsNullOrEmpty(Model.ActionDescription))
+{
+    <h5><b class="text-@CommonFunctions.GetAssociatedActionColor(Model.ActionType)">Description:</b></h5>
+    <div class="border-bottom">
+        <p>@Model.ActionDescription</p>
+    </div>
+    <div class="margin-bottom-medium"></div>
+}
+
+<div>
+    <h5><b class="text-@CommonFunctions.GetAssociatedActionColor(Model.ActionType)">Uri:</b></h5>
+    <span>@Model.ActionUri</span>
+
+    @if (Model.AlternativeUris.Any())
+    {
+        <div class="border-top padding-top-small margin-top-medium">
+            <h5><b class="text-@CommonFunctions.GetAssociatedActionColor(Model.ActionType)">Alternative Uri's:</b> (its recommended not to use these Uri's)</h5>
+            @foreach (var altUri in Model.AlternativeUris)
+            {
+                <span class="small clearfix">@altUri</span>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DataReef.TM.Contracts</name>
+    </assembly>
+    <members>
+        <member name="M:DataReef.TM.Contracts.Services.IKeyValueService.Upsert(DataReef.TM.Models.KeyValue)">
+            <summary>
+            Updates or inserts the KeyValue. Uses the Key and the ObjectID as a compound key
+            </summary>
+            <param name="kv"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IImageryService.HighResImageExistsAtLocation(System.Double,System.Double)">
+            <summary>
+            Returns true if an orthogonal image ( Down ) exists at location
+            </summary>
+            <param name="lat"></param>
+            <param name="lon"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IImageryService.AvailableOrientationsAtLocation(System.Double,System.Double)">
+            <summary>
+            Returns a list of image directions ( orientations ) Down, North, East, South,West
+            </summary>
+            <param name="lat"></param>
+            <param name="lon"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IImageryService.PurchaseHighResImageAtCoordinates(System.Guid,System.Double,System.Double,System.Double,System.Double,System.String)">
+            <summary>
+            gets the hi-res image at the given lat / lon
+            </summary>
+            <param name="propertyID">property id for the purchase</param>
+            <param name="top">Lat of the top cropping box side</param>
+            <param name="left">Lon of the left cropping box side</param>
+            <param name="bottom">Lat of the bottom cropping box side</param>
+            <param name="right">Lon of the Right cropping box side</param>
+            <param name="direction">Direction of Image.  Default is Down=Orthogonal</param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IImageryService.GetExistingHiResImageForProperty(System.Guid,System.Double,System.Double,System.Double,System.Double,System.String)">
+            <summary>
+            returns the already purchased hi res image for a given property
+            </summary>
+            <param name="propertyID">property id for the purchase</param>
+            <param name="top">Lat of the top cropping box side</param>
+            <param name="left">Lon of the left cropping box side</param>
+            <param name="bottom">Lat of the bottom cropping box side</param>
+            <param name="right">Lon of the Right cropping box side</param>
+            <param name="direction">Direction of Image.  Default is Down=Orthogonal</param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.ICurrentLocationService.GetCurrentLocationsForPersonAndDate(System.Guid,System.DateTime)">
+            <summary>
+            Select the CurrentLocations for a person by Date
+            </summary>
+            <param name="personID"></param>
+            <param name="date"></param>
+            <returns>collection of CurrentLocation</returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.ICurrentLocationService.GetLatestLocations(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            Get latest locations for given PersonIds
+            </summary>
+            <param name="personIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IDataService`1.Insert(`0)">
+            <summary>
+            Always adds a new entity of type T to the database.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IDataService`1.InsertMany(System.Collections.Generic.ICollection{`0})">
+            <summary>
+            Always adds the list of entities as new objects to the database.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IDataService`1.Update(`0)">
+            <summary>
+            Always updates by overwriting an existing entity of type T.
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.IDeviceService.GetAPNDeviceTokens(System.Nullable{System.Guid})">
+            <summary>
+            Retrieves a list of Device Tokens for given UserID or for SmartPrincipal.UserID if userId is null
+            </summary>
+            <param name="userId"></param>
+            <returns>A list of Apple Push Notification Device Tokens</returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.ISyncDataService.GetAll">
+            <summary>
+            Build an initial synchronization package
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Contracts.Services.ISyncDataService.GetSyncDevices(System.Guid,System.Guid,System.String)">
+            <summary>
+            Get the list of affected userdevices for a specific entity
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DataReef.TM.Contracts.KnownTypesProvider">
+            <summary>
+            todo: MAJOR Refactor : get aseemblies from catalog
+            </summary>
+        </member>
+    </members>
+</doc>

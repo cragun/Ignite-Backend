@@ -1,0 +1,20 @@
+namespace DataReef.TM.DataAccess.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class AddInverterModelAndManufacturer : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn("solar.Inverters", "Model", c => c.String());
+            AddColumn("solar.Inverters", "Manufacturer", c => c.String());
+        }
+        
+        public override void Down()
+        {
+            DropColumn("solar.Inverters", "Manufacturer");
+            DropColumn("solar.Inverters", "Model");
+        }
+    }
+}

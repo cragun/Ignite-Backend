@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="DataReef.TM.Cloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2014-06.2.4">
+  <Role name="DataReef.TM.IISHost">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="admin" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEAOnIbf3WiqZRUB8tjuQMyQwDQYJKoZIhvcNAQEBBQAEggEAgR7llpZoMjiC3+mTC9O8fC2PPCNFmh1CeMOGJN87UKpWLFgw8VPD7uVNQrxIq/gxZNoN/CIjVRIBN07kAMVXRIgiAvEFN/l6JnAYrlSCDyt+yx6OR4jcP4tAIvM4Y23/9LxYRdHB+1S/VuGcr68Gm/RYmPA90spKx9ywHeA+gJ9AB6YZndtojfDR7Y/Cqg0TgEQp5imuKyklIEsWQZXOVeU0OKulpd4t0+fbzu7osBoMEI/psZCU/f0KWIQg4l5Flsvsc1MrrIB/IIzroKoaa6YsPMtMwEwJ3mbPjbpkCZfZntGXsJ2C05cufx7jJDt/5sJa3N1xyoC0gXvnpNHLOzAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECI2ajfvyUiK/gBBzHaPZpYX+n+idSTQYqUtG" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2015-12-01T23:59:59.0000000-07:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="443B6780646B359B252F257433C38D235827F100" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+</ServiceConfiguration>

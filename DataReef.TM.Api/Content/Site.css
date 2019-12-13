@@ -1,0 +1,309 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* -- Site wide helpers -- */
+/* Padding defaults */
+
+.padding-large {
+    padding: 20px;
+}
+
+.padding-horizontal-large {
+    padding: 0 20px;
+}
+
+.padding-vertical-large {
+    padding: 20px 0;
+}
+
+.padding-right-large {
+    padding-right: 20px;
+}
+
+.padding-left-large {
+    padding-left: 20px;
+}
+
+.padding-top-large {
+    padding-top: 20px;
+}
+
+.padding-bottom-large {
+    padding-bottom: 20px;
+}
+
+.padding-medium {
+    padding: 10px;
+}
+
+.padding-horizontal-medium {
+    padding: 0 10px;
+}
+
+.padding-vertical-medium {
+    padding: 10px 0;
+}
+
+.padding-right-medium {
+    padding-right: 10px;
+}
+
+.padding-left-medium {
+    padding-left: 10px;
+}
+
+.padding-top-medium {
+    padding-top: 10px;
+}
+
+.padding-bottom-medium {
+    padding-bottom: 10px;
+}
+
+.padding-small {
+    padding: 5px;
+}
+
+.padding-right-small {
+    padding-right: 5px;
+}
+
+.padding-left-small {
+    padding-left: 5px;
+}
+
+.padding-top-small {
+    padding-top: 5px;
+}
+
+.padding-bottom-small {
+    padding-bottom: 5px;
+}
+
+
+/* Margin defaults*/
+
+.margin-medium {
+    margin: 10px;
+}
+
+.margin-horizontal-medium {
+    margin: 0 10px;
+}
+
+.margin-vertical-medium {
+    margin: 10px 0;
+}
+
+.margin-right-medium {
+    margin-right: 10px;
+}
+
+.margin-left-medium {
+    margin-left: 10px;
+}
+
+.margin-top-medium {
+    margin-top: 10px;
+}
+
+.margin-bottom-medium {
+    margin-bottom: 10px;
+}
+
+.margin-large {
+    margin: 20px;
+}
+
+.margin-horizontal-large {
+    margin: 0 20px;
+}
+
+.margin-vertical-large {
+    margin: 20px 0;
+}
+
+.margin-right-large {
+    margin-right: 20px;
+}
+
+.margin-left-large {
+    margin-left: 20px;
+}
+
+.margin-top-large {
+    margin-top: 20px;
+}
+
+.margin-bottom-large {
+    margin-bottom: 20px;
+}
+
+.margin-spaciouse {
+    margin: 50px;
+}
+
+.margin-horizontal-spaciouse {
+    margin: 0 50px;
+}
+
+.margin-vertical-spaciouse {
+    margin: 50px 0;
+}
+
+.margin-right-spaciouse {
+    margin-right: 50px;
+}
+
+.margin-left-spaciouse {
+    margin-left: 50px;
+}
+
+.margin-top-spaciouse {
+    margin-top: 50px;
+}
+
+.margin-bottom-spaciouse {
+    margin-bottom: 50px;
+}
+
+/* Style clear classes*/
+
+.nopadding {
+    padding: 0;
+}
+
+.nopadding-right {
+    padding-right: 0;
+}
+
+.nopadding-left {
+    padding-left: 0;
+}
+
+.nopadding-top {
+    padding-top: 0;
+}
+
+.nopadding-bottom {
+    padding-bottom: 0;
+}
+
+.nomargin {
+    margin: 0;
+}
+
+/* Separators */
+
+.border-top {
+    border-top: 1px solid #ccc;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #ccc;
+}
+
+.border-right {
+    border-right: 1px solid #ccc;
+}
+
+.border-left {
+    border-left: 1px solid #ccc;
+}
+
+/* Background */
+
+.bg-grayed {
+    background-color: #f5f5f5;
+}
+
+a.bg-grayed:hover {
+    background-color: #f0f3f5;
+}
+
+.bg-grayed-light {
+    background-color: rgba(252, 252, 252, 0.80);
+}
+
+a.bg-grayed-light:hover {
+    background-color: #f0f3f5;
+}
+
+/* Border styling */
+
+.border-callout {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    position: relative;
+}
+
+    .border-callout .border-callout-head {
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+.border-callout-primary {
+    border-left-color: #428bca;
+}
+
+.border-callout-success {
+    border-left-color: #dff0d8;
+}
+
+.border-callout-info {
+    border-left-color: #d9edf7;
+}
+
+.border-callout-warning {
+    border-left-color: #fcf8e3;
+}
+
+.border-callout-danger {
+    border-left-color: #f2dede;
+}
+
+.border-callout .border-callout-head > .label {
+    font-size: 20px;
+    position: absolute;
+    border-radius: 0;
+    left: 0;
+    top: 0;
+}
+
+
+/* Bootstrap extensions */
+
+.modal-dialog.large {
+    width: 80%;
+}

@@ -1,0 +1,42 @@
+﻿@model DataReef.TM.Api.Areas.HelpPage.Models.HelpPageControllerActionDescriptionModel
+<div data-bind="visible: isLoaded" style="display: none">
+    <div class="margin-bottom-spaciouse">
+        <button type="button" class="btn btn-default btn-sm" data-bind="click: invokeApi, enable: !invokingAction()">Invoke</button>
+        <div class="pull-right">
+            <i class="padding-right-medium">Copy action call to clipboard:</i>
+            <!-- ko if: (httpVerbe == 'GET' && !body())  -->
+            <button type="button" data-requesttoclipboard="URL" class="btn btn-default btn-sm">URL</button>
+            <!-- /ko -->
+            <button type="button" data-requesttoclipboard="CURL" class="btn btn-default btn-sm">CURL</button>
+        </div>
+    </div>
+
+    <!-- ko if: hasParameters -->
+    <h4 class="border-bottom padding-bottom-medium margin-vertical-large"><i>Request url parameters:</i></h4>
+    <form class="form-horizontal" role="form">
+        <!-- ko foreach: parameters -->
+
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label" data-bind="text: name"></label>
+            <div class="col-sm-8">
+                <input class="form-control" data-bind="textInput: value" placeholder="Value">
+            </div>
+            <span class="help-block col-sm-2" data-bind="text: type"></span>
+        </div>
+
+        <!-- /ko -->
+    </form>
+    <!-- /ko -->
+    <!-- ko if: hasBody -->
+    <h4 class="border-bottom padding-bottom-medium margin-vertical-large"><i>Request body:</i></h4>
+    <textarea class="form-control" rows="15" data-bind="textInput: body"></textarea>
+    <!-- /ko -->
+
+    <h4 class="border-bottom padding-bottom-medium margin-vertical-large"><i>Expected response sample:</i></h4>
+    <!-- ko if: hasResponse -->
+    <textarea disabled class="form-control" style="cursor:default !important" rows="10" data-bind="textInput: expectedResponse"></textarea>
+    <!-- /ko -->
+    <!-- ko ifnot: hasResponse -->
+    <p>Expected response missing</p>
+    <!-- /ko -->
+</div>

@@ -1,0 +1,78 @@
+﻿<div id="intractionInvoke-success-modal" class="modal fade">
+    <div class="modal-dialog large">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" data-target="#intractionInvoke-success-modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Api call result</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row margin-bottom-medium">
+                        <div class="col-sm-3">URL:</div>
+                        <div class="col-sm-9" data-bind="text: requestUrl"></div>
+                    </div>
+                    <div class="row margin-bottom-medium">
+                        <div class="col-sm-3">Request status code:</div>
+                        <div class="col-sm-9" data-bind="text: requestStatusCode"></div>
+                    </div>
+                    <div class="row margin-bottom-medium padding-bottom-medium border-bottom">
+                        <div class="col-sm-3">Additional request headers:</div>
+                        <div class="col-sm-9" data-bind="template: {name:'headerTemplate', foreach: requestHeaders}"></div>
+                    </div>
+                    <div class="row margin-bottom-medium">
+                        <div class="col-sm-3">Response headers:</div>
+                        <div class="col-sm-9" data-bind="template: {name:'headerTemplate', foreach: responseHeaders}"></div>
+                    </div>
+                    <div class="row" data-bind="if: responseData != null">
+                        <div class="col-sm-3">Response data:</div>
+                        <textarea disabled class="col-sm-9" style="cursor:default !important" rows="10" data-bind="textInput: responseData"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#intractionInvoke-success-modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="intractionInvoke-error-alert" class="modal fade">
+    <div class="modal-dialog large">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal" data-target="#intractionInvoke-error-alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Oh snap! You got an error!</h4>
+            </div>
+            <div class="modal-body bg-danger">
+                <div class="container-fluid">
+                    <div class="row margin-bottom-medium">
+                        <div class="col-sm-3">URL:</div>
+                        <div class="col-sm-9" data-bind="text: requestUrl"></div>
+                    </div>
+                    <div class="row margin-bottom-medium">
+                        <div class="col-sm-3">Request status code:</div>
+                        <div class="col-sm-9" data-bind="text: requestStatusCode"></div>
+                    </div>
+                    <div class="row margin-bottom-medium padding-bottom-medium border-bottom">
+                        <div class="col-sm-3">Additional request headers:</div>
+                        <div class="col-sm-9" data-bind="template: {name:'headerTemplate', foreach: requestHeaders}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">Request error:</div>
+                        <div class="col-sm-10" data-bind="text: requestError"></div>
+                    </div>
+                </div>
+                <h5><b>Message:</b></h5>
+                <p data-bind="text: errorDescription" />
+            </div>
+
+            <div class="modal-footer bg-danger">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#intractionInvoke-error-alert">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="headerTemplate" type="text/html">
+    <p class="nomargin" data-bind="text: $data"></p>
+</script>

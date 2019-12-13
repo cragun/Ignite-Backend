@@ -1,0 +1,760 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3864282A-6024-453E-A35A-C6ADE39A520E}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataReef.TM.Api</RootNamespace>
+    <AssemblyName>DataReef.TM.Api</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>App_Data\DataReef.TM.API.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>App_Data\DataReef.TM.API.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=1.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.2.2\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Owin, Version=1.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Owin.1.2.2\lib\net45\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=1.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.1.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.1\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.1\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.1\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.1.1.0\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.0\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.OData.Core, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Core.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.OData.Edm, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Edm.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.OData.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.1.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Spatial, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Spatial.7.0.0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.2\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\Microsoft SDKs\Azure\.NET SDK\v2.4\ref\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unofficial.Microsoft.WindowsAzure.ServiceRuntime.2.9.0.0\lib\net45\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.5.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.5.6\lib\net45\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IdentityModel">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.1.0\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.1\lib\net40\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Entity">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Abstractions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.OData, Version=5.5.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.OData.5.5.1\lib\net45\System.Web.Http.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebApi.OutputCache.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Strathweb.CacheOutput.WebApi2.0.10.0\lib\net45\WebApi.OutputCache.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebApi.OutputCache.V2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Strathweb.CacheOutput.WebApi2.0.10.0\lib\net45\WebApi.OutputCache.V2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\FinanceIntegrations\" />
+    <Folder Include="Views\Layers\" />
+    <Folder Include="Views\SpruceGenDocsRequest\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="Classes\Enums\WebRedirectActions.cs" />
+    <Compile Include="Classes\Infrastructure\CustomMultipartFormDataProvider.cs" />
+    <Compile Include="Classes\Infrastructure\InMemoryMultipartFormDataStreamProvider.cs" />
+    <Compile Include="Classes\ViewModels\IntegrationParameters.cs" />
+    <Compile Include="Classes\Requests\TestAPNPushRequest.cs" />
+    <Compile Include="Classes\ViewModels\RegistrationViewModel.cs" />
+    <Compile Include="Classes\ViewModels\ResetPasswordViewModel.cs" />
+    <Compile Include="Classes\ViewModels\UserRegistrationViewModel.cs" />
+    <Compile Include="Controllers\AppointmentsController.cs" />
+    <Compile Include="Controllers\FinanceIntegrationsController.cs" />
+    <Compile Include="Controllers\FinancePlanDefinitionsController.cs" />
+    <Compile Include="Controllers\FinanceDetailsController.cs" />
+    <Compile Include="Controllers\FinanceProvidersController.cs" />
+    <Compile Include="Controllers\ImageryController.cs" />
+    <Compile Include="Controllers\IntegrationsControllerSunnova.cs" />
+    <Compile Include="Controllers\OnBoardingController.cs" />
+    <Compile Include="Controllers\MortgageController.cs" />
+    <Compile Include="Controllers\PersonKPIsController.cs" />
+    <Compile Include="Controllers\PortalController.cs" />
+    <Compile Include="Controllers\Properties2Controller.cs" />
+    <Compile Include="Controllers\NotificationsController.cs" />
+    <Compile Include="Controllers\PropertyNotesController.cs" />
+    <Compile Include="Controllers\PropertySurveysController.cs" />
+    <Compile Include="Controllers\ServiceFinanceController.cs" />
+    <Compile Include="Controllers\SignalR\PortalHub.cs" />
+    <Compile Include="Controllers\SolarSalesTrackerController.cs" />
+    <Compile Include="Controllers\UtilController.cs" />
+    <Compile Include="Controllers\WebHooksController.cs" />
+    <Compile Include="Extensions\ModelExtensions.cs" />
+    <Compile Include="JsonFormatter\MortgageContractResolver.cs" />
+    <Compile Include="Controllers\VelocifyController.cs" />
+    <Compile Include="Logging\ApiLogHandler.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\ChangesetController.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\FeedbackController.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\Options.cs" />
+    <Compile Include="Areas\HelpPage\Extensions\PathExtensions.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageAreaRegistration.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageConfigurationExtensions.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\CollectionModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\ComplexTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\DictionaryModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\EnumTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\EnumValueDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\IModelDocumentationProvider.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\KeyValuePairModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\ModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ApiModelDescriptionGenerator.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\ModelNameAttribute.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\ModelNameHelper.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\ParameterAnnotation.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\ParameterDescription.cs" />
+    <Compile Include="Areas\HelpPage\Services\ModelDescriptions\SimpleTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageControllerActionDescriptionModel.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageControllerActionInteractionModel.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageEndpointModel.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageApiDescriptionModel.cs" />
+    <Compile Include="Bootstrap\GenericDirectRouteProvider.cs" />
+    <Compile Include="Bootstrap\GenericControllerTypeResolver.cs" />
+    <Compile Include="Bootstrap\GenericHttpControllerDescriptor.cs" />
+    <Compile Include="Bootstrap\GenericRoutePrefixAttribute.cs" />
+    <Compile Include="Classes\AuthenticationPost.cs" />
+    <Compile Include="Classes\Genability\PresolarCostResponseModel.cs" />
+    <Compile Include="Classes\Genability\ChangeAccountLseAndTariffRequestModel.cs" />
+    <Compile Include="Classes\Genability\LoadServingEntityResponseModel.cs" />
+    <Compile Include="Classes\Genability\TariffResponseModel.cs" />
+    <Compile Include="Classes\Genability\UpsertUsageProfileRequestModel.cs" />
+    <Compile Include="Classes\HttpResponseMessageExtensions.cs" />
+    <Compile Include="Classes\PasswordChange.cs" />
+    <Compile Include="Classes\Jwt.cs" />
+    <Compile Include="Classes\PasswordResetCompletion.cs" />
+    <Compile Include="Classes\Requests\GenericRequest.cs" />
+    <Compile Include="Classes\Requests\GenericResponse.cs" />
+    <Compile Include="Classes\Requests\GuidAndNameRequest.cs" />
+    <Compile Include="Classes\Requests\IDsListWrapperRequest.cs" />
+    <Compile Include="Classes\Solar\Proposal\ChargeLookup.cs" />
+    <Compile Include="Classes\ViewModels\LayerDefinition.cs" />
+    <Compile Include="Classes\ViewModels\UserInvitationViewModel.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
+    <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\ExternalCredentialsController.cs" />
+    <Compile Include="Controllers\FinancialEngineController.cs" />
+    <Compile Include="Controllers\IntegrationsControllerClearSattelite.cs" />
+    <Compile Include="Controllers\IntegrationsControllerSolcius.cs" />
+    <Compile Include="Controllers\SpruceGenDocsRequestController.cs" />
+    <Compile Include="Controllers\SpruceQuoteRequestsController.cs" />
+    <Compile Include="Controllers\DevicesController.cs" />
+    <Compile Include="Controllers\SpruceQuoteResponseController.cs" />
+    <Compile Include="Controllers\ZipAreaController.cs" />
+    <Compile Include="Controllers\AreaPurchasesController.cs" />
+    <Compile Include="Controllers\AssignmentsController.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\HealthController.cs" />
+    <Compile Include="Controllers\LayersController.cs" />
+    <Compile Include="Controllers\MediaItemsController.cs" />
+    <Compile Include="Controllers\OUAssociationsController.cs" />
+    <Compile Include="Controllers\OUsController.cs" />
+    <Compile Include="Controllers\PersonSettingsController.cs" />
+    <Compile Include="Controllers\PesonalConnectionsController.cs" />
+    <Compile Include="Controllers\PrescreenInstantController.cs" />
+    <Compile Include="Controllers\PrescreenBatchController.cs" />
+    <Compile Include="Controllers\PropertiesController.cs" />
+    <Compile Include="Controllers\SignaturesController.cs" />
+    <Compile Include="Controllers\ProposalsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\TerritoriesController.cs" />
+    <Compile Include="Controllers\TokensController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\IntegrationsController.cs" />
+    <Compile Include="Controllers\Web\HomeController.cs" />
+    <Compile Include="CustomResponseTypes\TextResult.cs" />
+    <Compile Include="Mappers\SpruceQuoteMapper.cs" />
+    <Compile Include="Security\Certificates\Certificate.cs" />
+    <Compile Include="Security\ClaimsTransformationHandler.cs" />
+    <Compile Include="Security\CorsValidationHandler.cs" />
+    <Compile Include="Security\CustomAuthorizationFilter.cs" />
+    <Compile Include="Security\TokenValidationHandler.cs" />
+    <Compile Include="Security\VersionValidationHandler.cs" />
+    <Compile Include="SqlServertypesInitialization.cs" />
+    <Compile Include="SqlServerTypes\Loader.cs" />
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\msvcr100.dll">
+      <Link>SqlServerTypes\x64\msvcr100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\SqlServerSpatial110.dll">
+      <Link>SqlServerTypes\x64\SqlServerSpatial110.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x86\msvcr100.dll">
+      <Link>SqlServerTypes\x86\msvcr100.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x86\SqlServerSpatial110.dll">
+      <Link>SqlServerTypes\x86\SqlServerSpatial110.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\DataReef.TM.API.XML" />
+    <Content Include="App_Data\DataReef.TM.Contracts.XML" />
+    <Content Include="App_Data\DataReef.TM.Models.XML" />
+    <Content Include="Areas\HelpPage\Docs\quick-DAR.txt" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageApiResourceModel.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageApiResourceType.cs" />
+    <Compile Include="Areas\HelpPage\Services\IApiModelDescriptionGenerator.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\HelpPageSampleGenerator.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\HelpPageSampleKey.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\ImageSample.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\InvalidSample.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\PredefinedObjectBuilders\BasePredefinedObjectBuilder.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\ObjectGenerator\IObjectGenerator.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\ObjectGenerator\DefaultObjectGenerator.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\ObjectGenerator\IPredefinedObjectBuilder.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\ObjectGenerator\PredefinedObjectGenerator.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\PredefinedObjectBuilders\StudentPredefinedObjectBuilder.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\SampleDirection.cs" />
+    <Compile Include="Areas\HelpPage\Services\SampleGeneration\TextSample.cs" />
+    <Compile Include="Areas\HelpPage\Services\ApiObjectSampleGeneratorService.cs" />
+    <Compile Include="Areas\HelpPage\Services\IApiObjectSampleGeneratorService.cs" />
+    <Compile Include="Areas\HelpPage\Views\Help\CommonFunctions.cs" />
+    <Compile Include="Areas\HelpPage\Services\XmlDocumentationProvider.cs" />
+    <Compile Include="Bootstrap\GenericControllerSelector.cs" />
+    <Compile Include="Classes\BlobPost.cs" />
+    <Compile Include="Classes\DeltaContractResolver.cs" />
+    <Compile Include="Classes\PluralizationExtenstions.cs" />
+    <Compile Include="Common\CrudApiActionAttribute.cs" />
+    <Compile Include="Content\JsonNetResult .cs" />
+    <Compile Include="Controllers\BlobsController.cs" />
+    <Compile Include="Controllers\EntityCrudController.cs" />
+    <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="JsonFormatter\SyncItemJsonConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\HelpPage\Resources\Css\HelpPage.css" />
+    <Content Include="Areas\HelpPage\Resources\Js\Endpoint.js" />
+    <Content Include="Areas\HelpPage\Resources\Js\Modules\AuthorizationModule.js" />
+    <Content Include="Areas\HelpPage\Resources\Js\Modules\Endpoint-Interaction.js" />
+    <Content Include="Areas\HelpPage\Resources\Js\Index.js" />
+    <Content Include="Areas\HelpPage\Resources\Js\Modules\PersistenceModule.js" />
+    <Content Include="Areas\HelpPage\Resources\Js\Options.js" />
+    <Content Include="Areas\HelpPage\Resources\Js\Modules\OptionsModule.js" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\LegionLaunchScreenBackground.png" />
+    <Content Include="Content\Legion.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TextSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\SimpleTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Parameters.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ModelDescriptionLink.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\KeyValuePairModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\InvalidSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ImageSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\EnumTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Controller.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageEndpointModelData.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageEndpointModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageEndpointInteraction.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Feedback\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Changeset\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Options\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageEndpointInteractionTemplates.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ControllerActionDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Web.config" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <Content Include="packages.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="external_api.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Google.ServiceAccountKey.json" />
+    <Content Include="ConnectionStrings.config" />
+    <Content Include=".ebextensions\0_commands.config" />
+    <None Include="Properties\PublishProfiles\datareef-territorymanager-api.pubxml" />
+    <None Include="Properties\PublishProfiles\local.pubxml" />
+    <Content Include="ppa.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="admin\authentications.htm" />
+    <Content Include="admin\process_payments.htm" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\common.js" />
+    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.1.1.js" />
+    <Content Include="Scripts\jquery-3.1.1.min.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="Scripts\knockout-3.2.0.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Legion.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\ZeroClipboard.js" />
+    <Content Include="Scripts\ZeroClipboard.min.js" />
+    <Content Include="Scripts\ZeroClipboard.swf" />
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Scripts\ZeroClipboard.min.map" />
+    <EmbeddedResource Include="Security\Certificates\idsrv3test.cer" />
+    <Content Include="Views\Home\UserInvitation.cshtml" />
+    <Content Include="Views\Home\Redirect.cshtml" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Views\Home\PasswordReset.cshtml" />
+    <Content Include="Views\Home\UserRegistration.cshtml" />
+    <Content Include="Views\Shared\_Layout-Legion.cshtml" />
+    <Content Include="Views\Home\Success.cshtml" />
+    <EmbeddedResource Include="Security\Certificates\certificate.pfx" />
+    <Content Include="Templates\Email\_Layout.cshtml" />
+    <Content Include="Templates\Email\AppointmentStatusChanged.cshtml" />
+    <Content Include="Templates\Email\ExistingUserInvitation.cshtml" />
+    <Content Include="Templates\Email\PropertyAttachmentRejected.cshtml" />
+    <Content Include="Templates\Email\PropertyAttachmentSubmitted.cshtml" />
+    <Content Include="Templates\Email\ResetPassword.cshtml" />
+    <Content Include="Templates\Email\SalesOrderConfirmation.cshtml" />
+    <Content Include="Templates\Email\TerritoryAssignmentNotification.cshtml" />
+    <Content Include="Templates\Email\UserInvitation.cshtml" />
+    <Content Include="Templates\Email\UserReactivation.cshtml" />
+    <None Include="Web.QA.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Stage.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataReef.Core.Base\DataReef.Core.Base.csproj">
+      <Project>{8b0773f4-e04a-40ea-8c02-8ecfe1dcd428}</Project>
+      <Name>DataReef.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Core.Infrastructure\DataReef.Core.Infrastructure.csproj">
+      <Project>{71d628d4-24ab-4493-a7ba-8c5565870a17}</Project>
+      <Name>DataReef.Core.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Engines.FinancialEngine\DataReef.Engines.FinancialEngine.csproj">
+      <Project>{bca56bb0-a060-4758-9b33-436292ec4651}</Project>
+      <Name>DataReef.Engines.FinancialEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Agemni\DataReef.Integrations.Agemni.csproj">
+      <Project>{b53ba670-6c29-414b-ac89-0d83429dcb31}</Project>
+      <Name>DataReef.Integrations.Agemni</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Common\DataReef.Integrations.Common.csproj">
+      <Project>{11d0aecc-f9a7-4ce9-b833-1e31b67da267}</Project>
+      <Name>DataReef.Integrations.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Core\DataReef.Integrations.Core.csproj">
+      <Project>{6a0522aa-6ef2-41a8-9ae2-a36379a90bff}</Project>
+      <Name>DataReef.Integrations.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Genability\DataReef.Integrations.Genability.csproj">
+      <Project>{49e4f162-6387-4e54-ac34-e05727fa0605}</Project>
+      <Name>DataReef.Integrations.Genability</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Geo\DataReef.Integrations.Geo.csproj">
+      <Project>{2BE122E0-6392-42A6-98B2-D0FC71F0812B}</Project>
+      <Name>DataReef.Integrations.Geo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Google\DataReef.Integrations.Google.csproj">
+      <Project>{60c15959-562c-428d-bb55-2cf1c3ea01f8}</Project>
+      <Name>DataReef.Integrations.Google</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.MailChimp\DataReef.Integrations.MailChimp.csproj">
+      <Project>{80E855C0-BDE8-40A1-97C2-85D18B084B0A}</Project>
+      <Name>DataReef.Integrations.MailChimp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Mosaic\DataReef.Integrations.Mosaic.csproj">
+      <Project>{3cd87149-19d1-40f1-b74b-213a494d540e}</Project>
+      <Name>DataReef.Integrations.Mosaic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.NetSuite\DataReef.Integrations.NetSuite.csproj">
+      <Project>{8ffbc954-59ba-454e-adf6-7103bf2364f0}</Project>
+      <Name>DataReef.Integrations.NetSuite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.SolarCloud\DataReef.Integrations.SolarCloud.csproj">
+      <Project>{4716cd08-8ce0-4660-aaf2-13b65ac0c83c}</Project>
+      <Name>DataReef.Integrations.SolarCloud</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Datareef.Integrations.Spruce\DataReef.Integrations.Spruce.csproj">
+      <Project>{77147a44-8ba3-4c01-8489-e2bc52f69c25}</Project>
+      <Name>DataReef.Integrations.Spruce</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.Contracts\DataReef.TM.Contracts.csproj">
+      <Project>{ea0a5a9e-ac18-4e7b-bde2-5abe8fbfdea1}</Project>
+      <Name>DataReef.TM.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.MailLibrary\DataReef.TM.MailLibrary.csproj">
+      <Project>{303c7119-0f5c-4873-8b80-41fcb1c4bb93}</Project>
+      <Name>DataReef.TM.MailLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.Models\DataReef.TM.Models.csproj">
+      <Project>{f5644194-5ab2-4fba-8632-46630fb5ddd3}</Project>
+      <Name>DataReef.TM.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.Services\DataReef.TM.Services.csproj">
+      <Project>{63f829a1-2bd9-49ed-b209-319c58538bf6}</Project>
+      <Name>DataReef.TM.Services</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>App_Data\Smart.DayCare.API.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>App_Data\Smart.DayCare.API.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>5024</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://local.api.tm.net</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="AfterCompile" Condition="Exists('Web.$(Configuration).config')">
+    <!--Generate transformed app config in the intermediate directory-->
+    <TransformXml Source="Web.config" Destination="$(IntermediateOutputPath)$(TargetFileName).config" Transform="Web.$(Configuration).config" />
+    <!--Force build process to use the transformed configuration file from now on.-->
+    <ItemGroup>
+      <AppConfigWithTargetPath Remove="Web.config" />
+      <AppConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).config">
+        <TargetPath>$(TargetFileName).config</TargetPath>
+      </AppConfigWithTargetPath>
+    </ItemGroup>
+  </Target>
+  <!--Override After Publish to support ClickOnce AfterPublish. Target replaces the untransformed config file copied to the deployment directory with the transformed one.-->
+  <Target Name="AfterPublish">
+    <PropertyGroup>
+      <DeployedConfig>$(_DeploymentApplicationDir)$(TargetName)$(TargetExt).config$(_DeploymentFileMappingExtension)</DeployedConfig>
+    </PropertyGroup>
+    <!--Publish copies the untransformed App.config to deployment directory so overwrite it-->
+    <Copy Condition="Exists('$(DeployedConfig)')" SourceFiles="$(IntermediateOutputPath)$(TargetFileName).config" DestinationFiles="$(DeployedConfig)" />
+  </Target>
+  <Import Project="..\packages\MSBuild.WebApplication.CopyContentLinkedFiles.1.0.0\build\MSBuild.WebApplication.CopyContentLinkedFiles.targets" Condition="Exists('..\packages\MSBuild.WebApplication.CopyContentLinkedFiles.1.0.0\build\MSBuild.WebApplication.CopyContentLinkedFiles.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MSBuild.WebApplication.CopyContentLinkedFiles.1.0.0\build\MSBuild.WebApplication.CopyContentLinkedFiles.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.WebApplication.CopyContentLinkedFiles.1.0.0\build\MSBuild.WebApplication.CopyContentLinkedFiles.targets'))" />
+  </Target>
+</Project>

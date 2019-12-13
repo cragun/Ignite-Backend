@@ -1,0 +1,17 @@
+﻿@model string
+<html>
+<head>
+
+</head>
+<body>
+    <script type="text/javascript">
+        try {
+            document.addEventListener('DOMContentLoaded', function () {
+                try {
+                    location.href = '@Html.Raw(Model)';
+                } catch (e) { }
+            });
+        } catch (e) { }
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+﻿CREATE TABLE [solar].[SystemProductionMonths] (
+    [Guid]               UNIQUEIDENTIFIER NOT NULL,
+    [SystemProductionID] UNIQUEIDENTIFIER NOT NULL,
+    [Consumption]        REAL             NOT NULL,
+    [PreSolarCost]       REAL             NOT NULL,
+    [PostSolarCost]      REAL             NOT NULL,
+    [Production]         REAL             NOT NULL,
+    [Month]              SMALLINT         NOT NULL,
+    [Year]               SMALLINT         NOT NULL,
+    [Id]                 BIGINT           IDENTITY (1, 1) NOT NULL,
+    [Name]               NVARCHAR (100)   NULL,
+    [Flags]              BIGINT           NULL,
+    [TenantID]           INT              NOT NULL,
+    [DateCreated]        DATETIME         NOT NULL,
+    [DateLastModified]   DATETIME         NULL,
+    [CreatedByName]      NVARCHAR (100)   NULL,
+    [CreatedByID]        UNIQUEIDENTIFIER NULL,
+    [LastModifiedBy]     UNIQUEIDENTIFIER NULL,
+    [LastModifiedByName] NVARCHAR (100)   NULL,
+    [Version]            INT              NOT NULL,
+    [IsDeleted]          BIT              NOT NULL,
+    [ExternalID]         NVARCHAR (50)    NULL,
+    [TagString]          NVARCHAR (1000)  NULL,
+    CONSTRAINT [PK_solar.SystemProductionMonths] PRIMARY KEY NONCLUSTERED ([Guid] ASC),
+    CONSTRAINT [FK_solar.SystemProductionMonths_solar.SystemsProduction_SystemProductionID] FOREIGN KEY ([SystemProductionID]) REFERENCES [solar].[SystemsProduction] ([Guid])
+);
+
+
+GO
+CREATE CLUSTERED INDEX [CLUSTERED_INDEX_ON_LONG]
+    ON [solar].[SystemProductionMonths]([Id] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_SystemProductionID]
+    ON [solar].[SystemProductionMonths]([SystemProductionID] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_TenantID]
+    ON [solar].[SystemProductionMonths]([TenantID] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_DateCreated]
+    ON [solar].[SystemProductionMonths]([DateCreated] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_CreatedByID]
+    ON [solar].[SystemProductionMonths]([CreatedByID] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Version]
+    ON [solar].[SystemProductionMonths]([Version] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_ExternalID]
+    ON [solar].[SystemProductionMonths]([ExternalID] ASC);
+

@@ -1,0 +1,30 @@
+﻿@model DataReef.TM.Classes.PropertyAttachmentRejectedTemplate
+@{
+    Layout = "_Layout.cshml";
+}
+
+<div class="content userInvitation">
+    <div class="row">
+        The following attachments for the property @Model.PropertyName were rejected. Address is: @Model.PropertyAddress
+    </div>
+
+    @foreach (var item in Model.RejectedItems)
+    {
+    <div class="row">
+        <b>Section: </b> @item.SectionName <br />
+        <b>Task: </b> @item.ItemName <br />
+        <b>Reason: </b> @item.RejectionMessage
+
+        @if (!string.IsNullOrEmpty(item.ImageUrl))
+        {
+            <div>
+                <b>Image </b>
+                <br />
+                <img src="@item.ImageUrl" width="300" />
+            </div>
+        }
+    </div>
+        
+    }
+
+</div>

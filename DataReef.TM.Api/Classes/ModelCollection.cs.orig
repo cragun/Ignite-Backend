@@ -1,0 +1,103 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Smart.DayCare.Models.Agreements;
+using Smart.DayCare.Models.Billing;
+using Smart.DayCare.Models;
+using Smart.DayCare.Models.HR;
+using Smart.DayCare.Models.Accounting;
+using Smart.DayCare.Models.Scheduling;
+
+namespace Smart.DayCare.Api.Classes
+{
+
+
+    public class ModelCollection
+    {
+
+        public ICollection<Activity> Activities { get; set; }
+        public ICollection<Address> Addresses { get; set; }
+        public ICollection<AgeGroup> AgeGroups { get; set; }
+        public ICollection<AgeGroupMilestone> AgeGroupMilestones { get; set; }
+        public ICollection<Allergy> Allergies { get; set; }
+        public ICollection<AllergyDefinition> AllergyDefinitions { get; set; }
+        public ICollection<Attachment> Attachments { get; set; }
+        public ICollection<BenefitActivity> BenefitActivities { get; set; }
+        public ICollection<BenefitCode> BenefitCodes { get; set; }
+        public ICollection<Campaign> Campaigns { get; set; }
+        public ICollection<Center> Centers { get; set; }
+        public ICollection<CheckIn> CheckIns { get; set; }
+        public ICollection<CheckOut> CheckOuts { get; set; }
+        public ICollection<Class> Classes { get; set; }
+        public ICollection<ClassAssignment> ClassAssignments { get; set; }
+        public ICollection<ClassRoom> ClassRooms { get; set; }
+        public ICollection<CurrentLocation> CurrentLocations { get; set; }
+        public ICollection<Employee> Employees { get; set; }
+        public ICollection<EmployeeFile> EmployeeFiles { get; set; }
+        public ICollection<EmploymentRole> EmploymentRoles { get; set; }
+        public ICollection<EmploymentStatus> EmploymentStatuses { get; set; }
+        public ICollection<Family> Families { get; set; }
+        public ICollection<Holiday> Holidays { get; set; }
+        public ICollection<HourlyWageDefinition> HourlyWageDefinitions { get; set; }
+        public ICollection<Identification> Identifications { get; set; }
+        public ICollection<Immunization> Immunizations { get; set; }
+        public ICollection<ImmunizationDefinition> ImmunizationDefinitions { get; set; }
+        public ICollection<Charge> Charges { get; set; }
+        public ICollection<JournalEntry> JournalEntries { get; set; }
+        public ICollection<JournalEntryAssociation> JournalEntryAssociations { get; set; }
+        public ICollection<JournalEntryComment> JournalEntryComments { get; set; }
+        public ICollection<GeneralLedgerAccount> LedgerAccounts { get; set; }
+        public ICollection<LedgerGroup> LedgerGroups { get; set; }
+        public ICollection<LedgerItem> LedgerItems { get; set; }
+        public ICollection<MedicalProvider> MedicalProviders { get; set; }
+        public ICollection<Milestone> Milestones { get; set; }
+        public ICollection<Note> Notes { get; set; }
+        public ICollection<OU> OUs { get; set; }
+        public ICollection<Payment> Payments { get; set; }
+        public ICollection<PayPeriod> PayPeriod { get; set; }
+        public ICollection<PayrollDefinition> PayrollDefinitions { get; set; }
+        public ICollection<Person> People { get; set; }
+        public ICollection<PersonalRelationship> PersonalRelationships { get; set; }
+        public ICollection<PickupAuthorization> PickupAuthorizations { get; set; }
+        public ICollection<PlannedBenefit> PlannedBenefits { get; set; }
+        public ICollection<ReferralSource> ReferralSources { get; set; }
+        public ICollection<Role> Roles { get; set; }
+        public ICollection<SalaryDefinition> SalaryDefinitions { get; set; }
+        public ICollection<School> Schools { get; set; }
+        public ICollection<SecurityQuestion> SecurityQuestions { get; set; }
+        public ICollection<Student> Students { get; set; }
+        public ICollection<TimeCard> TimeCards { get; set; }
+        public ICollection<User> Users { get; set; }
+        public ICollection<Vehicle> Vehicles { get; set; }
+        public ICollection<WithdrawalCode> WithdrawalCodes { get; set; }
+
+        public ICollection<Agreement> Agreements { get; set; }
+        public ICollection<AgreementPart> AgreementParts { get; set; }
+        public ICollection<ExecutedAgreement> ExecutedAgreements { get; set; }
+        public ICollection<ExecutedAgreementPart> ExecutedAgreementParts { get; set; }
+
+        public ICollection<EarlyLatePickupPlan> EarlyLatePickupPlans { get; set; }
+        public ICollection<FlatFeePlan> FlatFeePlans { get; set; }
+<<<<<<< HEAD
+        public ICollection<NonUtilizedAttendanceCreditPlan> NonUtilizedAttendanceCreditPlans { get; set; }
+        public ICollection<TimeRange> TimeRanges { get; set; }
+        public ICollection<TimeRangePlan> TimeRangePlans { get; set; }
+        public ICollection<UnitRange> UnitRanges { get; set; }
+        public ICollection<UnitRangePlan> UnitRangePlans { get; set; }
+
+        public ICollection<EmployeeSchedulePlan> EmployeeSchedulePlans { get; set; }
+        public ICollection<StudentSchedulePlan> StudentSchedulePlans { get; set; }
+        public ICollection<TeacherSchedulePlan> TeacherSchedulePlans { get; set; }
+        public ICollection<RecurrentSchedule> RecurrentSchedules { get; set; }
+        public ICollection<ScheduleException> ScheduleExceptions { get; set; }
+        public ICollection<TeacherRecurrentSchedule> TeacherRecurrentSchedules { get; set; }
+        public ICollection<TeacherScheduleException> TeacherScheduleExceptions { get; set; }
+        public ICollection<StudentRecurrentSchedule> StudentRecurrentSchedules { get; set; }
+        public ICollection<StudentScheduleException> StudentScheduleExceptions { get; set; }
+=======
+      
+        
+>>>>>>> master
+    }
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="3187bd24-5784-42b7-b948-30ac15bab09d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:1494/DtvAutomationService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="DtvAutomationService.xsd" MetadataType="Schema" ID="135a709c-5abf-4740-aa04-70719a8a3d0a" SourceId="1" SourceUrl="http://localhost:1494/DtvAutomationService.svc?xsd=xsd0" />
+    <MetadataFile FileName="DtvAutomationService1.xsd" MetadataType="Schema" ID="4647b0b8-f767-4ea7-8733-4f493d75bebf" SourceId="1" SourceUrl="http://localhost:1494/DtvAutomationService.svc?xsd=xsd1" />
+    <MetadataFile FileName="DtvAutomationService.disco" MetadataType="Disco" ID="ad064311-5598-4512-bf5e-d20092ef70d3" SourceId="1" SourceUrl="http://localhost:1494/DtvAutomationService.svc?disco" />
+    <MetadataFile FileName="DtvAutomationService2.xsd" MetadataType="Schema" ID="c796e34a-5977-4471-a87c-134e0e6a193f" SourceId="1" SourceUrl="http://localhost:1494/DtvAutomationService.svc?xsd=xsd2" />
+    <MetadataFile FileName="DtvAutomationService.wsdl" MetadataType="Wsdl" ID="8d752711-1cb8-4055-b40a-f9a2a704e159" SourceId="1" SourceUrl="http://localhost:1494/DtvAutomationService.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

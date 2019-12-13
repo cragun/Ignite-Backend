@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EA0A5A9E-AC18-4E7B-BDE2-5ABE8FBFDEA1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataReef.TM.Contracts</RootNamespace>
+    <AssemblyName>DataReef.TM.Contracts</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\DayCareAPI\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\DataReef.TM.Api\App_Data\DataReef.TM.Contracts.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\DataReef.TM.Api\App_Data\DataReef.TM.Contracts.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <OutputPath>bin\QA\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Smart.DayCare.Api\App_Data\Smart.DayCare.Contracts.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Stage|AnyCPU'">
+    <OutputPath>bin\Stage\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\Smart.DayCare.Api\App_Data\Smart.DayCare.Contracts.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exceptions\ResourceExistsException.cs" />
+    <Compile Include="Exceptions\TemplateNotFoundException.cs" />
+    <Compile Include="Faults\InvalidSyncItemFault.cs" />
+    <Compile Include="Faults\PreconditionFailedFault.cs" />
+    <Compile Include="Services\FinanceAdapters\ILoanPalAdapter.cs" />
+    <Compile Include="Services\FinanceAdapters\ISolarSalesTrackerAdapter.cs" />
+    <Compile Include="Services\ICRUDAuditService.cs" />
+    <Compile Include="Services\ICsvReportingService.cs" />
+    <Compile Include="Services\IFinancialService.cs" />
+    <Compile Include="Services\IKeyValueService.cs" />
+    <Compile Include="KnownTypeProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DataContext.cs" />
+    <Compile Include="Services\FinanceAdapters\IServiceFinanceAdapter.cs" />
+    <Compile Include="Services\IActionItemService.cs" />
+    <Compile Include="Services\IAdderItemService.cs" />
+    <Compile Include="Services\IAdministrationService.cs" />
+    <Compile Include="Services\IAppSettingService.cs" />
+    <Compile Include="Services\IApiLoggingService.cs" />
+    <Compile Include="Services\IClientAuthService.cs" />
+    <Compile Include="Services\IEpcStatusService.cs" />
+    <Compile Include="Services\IImageryService.cs" />
+    <Compile Include="Services\INotificationService.cs" />
+    <Compile Include="Services\IPropertyNoteService.cs" />
+    <Compile Include="Services\IOrderService.cs" />
+    <Compile Include="Services\IMortgageService.cs" />
+    <Compile Include="Services\IOUSettingService.cs" />
+    <Compile Include="Services\IOUShapeService.cs" />
+    <Compile Include="Services\IFinancePlanDefinitionService.cs" />
+    <Compile Include="Services\IPersonKPIService.cs" />
+    <Compile Include="Services\IAppointmentService.cs" />
+    <Compile Include="Services\IPersonSettingService.cs" />
+    <Compile Include="Services\IPropertyPowerConsumptionService.cs" />
+    <Compile Include="Services\IPropertySurveyService.cs" />
+    <Compile Include="Services\IProposalIntegrationAuditService.cs" />
+    <Compile Include="Services\IPushSubscriptionService.cs" />
+    <Compile Include="Services\ISpruceGenDocsRequestService.cs" />
+    <Compile Include="Services\ISpruceQuoteRequestService.cs" />
+    <Compile Include="Services\ISpruceQuoteResponseService.cs" />
+    <Compile Include="Services\ITokensProvider.cs" />
+    <Compile Include="Services\ITerritoryShapeService.cs" />
+    <Compile Include="Services\IZipAreaService.cs" />
+    <Compile Include="Services\IAreaPurchaseService.cs" />
+    <Compile Include="Services\IAssignmentService.cs" />
+    <Compile Include="Services\IAuthenticationService.cs" />
+    <Compile Include="Services\IBlobService.cs" />
+    <Compile Include="Services\ICurrentLocationService.cs" />
+    <Compile Include="Services\IInquiryService.cs" />
+    <Compile Include="Services\ILayerService.cs" />
+    <Compile Include="Services\IMediaItemService.cs" />
+    <Compile Include="Services\IOUAssociationService.cs" />
+    <Compile Include="Services\IOUService.cs" />
+    <Compile Include="Services\IPersonService.cs" />
+    <Compile Include="Services\IDataService.cs" />
+    <Compile Include="Services\IDeviceService.cs" />
+    <Compile Include="Services\IInvoiceService.cs" />
+    <Compile Include="Services\ISignatureService.cs" />
+    <Compile Include="Services\NoSQL\INoSQLDataService.cs" />
+    <Compile Include="Services\Prescreen\IPrescreenInstantService.cs" />
+    <Compile Include="Services\Prescreen\IPrescreenBatchService.cs" />
+    <Compile Include="Services\IPropertyService.cs" />
+    <Compile Include="Services\IReportingServices.cs" />
+    <Compile Include="Services\ISyncDataService.cs" />
+    <Compile Include="Services\ITerritoryService.cs" />
+    <Compile Include="Services\IProposalService.cs" />
+    <Compile Include="Services\IUserInvitationService.cs" />
+    <Compile Include="Services\PropertyAttachments\IPropertyAttachmentService.cs" />
+    <Compile Include="Services\Velocify\IVelocifyService.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="People.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataReef.CodeGenerator\DataReef.CodeGenerator.Core.csproj">
+      <Project>{201cb42a-0579-49d0-955a-bd5a1660119e}</Project>
+      <Name>DataReef.CodeGenerator.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Core.Base\DataReef.Core.Base.csproj">
+      <Project>{8b0773f4-e04a-40ea-8c02-8ecfe1dcd428}</Project>
+      <Name>DataReef.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Core.Infrastructure\DataReef.Core.Infrastructure.csproj">
+      <Project>{71D628D4-24AB-4493-A7BA-8C5565870A17}</Project>
+      <Name>DataReef.Core.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Common\DataReef.Integrations.Common.csproj">
+      <Project>{11d0aecc-f9a7-4ce9-b833-1e31b67da267}</Project>
+      <Name>DataReef.Integrations.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.Geo\DataReef.Integrations.Geo.csproj">
+      <Project>{2BE122E0-6392-42A6-98B2-D0FC71F0812B}</Project>
+      <Name>DataReef.Integrations.Geo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.Integrations.LoanPal\DataReef.Integrations.LoanPal.csproj">
+      <Project>{789d5400-9b5e-4f62-832c-20fa8428e572}</Project>
+      <Name>DataReef.Integrations.LoanPal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.DataAccess\DataReef.TM.DataAccess.csproj">
+      <Project>{D8C35AC6-25A6-46A8-9A6F-5DB8442EAD21}</Project>
+      <Name>DataReef.TM.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.Models\DataReef.TM.Models.csproj">
+      <Project>{f5644194-5ab2-4fba-8632-46630fb5ddd3}</Project>
+      <Name>DataReef.TM.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
