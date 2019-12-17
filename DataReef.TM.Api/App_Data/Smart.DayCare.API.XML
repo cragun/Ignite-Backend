@@ -289,17 +289,77 @@
             <param name="request"></param>
             <param name="apiKey"></param>
         </member>
+        <member name="T:DataReef.TM.Api.Controllers.NotificationsController">
+            <summary>
+            Managers CRUD for Properties
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.GetAllForProperty(System.Guid,System.Nullable{DataReef.TM.Models.IgniteNotificationSeenStatus},System.Int32,System.Int32)">
+            <summary>
+            Gets all notifications for user
+            </summary>
+            <param name="personID"></param>
+            <param name="status"></param>
+            <param name="pageNumber"></param>
+            <param name="itemsPerPage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.MarkAllUserNotificationsAsRead(System.Guid)">
+            <summary>
+            Mark all notifications for user as seen
+            </summary>
+            <param name="personID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.MarkNotificationAsRead(System.Guid)">
+            <summary>
+            Mark Notification as read
+            </summary>
+            <param name="notificationID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.CountUnreadForPerson(System.Guid)">
+            <summary>
+            Count unread notifications for user
+            </summary>
+            <param name="personID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.NotificationsController.MarkNotificationAsReadFromSmartboard(System.String,System.String)">
+            <summary>
+            Dismiss Notification from smartboard
+            </summary>
+            <param name="notificationID"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertyNotesController">
             <summary>
             Managers CRUD for Properties
             </summary>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetAllForSmartboard(System.Int64,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetAllForProperty(System.Guid)">
+            <summary>
+            Gets all PropertyNotes found for the specified propertyID
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.QueryUsersForProperty(System.Guid,DataReef.TM.Models.DTOs.Properties.PropertyNoteUserQueryRequest)">
+            <summary>
+            Finds all users with access to the property by partial match on email and name
+            </summary>
+            <param name="propertyID"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetAllForSmartboard(System.Int64,System.String,System.Nullable{System.Int64})">
             <summary>
             / Gets the notes linked to the specified smartboard lead Id
             </summary>
             <param name="leadId"></param>
             <param name="apiKey"></param>
+            <param name="igniteId"></param>
             <returns></returns>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CreateNoteFromSmartboard(DataReef.TM.Models.DTOs.SBNoteDTO,System.String)">
@@ -318,11 +378,12 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(System.Guid,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(System.Guid,System.String,System.String)">
             <summary>
             deletes a note by its specified id
             </summary>
             <param name="noteId"></param>
+            <param name="userID"></param>
             <param name="apiKey"></param>
             <returns></returns>
         </member>

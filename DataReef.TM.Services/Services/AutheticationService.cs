@@ -15,6 +15,7 @@ using DataReef.TM.Models.Accounting;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Blobs;
 using DataReef.TM.Services;
+using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -41,13 +42,15 @@ namespace DataReef.Application.Services
         private readonly Lazy<IDataService<PasswordReset>> _resetService;
         private readonly Lazy<IDataService<Credential>> _credentialService;
         private readonly Lazy<IPowerBIBridge> _powerBIBridge;
+        private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
 
         public AuthenticationService(ILogger logger,
             Lazy<IMailChimpAdapter> mailChimpAdapter,
             Lazy<IBlobService> blobService,
             Lazy<IDataService<PasswordReset>> resetService,
             Lazy<IDataService<Credential>> credentialService,
-            Lazy<IPowerBIBridge> powerBIBridge)
+            Lazy<IPowerBIBridge> powerBIBridge,
+            Lazy<ISolarSalesTrackerAdapter> sbAdapter)
         {
             this.logger = logger;
             _mailChimpAdapter = mailChimpAdapter;
@@ -55,6 +58,7 @@ namespace DataReef.Application.Services
             _resetService = resetService;
             _credentialService = credentialService;
             _powerBIBridge = powerBIBridge;
+            _sbAdapter = sbAdapter;
         }
 
         public AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword)
@@ -547,6 +551,14 @@ namespace DataReef.Application.Services
                         _mailChimpAdapter.Value.RegisterUser(userInvitation.EmailAddress);
                     }
                     catch { }
+
+                    //get the smartboardId for the user. We can use any apikey
+                    var ouSetting = dc.OUSettings.FirstOrDefault(x => !x.IsDeleted && x.Name == SolarTrackerResources.SelectedSettingName);
+                    if(ouSetting != null)
+                    {
+                        //the method also updates the Ignite user's SmartBoardId property
+                        _sbAdapter.Value.GetSBToken(ouSetting.OUID);
+                    }
 
                     if (!string.IsNullOrWhiteSpace(InvitationAcceptRecipient))
                     {
