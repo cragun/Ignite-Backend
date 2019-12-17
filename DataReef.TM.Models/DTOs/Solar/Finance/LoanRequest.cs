@@ -70,7 +70,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
                 return
                     Adders
                     ?.Where(a => a.Type == AdderItemType.Adder)
-                    ?.Sum(a => a.CalculatedCost(SystemSize, true)) ?? TotalAddersCosts;
+                    ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, true)) ?? TotalAddersCosts;
             }
         }
 
@@ -81,7 +81,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
                 return
                     Adders
                     ?.Where(a => a.Type == AdderItemType.Adder && a.IsAppliedBeforeITC)
-                    ?.Sum(a => a.CalculatedCost(SystemSize, true)) ?? 0;
+                    ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, true)) ?? 0;
             }
         }
         #endregion
