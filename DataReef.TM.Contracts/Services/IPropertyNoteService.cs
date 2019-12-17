@@ -26,7 +26,7 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
-        void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey);
+        void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
 
         [OperationContract]
         IEnumerable<Models.Person> QueryForPerson(Guid propertyID, string email, string name);

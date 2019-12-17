@@ -125,13 +125,14 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="noteId"></param>
         /// <param name="userID"></param>
         /// <param name="apiKey"></param>
+        /// <param name="email"></param>
         /// <returns></returns>
         [Route("sb/{leadId}/{userID}/{apiKey}")]
         [HttpDelete]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult EditNoteFromSmartboard(Guid noteId, string userID, string apiKey)
+        public IHttpActionResult EditNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
         {
-            _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, apiKey);
+            _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, apiKey, email);
 
             return Ok();
         }

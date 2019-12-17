@@ -312,7 +312,9 @@ namespace DataReef.TM.Services.Services
                 var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
 
                 //get user by the the smartboardId
-                var user = dc.People.FirstOrDefault(x => !x.IsDeleted && x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase));
+                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                                      && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+                                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
                 if (user == null)
                 {
                     throw new Exception("User with the specified ID was not found");
@@ -356,7 +358,8 @@ namespace DataReef.TM.Services.Services
                     Content = note.Content,
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
-                    UserID = user.SmartBoardID
+                    UserID = user.SmartBoardID,
+                    Email = user.EmailAddressString,
                 };
             }
         }
@@ -390,9 +393,12 @@ namespace DataReef.TM.Services.Services
 
                 //get user by the the smartboardId
                 var smartboardUserID = noteRequest.UserID;
-                if (!string.IsNullOrEmpty(noteRequest.UserID))
+                Person user = null;
+                if (!string.IsNullOrEmpty(noteRequest.UserID) || !string.IsNullOrEmpty(noteRequest.Email))
                 {
-                    var user = dc.People.FirstOrDefault(x => !x.IsDeleted && x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase));
+                    user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                                           && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+                                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email, StringComparison.InvariantCultureIgnoreCase))));
                     if (user == null)
                     {
                         throw new Exception("User with the specified ID was not found");
@@ -429,6 +435,7 @@ namespace DataReef.TM.Services.Services
                     Guid = note.Guid,
                     PropertyID = property.Guid,
                     LeadID = property.SmartBoardId,
+                    Email = user.EmailAddressString,
                     Content = note.Content,
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
@@ -437,7 +444,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey)
+        public void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
         {
             using (var dc = new DataContext())
             {
@@ -449,7 +456,8 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //get the user who deleted the note
-                var user = dc.People.FirstOrDefault(x => !x.IsDeleted && x.SmartBoardID.Equals(userID, StringComparison.InvariantCultureIgnoreCase));
+                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                               && (x.SmartBoardID.Equals(userID, StringComparison.InvariantCultureIgnoreCase) || x.EmailAddressString.Equals(email, StringComparison.InvariantCultureIgnoreCase)));
                 if (user == null)
                 {
                     throw new Exception("No user found with the specified ID");
