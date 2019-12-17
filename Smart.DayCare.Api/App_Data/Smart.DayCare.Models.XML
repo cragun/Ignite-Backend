@@ -869,6 +869,11 @@
             Optional image notes
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.DTOs.SBNoteDTO.IgniteID">
+            <summary>
+            You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
+            </summary>
+        </member>
         <member name="T:DataReef.TM.Models.DTOs.Signatures.DocumentSignRequest">
             <summary>
             Class used 
@@ -1390,7 +1395,7 @@
             List of adders
             </summary>
         </member>
-        <member name="F:DataReef.TM.Models.DTOs.Solar.Finance.LoanRequest.fedTaxIncentivePercentageBackingField">
+        <member name="P:DataReef.TM.Models.DTOs.Solar.Finance.LoanRequest.FederalTaxIncentivePercentage">
             <summary>
             The percentage of the AmountFinanced that represents the federal tax incentive. An usual value is 30% = 0.3. This incentive is applied at the end of the IntroTermInMonths.
             </summary>
@@ -4199,6 +4204,11 @@
         <member name="P:DataReef.TM.Models.KeyValue.ObjectID">
             <summary>
             Guid of the object that these values belong to
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Notification.Value">
+            <summary>
+            Holds the Guid of the target entity if one exists
             </summary>
         </member>
         <member name="P:DataReef.TM.Models.PersonKPI.PersonID">

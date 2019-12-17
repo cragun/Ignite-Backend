@@ -12,7 +12,7 @@ namespace DataReef.TM.Models.DTOs
         public Guid? Guid { get; set; }
 
         public Guid PropertyID { get; set; }
-        
+
         /// <summary>
         /// You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
         /// </summary>
@@ -23,6 +23,8 @@ namespace DataReef.TM.Models.DTOs
         public string Content { get; set; }
 
         public string UserID { get; set; }
+
+        public string Email { get; set; }
 
         public DateTime DateCreated { get; set; }
 
@@ -35,7 +37,7 @@ namespace DataReef.TM.Models.DTOs
 
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
-            if(note != null)
+            if (note != null)
             {
                 Guid = note.Guid;
                 Content = note.Content;
@@ -44,7 +46,7 @@ namespace DataReef.TM.Models.DTOs
                 DateLastModified = note.DateLastModified;
             }
 
-            if(property != null)
+            if (property != null)
             {
                 PropertyID = property.Guid;
                 LeadID = property.SmartBoardId;
