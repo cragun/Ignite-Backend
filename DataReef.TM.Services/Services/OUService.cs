@@ -380,6 +380,18 @@ namespace DataReef.TM.Services.Services
             return ou;
         }
 
+        public IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                return dc.OURoles.Select(x => new SBOURoleDTO
+                {
+                    Guid = x.Guid,
+                    Name = x.Name
+                }).ToList();
+            }
+        }
+
         public SBOUDTO GetSmartboardOus(Guid ouID, string apiKey)
         {
             using (var dc = new DataContext())

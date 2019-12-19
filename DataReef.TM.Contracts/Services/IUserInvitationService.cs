@@ -1,6 +1,7 @@
 ﻿using System.ServiceModel;
 using DataReef.TM.Models;
 using DataReef.TM.DataAccess.Database;
+using DataReef.TM.Models.DTOs.Persons;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -10,5 +11,7 @@ namespace DataReef.TM.Contracts.Services
     {
 
         UserInvitation Insert(UserInvitation entity, DataContext dc);
+
+        UserInvitation SilentInsertFromSmartboard(CreateUserDTO user, string apiKey);
     }
 }

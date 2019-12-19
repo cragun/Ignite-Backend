@@ -14,6 +14,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.Accounting;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Blobs;
+using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Services;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using System;

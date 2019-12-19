@@ -128,5 +128,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         IEnumerable<Person> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email);
+
+        [OperationContract]
+        IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey);
     }
 }

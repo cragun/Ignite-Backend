@@ -479,6 +479,14 @@
             <param name="user"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CreateUserFromSmartBoard(DataReef.TM.Models.DTOs.Persons.CreateUserDTO,System.String)">
+            <summary>
+            Creates a new user and returns an authentication token
+            </summary>
+            <param name="user"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CompleteResetPassword(DataReef.TM.Api.Classes.PasswordResetCompletion)">
             <summary>
             Using the reset guid sent in the email, accepts a new password and completes the reset process
@@ -559,6 +567,12 @@
             </summary>
             <param name="settingName"></param>
             <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetRoles(System.String)">
+            <summary>
+            Get method used by SmartBoard to retrieve the specified OU
+            </summary>
+            <param name="apiKey"></param>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOus(System.Guid,System.String)">
             <summary>

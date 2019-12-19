@@ -6,6 +6,9 @@ using DataReef.TM.Classes;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs.Integrations;
+using DataReef.TM.Models.DTOs.Persons;
+using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -50,10 +53,57 @@ namespace DataReef.TM.Services
                     }
                 }
             }
-            return userInvitations;
+            return userInvitations; 
+        }
+
+        public UserInvitation SilentInsertFromSmartboard(CreateUserDTO user, string apiKey)
+        {
+            using(var dc = new DataContext())
+            {
+                //get the OU based on the apiKey
+                var ouSetting = dc
+                    .OUSettings
+                    .Where(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                    .ToList()
+                    .FirstOrDefault(x =>
+                    {
+                        var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
+                        return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == apiKey);
+
+                    });
+
+                if(ouSetting == null)
+                {
+                    return null;
+                }
+
+                var userInvitation = new UserInvitation
+                {
+                    EmailAddress = user.EmailAddress,
+                    ExpirationDate = DateTime.UtcNow.AddDays(30),
+                    DateCreated = DateTime.UtcNow,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    IsDeleted = false,
+                    InvitationCode = Guid.NewGuid().ToString(),
+                    Status = InvitationStatus.Pending,
+                    Name = "New UserInvitation",
+                    RoleID = user.RoleID,
+                    OUID = ouSetting.OUID,
+                    FromPersonID = Guid.Parse(ConfigurationManager.AppSettings["AnonymousPrincipal_UserID"])
+
+                };
+
+                return InsertEntity(userInvitation, dc, false);
+            }
         }
 
         public override UserInvitation Insert(UserInvitation entity, DataContext dataContext)
+        {
+            return InsertEntity(entity, dataContext, true);
+        }
+
+        private UserInvitation InsertEntity(UserInvitation entity, DataContext dataContext, bool sendEmail = false)
         {
             bool userWasDeleted = false;
             string fromName = string.Empty;
@@ -155,7 +205,11 @@ namespace DataReef.TM.Services
             }
 
             // Send or resend the invitation
-            SendUserInvitationEmail(userInvitation, fromName, ouName, userWasDeleted);
+            if (sendEmail)
+            {
+                SendUserInvitationEmail(userInvitation, fromName, ouName, userWasDeleted);
+            }
+            
             return userInvitation;
         }
 

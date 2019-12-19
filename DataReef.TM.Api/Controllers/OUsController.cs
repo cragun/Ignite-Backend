@@ -291,6 +291,18 @@ namespace DataReef.TM.Api.Controllers
         /// <summary>
         /// Get method used by SmartBoard to retrieve the specified OU
         /// </summary>
+        /// <param name="apiKey"></param>
+        [HttpGet, Route("sb/roles/{apiKey}")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<SBOURoleDTO>))]
+        public IEnumerable<SBOURoleDTO> GetRoles(string apiKey)
+        {
+            return ouService.GetAllRoles(apiKey);
+        }
+
+        /// <summary>
+        /// Get method used by SmartBoard to retrieve the specified OU
+        /// </summary>
         /// <param name="ouID"></param>
         /// <param name="apiKey"></param>
         [HttpGet, Route("sb/{ouID}/{apiKey}")]
