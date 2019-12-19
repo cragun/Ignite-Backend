@@ -378,13 +378,14 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(System.Guid,System.String,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(System.Guid,System.String,System.String,System.String)">
             <summary>
             deletes a note by its specified id
             </summary>
             <param name="noteId"></param>
             <param name="userID"></param>
             <param name="apiKey"></param>
+            <param name="email"></param>
             <returns></returns>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
