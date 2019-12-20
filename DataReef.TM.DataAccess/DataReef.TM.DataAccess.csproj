@@ -1247,6 +1247,10 @@
     <Compile Include="Migrations\201912171144064_DealerFee Flag to AdderItem.Designer.cs">
       <DependentUpon>201912171144064_DealerFee Flag to AdderItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912201303253_LeadSource on Property.cs" />
+    <Compile Include="Migrations\201912201303253_LeadSource on Property.Designer.cs">
+      <DependentUpon>201912201303253_LeadSource on Property.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2141,6 +2145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912171144064_DealerFee Flag to AdderItem.resx">
       <DependentUpon>201912171144064_DealerFee Flag to AdderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912201303253_LeadSource on Property.resx">
+      <DependentUpon>201912201303253_LeadSource on Property.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

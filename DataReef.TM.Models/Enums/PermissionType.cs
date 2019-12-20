@@ -72,6 +72,9 @@ namespace DataReef.TM.Models.Enums
         Portal_All_OU_Settings = 1 << 19,
 
         [EnumMember]
-        Portal_All = 1 << 20
+        Portal_All = 1 << 20,
+
+        [EnumMember]
+        Can_See_All_Appointments = 1 << 21
     }
 }
