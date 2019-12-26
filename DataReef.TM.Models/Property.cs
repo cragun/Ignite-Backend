@@ -94,6 +94,8 @@ namespace DataReef.TM.Models
         [StringLength(200)]
         public string LeadSource { get; set; }
 
+        [DataMember]
+        public bool UsageCollected { get; set; }
 
         #region Navigation
 
