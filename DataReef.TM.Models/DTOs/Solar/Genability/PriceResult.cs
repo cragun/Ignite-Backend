@@ -21,5 +21,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Genability
         public string UtilityID      { get; set; }
 
         public string UtilityName    { get; set; }
+
+        public Nullable<bool> UsageCollected { get; set; }
     }
 }
