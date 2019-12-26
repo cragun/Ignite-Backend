@@ -59,8 +59,7 @@ namespace DataReef.TM.Models.Solar
         public string MetaInformationJSON { get; set; }
 
 
-        [DataMember]
-        public bool UsageCollected { get; set; }
+       
 
         #region Computed Properties
 
