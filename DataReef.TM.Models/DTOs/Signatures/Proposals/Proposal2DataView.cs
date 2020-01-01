@@ -44,6 +44,9 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
 
         public ICollection<string> Tags { get; set; }
 
+        public bool? UsageCollected { get; set; }
+
+
         public Proposal2DataView()
         {
             BasicInfo = new ProposalBasicInfo();
@@ -58,6 +61,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
             Guid = param.Data.Guid;
             ProposalID = param.Proposal.Guid;
             SignedDate = param.Data.SignatureDate;
+            UsageCollected = param.Proposal.Property.UsageCollected;
             if (!string.IsNullOrEmpty(param.Proposal?.SignedDocumentsJSON))
             {
                 SignedDocuments = JsonConvert.DeserializeObject<List<SignedDocumentDTO>>(param.Proposal.SignedDocumentsJSON)?.Select(x => x.Name)?.ToList();

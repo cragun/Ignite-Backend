@@ -159,7 +159,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             OldUtilityBill = proposalDataView?.EnergyCosts?.WithoutSolar?.MonthlyAverage;
             EstimatedNewUtilityBill = proposalDataView?.EnergyCosts?.WithSolar?.MonthlyAverage;
             NetMonthlySavings = proposalDataView?.EnergyCosts?.Savings?.MonthlyAverage;
-
+            UsageCollected = proposalDataView?.UsageCollected;
             HoaName = proposal.Property?.PropertyBag?.FirstOrDefault(x => x.DisplayName == "HOA/Management Name")?.Value;
             HoaPhoneEmail = proposal.Property?.PropertyBag?.FirstOrDefault(x => x.DisplayName == "HOA/Management Phone/Email")?.Value;
         }
@@ -239,6 +239,8 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public string HoaName { get; set; }
 
         public string HoaPhoneEmail { get; set; }
+
+        public bool? UsageCollected { get; set; }
     }
 
     public class SBProposalMonthData

@@ -48,6 +48,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
             UtilityProviderID = property?.UtilityProviderID;
             UtilityProviderName = property?.UtilityProviderName;
+            UsageCollected = property?.UsageCollected;
         }
 
         [JsonProperty("associated_id")]
@@ -106,6 +107,9 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         /// </summary>
         [JsonProperty("utility_provider_name")]
         public string UtilityProviderName { get; set; }
+
+        [JsonProperty("usageCollected")]
+        public bool? UsageCollected { get; set; }
 
         public string HoaName { get; set; }
 
