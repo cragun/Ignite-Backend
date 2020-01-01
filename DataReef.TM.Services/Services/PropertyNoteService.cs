@@ -101,7 +101,7 @@ namespace DataReef.TM.Services.Services
                         VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
                         if (emails?.Any() == true)
                         {
-                            SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                            SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -131,7 +131,7 @@ namespace DataReef.TM.Services.Services
                         VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
                         if (emails?.Any() == true)
                         {
-                            SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                            SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -165,7 +165,7 @@ namespace DataReef.TM.Services.Services
                             VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
                             if (emails?.Any() == true)
                             {
-                                SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                                SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                             }
 
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -227,7 +227,7 @@ namespace DataReef.TM.Services.Services
                         VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
                         if (emails?.Any() == true)
                         {
-                            SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                            SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -261,7 +261,7 @@ namespace DataReef.TM.Services.Services
                             VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
                             if (emails?.Any() == true)
                             {
-                                SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                                SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                             }
 
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -343,7 +343,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -420,7 +420,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -583,7 +583,27 @@ namespace DataReef.TM.Services.Services
 
         }
 
-        private void SendEmailNotification(string content, IEnumerable<string> emails, Property property, Guid noteID)
+        //private void SendEmailNotification(string content, IEnumerable<string> emails, Property property, Guid noteID)
+        //{
+        //    Task.Factory.StartNew(() =>
+        //    {
+        //        emails = emails.Distinct();
+        //        var tag1Regex = new Regex(@"\[email:'(.*?)'\]");
+        //        var tag2Regex = new Regex(@"\[\/email\]");
+
+        //        content = tag1Regex.Replace(content, "<b>");
+        //        content = tag2Regex.Replace(content, "</b>");
+
+        //        var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
+        //        var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} <br/><br/>{directNoteLinks}";
+        //        var to = string.Join(";", emails);
+
+        //        Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true);
+        //    });
+        //}
+
+
+        private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID)
         {
             Task.Factory.StartNew(() =>
             {
@@ -595,7 +615,7 @@ namespace DataReef.TM.Services.Services
                 content = tag2Regex.Replace(content, "</b>");
 
                 var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
-                var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} <br/><br/>{directNoteLinks}";
+                var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/> Note Sent by: <br/><br/> {Username} <br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 
                 Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true);
