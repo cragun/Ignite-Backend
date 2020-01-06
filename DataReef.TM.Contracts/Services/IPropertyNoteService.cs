@@ -26,6 +26,10 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
+        SBLeadApikey GetAPIkeybySmartboardId(long smartboardLeadID);
+
+
+        [OperationContract]
         void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
 
         [OperationContract]

@@ -388,6 +388,13 @@
             <param name="email"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetApikey(System.Int64)">
+            <summary>
+            / Gets the apikey base on property smartboard lead Id
+            </summary>
+            <param name="leadId"></param>
+            <returns></returns>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
             <summary>
             Managers CRUD for Properties

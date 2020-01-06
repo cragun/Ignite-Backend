@@ -583,6 +583,45 @@ namespace DataReef.TM.Services.Services
 
         }
 
+
+        
+        public SBLeadApikey GetAPIkeybySmartboardId(long smartboardLeadID)
+        {
+
+            using (var dc = new DataContext())
+            {               
+                //first get the property
+                var property = dc.Properties
+                    .Include(x => x.Territory)
+                    .Include(x => x.PropertyNotes)
+                    .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID);
+
+                if (property == null)
+                {
+                    throw new Exception("No lead found with the specified ID(s)");
+                }
+
+                property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
+                //validate the token
+                var sbSettings = _ouSettingService
+                                    .Value
+                                    .GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(property.Guid, SolarTrackerResources.SelectedSettingName)?
+                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                    .Data?
+                                    .SMARTBoard;               
+
+                return new SBLeadApikey
+                {                   
+                    PropertyID = property.Guid,
+                    LeadID = property.SmartBoardId,
+                    ApiKey = sbSettings?.ApiKey
+                };
+            }
+
+            
+        }
+
+
         //private void SendEmailNotification(string content, IEnumerable<string> emails, Property property, Guid noteID)
         //{
         //    Task.Factory.StartNew(() =>

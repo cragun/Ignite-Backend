@@ -8,6 +8,8 @@ namespace DataReef.TM.Models.DTOs
 {
 
     public class SBNoteDTO
+
+      
     {
         public Guid? Guid { get; set; }
 
@@ -35,6 +37,7 @@ namespace DataReef.TM.Models.DTOs
 
         }
 
+       
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
             if (note != null)
@@ -53,5 +56,17 @@ namespace DataReef.TM.Models.DTOs
                 IgniteID = property.Id;
             }
         }
+
+
+
+
+    }
+
+
+    public class SBLeadApikey
+    {
+        public Guid PropertyID { get; set; }
+        public long? LeadID { get; set; }
+        public string ApiKey { get; set; }
     }
 }

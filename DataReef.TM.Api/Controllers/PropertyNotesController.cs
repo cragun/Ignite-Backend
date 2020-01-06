@@ -136,5 +136,33 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok();
         }
+
+
+
+        /// <summary>
+        /// / Gets the apikey base on property smartboard lead Id
+        /// </summary>
+        /// <param name="leadId"></param>
+        /// <returns></returns>
+        [Route("sb/{leadId}")]
+        [ResponseType(typeof(SBLeadApikey))]
+        [HttpGet]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult GetApikey(long leadId)
+        {
+            var result = _propertyNoteService.GetAPIkeybySmartboardId(leadId);
+
+            return Ok(result);
+        }
+
+
+        //        {
+        //    "PropertyID": "66f951bf-136c-4906-8694-b7d0df88d5f8",
+        //    "LeadID": 172447,
+        //    "ApiKey": "67f8494124ec1d2e4e63d2087cd2298e"
+        //}
+
+
+
     }
 }
