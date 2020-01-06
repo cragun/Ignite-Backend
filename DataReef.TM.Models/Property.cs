@@ -97,6 +97,10 @@ namespace DataReef.TM.Models
         [DataMember]
         public bool UsageCollected { get; set; }
 
+        [DataMember]
+        public Nullable<int> DispositionTypeId { get; set; }
+
+
         #region Navigation
 
         [ForeignKey("TerritoryID")]

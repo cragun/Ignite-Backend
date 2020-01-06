@@ -1255,6 +1255,10 @@
     <Compile Include="Migrations\201912260953102_Removed usageCollected from ProposalData.Designer.cs">
       <DependentUpon>201912260953102_Removed usageCollected from ProposalData.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001060853541_added DispositionTypeId field to properties.cs" />
+    <Compile Include="Migrations\202001060853541_added DispositionTypeId field to properties.Designer.cs">
+      <DependentUpon>202001060853541_added DispositionTypeId field to properties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2155,6 +2159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912260953102_Removed usageCollected from ProposalData.resx">
       <DependentUpon>201912260953102_Removed usageCollected from ProposalData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001060853541_added DispositionTypeId field to properties.resx">
+      <DependentUpon>202001060853541_added DispositionTypeId field to properties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

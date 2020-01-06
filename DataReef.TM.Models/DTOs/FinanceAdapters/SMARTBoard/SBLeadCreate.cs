@@ -49,7 +49,8 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             UtilityProviderID = property?.UtilityProviderID;
             UtilityProviderName = property?.UtilityProviderName;
             UsageCollected = property?.UsageCollected;
-            Disposition = property?.LatestDisposition;
+           // Disposition = property?.LatestDisposition;
+            DispositionTypeId = property?.DispositionTypeId;
         }
 
         [JsonProperty("associated_id")]
@@ -112,10 +113,9 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         [JsonProperty("usageCollected")]
         public bool? UsageCollected { get; set; }
 
-        
-        [JsonProperty("disposition")]
-        public string Disposition { get; set; }
 
+        [JsonProperty("disposition_type_id")]
+        public int? DispositionTypeId { get; set; }
         public string HoaName { get; set; }
 
         public string HoaPhoneEmail { get; set; }
