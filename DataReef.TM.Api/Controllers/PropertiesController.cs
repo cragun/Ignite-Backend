@@ -2,6 +2,7 @@
 using DataReef.Core.Logging;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.PropertyAttachments;
 using DataReef.TM.Models.Solar;
 using Newtonsoft.Json;
@@ -43,7 +44,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="apiKey"></param>
         /// <returns></returns>
         [Route("{propertyID:guid}/territories/{apiKey}")]
-        [ResponseType(typeof(ICollection<Inquiry>))]
+        [ResponseType(typeof(IEnumerable<Territories>))]
         [HttpGet]
         public IHttpActionResult GetTerritoriesForProperty(Guid propertyID, string apiKey)
         {
