@@ -26,7 +26,7 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
-        SBLeadApikey GetAPIkeybySmartboardId(long smartboardLeadID);
+        IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey);
 
 
         [OperationContract]

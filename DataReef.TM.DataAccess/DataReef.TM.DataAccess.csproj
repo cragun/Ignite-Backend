@@ -1259,6 +1259,10 @@
     <Compile Include="Migrations\202001060853541_added DispositionTypeId field to properties.Designer.cs">
       <DependentUpon>202001060853541_added DispositionTypeId field to properties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs" />
+    <Compile Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.Designer.cs">
+      <DependentUpon>202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2162,6 +2166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001060853541_added DispositionTypeId field to properties.resx">
       <DependentUpon>202001060853541_added DispositionTypeId field to properties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.resx">
+      <DependentUpon>202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

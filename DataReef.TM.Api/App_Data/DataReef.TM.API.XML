@@ -378,7 +378,7 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(System.Guid,System.String,System.String,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.DeleteNoteFromSmartboard(System.Guid,System.String,System.String,System.String)">
             <summary>
             deletes a note by its specified id
             </summary>
@@ -388,11 +388,12 @@
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetApikey(System.Int64)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckCanTransferLead(System.Int64,System.String)">
             <summary>
             / Gets the apikey base on property smartboard lead Id
             </summary>
             <param name="leadId"></param>
+            <param name="apiKey"></param>
             <returns></returns>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">

@@ -63,10 +63,9 @@ namespace DataReef.TM.Models.DTOs
     }
 
 
-    public class SBLeadApikey
+    public class Territories
     {
-        public Guid PropertyID { get; set; }
-        public long? LeadID { get; set; }
-        public string ApiKey { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
     }
 }

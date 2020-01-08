@@ -131,5 +131,6 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey);
+       
     }
 }

@@ -130,7 +130,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("sb/{leadId}/{userID}/{apiKey}")]
         [HttpDelete]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult EditNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
+        public IHttpActionResult DeleteNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
         {
             _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, apiKey, email);
 
@@ -143,23 +143,32 @@ namespace DataReef.TM.Api.Controllers
         /// / Gets the apikey base on property smartboard lead Id
         /// </summary>
         /// <param name="leadId"></param>
+        /// <param name="apiKey"></param>
         /// <returns></returns>
-        [Route("sb/{leadId}")]
-        [ResponseType(typeof(SBLeadApikey))]
+        [Route("sb/Territories/{leadId}/{apiKey}")]
         [HttpGet]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult GetApikey(long leadId)
+        public IHttpActionResult CheckCanTransferLead(long leadId, string apiKey)
         {
-            var result = _propertyNoteService.GetAPIkeybySmartboardId(leadId);
-
+            var result = _propertyNoteService.GetTerritoriesList(leadId, apiKey);
             return Ok(result);
         }
 
 
-        //        {
-        //    "PropertyID": "66f951bf-136c-4906-8694-b7d0df88d5f8",
-        //    "LeadID": 172447,
-        //    "ApiKey": "67f8494124ec1d2e4e63d2087cd2298e"
+
+        ///// <summary>
+        ///// / Gets the apikey base on property smartboard lead Id
+        ///// </summary>
+        ///// <param name="leadId"></param>
+        ///// <param name="apiKey"></param>
+        ///// <returns></returns>
+        //[Route("sb/Transfer/{leadId}/{apiKey}")]
+        //[HttpPost]
+        //[AllowAnonymous, InjectAuthPrincipal]
+        //public IHttpActionResult CheckCanTransferLead(long leadId, string apiKey)
+        //{
+        //    var result = _propertyNoteService.GetTerritoriesList(leadId, apiKey);
+        //    return Ok(result);
         //}
 
 

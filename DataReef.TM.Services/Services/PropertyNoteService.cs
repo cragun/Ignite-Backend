@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
 using DataReef.Core;
+using System.Data.SqlClient;
 
 namespace DataReef.TM.Services.Services
 {
@@ -585,41 +586,57 @@ namespace DataReef.TM.Services.Services
 
 
         
-        public SBLeadApikey GetAPIkeybySmartboardId(long smartboardLeadID)
+        public IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey)
         {
-
             using (var dc = new DataContext())
             {               
                 //first get the property
-                var property = dc.Properties
-                    .Include(x => x.Territory)
-                    .Include(x => x.PropertyNotes)
-                    .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID);
+                var property = dc.Properties.FirstOrDefault(x => x.SmartBoardId == smartboardLeadID);
 
                 if (property == null)
                 {
                     throw new Exception("No lead found with the specified ID(s)");
                 }
 
-                property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
-                //validate the token
-                var sbSettings = _ouSettingService
-                                    .Value
-                                    .GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(property.Guid, SolarTrackerResources.SelectedSettingName)?
-                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
-                                    .Data?
-                                    .SMARTBoard;               
+                //-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                var TerritoriesList = dc
+             .Database
+             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey", new SqlParameter("@latitude", property.Latitude), new SqlParameter("@longitude", property.Longitude), new SqlParameter("@apiKey", apiKey))
+             .ToList();
 
-                return new SBLeadApikey
-                {                   
-                    PropertyID = property.Guid,
-                    LeadID = property.SmartBoardId,
-                    ApiKey = sbSettings?.ApiKey
-                };
+                return TerritoriesList;
             }
-
-            
         }
+
+
+        #region check latitude- longitude are available in polygon(wellknownText) region or not 
+        //// var ij = _ouService.IsInside(request.Request, -95.243265, 29.973433);
+        //public bool IsInside(string wkt, double longitude, double latitude)
+        //{
+        //    DbGeography point = DbGeography.FromText(string.Format("POINT({1} {0})", latitude.ToString().Replace(',', '.'), longitude.ToString().Replace(',', '.')), DbGeography.DefaultCoordinateSystemId);
+
+        //    DbGeography polygon = DbGeography.FromText(wkt);
+        //    var wellKnownText = polygon.AsText();
+
+        //    var sqlGeography =
+        //        Microsoft.SqlServer.Types.SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(wellKnownText), DbGeography.DefaultCoordinateSystemId)
+        //            .MakeValid();
+
+        //    //Now get the inversion of the above area
+        //    var invertedSqlGeography = sqlGeography.ReorientObject();
+
+        //    //Whichever of these is smaller is the enclosed polygon, so we use that one.
+        //    if (sqlGeography.STArea() > invertedSqlGeography.STArea())
+        //    {
+        //        sqlGeography = invertedSqlGeography;
+        //    }
+
+        //    polygon = DbSpatialServices.Default.GeographyFromProviderValue(sqlGeography);
+
+        //    return point.Intersects(polygon);
+        //}
+        #endregion check latitude- longitude are available in polygon(wellknownText) region or not 
+
 
 
         //private void SendEmailNotification(string content, IEnumerable<string> emails, Property property, Guid noteID)
