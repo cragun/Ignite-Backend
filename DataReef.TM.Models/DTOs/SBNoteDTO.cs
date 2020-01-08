@@ -65,7 +65,14 @@ namespace DataReef.TM.Models.DTOs
 
     public class Territories
     {
-        public long Id { get; set; }
+        public Guid TerritoryId { get; set; }
         public string Name { get; set; }
-    }
+    }   
+
+    //public class SBUpdateProperty
+    //{
+    //    public Guid PropertyId { get; set; }
+    //    public long? LeadId { get; set; }
+    //    public string apiKey { get; set; }
+    //}
 }

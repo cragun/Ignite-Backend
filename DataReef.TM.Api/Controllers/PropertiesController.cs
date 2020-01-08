@@ -35,6 +35,32 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
+
+        /// <summary>
+        /// / Gets all Territories regardless of Lat - Long, for a property
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [Route("{propertyID:guid}/territories/{apiKey}")]
+        [ResponseType(typeof(ICollection<Inquiry>))]
+        [HttpGet]
+        public IHttpActionResult GetTerritoriesForProperty(Guid propertyID, string apiKey)
+        {
+            try
+            {
+                var result = propertyService.GetTerritoriesList(propertyID, apiKey);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+
+
+
         /// <summary>
         /// / Gets all inquiries regardless of person, for a property
         /// </summary>

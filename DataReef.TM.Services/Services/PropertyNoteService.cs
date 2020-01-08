@@ -474,6 +474,52 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
+
+        //public SBUpdateProperty UpdateTerritoryIdInProperty(long leadId, long TerritoryId, string apiKey, string email)
+        //{
+        //    using (var dc = new DataContext())
+        //    {
+        //        //get the note
+        //        var propertye = dc.Properties.Where(x => x.SmartBoardId == leadId).FirstOrDefault();
+        //        if (propertye == null)
+        //        {
+        //            throw new Exception("The Lead with the specified LeadId was not found");
+        //        }
+
+
+        //        var territory = dc.Territories.Where(x => x.Id == TerritoryId).FirstOrDefault();
+        //        if (territory == null)
+        //        {
+        //            throw new Exception("The Territory with the specified TerritoryId was not found");
+        //        }
+
+        //        //get the user who transfered the Lead Territory
+        //        var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+        //                                       && (x.EmailAddressString.Equals(email, StringComparison.InvariantCultureIgnoreCase)));
+        //        if (user == null)
+        //        {
+        //            throw new Exception("No user found with the specified ID");
+        //        }
+
+        //        propertye.TerritoryID = territory.Guid;
+        //        propertye.Updated(user.Guid);
+        //        dc.SaveChanges();
+
+        //        //get the property
+        //        var property = GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey);
+
+        //        return new SBUpdateProperty
+        //        {
+        //            LeadId = property.SmartBoardId,
+        //            PropertyId = property.Guid,
+        //            apiKey = apiKey
+        //        };
+
+        //    }
+        //}
+
+
         private void NotifyTaggedUsers(IEnumerable<Person> people, PropertyNote note, Property property, DataContext dataContext = null)
         {
             if (people?.Any() != true)
@@ -585,11 +631,11 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        
+
         public IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey)
         {
             using (var dc = new DataContext())
-            {               
+            {
                 //first get the property
                 var property = dc.Properties.FirstOrDefault(x => x.SmartBoardId == smartboardLeadID);
 

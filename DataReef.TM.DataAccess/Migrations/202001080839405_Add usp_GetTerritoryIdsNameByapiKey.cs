@@ -26,15 +26,15 @@ BEGIN
      --get child OUs using Key
 
 
-	DECLARE @id bigint
+	DECLARE @id uniqueidentifier
 	DECLARE @Name varchar(100)
 	DECLARE @WellKnownText nvarchar(max)
 	DECLARE @shape geography
 	DECLARE @point geography = geography::Point(@latitude, @longitude, 4326)
-	DECLARE @territoryIds TABLE (Id bigint,Name varchar(100))
+	DECLARE @territoryIds TABLE ([Guid] uniqueidentifier,Name varchar(100))
 
 	DECLARE territories_cursor CURSOR FOR  
-	SELECT  Id,Name, WellKnownText FROM Territories where ouid in (select Guid from @OUIds)
+	SELECT  [Guid],Name, WellKnownText FROM Territories where ouid in (select Guid from @OUIds)
 
 	OPEN territories_cursor   
 	FETCH NEXT FROM territories_cursor INTO @id,@Name, @WellKnownText 
@@ -53,7 +53,7 @@ BEGIN
 	CLOSE territories_cursor   
 	DEALLOCATE territories_cursor
 
-	select Id,Name from @territoryIds order by Name
+	select [Guid] as TerritoryId,Name from @territoryIds order by Name
 END";
 
             Sql(sql);

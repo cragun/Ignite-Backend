@@ -140,7 +140,7 @@ namespace DataReef.TM.Api.Controllers
 
 
         /// <summary>
-        /// / Gets the apikey base on property smartboard lead Id
+        /// / Gets Territories where Lead can transfer using SB apikey
         /// </summary>
         /// <param name="leadId"></param>
         /// <param name="apiKey"></param>
@@ -157,17 +157,19 @@ namespace DataReef.TM.Api.Controllers
 
 
         ///// <summary>
-        ///// / Gets the apikey base on property smartboard lead Id
+        ///// / Update TerritoryId for Property which given By SB.
         ///// </summary>
         ///// <param name="leadId"></param>
+        ///// <param name="TerritoryId"></param>
+        ///// <param name="email"></param>
         ///// <param name="apiKey"></param>
         ///// <returns></returns>
-        //[Route("sb/Transfer/{leadId}/{apiKey}")]
+        //[Route("sb/Transfer/{leadId}/{TerritoryId}/{apiKey}")]
         //[HttpPost]
         //[AllowAnonymous, InjectAuthPrincipal]
-        //public IHttpActionResult CheckCanTransferLead(long leadId, string apiKey)
+        //public IHttpActionResult UpdateTerritoryIdInProperty(long leadId, long TerritoryId, string apiKey, string email)
         //{
-        //    var result = _propertyNoteService.GetTerritoriesList(leadId, apiKey);
+        //    var result = _propertyNoteService.UpdateTerritoryIdInProperty(leadId, TerritoryId, apiKey, email);
         //    return Ok(result);
         //}
 

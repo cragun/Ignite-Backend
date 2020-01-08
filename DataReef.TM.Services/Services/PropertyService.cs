@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
+using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.ServiceModel;
@@ -1196,5 +1197,31 @@ namespace DataReef.TM.Services.Services
                         .FirstOrDefault();
             }
         }
+
+
+
+        public IEnumerable<Territories> GetTerritoriesList(Guid propertyid, string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                //first get the property
+                var property = dc.Properties.FirstOrDefault(x => x.Guid == propertyid);
+
+                if (property == null)
+                {
+                    throw new Exception("No lead found with the specified ID(s)");
+                }
+
+                //-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                var TerritoriesList = dc
+             .Database
+             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey", new SqlParameter("@latitude", property.Latitude), new SqlParameter("@longitude", property.Longitude), new SqlParameter("@apiKey", apiKey))
+             .ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+
     }
 }
