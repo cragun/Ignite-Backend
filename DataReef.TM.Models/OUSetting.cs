@@ -121,6 +121,8 @@ namespace DataReef.TM.Models
         public static readonly string LegionOUFreeHiResImages = "Legion.OU.FreeHiResImages";
         public static readonly string LegionOULogoImageUrl = "Legion.OU.LogoImageUrl";
         public static readonly string LegionOUUseLogoInProposal = "Legion.OU.UseLogoInProposal";
+        public static readonly string LegionOULeadSource = "Legion.OU.LeadSource";
+        
 
         public static readonly string Legion_EventMessageHandlers = "Legion.Internal.EventMessage.Handlers";
 

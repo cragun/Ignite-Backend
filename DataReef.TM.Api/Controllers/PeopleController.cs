@@ -274,6 +274,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = result });
         }
 
+        [HttpGet]
+        [Route("crm/LeadSources")]
+        [ResponseType(typeof(GenericResponse<List<CRMLeadSource>>))]
+        public IHttpActionResult GetCRMLeadSources()
+        {
+            return Ok(new GenericResponse<List<CRMLeadSource>> { Response = peopleService.CRMGetAvailableLeadSources() });
+        }
+
 
         public override HttpResponseMessage DeleteByGuid(Guid guid)
         {

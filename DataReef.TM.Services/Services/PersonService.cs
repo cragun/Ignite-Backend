@@ -386,6 +386,37 @@ namespace DataReef.TM.Services
             return distinctDispositions.ToList();
         }
 
+
+
+        public List<CRMLeadSource> CRMGetAvailableLeadSources()
+        {
+            // Get all the OUs for the logged in user
+
+            var rootGuids = _ouService.Value.ListRootGuidsForPerson(SmartPrincipal.UserId);
+
+            var settings = _ouSettingsService
+                        .Value
+                        .GetOuSettingsMany(rootGuids)?
+                        .SelectMany(os => os.Value)?
+                        .ToList();
+            var leadSettings = settings?
+                    .Where(s => s.Name == OUSetting.LegionOULeadSource)?
+                    .ToList();
+
+            var leadsources = leadSettings?
+                    .SelectMany(s => JsonConvert.DeserializeObject<List<CRMLeadSource>>(s.Value))?
+                    .ToList() ?? new List<CRMLeadSource>();
+
+            var distinctLeadsources = new HashSet<CRMLeadSource>(leadsources);
+
+            return distinctLeadsources.ToList();
+        }
+
+
+        
+
+
+
         //public PaginatedResult<Property> CRMGetProperties(CRMFilterRequest request)
         //{
         //    var userId = SmartPrincipal.UserId;

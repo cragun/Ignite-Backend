@@ -526,7 +526,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Google.ServiceAccountKey.json" />
-    <Content Include="ConnectionStrings.config" />
+    <Content Include="ConnectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include=".ebextensions\0_commands.config" />
     <None Include="Properties\PublishProfiles\datareef-territorymanager-api.pubxml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />

@@ -213,6 +213,7 @@
     <Compile Include="DTOs\GetPropertiesRequest.cs" />
     <Compile Include="DTOs\Inquiries\CRMDisposition.cs" />
     <Compile Include="DTOs\Inquiries\CRMFilterRequest.cs" />
+    <Compile Include="DTOs\Inquiries\CRMLeadSource.cs" />
     <Compile Include="DTOs\Integrations\IntegrationOption.cs" />
     <Compile Include="DTOs\Integrations\IntegrationOptionData.cs" />
     <Compile Include="DTOs\Integrations\IntegrationOptionSettings.cs" />
