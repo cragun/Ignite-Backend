@@ -1263,6 +1263,10 @@
     <Compile Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.Designer.cs">
       <DependentUpon>202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001100718480_Add LeadSourceId .cs" />
+    <Compile Include="Migrations\202001100718480_Add LeadSourceId .Designer.cs">
+      <DependentUpon>202001100718480_Add LeadSourceId .cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2169,6 +2173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.resx">
       <DependentUpon>202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001100718480_Add LeadSourceId .resx">
+      <DependentUpon>202001100718480_Add LeadSourceId .cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

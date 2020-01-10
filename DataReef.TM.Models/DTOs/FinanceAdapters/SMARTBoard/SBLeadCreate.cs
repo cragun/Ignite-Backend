@@ -49,7 +49,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             UtilityProviderID = property?.UtilityProviderID;
             UtilityProviderName = property?.UtilityProviderName;
             UsageCollected = property?.UsageCollected;
-            LeadSource = property?.LeadSource;
+            LeadSourceId = property?.LeadSourceId;
             // Disposition = property?.LatestDisposition;
             DispositionTypeId = property?.DispositionTypeId;
         }
@@ -115,8 +115,8 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public bool? UsageCollected { get; set; }
 
 
-        [JsonProperty("leadSource")]
-        public string LeadSource { get; set; }
+        [JsonProperty("leadSource_id")]
+        public int? LeadSourceId { get; set; }
 
 
         [JsonProperty("disposition_type_id")]

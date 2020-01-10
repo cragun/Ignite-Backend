@@ -91,8 +91,7 @@ namespace DataReef.TM.Models
         public string UtilityProviderName { get; set; }
 
         [DataMember]
-        [StringLength(200)]
-        public string LeadSource { get; set; }
+        public int? LeadSourceId { get; set; }
 
         [DataMember]
         public bool UsageCollected { get; set; }
