@@ -276,10 +276,10 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("crm/LeadSources")]
-        [ResponseType(typeof(GenericResponse<List<CRMLeadSource>>))]
+        [ResponseType(typeof(List<CRMLeadSource>))]
         public IHttpActionResult GetCRMLeadSources()
         {
-            return Ok(new GenericResponse<List<CRMLeadSource>> { Response = peopleService.CRMGetAvailableLeadSources() });
+            return Ok(peopleService.CRMGetAvailableLeadSources());
         }
 
 
