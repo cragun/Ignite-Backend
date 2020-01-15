@@ -37,7 +37,7 @@ namespace DataReef.TM.Contracts.Services
         List<CRMDisposition> CRMGetAvailableNewDispositions();
 
         [OperationContract]
-        List<CRMLeadSource> CRMGetAvailableLeadSources();
+        List<CRMLeadSource> CRMGetAvailableLeadSources(Guid ouid);
         
 
         [OperationContract]

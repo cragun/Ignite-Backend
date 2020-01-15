@@ -388,7 +388,7 @@ namespace DataReef.TM.Services
 
 
 
-        public List<CRMLeadSource> CRMGetAvailableLeadSources()
+        public List<CRMLeadSource> CRMGetAvailableLeadSources(Guid ouid)
         {
             // Get all the OUs for the logged in user
 
@@ -400,7 +400,7 @@ namespace DataReef.TM.Services
                         .SelectMany(os => os.Value)?
                         .ToList();
             var leadSettings = settings?
-                    .Where(s => s.Name == OUSetting.LegionOULeadSource)?
+                    .Where(s => s.Name == OUSetting.LegionOULeadSource && s.OUID == ouid)?
                     .ToList();
 
             var leadsources = leadSettings?
