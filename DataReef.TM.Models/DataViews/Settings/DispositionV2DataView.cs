@@ -16,6 +16,7 @@ namespace DataReef.TM.Models.DataViews.Settings
         public string Action { get; set; }
         public string Parameters { get; set; }
         public List<DispositionV2DataView> Children { get; set; }
+        public int? SBTypeId { get; set; }
 
         public List<string> GetUniqueNames()
         {

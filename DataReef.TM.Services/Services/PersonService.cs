@@ -376,7 +376,7 @@ namespace DataReef.TM.Services
 
             var dispositions = dispSettings?
                     .SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?
-                    .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Icon = d.IconName, Color = d.Color})?
+                    .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Icon = d.IconName, Color = d.Color, SBTypeId = d.SBTypeId })?
                     .ToList() ?? new List<CRMDisposition>();
 
             var distinctDispositions = new HashSet<CRMDisposition>(dispositions);

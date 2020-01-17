@@ -74,6 +74,10 @@ namespace DataReef.TM.Models
         public string Disposition { get; set; }
 
         [DataMember]
+        public Nullable<int> DispositionTypeId { get; set; }
+
+
+        [DataMember]
         [StringLength(50)]
         public string OldDisposition { get; set; }
 
