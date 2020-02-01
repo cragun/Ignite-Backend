@@ -255,5 +255,22 @@ namespace DataReef.TM.Api.Controllers
             return _propertyServiceFactory().CreatePropertyFromSmartBoard(request, apiKey);
         }
 
+
+        /// <summary>
+        /// POST method used by SmartBoard to change customer's FirstName and LastName for a specified property
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="leadId"></param>
+        [HttpPost, Route("sb/leadname/{leadId}")]
+        [ResponseType(typeof(SBPropertyDTO))]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult ChangePropertyNameFromSB(long leadId, [FromBody]SBPropertyNameDTO request)
+        {
+            var result = _propertyServiceFactory().EditPropertyNameFromSB(leadId,request);
+
+            return Ok(result);
+        }
+
+
     }
 }

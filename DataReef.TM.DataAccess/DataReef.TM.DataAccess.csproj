@@ -1271,6 +1271,10 @@
     <Compile Include="Migrations\202001171123102_Added DispositionTypeId in Inquiry.Designer.cs">
       <DependentUpon>202001171123102_Added DispositionTypeId in Inquiry.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.cs" />
+    <Compile Include="Migrations\202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.Designer.cs">
+      <DependentUpon>202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2183,6 +2187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001171123102_Added DispositionTypeId in Inquiry.resx">
       <DependentUpon>202001171123102_Added DispositionTypeId in Inquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.resx">
+      <DependentUpon>202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

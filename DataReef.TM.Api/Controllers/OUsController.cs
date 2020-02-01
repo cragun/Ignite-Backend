@@ -325,6 +325,30 @@ namespace DataReef.TM.Api.Controllers
             return ouService.GetSmartboardAllOus(apiKey);
         }
 
+
+        /// <summary>
+        /// Gets all Ous by Latitude, Longitude or Apikey for Zapier Leads
+        /// </summary>
+        
+        [HttpGet, Route("sbzapierOus")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<zapierOus>))]
+
+        // api/v1/ous/sbzapierOus?apikey={apikey}&Lat={Lat}&Lon={Lon}
+        public IHttpActionResult GetzapierOus(float? Lat, float? Lon, string apiKey = " ")
+        {
+            try
+            {
+                var result = ouService.GetzapierOusList(Lat,Lon, apiKey);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+
         protected override string PrepareEntityForNavigationPropertiesAttachment(OU entity)
         {
             var includeProperties = new List<string>();

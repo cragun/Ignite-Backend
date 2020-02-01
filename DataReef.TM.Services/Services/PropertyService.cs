@@ -1223,5 +1223,68 @@ namespace DataReef.TM.Services.Services
         }
 
 
+
+
+        public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
+        {
+            using (var dc = new DataContext())
+            {                
+                //first get the property
+                var property = dc.Properties.Include(x => x.Occupants)
+                                            .Include(x => x.PropertyBag)
+                                            .FirstOrDefault(x => x.Id == igniteID);
+
+                if (property == null)
+                {
+                    throw new Exception("No lead found with the specified ID");
+                }
+
+
+                var mainOccupant = property.GetMainOccupant();
+                if (mainOccupant != null)
+                {
+                    if(mainOccupant.FirstName == Request.ExistFirstName && mainOccupant.LastName == Request.ExistLastName && mainOccupant.Guid != null)
+                    {
+
+                        using (var dataContext = new DataContext())
+                        {
+                           var occupant =  dataContext.Occupants.Where(x => x.Guid == mainOccupant.Guid).FirstOrDefault();
+                            occupant.FirstName = Request.NewFirstName;
+                            occupant.LastName = Request.NewLastName;
+                            dataContext.SaveChanges();
+                        }
+
+                            //update new fname - lname into occupant and Property 
+                            if (property?.PropertyBag?.FirstOrDefault(f => f.DisplayName == "Email Address")?.Value == Request.ExistEmailAddress)
+                        {
+                            using (var dataContext = new DataContext())
+                            {
+                                // update propertybag 
+                                var Fields = property?.PropertyBag?.FirstOrDefault(f => f.DisplayName == "Email Address");
+                                Fields.Value = Request.NewEmailAddress;
+                                dataContext.SaveChanges();
+                            }
+                        }
+                       
+                        property.Name = $"{Request.NewFirstName} {mainOccupant.MiddleInitial} {Request.NewLastName}".Replace("  ", " ");
+                        property.DateLastModified = DateTime.UtcNow;
+                        dc.SaveChanges();
+
+                    }
+                }
+
+                
+                using (var data = new DataContext())
+                {
+                     property = data.Properties.Include(x => x.Occupants).Include(x => x.PropertyBag).FirstOrDefault(x => x.Id == igniteID);
+                }
+               // Update(Latestproperty);
+
+
+                return new SBPropertyDTO(property);
+            }
+        }
+
+
     }
 }

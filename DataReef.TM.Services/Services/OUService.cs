@@ -1952,11 +1952,28 @@ namespace DataReef.TM.Services.Services
         //{
         //    csv.WriteRecords(records);
         //}
+
+
+        public IEnumerable<zapierOus> GetzapierOusList(float? Lat, float? Lon, string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                //-- exec usp_GetOUIdsNameForGeoCoordinates 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                var zapierOusList = dc
+             .Database
+             .SqlQuery<zapierOus>("exec usp_GetOUIdsNameForGeoCoordinates @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", apiKey))
+             .ToList();
+
+                return zapierOusList;
+            }
+        }
     }
 
 
 
-   
+
+
+
 
     //public void UpdateFinancing()
     //{

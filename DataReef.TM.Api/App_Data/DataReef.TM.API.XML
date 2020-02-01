@@ -289,6 +289,13 @@
             <param name="request"></param>
             <param name="apiKey"></param>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.Properties2Controller.ChangePropertyNameFromSB(System.Int64,DataReef.TM.Models.DTOs.SmartBoard.SBPropertyNameDTO)">
+            <summary>
+            POST method used by SmartBoard to change customer's FirstName and LastName for a specified property
+            </summary>
+            <param name="request"></param>
+            <param name="leadId"></param>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.NotificationsController">
             <summary>
             Managers CRUD for Properties
@@ -595,6 +602,11 @@
             Get method used by SmartBoard to retrieve all accessible OUs
             </summary>
             <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetzapierOus(System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <summary>
+            Gets all Ous by Latitude, Longitude or Apikey for Zapier Leads
+            </summary>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.OUsController.CheckOUValidity(DataReef.TM.Models.OU)">
             <summary>

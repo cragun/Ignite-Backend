@@ -301,6 +301,7 @@
     <Compile Include="DTOs\Signatures\SolciusPayload.cs" />
     <Compile Include="DTOs\SmartBoard\SBAppointmentDTO.cs" />
     <Compile Include="DTOs\SmartBoard\SBCreatePropertyRequest.cs" />
+    <Compile Include="DTOs\SmartBoard\SBPropertyNameDTO.cs" />
     <Compile Include="DTOs\SmartBoard\SBSetAppointmentStatusRequest.cs" />
     <Compile Include="DTOs\SmartBoard\SBEditAppointmentRequest.cs" />
     <Compile Include="DTOs\SmartBoard\SBCreateAppointmentRequest.cs" />

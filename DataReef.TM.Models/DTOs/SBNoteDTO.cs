@@ -67,7 +67,13 @@ namespace DataReef.TM.Models.DTOs
     {
         public Guid TerritoryId { get; set; }
         public string Name { get; set; }
-    }   
+    }
+
+    public class zapierOus
+    {
+        public Guid Ouid { get; set; }
+        public string Name { get; set; }
+    }
 
     //public class SBUpdateProperty
     //{

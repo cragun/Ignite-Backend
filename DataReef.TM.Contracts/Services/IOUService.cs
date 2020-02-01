@@ -131,6 +131,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey);
-       
+
+        [OperationContract]
+        IEnumerable<zapierOus> GetzapierOusList(float? Lat, float? Lon, string apiKey );
+
     }
 }
