@@ -24,5 +24,11 @@ namespace DataReef.TM.Models.DataViews.Inquiries
 
         [DataMember]
         public int SpecifiedDay { get; set; }
+
+        [DataMember]
+        public int ThisQuarter { get; set; }
+
+        [DataMember]
+        public int RangeDay { get; set; }
     }
 }

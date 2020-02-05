@@ -202,7 +202,7 @@ namespace DataReef.TM.Services.Services
             return result;
         }
 
-        public ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, IEnumerable<Guid> excludedReps = null)
+        public ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
         {
             var result = new List<InquiryStatisticsForPerson>();
 
@@ -246,12 +246,12 @@ namespace DataReef.TM.Services.Services
 
             if(associatedPersonIds?.Any() == true)
             {
-                result = _personKPIService.Value.GetSelfTrackedStatisticsForSalesPeopleTerritories(associatedPersonIds, reportSettings.PersonReportItems, specifiedDay, excludedReps).ToList();
+                result = _personKPIService.Value.GetSelfTrackedStatisticsForSalesPeopleTerritories(associatedPersonIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
             }
             
             if(territoryIds?.Any() == true)
             {
-                var inquiries = _inquiryService.GetInquiryStatisticsForSalesPeopleTerritories(territoryIds, reportSettings.PersonReportItems, specifiedDay, excludedReps).ToList();
+                var inquiries = _inquiryService.GetInquiryStatisticsForSalesPeopleTerritories(territoryIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
 
                 foreach(var inquiryResult in inquiries)
                 {
@@ -265,6 +265,8 @@ namespace DataReef.TM.Services.Services
                         matchingItem.Actions.ThisMonth += inquiryResult.Actions.ThisMonth;
                         matchingItem.Actions.ThisYear += inquiryResult.Actions.ThisYear;
                         matchingItem.Actions.SpecifiedDay += inquiryResult.Actions.SpecifiedDay;
+                        matchingItem.Actions.RangeDay += inquiryResult.Actions.RangeDay;
+                        matchingItem.Actions.ThisQuarter += inquiryResult.Actions.ThisQuarter;
 
                         matchingItem.DaysActive.AllTime = Math.Max(matchingItem.DaysActive.AllTime, inquiryResult.DaysActive.AllTime);
                         matchingItem.DaysActive.Today = Math.Max(matchingItem.DaysActive.Today, inquiryResult.DaysActive.Today);
@@ -272,6 +274,8 @@ namespace DataReef.TM.Services.Services
                         matchingItem.DaysActive.ThisMonth = Math.Max(matchingItem.DaysActive.ThisMonth, inquiryResult.DaysActive.ThisMonth);
                         matchingItem.DaysActive.ThisYear = Math.Max(matchingItem.DaysActive.ThisYear, inquiryResult.DaysActive.ThisYear);
                         matchingItem.DaysActive.SpecifiedDay = Math.Max(matchingItem.DaysActive.SpecifiedDay, inquiryResult.DaysActive.SpecifiedDay);
+                        matchingItem.DaysActive.RangeDay = Math.Max(matchingItem.DaysActive.SpecifiedDay, inquiryResult.DaysActive.RangeDay);
+                        matchingItem.DaysActive.ThisQuarter = Math.Max(matchingItem.DaysActive.SpecifiedDay, inquiryResult.DaysActive.ThisQuarter);
                     }
                     else
                     {

@@ -686,13 +686,15 @@
             <param name="proposalID"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.ReportsController.GenerateReport(System.String,System.Guid,System.Nullable{System.DateTime})">
+        <member name="M:DataReef.TM.Api.Controllers.ReportsController.GenerateReport(System.String,System.Guid,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
             <summary>
             Gets the data needed for the specified report
             </summary>
             <param name="reportName">the name of the report</param>
             <param name="ouID">the organizational unit guid</param>
             <param name="specifiedDay">The date of a day that will be added to the report dates along with Today, WeekToDate, MonthToDate, YearToDate</param>
+            <param name="StartRangeDay">The date of a day that choose from dateRange Start</param>
+            <param name="EndRangeDay">The date of a day that choose from dateRange End</param>
             <returns></returns>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.TerritoriesController">

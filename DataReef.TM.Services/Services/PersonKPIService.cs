@@ -164,7 +164,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public ICollection<InquiryStatisticsForPerson> GetSelfTrackedStatisticsForSalesPeopleTerritories(ICollection<Guid> personIds, IEnumerable<PersonReportingSettingsItem> reportItems, DateTime? specifiedDay, IEnumerable<Guid> excludedReps = null)
+        public ICollection<InquiryStatisticsForPerson> GetSelfTrackedStatisticsForSalesPeopleTerritories(ICollection<Guid> personIds, IEnumerable<PersonReportingSettingsItem> reportItems, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
         {
             var kpiStatistics = new List<InquiryStatisticsForPerson>();
 
@@ -216,7 +216,9 @@ namespace DataReef.TM.Services
                                     ThisMonth = personKpiDates.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.Value),
                                     ThisWeek = personKpiDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.Value),
                                     Today = personKpiDates.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.Value),
-                                    SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Sum(x => x.Value) : 0
+                                    ThisQuarter = personKpiDates.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.Value),
+                                    SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Sum(x => x.Value) : 0,
+                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personKpiDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.Value) : 0
                                 },
                                 DaysActive = new InquiryStatisticsByDate
                                 {
@@ -225,7 +227,9 @@ namespace DataReef.TM.Services
                                     ThisMonth = personKpiDates.Where(id => id.DateCreated >= dates.MonthStart).GroupBy(id => id.DateCreated.Date).Count(),
                                     ThisWeek = personKpiDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).GroupBy(id => id.DateCreated.Date).Count(),
                                     Today = personKpiDates.Where(id => id.DateCreated >= dates.TodayStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0
+                                    ThisQuarter = personKpiDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                    SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0,
+                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personKpiDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
                                 }
                             });
                         }
