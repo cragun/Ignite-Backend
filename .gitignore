@@ -199,3 +199,5 @@ DataReef.TM.Api/Google.ServiceAccountKey.json
 */App_Data/*.p12
 .vs/
 /DataReef.TM.Api/ConnectionStrings.config
+/DataReef.TM.Api/Templates/Email - Copy
+/DataReef.TM.Api/Templates/Email/ExistingUserInvitation - Copy.cshtml

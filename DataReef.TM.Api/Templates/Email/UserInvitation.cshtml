@@ -1,36 +1,29 @@
 ﻿@model DataReef.TM.Classes.UserInvitationTemplate
 @{
-    Layout = "_Layout.cshml";
+    Layout = null;
 }
 
-<div class="content userInvitation">
-    <div class="row">
-        @Model.InviterName has invited you to join IGNITE. On your iOS device you will need to download the app to begin.
-    </div>
-    @if (Model.UserWasDeleted)
-    {
-        <div class="row">
-            Your user was deleted but is now restored because of this invitation. You may use your credentials to log in.
-        </div>
-    }
+<p>
+    @Model.InviterName has invited you to join IGNITE. On your iOS device you will need to download the app to begin.
+</p>
+@if (Model.UserWasDeleted)
+{
+    <p>
+        Your user was deleted but is now restored because of this invitation. You may use your credentials to log in.
+    </p>
+}
 
-    @if (!string.IsNullOrWhiteSpace(Model.DownloadURL))
-    {
-        <div class="row">
-            <a class="button" href="@Raw(Model.DownloadURL)">Download app</a>
-        </div>
-        <div class="row">
-            <p>After downloading the app, on your device, tap the link below to accept this invitation.</p>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            <p>Please check you e-mail for the latest Test Flight invitation or contact our Support Team to receive a new one. After installing the app, tap the link below to accept this invitation.</p>
-        </div>        
-    }
+@if (!string.IsNullOrWhiteSpace(Model.DownloadURL))
+{
+    <p><a href="@Raw(Model.DownloadURL)">Download app</a></p>
 
-    <div class="row">
-        <a class="button" href="@Raw(Model.InvitationURL)">Accept invitation</a>
-    </div>
-</div>
+    <p>After downloading the app, on your device, tap the link below to accept this invitation.</p>
+}
+else
+{
+
+    <p>Please check you e-mail for the latest Test Flight invitation or contact our Support Team to receive a new one. After installing the app, tap the link below to accept this invitation.</p>
+
+}
+
+<p><a href="@Raw(Model.InvitationURL)">Accept invitation</a></p>
