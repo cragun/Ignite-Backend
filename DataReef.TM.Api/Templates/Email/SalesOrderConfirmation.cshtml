@@ -3,162 +3,162 @@
     Layout = null;
 }
 
-<div class="content salesOrderConfirmation">
-    <div class="row">
-        Thank you for your recent order with Direct TV. Please see the details of the order below:
-    </div>
 
-    <div class="row">
-        <div class="subrow">
+    <p>
+        Thank you for your recent order with Direct TV. Please see the details of the order below:
+    </p>
+
+    <p>
+        <p>
             First Name: @Model.FirstName
-        </div>
-        <div class="subrow">
+        </p>
+        <p>
             Last Name: @Model.LastName
-        </div>
-        <div class="subrow">
+        </p>
+        <p>
             Phone: @Model.Phone
-        </div>
-        <div class="subrow">
+        </p>
+        <p>
             Phone 2: @Model.Phone2
-        </div>
-        <div class="subrow">
+        </p>
+        <p>
             Street: @Model.Street
-        </div>
-        <div class="subrow">
+        </p>
+        <p>
             City: @Model.City
-        </div>
-        <div class="subrow">
+        </p>
+        <p>
             State: @Model.State
-        </div>
-        <div class="subrow">
+        </p>
+        <p>
             Zip: @Model.Zip
-        </div>
+        </p>
 
         @if (!string.IsNullOrWhiteSpace(Model.SSN))
 		{
-        <div class="subrow">
+        <p>
             SSN: @Model.SSN
-        </div>
+        </p>
 		}
-    </div>
+    </p>
 
     @if (Model.IsBillingAddressDifferentThanInstallAddress)
     {
-        <div class="row">
-            <div class="subrow">
+        <p>
+            <p>
                 Billing Address is different than Install Address
-            </div>
+            </p>
 
             @if (!string.IsNullOrWhiteSpace(Model.BillingAddress))
 		{
-        <div class="subrow">
+        <p>
             Address: @Model.BillingAddress
-        </div>
+        </p>
 		}
 
             @if (!string.IsNullOrWhiteSpace(Model.BillingAddress2))
 		{
-        <div class="subrow">
+        <p>
             Address 2: @Model.BillingAddress2
-        </div>
+        </p>
 		}
 
             @if (!string.IsNullOrWhiteSpace(Model.BillingCity))
 		{
-        <div class="subrow">
+        <p>
             City: @Model.BillingCity
-        </div>
+        </p>
 		}
 
             @if (!string.IsNullOrWhiteSpace(Model.BillingState))
 		{
-        <div class="subrow">
+        <p>
             State: @Model.BillingState
-        </div>
+        </p>
 		}
 
             @if (!string.IsNullOrWhiteSpace(Model.BillingZip))
 		{
-        <div class="subrow">
+        <p>
             Zip: @Model.BillingZip
-        </div>
+        </p>
 		}
-        </div>
+        </p>
     }
 
-    <div class="row">
+    <p>
         @if (!string.IsNullOrWhiteSpace(Model.SalesPerson))
 		{
-        <div class="subrow">
+        <p>
             Sales Person: @Model.SalesPerson
-        </div>
+        </p>
 		}
 
-        <div class="subrow">
+        <p>
             Office: @Model.Office
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             Language: @Model.Language
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             Base Package: @Model.BasePackage
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             TV Count: @Model.TVCount
-        </div>
+        </p>
 
         @if (Model.MiniReceiverCount > 0)
 		{
-        <div class="subrow">
+        <p>
             Mini Receiver Count: @Model.MiniReceiverCount
-        </div>
+        </p>
 		}
 
         @if (Model.WirelessMiniReceiverCount > 0)
 		{
-        <div class="subrow">
+        <p>
             Wireless Mini Receiver Count: @Model.WirelessMiniReceiverCount
-        </div>
+        </p>
 		}
 
         @if (Model.GenieReceiverCount > 0)
 		{
-        <div class="subrow">
+        <p>
             Genie Receivers: @Model.GenieReceiverCount
-        </div>
+        </p>
 		}
 
         @if (Model.DVRReceiverCount > 0)
 		{
-        <div class="subrow">
+        <p>
             DVR Receivers: @Model.DVRReceiverCount
-        </div>
+        </p>
 		}
 
         @if (Model.HDDVRReceiverCount > 0)
 		{
-        <div class="subrow">
+        <p>
             HD DVR Receivers: @Model.HDDVRReceiverCount
-        </div>
+        </p>
 		}
 
         @if (Model.HDReceiverCount > 0)
 		{
-        <div class="subrow">
+        <p>
             HD Receivers: @Model.HDReceiverCount
-        </div>
+        </p>
 		}
 
         @if (Model.StandardReceiverCount > 0)
 		{
-        <div class="subrow">
+        <p>
             Standard Receivers: @Model.StandardReceiverCount
-        </div>
+        </p>
 		}
-    </div>
+    </p>
 
     @if (
         ((Model.DTVAddons != null) && (Model.DTVAddons.Length > 0)) ||
@@ -169,150 +169,150 @@
         ((Model.OtherEquipments != null) && (Model.OtherEquipments.Length > 0))
         )
     {
-        <div class="row">
+        <p>
             @if ((Model.DTVAddons != null) && (Model.DTVAddons.Length > 0))
 			{
-            <div class="subrow">
+            <p>
                 DirecTV Add-ons:
-            </div>
+            </p>
 				foreach (string item in Model.DTVAddons)
 				{
-            <div class="subrow">
+            <p>
                 @item
-            </div>
+            </p>
 				}
 			}
 
             @if ((Model.PremiumAddOns != null) && (Model.PremiumAddOns.Length > 0))
 			{
-            <div class="subrow">
+            <p>
                 Premium Add-ons:
-            </div>
+            </p>
 				foreach (string item in Model.PremiumAddOns)
 				{
-            <div class="subrow">
+            <p>
                 @item
-            </div>
+            </p>
 				}
 			}
 
             @if ((Model.InternationalPrograms != null) && (Model.InternationalPrograms.Length > 0))
 			{
-            <div class="subrow">
+            <p>
                 International Programs:
-            </div>
+            </p>
 				foreach (string item in Model.InternationalPrograms)
 				{
-            <div class="subrow">
+            <p>
                 @item
-            </div>
+            </p>
 				}
 			}
 
             @if ((Model.SportsPackages != null) && (Model.SportsPackages.Length > 0))
 			{
-            <div class="subrow">
+            <p>
                 Sports Packages:
-            </div>
+            </p>
 				foreach (string item in Model.SportsPackages)
 				{
-            <div class="subrow">
+            <p>
                 @item
-            </div>
+            </p>
 				}
 			}
 
             @if ((Model.SpanishAddOns != null) && (Model.SpanishAddOns.Length > 0))
 			{
-            <div class="subrow">
+            <p>
                 Spanish Addons:
-            </div>
+            </p>
 				foreach (string item in Model.SpanishAddOns)
 				{
-            <div class="subrow">
+            <p>
                 @item
-            </div>
+            </p>
 				}
 			}
 
             @if ((Model.OtherEquipments != null) && (Model.OtherEquipments.Length > 0))
 			{
-            <div class="subrow">
+            <p>
                 Other Equipment:
-            </div>
+            </p>
 				foreach (string item in Model.OtherEquipments)
 				{
-            <div class="subrow">
+            <p>
                 @item
-            </div>
+            </p>
 				}
 			}
-        </div>
+        </p>
     }
 
-    <div class="row">
-        <div class="subrow">
+    <p>
+        <p>
             Payment Info:
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             Name: @Model.PaymentName
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             Address: @Model.PaymentAddress
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             City: @Model.PaymentCity
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             State: @Model.PaymentState
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             Zip: @Model.PaymentZip
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             AutoPay: @Model.AcceptsAutoPay
-        </div>
+        </p>
 
         @if (!string.IsNullOrWhiteSpace(Model.PaymentEmailAddress))
 		{
-        <div class="subrow">
+        <p>
             Email: @Model.PaymentEmailAddress
-        </div>
+        </p>
 		}
 
         @if (!string.IsNullOrWhiteSpace(Model.SSN))
 		{
-        <div class="subrow">
+        <p>
             SSN: @Model.SSN
-        </div>
+        </p>
 		}
 
         @if (!string.IsNullOrWhiteSpace(Model.ProtectionPlan))
 		{
-        <div class="subrow">
+        <p>
             Protection Plan: @Model.ProtectionPlan
-        </div>
+        </p>
 		}
 
-        <div class="subrow">&nbsp;</div>
+        <p>&nbsp;</p>
 
-        <div class="subrow">
+        <p>
             Amount Due at Install: @Model.EquipmentAndProcessingFee
-        </div>
+        </p>
 
-        <div class="subrow">
+        <p>
             Monthly Fee: @Model.MonthlyFeeTotal
-        </div>
-    </div>
+        </p>
+    </p>
 
-    <div class="row">
-        <table cellpadding="0" cellspacing="0" width="100%" class="dotted-border">
+    <p>
+        <table cellpadding="0" cellspacing="0" width="100%">
             <tbody>
                 <tr>
                     <td>
@@ -344,5 +344,5 @@
             </tbody>
         </table>
 
-    </div>
-</div>
+    </p>
+</p>

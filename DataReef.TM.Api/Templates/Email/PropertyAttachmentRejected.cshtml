@@ -3,28 +3,23 @@
     Layout = null;
 }
 
-<div class="content userInvitation">
-    <div class="row">
+
+    <p>
         The following attachments for the property @Model.PropertyName were rejected. Address is: @Model.PropertyAddress
-    </div>
+    </p>
 
     @foreach (var item in Model.RejectedItems)
     {
-    <div class="row">
-        <b>Section: </b> @item.SectionName <br />
-        <b>Task: </b> @item.ItemName <br />
+    <p>
+        <b>Section: </b> @item.SectionName 
+        <b>Task: </b> @item.ItemName 
         <b>Reason: </b> @item.RejectionMessage
-
+  </p> 
         @if (!string.IsNullOrEmpty(item.ImageUrl))
         {
-            <div>
+            <p>
                 <b>Image </b>
-                <br />
                 <img src="@item.ImageUrl" width="300" />
-            </div>
+            </p>
         }
-    </div>
-        
     }
-
-</div>

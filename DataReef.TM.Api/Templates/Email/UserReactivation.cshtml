@@ -3,23 +3,23 @@
     Layout = null;
 }
 
-<div class="content userInvitation">
-    <div class="row">
-        <p>
-            @Model.ToPersonName, your user has been reactivated.
-        </p>
-        Make sure IGNITE application is installed on your iOS device. If IGNITE is not installed, please check the information below to download it.
-    </div>
-    @if (!string.IsNullOrWhiteSpace(Model.DownloadURL))
-    {
-        <div class="row">
-            <a class="button" href="@Raw(Model.DownloadURL)">Download app</a>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            <p>Please check you e-mail for the latest Test Flight invitation or contact our Support Team to receive a new one.</p>            
-        </div>
-    }
-</div>
+
+<p>
+    @Model.ToPersonName, your user has been reactivated.
+</p>
+<p>
+    Make sure IGNITE application is installed on your iOS device. If IGNITE is not installed, please check the information below to download it.
+</p>
+
+@if (!string.IsNullOrWhiteSpace(Model.DownloadURL))
+{
+    <p>
+        <a class="button" href="@Raw(Model.DownloadURL)">Download app</a>
+    </p>
+}
+else
+{
+
+    <p>Please check you e-mail for the latest Test Flight invitation or contact our Support Team to receive a new one.</p>
+
+}
