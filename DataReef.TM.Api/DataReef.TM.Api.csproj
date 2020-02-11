@@ -596,6 +596,17 @@
     <Content Include="Templates\Email\TerritoryAssignmentNotification.cshtml" />
     <Content Include="Templates\Email\UserInvitation.cshtml" />
     <Content Include="Templates\Email\UserReactivation.cshtml" />
+    <Content Include="Templates\OldEmail\AppointmentStatusChanged.cshtml" />
+    <Content Include="Templates\OldEmail\ExistingUserInvitation - Copy.cshtml" />
+    <Content Include="Templates\OldEmail\ExistingUserInvitation.cshtml" />
+    <Content Include="Templates\OldEmail\PropertyAttachmentRejected.cshtml" />
+    <Content Include="Templates\OldEmail\PropertyAttachmentSubmitted.cshtml" />
+    <Content Include="Templates\OldEmail\ResetPassword.cshtml" />
+    <Content Include="Templates\OldEmail\SalesOrderConfirmation.cshtml" />
+    <Content Include="Templates\OldEmail\TerritoryAssignmentNotification.cshtml" />
+    <Content Include="Templates\OldEmail\UserInvitation.cshtml" />
+    <Content Include="Templates\OldEmail\UserReactivation.cshtml" />
+    <Content Include="Templates\OldEmail\_Layout.cshtml" />
     <None Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

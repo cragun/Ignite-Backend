@@ -55,28 +55,6 @@ namespace DataReef.TM.Mail
                  templateType = EmailTemplateType.ExistingUserInvitation;
             }
             string body = TemplateHelper.GetTemplate(templateType, template);
-
-            //string body = "";
-            //body = body + string.Format("You have been invited to join {0}.", template.OUName);
-
-            //if (template.UserWasDeleted)
-            //{
-            //    body = body + "Your user was deleted but is now restored because of this invitation.You may use your credentials to log in.";
-            //}
-            //body = body + "<p> Make sure IGNITE application is installed on your iOS device.If IGNITE is not installed, please check the information below to download it.</p>";
-            //body = body + "<p> If you are logged in, please go to the main organizations screen and accept the invitation from there.</p>";
-
-            //if (!string.IsNullOrWhiteSpace(template.DownloadURL))
-            //{
-            //    body = body + string.Format("<a href='{0}'>Download app</a><br />", template.DownloadURL);
-            //    body = body + "<p>After downloading the app, on your device, tap the link below to accept this invitation.</p>";
-            //}
-            //else
-            //{
-            //    body = body + "<p>Please check you e-mail for the latest Test Flight invitation or contact our Support Team to receive a new one.After installing the app, tap the link below to accept this invitation.</p>";
-            //}
-            //body = body + string.Format("<a href='{0}'>Accept invitation</a>", template.InvitationURL);
-
             string subject = string.Format("You've been invited to join {0}", template.OUName);
             DataReef.Mail.Mailer.SendMail(new string[] { template.ToPersonEmail }, _senderEmail, template.FromPersonName, subject, body);
         }
