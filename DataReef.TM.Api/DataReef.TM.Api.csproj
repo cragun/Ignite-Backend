@@ -676,9 +676,9 @@
       <Project>{63f829a1-2bd9-49ed-b209-319c58538bf6}</Project>
       <Name>DataReef.TM.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GoogleMaps.LocationServices\GoogleMaps.LocationServices.csproj">
+    <ProjectReference Include="..\GoogleMaps.LocationServices\DataReef.GMap.LocationServices.csproj">
       <Project>{2c8e82be-4562-4bd8-806e-2abc806ff2b3}</Project>
-      <Name>GoogleMaps.LocationServices</Name>
+      <Name>DataReef.GMap.LocationServices</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

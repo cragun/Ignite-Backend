@@ -117,7 +117,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReef.Integrations.LoanP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReef.Integrations.Sunnova", "DataReef.Integrations.Sunnova\DataReef.Integrations.Sunnova.csproj", "{3683AF7D-373B-4646-878C-4ACA56182B6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMaps.LocationServices", "GoogleMaps.LocationServices\GoogleMaps.LocationServices.csproj", "{2C8E82BE-4562-4BD8-806E-2ABC806FF2B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReef.GMap.LocationServices", "GoogleMaps.LocationServices\DataReef.GMap.LocationServices.csproj", "{2C8E82BE-4562-4BD8-806E-2ABC806FF2B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1236,7 +1236,7 @@ Global
 		{2C8E82BE-4562-4BD8-806E-2ABC806FF2B3} = {3B930DCA-49C9-4789-9838-3FA9A57A0274}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.Integration.WPF.6.0.1304.0\lib\NET45
 		SolutionGuid = {DCF60401-E2BA-49E3-8B6E-CD4A61102494}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.Integration.WPF.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal

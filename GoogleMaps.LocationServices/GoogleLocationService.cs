@@ -7,7 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace GoogleMaps.LocationServices
+namespace DataReef.GMap.LocationServices
 {
     public class GoogleLocationService : ILocationService
     {

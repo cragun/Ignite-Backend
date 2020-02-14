@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace GoogleMaps.LocationServices
+namespace DataReef.GMap.LocationServices
 {
     public class AddressData
     {

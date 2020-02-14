@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GoogleMaps.LocationServices")]
+[assembly: AssemblyTitle("DataReef.GMap.LocationServices")]
 [assembly: AssemblyDescription("Test")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Seth Webster")]
-[assembly: AssemblyProduct("GoogleMaps.LocationServices")]
+[assembly: AssemblyProduct("DataReef.GMap.LocationServices")]
 [assembly: AssemblyCopyright("Copyright © Seth Webster")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
