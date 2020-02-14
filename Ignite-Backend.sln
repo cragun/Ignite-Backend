@@ -117,7 +117,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReef.Integrations.LoanP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReef.Integrations.Sunnova", "DataReef.Integrations.Sunnova\DataReef.Integrations.Sunnova.csproj", "{3683AF7D-373B-4646-878C-4ACA56182B6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMaps.LocationServices", "C:\Users\as\Downloads\GoogleMaps.LocationServices-master\GoogleMaps.LocationServices\GoogleMaps.LocationServices.csproj", "{2C8E82BE-4562-4BD8-806E-2ABC806FF2B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMaps.LocationServices", "GoogleMaps.LocationServices\GoogleMaps.LocationServices.csproj", "{2C8E82BE-4562-4BD8-806E-2ABC806FF2B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
