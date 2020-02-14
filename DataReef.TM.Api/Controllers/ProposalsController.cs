@@ -9,7 +9,7 @@ using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.Solar;
-using DataReef.GMap.LocationServices;
+using GoogleMaps.LocationServices;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataReef.GMap.LocationServices
+namespace GoogleMaps.LocationServices
 {
     public class Region
     {
