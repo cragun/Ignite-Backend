@@ -1239,6 +1239,12 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("No lead found with the specified ID");
                 }
 
+                if(Request.DispositionTypeId != property.DispositionTypeId)
+                {
+                    property.DispositionTypeId = Request.DispositionTypeId;
+                    property.DateLastModified = DateTime.UtcNow;
+                    dc.SaveChanges();
+                }
 
                 var mainOccupant = property.GetMainOccupant();
                 if (mainOccupant != null)

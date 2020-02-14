@@ -57,6 +57,9 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
         [DataMember]
         public Guid TerritoryID { get; set; }
 
+        [DataMember]
+        public int? DispositionTypeId { get; set; }
+
         public SBPropertyDTO(Property prop)
         {
             if(prop == null)
@@ -82,6 +85,7 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
             Latitude = prop.Latitude;
             Longitude = prop.Longitude;
             TerritoryID = prop.TerritoryID;
+            DispositionTypeId = prop.DispositionTypeId;
         }
     }
 }

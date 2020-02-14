@@ -29,5 +29,8 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
 
         [DataMember]
         public string NewEmailAddress { get; set; }
+
+        [DataMember]
+        public int? DispositionTypeId { get; set; }
     }
 }
