@@ -43,7 +43,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("getlatlongFromaddress")]
         [HttpGet]
-        public IHttpActionResult getlatlongFromaddress()
+        public IHttpActionResult getlatlongFromaddress(string gapikey)
         {
             AddressData a = new AddressData // Belgium
             {
@@ -54,7 +54,7 @@ namespace DataReef.TM.Api.Controllers
                 Zip = "B-4800"
             };
 
-            var gls = new GoogleLocationService("AIzaSyAuueKfJsNBYPkk8JRsS-qxOKQZhpaIUK4");
+            var gls = new GoogleLocationService(gapikey);
             var latlong = gls.GetLatLongFromAddress(a);
 
             if (latlong == null)
