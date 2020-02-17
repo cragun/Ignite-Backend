@@ -345,6 +345,7 @@ namespace DataReef.TM.Services.Services
                                     .Where(i => !excludedReps.Contains(i.PersonID) &&
                                                 territoryIds.Contains(i.Property.TerritoryID) &&
                                                 i.IsDeleted == false &&
+                                                 i.User.IsDeleted == false &&
                                                 searchDispositions.Contains(i.Disposition))
                                     .Select(i => new { Guid = i.Guid, PersonID = i.PersonID, DateCreated = i.DateCreated, Disposition = i.Disposition, OldDisposition = i.OldDisposition }).ToList();
 

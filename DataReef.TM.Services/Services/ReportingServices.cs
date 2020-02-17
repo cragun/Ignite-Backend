@@ -141,6 +141,7 @@ namespace DataReef.TM.Services
 
             var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct().ToList();
+             peopleIds = _personService.Value.GetMany(peopleIds).Where(p => p.IsDeleted == false).Select(i => i.Guid).Distinct().ToList();
             var people = _personService.Value.GetMany(peopleIds).Where(p => !repExclusionList.Contains(p.Guid));
             foreach (var personId in peopleIds)
             {
