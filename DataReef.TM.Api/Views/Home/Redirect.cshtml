@@ -3,6 +3,10 @@
      Layout = "~/Views/Shared/_Layout-Legion.cshtml";
     ViewBag.Title = "Ignite - User Registration";
 }
+
+<a data-uri="" onclick="clickHandler('trismart-ignite-dev://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Click dev</a>
+<a data-uri="" onclick="clickHandler('trismart-ignitestage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Click stage</a>
+<a data-uri="" onclick="clickHandler('trismart-IgniteStage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Click stag2</a>
 @section scripts
 {
 
@@ -10,9 +14,10 @@
         try {
             document.addEventListener('DOMContentLoaded', function () {
                 try {
-                    if (validations.isiPad || validations.isiPhone) {
+                    if (validations.isiPad || validations.isiPhone) {   
                         var strlink = '@Html.Raw(Model)';
-                        if (strlink.indexOf('notes') != -1) {
+                        if (strlink.indexOf('note') != -1) {
+                            console.log(strlink);
                             deeplink.open(strlink);
                         }
                         else {
@@ -24,5 +29,11 @@
                 } catch (e) { console.log(e)}
             });
         } catch (e) { }
+
+
+        function clickHandler(uri) {
+            deeplink.open(uri);
+            return false;
+        }
     </script>
 }
