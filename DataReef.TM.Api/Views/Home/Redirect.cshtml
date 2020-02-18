@@ -1,24 +1,31 @@
 ﻿@model string
 @{
-    Layout = "~/Views/Shared/_Layout-Legion.cshtml";
+     Layout = "~/Views/Shared/_Layout-Legion.cshtml";
+   // Layout = null;
     ViewBag.Title = "Ignite - User Registration";
 }
+
+@*<script src="~/Scripts/browser-deeplink.js"></script>
+<script src="~/Scripts/browser-deeplink.min.js"></script>*@
 @section scripts
 {
+
     <script type="text/javascript">
         try {
-
             document.addEventListener('DOMContentLoaded', function () {
                 try {
-
-                    if (validations.isiPad || validations.isiPhone) {                        
-                        location.href = '@Html.Raw(Model)';
+                    if (validations.isiPad || validations.isiPhone) {
+                        var strlink = '@Html.Raw(Model)';
+                        if (strlink.indexOf('notes') != -1) {
+                            deeplink.open(strlink);
+                        }
+                        else {
+                            location.href = strlink;
+                        }
                     } else {
-                        //
                         var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
-                        //location.href = `UserRegistration?${queryString}`;
                     }
-                } catch (e) { }
+                } catch (e) { console.log(e)}
             });
         } catch (e) { }
     </script>
