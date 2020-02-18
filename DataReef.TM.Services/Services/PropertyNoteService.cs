@@ -714,9 +714,11 @@ namespace DataReef.TM.Services.Services
                 var tag2Regex = new Regex(@"\[\/email\]");
 
                 content = tag1Regex.Replace(content, "<b>");
-                content = tag2Regex.Replace(content, "</b>");
+                content = tag2Regex.Replace(content, "</b>");                
 
-                var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
+                //var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
+
+                var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?action=notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
                 var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/> Note Sent by: <br/><br/> {Username} <br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 

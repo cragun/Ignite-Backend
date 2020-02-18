@@ -19,7 +19,8 @@ namespace DataReef.TM.Api
 
             bundles.Add(new ScriptBundle("~/bundles/legionjs").Include(
                         "~/Scripts/Legion.js",
-                        "~/Scripts/browser-deeplink.js"));
+                        "~/Scripts/browser-deeplink.js")
+                        );
 
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
