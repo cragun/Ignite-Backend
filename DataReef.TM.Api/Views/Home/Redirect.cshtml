@@ -1,20 +1,26 @@
 ﻿@model string
 @{
-     Layout = "~/Views/Shared/_Layout-Legion.cshtml";
+    Layout = "~/Views/Shared/_Layout-Legion.cshtml";
     ViewBag.Title = "Ignite - User Registration";
 }
+<a href="#" data-uri="trismart-ignite-dev://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7" onclick="clickHandler(this.dataset.uri)">Clickdev</a>
+<a href="#" data-uri="trismart-ignitestage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7" onclick="clickHandler(this.dataset.uri)">Clickstage</a>
+<a href="#" data-uri="trismart-IgniteStage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7" onclick="clickHandler(this.dataset.uri)">Clickstag2</a>
+<a href="#" data-uri="trismart-ignite-stage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7" onclick="clickHandler(this.dataset.uri)">Clickstag3</a>
+<a href="#" data-uri="trismart-ignite://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7" onclick="clickd(this.dataset.uri)">ClickSpecial</a>
 
-<a data-uri="" onclick="clickHandler('trismart-ignite-dev://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Click dev</a>
-<a data-uri="" onclick="clickHandler('trismart-ignitestage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Click stage</a>
-<a data-uri="" onclick="clickHandler('trismart-IgniteStage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Click stag2</a>
-@section scripts
+@*<a data-uri="" style="color:black" onclick="clickHandler('trismart-ignite-dev://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Clickdev</a>
+<a data-uri="" style="color:black" onclick="clickHandler('trismart-ignitestage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Clickstage</a>
+<a data-uri="" style="color:black" onclick="clickHandler('trismart-IgniteStage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Clickstag2</a>
+<a data-uri="" style="color:black" onclick="clickHandler('trismart-ignite-stage://propertyID=6bc67d1f-059b-40fa-9833-ae65caaab8b0&noteID=5bb307be-087c-467e-82f0-e38c41235cb7')">Clickstag3</a>*@
+   @section scripts
 {
 
     <script type="text/javascript">
-        try {
+        @*try {
             document.addEventListener('DOMContentLoaded', function () {
                 try {
-                    if (validations.isiPad || validations.isiPhone) {   
+                    if (validations.isiPad || validations.isiPhone) {
                         var strlink = '@Html.Raw(Model)';
                         if (strlink.indexOf('note') != -1) {
                             console.log(strlink);
@@ -28,12 +34,30 @@
                     }
                 } catch (e) { console.log(e)}
             });
-        } catch (e) { }
+        } catch (e) { }*@
 
 
         function clickHandler(uri) {
+            console.log(uri);
             deeplink.open(uri);
             return false;
         }
+
+        deeplink.setup({
+            iOS: {
+                appId: "1406816571",
+                appName: "ignite-by-smartboard",
+            },
+            android: {
+                appId: "com.facebook.katana"
+            }
+        });
+
+        function clickd(uri) {
+            console.log(uri);
+            deeplink.open(uri);
+            return false;
+        }
+
     </script>
 }
