@@ -16,7 +16,8 @@
     <a data-uri="" style="color:black" onclick="clickHandler('trismart-ignite-stage://propertyID=9b26012f-edcd-40bc-9e88-28a00030d345&noteID=7c5c63d4-7805-493b-81c0-7fe11400d73b')">Clickstag3</a>*@
 @section scripts
 {
-
+    @*"You must be on an iOS device to use that link."
+    [Close Tab]*@
     <script type="text/javascript">
         @*try {
             document.addEventListener('DOMContentLoaded', function () {
@@ -44,15 +45,15 @@
             return false;
         }
 
-        deeplink.setup({
-            iOS: {
-                appId: "1406816571",
-                appName: "ignite-by-smartboard",
-            },
-            android: {
-                appId: "com.facebook.katana"
-            }
-        });
+        //deeplink.setup({
+        //    iOS: {
+        //        appId: "1406816571",
+        //        appName: "ignite-by-smartboard",
+        //    },
+        //    android: {
+        //        appId: "com.facebook.katana"
+        //    }
+        //});
 
         function clickd(uri) {
             console.log(uri);
