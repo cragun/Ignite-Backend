@@ -558,7 +558,6 @@
     <Content Include="Scripts\ZeroClipboard.min.js" />
     <Content Include="Scripts\ZeroClipboard.swf" />
     <Content Include="SqlServerTypes\readme.htm" />
-    <Content Include="Views\Home\linktest.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -28,6 +28,12 @@ namespace DataReef.TM.Services
 
         public override Assignment Insert(Assignment ass)
         {
+            bool IsFromSmartBoard = false;
+            if (ass.Notes == "FromSmartBoard")
+            {
+                IsFromSmartBoard = true;
+                ass.Notes = null;
+            }
             Assignment existingAssignment;
             // I saw lots of duplicate assignments, and I added a validation
             using (var dataContext = new DataContext())
@@ -40,7 +46,7 @@ namespace DataReef.TM.Services
                 if (existingAssignment != null)
                 {
                     existingAssignment.SaveResult = SaveResult.SuccessfulInsert;
-                    if(ass.Territory != null)
+                    if (ass.Territory != null)
                     {
                         // keep territory if already set
                         existingAssignment.Territory = ass.Territory;
@@ -49,8 +55,12 @@ namespace DataReef.TM.Services
             }
 
             Assignment ret = existingAssignment ?? base.Insert(ass);
+            
+            if (IsFromSmartBoard == false)
+            {
+                this.SendTerritoryAssignmentNotification(new Assignment[] { ret });
+            }
 
-            this.SendTerritoryAssignmentNotification(new Assignment[] { ret });
 
             return ret;
         }
@@ -124,7 +134,7 @@ namespace DataReef.TM.Services
                 {
                     var personId = item.Key;
                     var ouid = item.Value;
-                    
+
                     // Validate that the User to get assigned is associated to the Territory's OU.
                     // Get all Hierarchical OUs for Person
                     var personOUs = dataContext
@@ -142,7 +152,7 @@ namespace DataReef.TM.Services
                                         .Database
                                         .SqlQuery<Guid>("select Guid from dbo.OUTreeUp({0})", ouid)
                                         .ToList();
-                    
+
                     // if the OU is top level, it will not be in the list, that's why we add it below
                     ouHierarchy.Add(ouid);
 
