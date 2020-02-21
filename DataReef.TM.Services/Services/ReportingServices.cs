@@ -141,7 +141,7 @@ namespace DataReef.TM.Services
 
             var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct().ToList();
-             peopleIds = _personService.Value.GetMany(peopleIds).Where(p => p.IsDeleted == false).Select(i => i.Guid).Distinct().ToList();
+            var DeactivepeopleIds = _personService.Value.GetMany(peopleIds).Where(p => p.IsDeleted == true).Select(i => i.Guid).Distinct().ToList();
             var people = _personService.Value.GetMany(peopleIds).Where(p => !repExclusionList.Contains(p.Guid));
             foreach (var personId in peopleIds)
             {
@@ -150,6 +150,7 @@ namespace DataReef.TM.Services
                 var reportRow = NormalizeSalesRepresentativeReportRow(
                         personId, 
                         person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???", 
+                        DeactivepeopleIds.Contains(personId) ? true : false,
                         inquiryStatistics.Where(i => i.PersonId == personId).ToList(), 
                         reportSettings);
                 
@@ -239,12 +240,13 @@ namespace DataReef.TM.Services
             return true;
         }
 
-        private SalesRepresentativeReportRow NormalizeSalesRepresentativeReportRow(Guid personId, string name, IEnumerable<InquiryStatisticsForPerson> stats, OUReportingSettings settings)
+        private SalesRepresentativeReportRow NormalizeSalesRepresentativeReportRow(Guid personId, string name, bool IsDeleted, IEnumerable<InquiryStatisticsForPerson> stats, OUReportingSettings settings)
         {
             SalesRepresentativeReportRow row = new SalesRepresentativeReportRow
             {
                 Id = personId,
                 Name = name,
+                IsDeleted = IsDeleted,
                 InquiryStatistics = new List<InquiryStatisticsForPerson>()
             };
             if (settings == null)
