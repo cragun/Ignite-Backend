@@ -90,7 +90,7 @@ namespace DataReef.TM.Services
                         .ConditionalGetActivePeopleIDsForCurrentAndSubOUs(ou.Guid, true)
                         .Distinct()
                         .ToList();
-                    
+
 
                     var reportRow = new OrganizationReportRow
                     {
@@ -148,13 +148,16 @@ namespace DataReef.TM.Services
                 var person = people.SingleOrDefault(p => p.Guid == personId);
 
                 var reportRow = NormalizeSalesRepresentativeReportRow(
-                        personId, 
-                        person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???", 
+                        personId,
+                        person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???",
                         DeactivepeopleIds.Contains(personId) ? true : false,
-                        inquiryStatistics.Where(i => i.PersonId == personId).ToList(), 
+                        inquiryStatistics.Where(i => i.PersonId == personId).ToList(),
                         reportSettings);
-                
-                results.Add(reportRow);
+
+                if (reportRow.InquiryStatistics.Count() > 0)
+                {
+                    results.Add(reportRow);
+                }
             }
             return results;
         }
@@ -242,6 +245,7 @@ namespace DataReef.TM.Services
 
         private SalesRepresentativeReportRow NormalizeSalesRepresentativeReportRow(Guid personId, string name, bool IsDeleted, IEnumerable<InquiryStatisticsForPerson> stats, OUReportingSettings settings)
         {
+            bool isallZero = true;
             SalesRepresentativeReportRow row = new SalesRepresentativeReportRow
             {
                 Id = personId,
@@ -253,12 +257,17 @@ namespace DataReef.TM.Services
             {
                 return null;
             }
-
-            foreach(var col in settings.PersonReportItems)
+            foreach (var col in settings.PersonReportItems)
             {
                 var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);
-                if(matchingStat != null)
+                if (matchingStat != null)
                 {
+                    if (IsDeleted == true)
+                    {
+                        isallZero = isallZero && matchingStat.Actions.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.Actions) as int?), 0));
+                        isallZero = isallZero && matchingStat.DaysActive.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.DaysActive) as int?), 0));
+                    }
+
                     row.InquiryStatistics.Add(matchingStat);
                 }
                 else
@@ -272,7 +281,12 @@ namespace DataReef.TM.Services
                         DaysActive = new InquiryStatisticsByDate()
                     });
                 }
-                
+
+            }
+
+            if (isallZero == true && IsDeleted == true)
+            {
+                row.InquiryStatistics = new List<InquiryStatisticsForPerson>();
             }
             return row;
         }
