@@ -337,7 +337,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="Zip"></param>
         [HttpGet, Route("sbzapierOus")]
         [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(IEnumerable<zapierOus>))]
+        [ResponseType(typeof(zapierOusModel))]
 
         // api/v1/ous/sbzapierOus?Address=&City=&State=&Country=&Zip=
         // api/v1/ous/sbzapierOus?Address=Rue du Cornet 6&City=VERVIERS&State=null&Country=Belgium&Zip=B-4800
@@ -345,23 +345,43 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-
-                //AddressData a = new AddressData // Belgium
-                //{
-                //    Address = "Rue du Cornet 6",
-                //    City = "VERVIERS",
-                //    State = null,
-                //    Country = "Belgium",
-                //    Zip = "B-4800"
-                //};
                 AddressData a = new AddressData { Address = Address, City = City, State = State, Country = Country, Zip = Zip };
                 var gls = new GoogleLocationService(DataReef.Core.Constants.GoogleLocationApikey);
                 var latlong = gls.GetLatLongFromAddress(a);
                 if (latlong == null)
                     return null;
+                zapierOusModel zapierou = new zapierOusModel();
+                zapierou.Latitude = (float)latlong.Latitude;
+                zapierou.Longitude = (float)latlong.Longitude;
+                zapierou.ouslist = ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
+                return Ok(zapierou);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
 
-                var result = ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
-                return Ok(result);
+
+
+        /// <summary>
+        /// Gets all Territories by lat,long and ouid for Zapier Leads
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <param name="ouid"></param>
+        [HttpGet, Route("sbzapierOus")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<zapierOus>))]
+
+
+        // api/v1/ous/sbzapierOus?latitude=&longitude=&ouid=
+        public IHttpActionResult GetTerritoriesByOu(float latitude, float longitude, Guid ouid )
+        {
+            try
+            {
+                var list = ouService.GetTerritoriesListByOu(latitude, longitude, ouid);
+                return Ok(list);
             }
             catch (System.Exception)
             {

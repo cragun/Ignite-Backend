@@ -1971,8 +1971,24 @@ namespace DataReef.TM.Services.Services
                 return zapierOusList;
             }
         }
-    }
 
+
+        public IEnumerable<zapierOus> GetTerritoriesListByOu(float Lat, float Lon, Guid ouid)
+        {
+            using (var dc = new DataContext())
+            {
+                //-- exec usp_GetOUIdsNameForGeoCoordinates 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                var TerritoriesList = dc
+             .Database
+             .SqlQuery<zapierOus>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @ouid", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@ouid", ouid))
+             .ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+    }
+    
 
 
 

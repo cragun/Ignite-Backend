@@ -135,5 +135,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         IEnumerable<zapierOus> GetzapierOusList(float? Lat, float? Lon, string apiKey );
 
+        [OperationContract]
+        IEnumerable<zapierOus> GetTerritoriesListByOu(float Lat, float Lon, Guid ouid);
+
     }
 }

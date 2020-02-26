@@ -75,6 +75,15 @@ namespace DataReef.TM.Models.DTOs
         public string Name { get; set; }
     }
 
+
+    public class zapierOusModel
+    {
+        public float? Latitude { get; set; }
+        public float? Longitude { get; set; }
+
+        public IEnumerable<zapierOus> ouslist {get;set;}
+    }
+
     //public class SBUpdateProperty
     //{
     //    public Guid PropertyId { get; set; }
