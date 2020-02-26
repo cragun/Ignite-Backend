@@ -6,6 +6,8 @@ namespace DataReef.Core
     public class Constants
     {
         public static string APIBaseAddress = ConfigurationManager.AppSettings["DataReef.TM.API.BaseAddress"];
+        public static string GoogleLocationApikey = ConfigurationManager.AppSettings["GoogleMaps.LocationServices.Apikey"];
+        
         public static string UtilsAPIUrl = ConfigurationManager.AppSettings["DataReef.UtilsAPI.Url"];
         public static string CustomURL = ConfigurationManager.AppSettings["DataReef.TM.CustomURL"];
         public static string SmartboardURL = ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"];

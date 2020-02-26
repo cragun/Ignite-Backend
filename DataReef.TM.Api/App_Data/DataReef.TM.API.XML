@@ -603,10 +603,15 @@
             </summary>
             <param name="apiKey"></param>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetzapierOus(System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetzapierOus(System.String,System.String,System.String,System.String,System.String)">
             <summary>
-            Gets all Ous by Latitude, Longitude or Apikey for Zapier Leads
+            Gets all Ous by location Address for Zapier Leads
             </summary>
+            <param name="Address"></param>
+            <param name="City"></param>
+            <param name="State"></param>
+            <param name="Country"></param>
+            <param name="Zip"></param>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.OUsController.CheckOUValidity(DataReef.TM.Models.OU)">
             <summary>

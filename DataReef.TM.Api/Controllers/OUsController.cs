@@ -18,6 +18,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
+using GoogleMaps.LocationServices;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -327,19 +328,39 @@ namespace DataReef.TM.Api.Controllers
 
 
         /// <summary>
-        /// Gets all Ous by Latitude, Longitude or Apikey for Zapier Leads
+        /// Gets all Ous by location Address for Zapier Leads
         /// </summary>
-        
+        /// <param name="Address"></param>
+        /// <param name="City"></param>
+        /// <param name="State"></param>
+        /// <param name="Country"></param>
+        /// <param name="Zip"></param>
         [HttpGet, Route("sbzapierOus")]
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(IEnumerable<zapierOus>))]
 
-        // api/v1/ous/sbzapierOus?apikey={apikey}&Lat={Lat}&Lon={Lon}
-        public IHttpActionResult GetzapierOus(float? Lat, float? Lon, string apiKey = " ")
+        // api/v1/ous/sbzapierOus?Address=&City=&State=&Country=&Zip=
+        // api/v1/ous/sbzapierOus?Address=Rue du Cornet 6&City=VERVIERS&State=null&Country=Belgium&Zip=B-4800
+        public IHttpActionResult GetzapierOus(string Address, string City, string State, string Country, string Zip)
         {
             try
             {
-                var result = ouService.GetzapierOusList(Lat,Lon, apiKey);
+
+                //AddressData a = new AddressData // Belgium
+                //{
+                //    Address = "Rue du Cornet 6",
+                //    City = "VERVIERS",
+                //    State = null,
+                //    Country = "Belgium",
+                //    Zip = "B-4800"
+                //};
+                AddressData a = new AddressData { Address = Address, City = City, State = State, Country = Country, Zip = Zip };
+                var gls = new GoogleLocationService(DataReef.Core.Constants.GoogleLocationApikey);
+                var latlong = gls.GetLatLongFromAddress(a);
+                if (latlong == null)
+                    return null;
+
+                var result = ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
                 return Ok(result);
             }
             catch (System.Exception)

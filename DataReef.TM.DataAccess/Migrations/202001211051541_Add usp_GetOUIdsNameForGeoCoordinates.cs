@@ -28,7 +28,7 @@ BEGIN
 	 if(@apiKey IS NOT NULL and LEN(@apiKey) > 0)
 	 begin
 	 	--get child OUs using Key
-		;WITH OUTree AS ( SELECT OUs.[Guid], OUs.Name , OUs.WellKnownText FROM OUs WHERE OUs.Guid in (select OUID from dbo.ousettings where value like '%' + @apiKey + '%' and Name = 'Integrations.Options.Selected')
+		;WITH OUTree AS ( SELECT OUs.[Guid], OUs.Name , OUs.WellKnownText FROM OUs WHERE OUs.Guid in (select OUID from dbo.ousettings where value like '%' + @apiKey + '%' and Name = 'Integrations.Options.Selected')  and isdeleted = 0 
 		                      UNION ALL
 							  SELECT OUs.[Guid], OUs.Name , OUs.WellKnownText FROM OUs INNER JOIN OUTree AS T ON OUs.ParentID = T.Guid WHERE OUs.IsDeleted = 0)
         insert into @OUIds select [Guid], Name , WellKnownText from OUTree
@@ -36,7 +36,7 @@ BEGIN
 	 end
 	 else
 	 begin
-	     insert into @OUIds select [Guid], Name , WellKnownText from OUs
+	     insert into @OUIds select [Guid], Name , WellKnownText from OUs where isdeleted = 0
 	 end
 
 	DECLARE @id uniqueidentifier
