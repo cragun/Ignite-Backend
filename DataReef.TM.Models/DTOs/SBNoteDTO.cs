@@ -92,10 +92,10 @@ namespace DataReef.TM.Models.DTOs
         public IEnumerable<zapierOus> ouslist {get;set;}
     }
 
-    //public class SBUpdateProperty
-    //{
-    //    public Guid PropertyId { get; set; }
-    //    public long? LeadId { get; set; }
-    //    public string apiKey { get; set; }
-    //}
+    public class SBUpdateProperty
+    {
+        public Guid PropertyId { get; set; }
+        public long? LeadId { get; set; }
+        public string apiKey { get; set; }
+    }
 }

@@ -156,22 +156,22 @@ namespace DataReef.TM.Api.Controllers
 
 
 
-        ///// <summary>
-        ///// / Update TerritoryId for Property which given By SB.
-        ///// </summary>
-        ///// <param name="leadId"></param>
-        ///// <param name="TerritoryId"></param>
-        ///// <param name="email"></param>
-        ///// <param name="apiKey"></param>
-        ///// <returns></returns>
-        //[Route("sb/Transfer/{leadId}/{TerritoryId}/{apiKey}")]
-        //[HttpPost]
-        //[AllowAnonymous, InjectAuthPrincipal]
-        //public IHttpActionResult UpdateTerritoryIdInProperty(long leadId, long TerritoryId, string apiKey, string email)
-        //{
-        //    var result = _propertyNoteService.UpdateTerritoryIdInProperty(leadId, TerritoryId, apiKey, email);
-        //    return Ok(result);
-        //}
+        /// <summary>
+        /// / Update TerritoryId for Property which given By SB.
+        /// </summary>
+        /// <param name="leadId"></param>
+        /// <param name="TerritoryId"></param>
+        /// <param name="email"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [Route("sb/Transfer/{leadId}/{TerritoryId}/{apiKey}")]
+        [HttpPost]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult UpdateTerritoryIdInProperty(long leadId, long TerritoryId, string apiKey, string email)
+        {
+            var result = _propertyNoteService.UpdateTerritoryIdInProperty(leadId, TerritoryId, apiKey, email);
+            return Ok(result);
+        }
 
 
 

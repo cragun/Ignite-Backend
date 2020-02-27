@@ -403,6 +403,16 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateTerritoryIdInProperty(System.Int64,System.Int64,System.String,System.String)">
+            <summary>
+            / Update TerritoryId for Property which given By SB.
+            </summary>
+            <param name="leadId"></param>
+            <param name="TerritoryId"></param>
+            <param name="email"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
             <summary>
             Managers CRUD for Properties
