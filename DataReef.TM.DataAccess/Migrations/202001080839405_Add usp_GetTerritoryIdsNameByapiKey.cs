@@ -9,15 +9,17 @@ namespace DataReef.TM.DataAccess.Migrations
         {
             var sql = @"Create PROCEDURE [dbo].[usp_GetTerritoryIdsNameByapiKey]
 (
-	@latitude FLOAT = NULL,
-	@longitude FLOAT = NULL,
+	@latitude FLOAT,
+	@longitude FLOAT ,
 	@apiKey varchar(100)= NULL,
 	@ouid uniqueidentifier = NULL
 )
 AS
 BEGIN
+
 	-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828', '48a930a3-4ad0-4786-a480-5585c2b2f117'
-	-- exec usp_GetTerritoryIdsNameByapiKey 50.8377520, 4.3821039, '48a930a3-4ad0-4786-a480-5585c2b2f117'
+	--exec usp_GetTerritoryIdsNameByapiKey 29.920071,	-95.498855,NULL,'1E9E5809-45F2-4CEE-AACB-6617DD232A40'
+    --exec usp_GetTerritoryIdsNameByapiKey 0,0,NULL,'1E9E5809-45F2-4CEE-AACB-6617DD232A40'
 	DECLARE @OUIds TABLE ([Guid] uniqueidentifier)
 	--get child OUs using Key
 		;WITH OUTree ([Guid]) AS ( SELECT OUs.Guid FROM OUs WHERE OUs.Guid in (select OUID from dbo.ousettings where value like '%' + @apiKey + '%' and Name = 'Integrations.Options.Selected') and OUs.IsDeleted = 0
@@ -26,6 +28,15 @@ BEGIN
         insert into @OUIds select Guid from OUTree
      --get child OUs using Key
 	 if(@ouid IS NOT NULL) begin insert into @OUIds select @ouid as Guid end
+
+
+	 if(@latitude = 0 and @longitude = 0)
+	 begin
+	 
+	 select [Guid] as TerritoryId,Name from Territories where ouid = @ouid order by Name
+	 return
+	 end
+
 
 	DECLARE @id uniqueidentifier
 	DECLARE @Name varchar(100)

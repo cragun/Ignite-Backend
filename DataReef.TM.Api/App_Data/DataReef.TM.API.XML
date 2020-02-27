@@ -613,7 +613,7 @@
             <param name="Country"></param>
             <param name="Zip"></param>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetTerritoriesByOu(System.Single,System.Single,System.Guid)">
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetTerritoriesByOu(System.Nullable{System.Single},System.Nullable{System.Single},System.Guid)">
             <summary>
             Gets all Territories by lat,long and ouid for Zapier Leads
             </summary>

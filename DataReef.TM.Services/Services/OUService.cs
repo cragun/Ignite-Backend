@@ -1973,14 +1973,16 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public IEnumerable<Territories> GetTerritoriesListByOu(float Lat, float Lon, Guid ouid)
+        public IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
         {
+            Lat = Lat == null ? 0 : Lat;
+            Lon = Lon == null ? 0 : Lon;
             using (var dc = new DataContext())
             {
-                //-- exec usp_GetOUIdsNameForGeoCoordinates 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                //-- exec usp_GetTerritoryIdsNameByapiKey 29.920071,-95.498855,NULL,'1E9E5809-45F2-4CEE-AACB-6617DD232A40'
                 var TerritoriesList = dc
              .Database
-             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @ouid", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@ouid", ouid))
+             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey, @ouid", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", "NULL"), new SqlParameter("@ouid", ouid))
              .ToList();
 
                 return TerritoriesList;

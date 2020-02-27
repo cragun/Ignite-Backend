@@ -376,7 +376,7 @@ namespace DataReef.TM.Api.Controllers
 
 
         // api/v1/ous/TerritoriesByOu?latitude=&longitude=&ouid=
-        public IHttpActionResult GetTerritoriesByOu(float latitude, float longitude, Guid ouid )
+        public IHttpActionResult GetTerritoriesByOu(float? latitude, float? longitude, Guid ouid)
         {
             try
             {
