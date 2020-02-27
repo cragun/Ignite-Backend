@@ -69,6 +69,14 @@ namespace DataReef.TM.Models.DTOs
         public string Name { get; set; }
     }
 
+    public class TerritoryModel
+    {
+        public IEnumerable<Territories> TerritorieswithLatLong { get; set; }
+        public IEnumerable<Territories> Territories { get; set; }
+    }
+
+
+
     public class zapierOus
     {
         public Guid Ouid { get; set; }

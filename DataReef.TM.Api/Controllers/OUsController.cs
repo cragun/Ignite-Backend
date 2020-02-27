@@ -372,7 +372,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="ouid"></param>
         [HttpGet, Route("TerritoriesByOu")]
         [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(IEnumerable<Territories>))]
+        [ResponseType(typeof(TerritoryModel))]
 
 
         // api/v1/ous/TerritoriesByOu?latitude=&longitude=&ouid=
@@ -380,8 +380,10 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                var list = ouService.GetTerritoriesListByOu(latitude, longitude, ouid);
-                return Ok(list);
+                TerritoryModel teritory = new TerritoryModel();
+                teritory.TerritorieswithLatLong = ouService.GetTerritoriesListByOu(latitude, longitude, ouid);
+                teritory.Territories = ouService.GetTerritoriesListByOu(0, 0, ouid);
+                return Ok(teritory);
             }
             catch (System.Exception)
             {
