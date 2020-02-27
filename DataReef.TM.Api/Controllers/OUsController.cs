@@ -370,12 +370,12 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <param name="ouid"></param>
-        [HttpGet, Route("sbzapierOus")]
+        [HttpGet, Route("TerritoriesByOu")]
         [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(IEnumerable<zapierOus>))]
+        [ResponseType(typeof(IEnumerable<Territories>))]
 
 
-        // api/v1/ous/sbzapierOus?latitude=&longitude=&ouid=
+        // api/v1/ous/TerritoriesByOu?latitude=&longitude=&ouid=
         public IHttpActionResult GetTerritoriesByOu(float latitude, float longitude, Guid ouid )
         {
             try

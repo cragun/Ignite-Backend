@@ -9,22 +9,23 @@ namespace DataReef.TM.DataAccess.Migrations
         {
             var sql = @"Create PROCEDURE [dbo].[usp_GetTerritoryIdsNameByapiKey]
 (
-	@latitude FLOAT,
-	@longitude FLOAT,
-	@apiKey varchar(100)
+	@latitude FLOAT = NULL,
+	@longitude FLOAT = NULL,
+	@apiKey varchar(100)= NULL,
+	@ouid uniqueidentifier = NULL
 )
 AS
 BEGIN
-
-	-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+	-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828', '48a930a3-4ad0-4786-a480-5585c2b2f117'
+	-- exec usp_GetTerritoryIdsNameByapiKey 50.8377520, 4.3821039, '48a930a3-4ad0-4786-a480-5585c2b2f117'
 	DECLARE @OUIds TABLE ([Guid] uniqueidentifier)
 	--get child OUs using Key
-		;WITH OUTree ([Guid]) AS ( SELECT OUs.Guid FROM OUs WHERE OUs.Guid in (select OUID from dbo.ousettings where value like '%' + @apiKey + '%' and Name = 'Integrations.Options.Selected')
+		;WITH OUTree ([Guid]) AS ( SELECT OUs.Guid FROM OUs WHERE OUs.Guid in (select OUID from dbo.ousettings where value like '%' + @apiKey + '%' and Name = 'Integrations.Options.Selected') and OUs.IsDeleted = 0
 		                      UNION ALL
 							  SELECT OUs.Guid FROM OUs INNER JOIN OUTree AS T ON OUs.ParentID = T.Guid WHERE OUs.IsDeleted = 0)
         insert into @OUIds select Guid from OUTree
      --get child OUs using Key
-
+	 if(@ouid IS NOT NULL) begin insert into @OUIds select @ouid as Guid end
 
 	DECLARE @id uniqueidentifier
 	DECLARE @Name varchar(100)
