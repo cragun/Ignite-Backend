@@ -159,17 +159,15 @@ namespace DataReef.TM.Api.Controllers
         /// <summary>
         /// / Update TerritoryId for Property which given By SB.
         /// </summary>
-        /// <param name="leadId"></param>
-        /// <param name="TerritoryId"></param>
-        /// <param name="email"></param>
+        /// <param name="request"></param>
         /// <param name="apiKey"></param>
         /// <returns></returns>
-        [Route("sb/Transfer/{leadId}/{TerritoryId}/{apiKey}")]
+        [Route("sb/Transfer/{apiKey}")]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult UpdateTerritoryIdInProperty(long leadId, Guid TerritoryId, string apiKey, string email)
+        public IHttpActionResult UpdateTerritoryIdInProperty([FromBody]SBNoteDTO request , string apiKey)
         {
-            var result = _propertyNoteService.UpdateTerritoryIdInProperty(leadId, TerritoryId, apiKey, email);
+            var result = _propertyNoteService.UpdateTerritoryIdInProperty(request.LeadID, request.Guid, apiKey, request.Email);
             return Ok(result);
         }
 

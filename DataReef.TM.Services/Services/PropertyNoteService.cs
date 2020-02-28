@@ -476,7 +476,7 @@ namespace DataReef.TM.Services.Services
 
 
 
-        public SBUpdateProperty UpdateTerritoryIdInProperty(long leadId, Guid TerritoryId, string apiKey, string email)
+        public SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email)
         {
             using (var dc = new DataContext())
             {
@@ -496,7 +496,7 @@ namespace DataReef.TM.Services.Services
 
                 //get the user who transfered the Lead Territory
                 var user = dc.People.FirstOrDefault(x => !x.IsDeleted
-                                               && (x.EmailAddressString.Equals(email, StringComparison.InvariantCultureIgnoreCase)));
+                                               && (x.EmailAddressString.Equals(email)));
                 if (user == null)
                 {
                     throw new Exception("No user found with the specified ID");
