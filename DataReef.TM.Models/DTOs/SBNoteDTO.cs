@@ -71,6 +71,7 @@ namespace DataReef.TM.Models.DTOs
 
     public class TerritoryModel
     {
+        public string apikey { get; set; }
         public IEnumerable<Territories> TerritorieswithLatLong { get; set; }
         public IEnumerable<Territories> Territories { get; set; }
     }

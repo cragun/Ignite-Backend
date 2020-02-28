@@ -381,6 +381,7 @@ namespace DataReef.TM.Api.Controllers
             try
             {
                 TerritoryModel teritory = new TerritoryModel();
+                teritory.apikey = ouService.GetApikeyByOU(ouid);
                 teritory.TerritorieswithLatLong = ouService.GetTerritoriesListByOu(latitude, longitude, ouid);
                 teritory.Territories = ouService.GetTerritoriesListByOu(0, 0, ouid);
                 return Ok(teritory);

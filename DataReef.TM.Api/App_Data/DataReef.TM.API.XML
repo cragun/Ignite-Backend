@@ -403,7 +403,7 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateTerritoryIdInProperty(System.Int64,System.Int64,System.String,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateTerritoryIdInProperty(System.Int64,System.Guid,System.String,System.String)">
             <summary>
             / Update TerritoryId for Property which given By SB.
             </summary>

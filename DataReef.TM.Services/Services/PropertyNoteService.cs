@@ -476,7 +476,7 @@ namespace DataReef.TM.Services.Services
 
 
 
-        public SBUpdateProperty UpdateTerritoryIdInProperty(long leadId, long TerritoryId, string apiKey, string email)
+        public SBUpdateProperty UpdateTerritoryIdInProperty(long leadId, Guid TerritoryId, string apiKey, string email)
         {
             using (var dc = new DataContext())
             {
@@ -488,7 +488,7 @@ namespace DataReef.TM.Services.Services
                 }
 
 
-                var territory = dc.Territories.Where(x => x.Id == TerritoryId).FirstOrDefault();
+                var territory = dc.Territories.Where(x => x.Guid == TerritoryId).FirstOrDefault();
                 if (territory == null)
                 {
                     throw new Exception("The Territory with the specified TerritoryId was not found");

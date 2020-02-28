@@ -138,5 +138,7 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid);
 
+        [OperationContract]
+        string GetApikeyByOU(Guid ouid);
     }
 }

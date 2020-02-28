@@ -36,6 +36,6 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<Models.Person> QueryForPerson(Guid propertyID, string email, string name);
 
         [OperationContract]
-        SBUpdateProperty UpdateTerritoryIdInProperty(long leadId, long TerritoryId, string apiKey, string email);
+        SBUpdateProperty UpdateTerritoryIdInProperty(long leadId, Guid TerritoryId, string apiKey, string email);
     }
 }

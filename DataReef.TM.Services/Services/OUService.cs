@@ -1972,6 +1972,23 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public string  GetApikeyByOU(Guid ouid)
+        {
+            // validate apiKey
+            var sbSettings = _settingsService
+                                .Value
+                                .GetSettingsByOUID(ouid)
+                                ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                .Data?
+                                .SMARTBoard;
+
+            return sbSettings.ApiKey;
+        }
+
+
+
 
         public IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
         {
