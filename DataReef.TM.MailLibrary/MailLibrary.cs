@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Mail;
+using System.Web;
 
 namespace DataReef.TM.Mail
 {
@@ -121,7 +122,12 @@ namespace DataReef.TM.Mail
         }
 
         public static void SendEmail(string to, string cc, string subject, string body, bool isHtml = false, List<Attachment> attachments = null)
-        {
+        {            
+            if (Constants.APIBaseAddress == "http://api-staging.ignite.trismartsolar.com")
+            {
+                subject = "Testing  " + subject;
+            }
+            
             var email = new MailMessage();
             email.From = new MailAddress(_senderEmail, SenderName);
             email.Subject = subject;

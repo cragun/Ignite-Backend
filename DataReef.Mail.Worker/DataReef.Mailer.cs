@@ -1,7 +1,9 @@
-﻿using System;
+﻿using DataReef.Core;
+using System;
 using System.Configuration;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Web;
 
 namespace DataReef.Mail
 {
@@ -55,6 +57,18 @@ namespace DataReef.Mail
         {
             try
             {
+                if (Constants.APIBaseAddress == "http://api-staging.ignite.trismartsolar.com")
+                {
+                    subject = "Testing  " + subject;
+                }
+
+
+                //string host = HttpContext.Current.Request.Url.Host; // localhost
+                //if (host == "api-staging.ignite.trismartsolar.com" || host == "localhost")
+                //{
+                //    subject = "<b>Testing</b>" + subject;
+                //}
+
                 string userName = ConfigurationManager.AppSettings["SendGrid-UserName"];
                 string password = ConfigurationManager.AppSettings["SendGrid-Password"];
                 string server = ConfigurationManager.AppSettings["SendGrid-Server"];
@@ -110,6 +124,11 @@ namespace DataReef.Mail
             {
                 throw;
             }
+        }
+
+        private static string GetActionURL(string v1, string v2, string v3)
+        {
+            throw new NotImplementedException();
         }
     }
 }
