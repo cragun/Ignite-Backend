@@ -122,10 +122,19 @@ namespace DataReef.TM.Mail
         }
 
         public static void SendEmail(string to, string cc, string subject, string body, bool isHtml = false, List<Attachment> attachments = null)
-        {            
+        {
             if (Constants.APIBaseAddress == "http://api-staging.ignite.trismartsolar.com")
             {
                 subject = "Testing  " + subject;
+                if(isHtml == true)
+                {
+                    body = $"<p style='font-size:large;'><b> Test Email </b> </p> <br/> " + body;
+                }
+                else
+                {
+                    body = $"Test Email" + body;
+                }
+                
             }
             
             var email = new MailMessage();

@@ -60,6 +60,8 @@ namespace DataReef.Mail
                 if (Constants.APIBaseAddress == "http://api-staging.ignite.trismartsolar.com")
                 {
                     subject = "Testing  " + subject;
+                    body = $"<p style='font-size:large;'><b> Test Email </b> </p> <br/> " + body;
+
                 }
 
                 string userName = ConfigurationManager.AppSettings["SendGrid-UserName"];
