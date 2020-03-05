@@ -726,7 +726,7 @@ namespace DataReef.TM.Services
                     {
                         var propIds = dataContext
                                 .Properties
-                                .SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query", paramValue.ToArray())
+                                .SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query OR Name like @query", paramValue.ToArray())
                                 .Select(p => p.Guid)
                                 .ToList();
 

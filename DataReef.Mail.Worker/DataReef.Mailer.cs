@@ -62,13 +62,6 @@ namespace DataReef.Mail
                     subject = "Testing  " + subject;
                 }
 
-
-                //string host = HttpContext.Current.Request.Url.Host; // localhost
-                //if (host == "api-staging.ignite.trismartsolar.com" || host == "localhost")
-                //{
-                //    subject = "<b>Testing</b>" + subject;
-                //}
-
                 string userName = ConfigurationManager.AppSettings["SendGrid-UserName"];
                 string password = ConfigurationManager.AppSettings["SendGrid-Password"];
                 string server = ConfigurationManager.AppSettings["SendGrid-Server"];
