@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class RemovedusageCollectedfromProposalData : IMigrationMetadata
+    public sealed partial class Addusagecollected : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(RemovedusageCollectedfromProposalData));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Addusagecollected));
         
         string IMigrationMetadata.Id
         {
-            get { return "201912260953102_Removed usageCollected from ProposalData"; }
+            get { return "202003060631268_Add usagecollected"; }
         }
         
         string IMigrationMetadata.Source

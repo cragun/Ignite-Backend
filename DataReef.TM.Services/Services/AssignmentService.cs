@@ -18,7 +18,9 @@ namespace DataReef.TM.Services
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     public class AssignmentService : DataService<Assignment>, IAssignmentService
     {
-        private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "noreply@datareef.com";
+        //private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "noreply@datareef.com";
+        private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "donotreply@smartboardcrm.com";
+        
         private readonly ILogger _logger;
 
         public AssignmentService(ILogger logger, Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
