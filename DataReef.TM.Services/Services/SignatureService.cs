@@ -39,7 +39,7 @@ namespace DataReef.TM.Services.Services
         private readonly IVelocifyService _velocifyService;
         private readonly IMortgageService _mortgageService;
         //private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "noreply@datareef.com";
-        private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "donotreply@smartboardcrm.com";
+        private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "support@smartboardcrm.com";
         
         public SignatureService(
             IBlobService blobService,

@@ -19,7 +19,7 @@ namespace DataReef.TM.Services
     public class AssignmentService : DataService<Assignment>, IAssignmentService
     {
         //private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "noreply@datareef.com";
-        private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "donotreply@smartboardcrm.com";
+        private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "support@smartboardcrm.com";
         
         private readonly ILogger _logger;
 
