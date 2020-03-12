@@ -393,6 +393,7 @@ namespace DataReef.TM.Services
             // Get all the OUs for the logged in user
 
             var rootGuids = _ouService.Value.ListRootGuidsForPerson(SmartPrincipal.UserId);
+           // rootGuids.Add(ouid);
 
             var settings = _ouSettingsService
                         .Value
@@ -400,8 +401,13 @@ namespace DataReef.TM.Services
                         .SelectMany(os => os.Value)?
                         .ToList();
             var leadSettings = settings?
-                    .Where(s => s.Name == OUSetting.LegionOULeadSource && s.OUID == ouid)?
+                    .Where(s => s.Name == OUSetting.LegionOULeadSource)?
                     .ToList();
+
+            if(leadSettings.Count == 0 && ouid != null)
+            {
+                leadSettings = _ouSettingsService.Value.GetSettingsByOUID(ouid)?.Where(x => x.Name == OUSetting.LegionOULeadSource)?.ToList();
+            }
 
             var leadsources = leadSettings?
                     .SelectMany(s => JsonConvert.DeserializeObject<List<CRMLeadSource>>(s.Value))?
