@@ -189,6 +189,20 @@ namespace DataReef.TM.Services.Services
 
             var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
 
+
+            //send new lead to SMARTBOARD
+            try
+            {
+                _sbAdapter.Value.SubmitLead(entity.Guid);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Error submitting SB lead!", ex);
+            }
+            //send new lead to SMARTBOARD
+
+
+
             //update territory date modified because a new property was added
             using (var dataContext = new DataContext())
             {
