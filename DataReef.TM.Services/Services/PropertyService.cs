@@ -48,6 +48,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
+        private readonly Lazy<IPersonService> _personService = null;
 
 
         public PropertyService(ILogger logger,
@@ -59,6 +60,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
+            Lazy<IPersonService> personService,
             Lazy<IAppointmentService> appointmentService)
             : base(logger, unitOfWorkFactory)
         {
@@ -69,6 +71,7 @@ namespace DataReef.TM.Services.Services
             _ouService = ouService;
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
+            _personService = personService;
             _appointmentService = appointmentService;
         }
 
@@ -1255,7 +1258,11 @@ namespace DataReef.TM.Services.Services
 
                 if(Request.DispositionTypeId != property.DispositionTypeId)
                 {
+
+                    var dispositionslist = _personService.Value.CRMGetAvailableNewDispositions().ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault();
+
                     property.DispositionTypeId = Request.DispositionTypeId;
+                    property.LatestDisposition = dispositionslist != null? dispositionslist.Disposition : property.LatestDisposition;
                     property.DateLastModified = DateTime.UtcNow;
                     dc.SaveChanges();
                 }
