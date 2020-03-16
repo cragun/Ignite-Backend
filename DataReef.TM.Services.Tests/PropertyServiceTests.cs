@@ -54,7 +54,6 @@ namespace DataReef.TM.Services.Tests
                 new Lazy<IOUService>(() => _ouService.Object),
                 new Lazy<IOUSettingService>(() => _ouSettingService.Object),
                 new Lazy<ITerritoryService>(() => _territoryService.Object),
-                null,
                 null);
         }
         #region GetProperties

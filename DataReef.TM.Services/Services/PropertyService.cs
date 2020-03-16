@@ -9,6 +9,7 @@ using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
@@ -21,6 +22,7 @@ using DataReef.TM.Services.Extensions;
 using DataReef.TM.Services.InternalServices.Geo;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using EntityFramework.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -48,7 +50,6 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
-        private readonly Lazy<IPersonService> _personService = null;
 
 
         public PropertyService(ILogger logger,
@@ -60,7 +61,6 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
-            Lazy<IPersonService> personService,
             Lazy<IAppointmentService> appointmentService)
             : base(logger, unitOfWorkFactory)
         {
@@ -71,7 +71,6 @@ namespace DataReef.TM.Services.Services
             _ouService = ouService;
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
-            _personService = personService;
             _appointmentService = appointmentService;
         }
 
@@ -1257,13 +1256,12 @@ namespace DataReef.TM.Services.Services
                 }
 
                 if(Request.DispositionTypeId != property.DispositionTypeId)
-                {
+                {                    
+                    var dispSettings = _ouSettingService.Value.GetSettingsByPropertyID(property.Guid)?.Where(s => s.Name == OUSetting.NewDispositions)?.ToList();
+                    var dispositions = dispSettings?.SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?.ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault(); 
 
-                    var dispositionslist = _personService.Value.CRMGetAvailableNewDispositions().ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault();
-                    property.DispositionTypeId = Request.DispositionTypeId ;
-                    property.LatestDisposition = dispositionslist.Disposition ;
-                    //property.DispositionTypeId = dispositionslist != null ? Request.DispositionTypeId : property.DispositionTypeId;
-                    //property.LatestDisposition = dispositionslist != null? dispositionslist.Disposition : property.LatestDisposition;
+                    property.DispositionTypeId = dispositions != null ? Request.DispositionTypeId : property.DispositionTypeId;
+                    property.LatestDisposition = dispositions != null? dispositions.Name : property.LatestDisposition;
                     property.DateLastModified = DateTime.UtcNow;
                     dc.SaveChanges();
                 }
