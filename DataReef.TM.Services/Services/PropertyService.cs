@@ -1261,7 +1261,7 @@ namespace DataReef.TM.Services.Services
 
                     var dispositionslist = _personService.Value.CRMGetAvailableNewDispositions().ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault();
 
-                    property.DispositionTypeId = Request.DispositionTypeId;
+                    property.DispositionTypeId = dispositionslist != null ? Request.DispositionTypeId : property.DispositionTypeId;
                     property.LatestDisposition = dispositionslist != null? dispositionslist.Disposition : property.LatestDisposition;
                     property.DateLastModified = DateTime.UtcNow;
                     dc.SaveChanges();
