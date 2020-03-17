@@ -78,7 +78,7 @@ namespace DataReef.TM.Models
         public string EmailAddressString { get; set; }
 
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public string OnlineAppointmentPara { get; set; }
 
 
