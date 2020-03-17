@@ -7,12 +7,12 @@ namespace DataReef.TM.DataAccess.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.People", "OnlineAppointmentPara", c => c.String());
+            DropColumn("dbo.Appointments", "IsOnline");
         }
         
         public override void Down()
         {
-            DropColumn("dbo.People", "OnlineAppointmentPara");
+            AddColumn("dbo.Appointments", "IsOnline", c => c.Boolean(nullable: false));
         }
     }
 }
