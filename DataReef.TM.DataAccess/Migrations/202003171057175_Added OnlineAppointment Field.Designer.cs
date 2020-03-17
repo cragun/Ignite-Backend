@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddedOnlineAppointmentParaFieldinPeople : IMigrationMetadata
+    public sealed partial class AddedOnlineAppointmentField : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedOnlineAppointmentParaFieldinPeople));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedOnlineAppointmentField));
         
         string IMigrationMetadata.Id
         {
-            get { return "202003171047087_Added OnlineAppointmentPara Field in People"; }
+            get { return "202003171057175_Added OnlineAppointment Field"; }
         }
         
         string IMigrationMetadata.Source

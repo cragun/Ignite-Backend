@@ -97,6 +97,10 @@ namespace DataReef.TM.Models
         public bool UsageCollected { get; set; }
 
         [DataMember]
+        public bool onlineAppointment { get; set; }
+        
+
+        [DataMember]
         public Nullable<int> DispositionTypeId { get; set; }
 
 

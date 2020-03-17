@@ -1275,9 +1275,9 @@
     <Compile Include="Migrations\202003060631268_Add usagecollected.designer.cs">
       <DependentUpon>202003060631268_Add usagecollected.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202003171047087_Added OnlineAppointmentPara Field in People.cs" />
-    <Compile Include="Migrations\202003171047087_Added OnlineAppointmentPara Field in People.Designer.cs">
-      <DependentUpon>202003171047087_Added OnlineAppointmentPara Field in People.cs</DependentUpon>
+    <Compile Include="Migrations\202003171057175_Added OnlineAppointment Field.cs" />
+    <Compile Include="Migrations\202003171057175_Added OnlineAppointment Field.Designer.cs">
+      <DependentUpon>202003171057175_Added OnlineAppointment Field.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2195,8 +2195,8 @@
     <EmbeddedResource Include="Migrations\202003060631268_Add usagecollected.resx">
       <DependentUpon>202003060631268_Add usagecollected.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202003171047087_Added OnlineAppointmentPara Field in People.resx">
-      <DependentUpon>202003171047087_Added OnlineAppointmentPara Field in People.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202003171057175_Added OnlineAppointment Field.resx">
+      <DependentUpon>202003171057175_Added OnlineAppointment Field.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
