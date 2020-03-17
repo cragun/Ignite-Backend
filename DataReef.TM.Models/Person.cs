@@ -77,6 +77,11 @@ namespace DataReef.TM.Models
         [Index(IsUnique = true, IsClustered = false)]
         public string EmailAddressString { get; set; }
 
+
+        [DataMember]
+        public string OnlineAppointmentPara { get; set; }
+
+
         [DataMember(EmitDefaultValue = false)]
         public List<string> EmailAddresses
         {
