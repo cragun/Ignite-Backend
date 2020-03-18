@@ -127,7 +127,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("")]
         public User Get()
         {
-            var user = userDataService.Get(SmartPrincipal.UserId);
+            var user = userDataService.Get(SmartPrincipal.UserId, "Person");
             if (user == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             return user;
