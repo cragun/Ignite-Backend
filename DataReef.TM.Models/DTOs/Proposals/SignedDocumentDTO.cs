@@ -5,6 +5,13 @@ namespace DataReef.TM.Models.DTOs.Proposals
 {
     public class SignedDocumentDTO
     {
+
+    
+        public float Apr { get; set; }
+        public float Year { get; set; }
+        public string ProviderName { get; set; }
+       
+
         public string Name { get; set; }
         public Guid? ProposalDataID { get; set; }
         public string Url { get; set; }

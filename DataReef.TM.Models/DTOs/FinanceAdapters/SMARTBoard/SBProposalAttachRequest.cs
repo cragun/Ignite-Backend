@@ -33,6 +33,9 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("proposal_name")]
+        public string ProposalName { get; set; }
+
         [JsonProperty("url")]
         public string Url { get; set; }
 

@@ -420,18 +420,36 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                             .Get<ProposalData>()
                             .FirstOrDefault(pd => pd.Guid == proposalDataId);
 
+
+                var ProjectData = BuildProposalDataModelFromProposalData(proposalData);
+
                 var request = new SBProposalAttachRequest(proposal)
                 {
                     Lead = new SBLeadModel(proposal?.Property, dealer),
                     Proposal = new SBProposalModel
                     {
                         Name = proposalDoc.Description,
+
+                        
+                        ProposalName = proposal?.Property.Name + "|" +
+                                ProjectData?.ModuleCount + "|" +
+                                ProjectData?.ModuleModel + "|" +
+                                ProjectData?.ModuleSize + "|" +
+                                ProjectData?.SystemSize + "|" +
+                                proposalDoc?.ProviderName + "|" +
+                                proposalDoc?.Apr + "|" +
+                                proposalDoc?.Year + "|" +
+                                proposalData?.SignatureDate?.Year + "." + proposalData?.SignatureDate?.Month + "." + proposalData?.SignatureDate?.Day + "|" +
+                                proposalData?.SignatureDate?.Hour + "." + proposalData?.SignatureDate?.Minute,
+
+
+
                         Url = proposalDoc.PDFUrl,
                         EnergyBillUrl = proposalDoc.EnergyBillUrl,
                         SignedDate = proposalData?.SignatureDate,
                         SignedLocation = proposalData?.MetaInformation?.AcceptLocation
                     },
-                    ProjectData = BuildProposalDataModelFromProposalData(proposalData),
+                    ProjectData = ProjectData,
                 };
                 SubmitProposal(integrationData, request, ouid.Value);
             }
