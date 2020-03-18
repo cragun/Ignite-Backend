@@ -427,11 +427,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                     Lead = new SBLeadModel(proposal?.Property, dealer),
                     Proposal = new SBProposalModel
-                    {
-                        Name = proposalDoc.Description,
+                    {                     
 
                         
-                        ProposalName = proposal?.Property.Name + "|" +
+                        Name = proposal?.Property.Name + "|" +
                                 ProjectData?.ModuleCount + "|" +
                                 ProjectData?.ModuleModel + "|" +
                                 ProjectData?.ModuleSize + "|" +
@@ -443,7 +442,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                                 proposalData?.SignatureDate?.Hour + "." + proposalData?.SignatureDate?.Minute,
 
 
-
+                        ProposalName = proposalDoc.Description,
                         Url = proposalDoc.PDFUrl,
                         EnergyBillUrl = proposalDoc.EnergyBillUrl,
                         SignedDate = proposalData?.SignatureDate,
