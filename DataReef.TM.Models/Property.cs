@@ -94,10 +94,7 @@ namespace DataReef.TM.Models
         public int? LeadSourceId { get; set; }
 
         [DataMember]
-        public bool UsageCollected { get; set; }
-
-        [DataMember]
-        public bool onlineAppointment { get; set; }
+        public bool UsageCollected { get; set; }      
         
 
         [DataMember]

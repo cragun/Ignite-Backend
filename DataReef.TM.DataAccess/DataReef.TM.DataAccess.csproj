@@ -1279,6 +1279,10 @@
     <Compile Include="Migrations\202003171057175_Added OnlineAppointment Field.Designer.cs">
       <DependentUpon>202003171057175_Added OnlineAppointment Field.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003180730121_Remove OnlineAppointment Param.cs" />
+    <Compile Include="Migrations\202003180730121_Remove OnlineAppointment Param.Designer.cs">
+      <DependentUpon>202003180730121_Remove OnlineAppointment Param.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2197,6 +2201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003171057175_Added OnlineAppointment Field.resx">
       <DependentUpon>202003171057175_Added OnlineAppointment Field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003180730121_Remove OnlineAppointment Param.resx">
+      <DependentUpon>202003180730121_Remove OnlineAppointment Param.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
