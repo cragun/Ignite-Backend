@@ -1243,6 +1243,10 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003180839275_Add OnlineAppointmentPara in People.cs" />
+    <Compile Include="Migrations\202003180839275_Add OnlineAppointmentPara in People.Designer.cs">
+      <DependentUpon>202003180839275_Add OnlineAppointmentPara in People.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2134,6 +2138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003180839275_Add OnlineAppointmentPara in People.resx">
+      <DependentUpon>202003180839275_Add OnlineAppointmentPara in People.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

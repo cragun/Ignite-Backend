@@ -1201,7 +1201,7 @@ Global
 		{3683AF7D-373B-4646-878C-4ACA56182B6B} = {E250DB23-EBE0-4E55-885B-964EBAE2595D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DCF60401-E2BA-49E3-8B6E-CD4A61102494}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.Integration.WPF.6.0.1304.0\lib\NET45
+		SolutionGuid = {DCF60401-E2BA-49E3-8B6E-CD4A61102494}
 	EndGlobalSection
 EndGlobal
