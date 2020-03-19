@@ -429,18 +429,30 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     Proposal = new SBProposalModel
                     {
 
-                       
+                        CustomerName =(proposal?.Property.Name).Replace(" ", ""),
+                        ModuleQty= ProjectData?.ModuleCount.ToString(),
+                        PanelBrand = (ProjectData?.ModuleModel).Replace(" ", ""),
+                        PanelSize = ProjectData?.ModuleSize.ToString(),
+                        SystemSize= ProjectData?.SystemSize + "kW",
+                        Lender= (proposalDoc?.ProviderName).Replace(" ", ""),
+                        TermInYears = proposalDoc?.Year.ToString(),
+                        Apr = proposalDoc?.Apr.ToString(),
+                        Year= proposalData?.SignatureDate?.Year.ToString(),
+                        Month= proposalData?.SignatureDate?.Month.ToString(),
+                        Day= proposalData?.SignatureDate?.Day.ToString(),
+                        Hour= proposalData?.SignatureDate?.Hour.ToString(),
+                        Minute= proposalData?.SignatureDate?.Minute.ToString(),
 
-                        Name = (proposal?.Property.Name + "|" +
-                                ProjectData?.ModuleCount + "|" +
-                                ProjectData?.ModuleModel + "|" +
-                                ProjectData?.ModuleSize + "|" +
-                                ProjectData?.SystemSize + "kW|" +
-                                proposalDoc?.ProviderName + "|" +
-                                proposalDoc?.Year + "|" +
-                                proposalDoc?.Apr + "|" +    
-                                proposalData?.SignatureDate?.Year + "." + proposalData?.SignatureDate?.Month + "." + proposalData?.SignatureDate?.Day + "|" +
-                                proposalData?.SignatureDate?.Hour + "." + proposalData?.SignatureDate?.Minute).Replace(" ", ""),
+                        //Name = (proposal?.Property.Name + "|" +
+                        //         ProjectData?.ModuleCount + "|" +
+                        //        ProjectData?.ModuleModel + "|" +
+                        //        ProjectData?.ModuleSize + "|" +
+                        //        ProjectData?.SystemSize + "kW|" +
+                        //        proposalDoc?.ProviderName + "|" +
+                        //        proposalDoc?.Year + "|" +
+                        //        proposalDoc?.Apr + "|" +    
+                        //        proposalData?.SignatureDate?.Year + "." + proposalData?.SignatureDate?.Month + "." + proposalData?.SignatureDate?.Day + "|" +
+                        //        proposalData?.SignatureDate?.Hour + "." + proposalData?.SignatureDate?.Minute).Replace(" ", ""),
 
 
                         ProposalName = proposalDoc.Description,
