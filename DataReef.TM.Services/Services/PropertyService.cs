@@ -1290,7 +1290,6 @@ namespace DataReef.TM.Services.Services
                         CreatedByID = property.CreatedByID,
                         Disposition = property.LatestDisposition,
                         DispositionTypeId = property.DispositionTypeId,
-                      //  Property = property,
                         IsNew = true
                     };
 
