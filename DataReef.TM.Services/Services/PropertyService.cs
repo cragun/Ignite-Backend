@@ -50,7 +50,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
-        private readonly IInquiryService _inquiryService;
+        private readonly Lazy<IInquiryService> _inquiryService;
 
 
         public PropertyService(ILogger logger,
@@ -63,7 +63,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
             Lazy<IAppointmentService> appointmentService,
-            IInquiryService inquiryService)
+            Lazy<IInquiryService> inquiryService)
             : base(logger, unitOfWorkFactory)
         {
             _geoProvider = geoProvider;
@@ -1290,10 +1290,11 @@ namespace DataReef.TM.Services.Services
                         CreatedByID = property.CreatedByID,
                         Disposition = property.LatestDisposition,
                         DispositionTypeId = property.DispositionTypeId,
-                        Property = property
+                      //  Property = property,
+                        IsNew = true
                     };
 
-                    _inquiryService.Insert(inquiry);
+                    _inquiryService.Value.Insert(inquiry);
 
                 }
 
