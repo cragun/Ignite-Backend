@@ -32,5 +32,11 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
 
         [DataMember]
         public int? DispositionTypeId { get; set; }
+
+        [DataMember]
+        public string UserId { get; set; }
+
+        [DataMember]
+        public string UserEmailId { get; set; }
     }
 }

@@ -50,6 +50,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
+        private readonly IInquiryService _inquiryService;
 
 
         public PropertyService(ILogger logger,
@@ -61,7 +62,8 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
-            Lazy<IAppointmentService> appointmentService)
+            Lazy<IAppointmentService> appointmentService,
+            IInquiryService inquiryService)
             : base(logger, unitOfWorkFactory)
         {
             _geoProvider = geoProvider;
@@ -72,6 +74,7 @@ namespace DataReef.TM.Services.Services
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
             _appointmentService = appointmentService;
+            _inquiryService = inquiryService;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -1255,15 +1258,43 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("No lead found with the specified ID");
                 }
 
-                if(Request.DispositionTypeId != property.DispositionTypeId)
+                //get the user who transfered the Lead Territory
+                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                               && ((x.EmailAddressString.Equals(Request.UserEmailId)) || (x.SmartBoardID == Request.UserId)));
+                if (user == null)
+                {
+                    throw new Exception("No user found with the specified ID");
+                }
+
+                if (Request.DispositionTypeId != property.DispositionTypeId)
                 {                    
                     var dispSettings = _ouSettingService.Value.GetSettingsByPropertyID(property.Guid)?.Where(s => s.Name == OUSetting.NewDispositions)?.ToList();
                     var dispositions = dispSettings?.SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?.ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault(); 
 
                     property.DispositionTypeId = dispositions != null ? Request.DispositionTypeId : property.DispositionTypeId;
                     property.LatestDisposition = dispositions != null? dispositions.Name : property.LatestDisposition;
-                    property.DateLastModified = DateTime.UtcNow;
+                    property.Updated(user.Guid);
                     dc.SaveChanges();
+
+                  
+                    var inquiry = new Inquiry
+                    {
+                        Guid = Guid.NewGuid(),
+                        PropertyID = property.Guid,
+                        PersonID = user.Guid,
+                        Notes = "Sales Rap(SB): " + user.Name ,
+                        Lat = property.Latitude,
+                        Lon = property.Longitude,
+                        Name = property.LatestDisposition,
+                        DateCreated = DateTime.UtcNow,
+                        CreatedByID = property.CreatedByID,
+                        Disposition = property.LatestDisposition,
+                        DispositionTypeId = property.DispositionTypeId,
+                        Property = property
+                    };
+
+                    _inquiryService.Insert(inquiry);
+
                 }
 
                 var mainOccupant = property.GetMainOccupant();
