@@ -289,6 +289,13 @@
             <param name="request"></param>
             <param name="apiKey"></param>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.Properties2Controller.ChangePropertyNameFromSB(System.Int64,DataReef.TM.Models.DTOs.SmartBoard.SBPropertyNameDTO)">
+            <summary>
+            POST method used by SmartBoard to change customer's FirstName and LastName for a specified property
+            </summary>
+            <param name="request"></param>
+            <param name="leadId"></param>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.NotificationsController">
             <summary>
             Managers CRUD for Properties
@@ -378,7 +385,7 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(System.Guid,System.String,System.String,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.DeleteNoteFromSmartboard(System.Guid,System.String,System.String,System.String)">
             <summary>
             deletes a note by its specified id
             </summary>
@@ -386,6 +393,22 @@
             <param name="userID"></param>
             <param name="apiKey"></param>
             <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckCanTransferLead(System.Int64,System.String)">
+            <summary>
+            / Gets Territories where Lead can transfer using SB apikey
+            </summary>
+            <param name="leadId"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateTerritoryIdInProperty(DataReef.TM.Models.DTOs.SBNoteDTO,System.String)">
+            <summary>
+            / Update TerritoryId for Property which given By SB.
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
             <returns></returns>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
@@ -480,6 +503,14 @@
             <param name="user"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CreateUserFromSmartBoard(DataReef.TM.Models.DTOs.Persons.CreateUserDTO,System.String)">
+            <summary>
+            Creates a new user and returns an authentication token
+            </summary>
+            <param name="user"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CompleteResetPassword(DataReef.TM.Api.Classes.PasswordResetCompletion)">
             <summary>
             Using the reset guid sent in the email, accepts a new password and completes the reset process
@@ -561,6 +592,12 @@
             <param name="settingName"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetRoles(System.String)">
+            <summary>
+            Get method used by SmartBoard to retrieve the specified OU
+            </summary>
+            <param name="apiKey"></param>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOus(System.Guid,System.String)">
             <summary>
             Get method used by SmartBoard to retrieve the specified OU
@@ -573,6 +610,24 @@
             Get method used by SmartBoard to retrieve all accessible OUs
             </summary>
             <param name="apiKey"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetzapierOus(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Gets all Ous by location Address for Zapier Leads
+            </summary>
+            <param name="Address"></param>
+            <param name="City"></param>
+            <param name="State"></param>
+            <param name="Country"></param>
+            <param name="Zip"></param>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetTerritoriesByOu(System.Nullable{System.Single},System.Nullable{System.Single},System.Guid)">
+            <summary>
+            Gets all Territories by lat,long and ouid for Zapier Leads
+            </summary>
+            <param name="latitude"></param>
+            <param name="longitude"></param>
+            <param name="ouid"></param>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.OUsController.CheckOUValidity(DataReef.TM.Models.OU)">
             <summary>
@@ -604,6 +659,14 @@
             <summary>
             Managers CRUD for Properties
             </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetTerritoriesForProperty(System.Guid,System.String)">
+            <summary>
+            / Gets all Territories regardless of Lat - Long, for a property
+            </summary>
+            <param name="propertyID"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetInquiriesForProperty(System.Guid)">
             <summary>
@@ -644,13 +707,15 @@
             <param name="proposalID"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.ReportsController.GenerateReport(System.String,System.Guid,System.Nullable{System.DateTime})">
+        <member name="M:DataReef.TM.Api.Controllers.ReportsController.GenerateReport(System.String,System.Guid,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
             <summary>
             Gets the data needed for the specified report
             </summary>
             <param name="reportName">the name of the report</param>
             <param name="ouID">the organizational unit guid</param>
             <param name="specifiedDay">The date of a day that will be added to the report dates along with Today, WeekToDate, MonthToDate, YearToDate</param>
+            <param name="StartRangeDay">The date of a day that choose from dateRange Start</param>
+            <param name="EndRangeDay">The date of a day that choose from dateRange End</param>
             <returns></returns>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.TerritoriesController">

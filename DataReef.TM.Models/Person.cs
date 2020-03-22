@@ -83,10 +83,6 @@ namespace DataReef.TM.Models
 
 
         [DataMember(EmitDefaultValue = false)]
-        public string OnlineAppointmentPara { get; set; }
-
-
-        [DataMember(EmitDefaultValue = false)]
         public List<string> EmailAddresses
         {
             get

@@ -1247,6 +1247,10 @@
     <Compile Include="Migrations\202003180839275_Add OnlineAppointmentPara in People.Designer.cs">
       <DependentUpon>202003180839275_Add OnlineAppointmentPara in People.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003221109041_Production migration.cs" />
+    <Compile Include="Migrations\202003221109041_Production migration.Designer.cs">
+      <DependentUpon>202003221109041_Production migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2141,6 +2145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003180839275_Add OnlineAppointmentPara in People.resx">
       <DependentUpon>202003180839275_Add OnlineAppointmentPara in People.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003221109041_Production migration.resx">
+      <DependentUpon>202003221109041_Production migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
