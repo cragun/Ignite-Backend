@@ -27,45 +27,47 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
     public class SBProposalModel
     {
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-        [JsonProperty("customer_name")]
-        public string CustomerName { get; set; }
+        //[JsonProperty("customer_name")]
+        //public string CustomerName { get; set; }
 
-        [JsonProperty("module_qty")]
-        public string ModuleQty { get; set; }
+        //[JsonProperty("module_qty")]
+        //public string ModuleQty { get; set; }
 
-        [JsonProperty("panel_brand")]
-        public string PanelBrand { get; set; }
+        //[JsonProperty("panel_brand")]
+        //public string PanelBrand { get; set; }
 
-        [JsonProperty("panel_size")]
-        public string PanelSize { get; set; }
+        //[JsonProperty("panel_size")]
+        //public string PanelSize { get; set; }
 
-        [JsonProperty("system_size")]
-        public string SystemSize { get; set; }
+        //[JsonProperty("system_size")]
+        //public string SystemSize { get; set; }
 
-        [JsonProperty("lender")]
-        public string Lender { get; set; }
+        //[JsonProperty("lender")]
+        //public string Lender { get; set; }
 
-        [JsonProperty("term_in_years")]
-        public string TermInYears { get; set; }
+        //[JsonProperty("term_in_years")]
+        //public string TermInYears { get; set; }
 
-        [JsonProperty("apr")]
-        public string Apr { get; set; }
+        //[JsonProperty("apr")]
+        //public string Apr { get; set; }
 
-        [JsonProperty("year")]
-        public string Year { get; set; }
+        //[JsonProperty("year")]
+        //public string Year { get; set; }
 
-        [JsonProperty("month")]
-        public string Month { get; set; }
+        //[JsonProperty("month")]
+        //public string Month { get; set; }
 
-        [JsonProperty("day")]
-        public string Day { get; set; }
+        //[JsonProperty("day")]
+        //public string Day { get; set; }
 
-        [JsonProperty("hour")]
-        public string Hour { get; set; }
+        //[JsonProperty("hour")]
+        //public string Hour { get; set; }
 
-        [JsonProperty("minute")]
-        public string Minute { get; set; }
+        //[JsonProperty("minute")]
+        //public string Minute { get; set; }
 
         [JsonProperty("proposal_name")]
         public string ProposalName { get; set; }
