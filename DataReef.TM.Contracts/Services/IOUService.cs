@@ -45,7 +45,7 @@ namespace DataReef.TM.Contracts.Services
         ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganization(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay = null, IEnumerable<Guid> excludedReps = null);
 
         [OperationContract]
-        ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay = null, IEnumerable<Guid> excludedReps = null);
+        ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
 
         [OperationContract]
         ICollection<Guid> ConditionalGetActiveUserIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch);
@@ -128,5 +128,17 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         IEnumerable<Person> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email);
+
+        [OperationContract]
+        IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey);
+
+        [OperationContract]
+        IEnumerable<zapierOus> GetzapierOusList(float? Lat, float? Lon, string apiKey );
+
+        [OperationContract]
+        IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid);
+
+        [OperationContract]
+        string GetApikeyByOU(Guid ouid);
     }
 }

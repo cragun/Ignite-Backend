@@ -526,7 +526,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Google.ServiceAccountKey.json" />
-    <Content Include="ConnectionStrings.config" />
+    <Content Include="ConnectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include=".ebextensions\0_commands.config" />
     <None Include="Properties\PublishProfiles\datareef-territorymanager-api.pubxml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
@@ -537,6 +539,8 @@
     <Content Include="admin\process_payments.htm" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\browser-deeplink.js" />
+    <Content Include="Scripts\browser-deeplink.min.js" />
     <Content Include="Scripts\common.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -673,6 +677,10 @@
     <ProjectReference Include="..\DataReef.TM.Services\DataReef.TM.Services.csproj">
       <Project>{63f829a1-2bd9-49ed-b209-319c58538bf6}</Project>
       <Name>DataReef.TM.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GoogleMaps.LocationServices\GoogleMaps.LocationServices.csproj">
+      <Project>{3fb2c5d1-6090-4e5f-bc19-0648cbe4fb54}</Project>
+      <Name>GoogleMaps.LocationServices</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

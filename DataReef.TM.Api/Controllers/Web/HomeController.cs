@@ -64,6 +64,10 @@ namespace DataReef.TM.Api.Controllers.Web
             }
 
             string customUrl = string.Format("{0}{1}?{2}", Constants.CustomURL, stringAction, query.ToString().EscapeEmail());
+            if(customUrl.Contains("noteID"))
+            {
+                customUrl = string.Format("{0}{1}", Constants.CustomURL, query.ToString().EscapeEmail()).Replace("%3f","?");
+            }
             return View("Redirect", (object)customUrl);
         }
 

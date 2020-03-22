@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Mail;
+using System.Web;
 
 namespace DataReef.TM.Mail
 {
     public class Library
     {
-        private static string _senderEmail = ConfigurationManager.AppSettings["SenderEmail"] ?? "info@trismartsolar.com";
+        private static string _senderEmail = ConfigurationManager.AppSettings["SenderEmail"] ?? "support@smartboardcrm.com";
         public static string SenderName = ConfigurationManager.AppSettings["Email.SenderName"] ?? "Ingite App";
 
         public static void SendOUAssoicationConfirmationToAdmin(string toPersonName, string toPersonEmail, string fromPersonName, string ouName)
@@ -48,18 +49,14 @@ namespace DataReef.TM.Mail
         public static void SendUserInvitationEmail(UserInvitationTemplate template)
         {
             template.InvitationURL = GetActionURL("userinvitation", "guid={0}&username={1}", template.Guid, template.EncodedToPersonEmail());
-
             EmailTemplateType templateType = EmailTemplateType.UserInvitation;
-
             if (template.ToPersonId.HasValue)
             {
                 template.InvitationURL += string.Format("&toPersonID={0}", template.ToPersonId.Value);
-                templateType = EmailTemplateType.ExistingUserInvitation;
+                 templateType = EmailTemplateType.ExistingUserInvitation;
             }
-
             string body = TemplateHelper.GetTemplate(templateType, template);
             string subject = string.Format("You've been invited to join {0}", template.OUName);
-
             DataReef.Mail.Mailer.SendMail(new string[] { template.ToPersonEmail }, _senderEmail, template.FromPersonName, subject, body);
         }
 
@@ -126,6 +123,20 @@ namespace DataReef.TM.Mail
 
         public static void SendEmail(string to, string cc, string subject, string body, bool isHtml = false, List<Attachment> attachments = null)
         {
+            if (Constants.APIBaseAddress == "http://api-staging.ignite.trismartsolar.com")
+            {
+                subject = "Testing  " + subject;
+                if(isHtml == true)
+                {
+                    body = $"<p style='font-size:large;'><b> Test Email </b> </p> <br/> " + body;
+                }
+                else
+                {
+                    body = $"Test Email" + body;
+                }
+                
+            }
+            
             var email = new MailMessage();
             email.From = new MailAddress(_senderEmail, SenderName);
             email.Subject = subject;

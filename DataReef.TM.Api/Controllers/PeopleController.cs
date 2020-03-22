@@ -272,6 +272,14 @@ namespace DataReef.TM.Api.Controllers
         {
             var result = peopleService.GetSurveyUrl(SmartPrincipal.UserId, propertyID);
             return Ok(new GenericResponse<string> { Response = result });
+        }       
+
+        [HttpGet]
+        [Route("crm/LeadSources/{ouid}")]
+        [ResponseType(typeof(GenericResponse<List<CRMLeadSource>>))]
+        public IHttpActionResult GetCRMLeadSources(Guid ouid)
+        {            
+            return Ok(new GenericResponse<List<CRMLeadSource>> { Response = peopleService.CRMGetAvailableLeadSources(ouid) });
         }
 
 

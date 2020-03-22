@@ -130,11 +130,48 @@ namespace DataReef.TM.Api.Controllers
         [Route("sb/{leadId}/{userID}/{apiKey}")]
         [HttpDelete]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult EditNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
+        public IHttpActionResult DeleteNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
         {
             _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, apiKey, email);
 
             return Ok();
         }
+
+
+
+        /// <summary>
+        /// / Gets Territories where Lead can transfer using SB apikey
+        /// </summary>
+        /// <param name="leadId"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [Route("sb/Territories/{leadId}/{apiKey}")]
+        [HttpGet]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult CheckCanTransferLead(long leadId, string apiKey)
+        {
+            var result = _propertyNoteService.GetTerritoriesList(leadId, apiKey);
+            return Ok(result);
+        }
+
+
+
+        /// <summary>
+        /// / Update TerritoryId for Property which given By SB.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [Route("sb/Transfer/{apiKey}")]
+        [HttpPost]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult UpdateTerritoryIdInProperty([FromBody]SBNoteDTO request , string apiKey)
+        {
+            var result = _propertyNoteService.UpdateTerritoryIdInProperty(request.LeadID, request.Guid, apiKey, request.Email);
+            return Ok(result);
+        }
+
+
+
     }
 }

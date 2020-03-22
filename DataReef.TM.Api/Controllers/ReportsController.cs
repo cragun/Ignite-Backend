@@ -28,17 +28,19 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="reportName">the name of the report</param>
         /// <param name="ouID">the organizational unit guid</param>
         /// <param name="specifiedDay">The date of a day that will be added to the report dates along with Today, WeekToDate, MonthToDate, YearToDate</param>
+        /// <param name="StartRangeDay">The date of a day that choose from dateRange Start</param>
+        /// <param name="EndRangeDay">The date of a day that choose from dateRange End</param>
         /// <returns></returns>
         [HttpGet]
         [Route("{reportName}")]
-        public IHttpActionResult GenerateReport(string reportName, Guid ouID, DateTime? specifiedDay = null)
+        public IHttpActionResult GenerateReport(string reportName, Guid ouID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null)
         {
             try
             {
                 switch (reportName)
                 {
                     case "OrganizationReport": return Ok<ICollection<OrganizationReportRow>>(_reportingService.GetOrganizationReport(ouID, specifiedDay));
-                    case "SalesRepresentativeReport": return Ok<ICollection<SalesRepresentativeReportRow>>(_reportingService.GetSalesRepresentativeReport(ouID, specifiedDay));
+                    case "SalesRepresentativeReport": return Ok<ICollection<SalesRepresentativeReportRow>>(_reportingService.GetSalesRepresentativeReport(ouID, specifiedDay, StartRangeDay, EndRangeDay));
                     case "OrganizationSelfTrackedReport": return Ok<ICollection<OrganizationSelfTrackedReportRow>>(_reportingService.GetOrganizationSelfTrackedReport(ouID, specifiedDay));
                     default: return BadRequest();
                 }

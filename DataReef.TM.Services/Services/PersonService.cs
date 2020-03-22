@@ -376,7 +376,7 @@ namespace DataReef.TM.Services
 
             var dispositions = dispSettings?
                     .SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?
-                    .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Icon = d.IconName, Color = d.Color})?
+                    .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Icon = d.IconName, Color = d.Color, SBTypeId = d.SBTypeId })?
                     .ToList() ?? new List<CRMDisposition>();
 
             var distinctDispositions = new HashSet<CRMDisposition>(dispositions);
@@ -385,6 +385,43 @@ namespace DataReef.TM.Services
 
             return distinctDispositions.ToList();
         }
+
+
+
+        public List<CRMLeadSource> CRMGetAvailableLeadSources(Guid ouid)
+        {
+            // Get all the OUs for the logged in user
+
+            var rootGuids = _ouService.Value.ListRootGuidsForPerson(SmartPrincipal.UserId);
+           // rootGuids.Add(ouid);
+
+            var settings = _ouSettingsService
+                        .Value
+                        .GetOuSettingsMany(rootGuids)?
+                        .SelectMany(os => os.Value)?
+                        .ToList();
+            var leadSettings = settings?
+                    .Where(s => s.Name == OUSetting.LegionOULeadSource)?
+                    .ToList();
+
+            if(leadSettings.Count == 0 && ouid != null)
+            {
+                leadSettings = _ouSettingsService.Value.GetSettingsByOUID(ouid)?.Where(x => x.Name == OUSetting.LegionOULeadSource)?.ToList();
+            }
+
+            var leadsources = leadSettings?
+                    .SelectMany(s => JsonConvert.DeserializeObject<List<CRMLeadSource>>(s.Value))?
+                    .ToList() ?? new List<CRMLeadSource>();
+
+            var distinctLeadsources = new HashSet<CRMLeadSource>(leadsources);
+
+            return distinctLeadsources.ToList();
+        }
+
+
+        
+
+
 
         //public PaginatedResult<Property> CRMGetProperties(CRMFilterRequest request)
         //{
@@ -695,7 +732,7 @@ namespace DataReef.TM.Services
                     {
                         var propIds = dataContext
                                 .Properties
-                                .SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query", paramValue.ToArray())
+                                .SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query OR Name like @query", paramValue.ToArray())
                                 .Select(p => p.Guid)
                                 .ToList();
 

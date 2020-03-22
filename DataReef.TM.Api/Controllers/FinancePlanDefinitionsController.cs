@@ -43,20 +43,20 @@ namespace DataReef.TM.Api.Controllers
 
         #region Forbidden methods
 
-        public override FinancePlanDefinition Post(FinancePlanDefinition item)
-        {
-            throw new HttpResponseException(HttpStatusCode.Forbidden);
-        }
+        //public override FinancePlanDefinition Post(FinancePlanDefinition item)
+        //{
+        //    throw new HttpResponseException(HttpStatusCode.Forbidden);
+        //}
 
-        public override ICollection<FinancePlanDefinition> PostMany(List<FinancePlanDefinition> items)
-        {
-            throw new HttpResponseException(HttpStatusCode.Forbidden);
-        }
+        //public override ICollection<FinancePlanDefinition> PostMany(List<FinancePlanDefinition> items)
+        //{
+        //    throw new HttpResponseException(HttpStatusCode.Forbidden);
+        //}
 
-        public override FinancePlanDefinition Put(FinancePlanDefinition item)
-        {
-            throw new HttpResponseException(HttpStatusCode.Forbidden);
-        }
+        //public override FinancePlanDefinition Put(FinancePlanDefinition item)
+        //{
+        //    throw new HttpResponseException(HttpStatusCode.Forbidden);
+        //}
 
         public override HttpResponseMessage Delete(FinancePlanDefinition item)
         {

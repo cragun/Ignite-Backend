@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
 using DataReef.Core;
+using System.Data.SqlClient;
 
 namespace DataReef.TM.Services.Services
 {
@@ -98,10 +99,10 @@ namespace DataReef.TM.Services.Services
                     {
                         var emails = taggedPersons?.Select(x => x.EmailAddressString);
                         var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
+                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
                         if (emails?.Any() == true)
                         {
-                            SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                            SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -128,10 +129,10 @@ namespace DataReef.TM.Services.Services
                     {
                         var emails = taggedPersons?.Select(x => x.EmailAddressString);
                         var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
+                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
                         if (emails?.Any() == true)
                         {
-                            SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                            SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -162,10 +163,10 @@ namespace DataReef.TM.Services.Services
                         {
                             var emails = taggedPersons?.Select(x => x.EmailAddressString);
                             var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
+                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
                             if (emails?.Any() == true)
                             {
-                                SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                                SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                             }
 
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -224,10 +225,10 @@ namespace DataReef.TM.Services.Services
                     {
                         var emails = taggedPersons?.Select(x => x.EmailAddressString);
                         var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
+                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
                         if (emails?.Any() == true)
                         {
-                            SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                            SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -258,10 +259,10 @@ namespace DataReef.TM.Services.Services
                         {
                             var emails = taggedPersons?.Select(x => x.EmailAddressString);
                             var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
+                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
                             if (emails?.Any() == true)
                             {
-                                SendEmailNotification(entity.Content, emails, property, entity.Guid);
+                                SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                             }
 
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
@@ -340,10 +341,10 @@ namespace DataReef.TM.Services.Services
                 {
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -417,10 +418,10 @@ namespace DataReef.TM.Services.Services
                 {
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -472,6 +473,52 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
             }
         }
+
+
+
+        public SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email)
+        {
+            using (var dc = new DataContext())
+            {
+                //get the note
+                var propertye = dc.Properties.Where(x => x.SmartBoardId == leadId).FirstOrDefault();
+                if (propertye == null)
+                {
+                    throw new Exception("The Lead with the specified LeadId was not found");
+                }
+
+
+                var territory = dc.Territories.Where(x => x.Guid == TerritoryId).FirstOrDefault();
+                if (territory == null)
+                {
+                    throw new Exception("The Territory with the specified TerritoryId was not found");
+                }
+
+                //get the user who transfered the Lead Territory
+                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                               && (x.EmailAddressString.Equals(email)));
+                if (user == null)
+                {
+                    throw new Exception("No user found with the specified ID");
+                }
+
+                propertye.TerritoryID = territory.Guid;
+                propertye.Updated(user.Guid);
+                dc.SaveChanges();
+
+                //get the property
+                var property = GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey);
+
+                return new SBUpdateProperty
+                {
+                    LeadId = property.SmartBoardId,
+                    PropertyId = property.Guid,
+                    apiKey = apiKey
+                };
+
+            }
+        }
+
 
         private void NotifyTaggedUsers(IEnumerable<Person> people, PropertyNote note, Property property, DataContext dataContext = null)
         {
@@ -583,7 +630,82 @@ namespace DataReef.TM.Services.Services
 
         }
 
-        private void SendEmailNotification(string content, IEnumerable<string> emails, Property property, Guid noteID)
+
+
+        public IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                //first get the property
+                var property = dc.Properties.FirstOrDefault(x => x.SmartBoardId == smartboardLeadID);
+
+                if (property == null)
+                {
+                    throw new Exception("No lead found with the specified ID(s)");
+                }
+
+                //-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                var TerritoriesList = dc
+             .Database
+             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey", new SqlParameter("@latitude", property.Latitude), new SqlParameter("@longitude", property.Longitude), new SqlParameter("@apiKey", apiKey))
+             .ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+
+        #region check latitude- longitude are available in polygon(wellknownText) region or not 
+        //// var ij = _ouService.IsInside(request.Request, -95.243265, 29.973433);
+        //public bool IsInside(string wkt, double longitude, double latitude)
+        //{
+        //    DbGeography point = DbGeography.FromText(string.Format("POINT({1} {0})", latitude.ToString().Replace(',', '.'), longitude.ToString().Replace(',', '.')), DbGeography.DefaultCoordinateSystemId);
+
+        //    DbGeography polygon = DbGeography.FromText(wkt);
+        //    var wellKnownText = polygon.AsText();
+
+        //    var sqlGeography =
+        //        Microsoft.SqlServer.Types.SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(wellKnownText), DbGeography.DefaultCoordinateSystemId)
+        //            .MakeValid();
+
+        //    //Now get the inversion of the above area
+        //    var invertedSqlGeography = sqlGeography.ReorientObject();
+
+        //    //Whichever of these is smaller is the enclosed polygon, so we use that one.
+        //    if (sqlGeography.STArea() > invertedSqlGeography.STArea())
+        //    {
+        //        sqlGeography = invertedSqlGeography;
+        //    }
+
+        //    polygon = DbSpatialServices.Default.GeographyFromProviderValue(sqlGeography);
+
+        //    return point.Intersects(polygon);
+        //}
+        #endregion check latitude- longitude are available in polygon(wellknownText) region or not 
+
+
+
+        //private void SendEmailNotification(string content, IEnumerable<string> emails, Property property, Guid noteID)
+        //{
+        //    Task.Factory.StartNew(() =>
+        //    {
+        //        emails = emails.Distinct();
+        //        var tag1Regex = new Regex(@"\[email:'(.*?)'\]");
+        //        var tag2Regex = new Regex(@"\[\/email\]");
+
+        //        content = tag1Regex.Replace(content, "<b>");
+        //        content = tag2Regex.Replace(content, "</b>");
+
+        //        var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
+        //        var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} <br/><br/>{directNoteLinks}";
+        //        var to = string.Join(";", emails);
+
+        //        Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true);
+        //    });
+        //}
+
+
+        private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID)
         {
             Task.Factory.StartNew(() =>
             {
@@ -592,17 +714,19 @@ namespace DataReef.TM.Services.Services
                 var tag2Regex = new Regex(@"\[\/email\]");
 
                 content = tag1Regex.Replace(content, "<b>");
-                content = tag2Regex.Replace(content, "</b>");
+                content = tag2Regex.Replace(content, "</b>");                
 
-                var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
-                var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} <br/><br/>{directNoteLinks}";
+                //var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
+
+                var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
+                var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/> Note Sent by: <br/><br/> {Username} <br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 
                 Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true);
             });
         }
 
-        private void VerifyUserAssignmentsAndInvite(IEnumerable<Guid> userIds, Property property)
+        private void VerifyUserAssignmentsAndInvite(IEnumerable<Guid> userIds, Property property, bool IsFromSmartBoard)
         {
             if (userIds?.Any() != true)
             {
@@ -652,7 +776,8 @@ namespace DataReef.TM.Services.Services
                                 CreatedByID = SmartPrincipal.UserId,
                                 PersonID = person.Guid,
                                 TerritoryID = property.TerritoryID,
-                                Status = AssignmentStatus.Open
+                                Status = AssignmentStatus.Open,
+                                Notes = (IsFromSmartBoard == true) ? "FromSmartBoard" : null                                
                             });
                         }
                     }

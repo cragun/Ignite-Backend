@@ -90,6 +90,16 @@ namespace DataReef.TM.Models
         [StringLength(200)]
         public string UtilityProviderName { get; set; }
 
+        [DataMember]
+        public int? LeadSourceId { get; set; }
+
+        [DataMember]
+        public bool UsageCollected { get; set; }      
+        
+
+        [DataMember]
+        public Nullable<int> DispositionTypeId { get; set; }
+
 
         #region Navigation
 

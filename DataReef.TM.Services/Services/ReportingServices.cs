@@ -90,7 +90,7 @@ namespace DataReef.TM.Services
                         .ConditionalGetActivePeopleIDsForCurrentAndSubOUs(ou.Guid, true)
                         .Distinct()
                         .ToList();
-                    
+
 
                     var reportRow = new OrganizationReportRow
                     {
@@ -106,7 +106,7 @@ namespace DataReef.TM.Services
             return results;
         }
 
-        public ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay)
+        public ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay)
         {
             var results = new List<SalesRepresentativeReportRow>();
 
@@ -139,20 +139,25 @@ namespace DataReef.TM.Services
 
 
 
-            var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, repExclusionList);
+            var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct().ToList();
+            var DeactivepeopleIds = _personService.Value.GetMany(peopleIds).Where(p => p.IsDeleted == true).Select(i => i.Guid).Distinct().ToList();
             var people = _personService.Value.GetMany(peopleIds).Where(p => !repExclusionList.Contains(p.Guid));
             foreach (var personId in peopleIds)
             {
                 var person = people.SingleOrDefault(p => p.Guid == personId);
 
                 var reportRow = NormalizeSalesRepresentativeReportRow(
-                        personId, 
-                        person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???", 
-                        inquiryStatistics.Where(i => i.PersonId == personId).ToList(), 
+                        personId,
+                        person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???",
+                        DeactivepeopleIds.Contains(personId) ? true : false,
+                        inquiryStatistics.Where(i => i.PersonId == personId).ToList(),
                         reportSettings);
-                
-                results.Add(reportRow);
+
+                if (reportRow.InquiryStatistics.Count() > 0)
+                {
+                    results.Add(reportRow);
+                }
             }
             return results;
         }
@@ -238,24 +243,31 @@ namespace DataReef.TM.Services
             return true;
         }
 
-        private SalesRepresentativeReportRow NormalizeSalesRepresentativeReportRow(Guid personId, string name, IEnumerable<InquiryStatisticsForPerson> stats, OUReportingSettings settings)
+        private SalesRepresentativeReportRow NormalizeSalesRepresentativeReportRow(Guid personId, string name, bool IsDeleted, IEnumerable<InquiryStatisticsForPerson> stats, OUReportingSettings settings)
         {
+            bool isallZero = true;
             SalesRepresentativeReportRow row = new SalesRepresentativeReportRow
             {
                 Id = personId,
                 Name = name,
+                IsDeleted = IsDeleted,
                 InquiryStatistics = new List<InquiryStatisticsForPerson>()
             };
             if (settings == null)
             {
                 return null;
             }
-
-            foreach(var col in settings.PersonReportItems)
+            foreach (var col in settings.PersonReportItems)
             {
                 var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);
-                if(matchingStat != null)
+                if (matchingStat != null)
                 {
+                    if (IsDeleted == true)
+                    {
+                        isallZero = isallZero && matchingStat.Actions.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.Actions) as int?), 0));
+                        isallZero = isallZero && matchingStat.DaysActive.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.DaysActive) as int?), 0));
+                    }
+
                     row.InquiryStatistics.Add(matchingStat);
                 }
                 else
@@ -269,7 +281,12 @@ namespace DataReef.TM.Services
                         DaysActive = new InquiryStatisticsByDate()
                     });
                 }
-                
+
+            }
+
+            if (isallZero == true && IsDeleted == true)
+            {
+                row.InquiryStatistics = new List<InquiryStatisticsForPerson>();
             }
             return row;
         }

@@ -99,6 +99,9 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public decimal? FinancingFee { get; set; }
 
+        [DataMember]
+        public bool? ApplyDealerFee { get; set; }
+
         #region Navigation
 
         [DataMember]
@@ -131,7 +134,7 @@ namespace DataReef.TM.Models.Solar
 
         public decimal CalculatedCost(int systemSize, bool includeFee = false)
         {
-            return CalculatedCost((long)systemSize, includeFee);
+            return CalculatedCost((long)systemSize, null, includeFee);
         }
 
         public decimal GetCost()
@@ -139,7 +142,7 @@ namespace DataReef.TM.Models.Solar
             return CalculatedCost(SolarSystem.SystemSize);
         }
 
-        public decimal CalculatedCost(long systemSize, bool includeFee = false)
+        public decimal CalculatedCost(long systemSize, decimal? dealerFee = null, bool includeFee = false)
         {
             decimal cost = 0;
             switch (RateType)
@@ -155,7 +158,14 @@ namespace DataReef.TM.Models.Solar
                     break;
             }
 
-            return cost + (includeFee ? ((FinancingFee ?? 0) / 100) * cost : 0);
+            var feeValue = FinancingFee;
+
+            if(dealerFee.HasValue && dealerFee > 0 && !FinancingFee.HasValue)
+            {
+                feeValue = dealerFee;
+            }
+
+            return cost + (includeFee ? ((feeValue ?? 0) / 100) * cost : 0);
         }
 
         public T GetCustomSettings<T>()

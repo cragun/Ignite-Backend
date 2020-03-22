@@ -21,7 +21,7 @@ namespace DataReef.TM.Contracts.Services
         ICollection<SelfTrackedStatistics> GetSelfTrackedStatisticsForPerson(Guid ouId, DateTime? specifiedDay);
 
         [OperationContract]
-        ICollection<InquiryStatisticsForPerson> GetSelfTrackedStatisticsForSalesPeopleTerritories(ICollection<Guid> personIds, IEnumerable<PersonReportingSettingsItem> reportItems, DateTime? specifiedDay, IEnumerable<Guid> excludedReps = null);
+        ICollection<InquiryStatisticsForPerson> GetSelfTrackedStatisticsForSalesPeopleTerritories(ICollection<Guid> personIds, IEnumerable<PersonReportingSettingsItem> reportItems, DateTime? specifiedDay, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
 
         [OperationContract]
         ICollection<PersonKPI> ListKPIsFromDate(DateTime date, bool includeDeleted = false);

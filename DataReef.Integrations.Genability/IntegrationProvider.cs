@@ -101,7 +101,7 @@ namespace DataReef.Integrations.Genability
         /// <param name="genabilityAppKey">The genability application key.</param>
         /// <param name="providerAccountId">The provider account ID of the acccount the usage profile belongs to.</param>
         /// <returns>Returns an PriceResult object.</returns>
-        public PriceResult GetAccountPriceResult(string genabilityAppID, string genabilityAppKey, string providerAccountId, string zipCode)
+        public PriceResult GetAccountPriceResult(string genabilityAppID, string genabilityAppKey, string providerAccountId, string zipCode, bool? usagecollected)
         {
             GetAccountRecommendedPrice recommendedPrice = GetAccountRecommendedPrice(genabilityAppID, genabilityAppKey, providerAccountId);
 
@@ -128,7 +128,8 @@ namespace DataReef.Integrations.Genability
                 TariffName = currentTariff.tariffName,
                 TariffCode = currentTariff.tariffCode,
                 UtilityID = currentTariff.lseId,
-                UtilityName = currentTariff.lseName
+                UtilityName = currentTariff.lseName,
+                UsageCollected = usagecollected
             } : new PriceResult();
 
             return priceResult;

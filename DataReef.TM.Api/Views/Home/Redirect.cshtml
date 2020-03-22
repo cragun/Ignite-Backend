@@ -3,20 +3,23 @@
     Layout = "~/Views/Shared/_Layout-Legion.cshtml";
     ViewBag.Title = "Ignite - User Registration";
 }
+<div id="isiosDevice" style="color:red"></div>
 @section scripts
 {
     <script type="text/javascript">
         try {
-
             document.addEventListener('DOMContentLoaded', function () {
                 try {
-
-                    if (validations.isiPad || validations.isiPhone) {                        
-                        location.href = '@Html.Raw(Model)';
+                    var strlink = '@Html.Raw(Model)';
+                    if (validations.isiPad || validations.isiPhone) {
+                        location.href = strlink;
+                    } else if (strlink.indexOf('notes') != -1) {
+                        var node = document.createElement("span");
+                        var textnode = document.createTextNode("You must be on an iOS device to use that link.");
+                        node.appendChild(textnode);
+                        document.getElementById("isiosDevice").appendChild(node);
                     } else {
-                        //
                         var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
-                        //location.href = `UserRegistration?${queryString}`;
                     }
                 } catch (e) { }
             });

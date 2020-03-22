@@ -311,7 +311,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeopleTerritories(ICollection<Guid> territoryIds, IEnumerable<PersonReportingSettingsItem> reportItems, DateTime? specifiedDay, IEnumerable<Guid> excludedReps = null)
+        public ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeopleTerritories(ICollection<Guid> territoryIds, IEnumerable<PersonReportingSettingsItem> reportItems, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
         {
             var inquiryStatistics = new List<InquiryStatisticsForPerson>();
 
@@ -345,6 +345,7 @@ namespace DataReef.TM.Services.Services
                                     .Where(i => !excludedReps.Contains(i.PersonID) &&
                                                 territoryIds.Contains(i.Property.TerritoryID) &&
                                                 i.IsDeleted == false &&
+                                                 i.User.IsDeleted == false &&
                                                 searchDispositions.Contains(i.Disposition))
                                     .Select(i => new { Guid = i.Guid, PersonID = i.PersonID, DateCreated = i.DateCreated, Disposition = i.Disposition, OldDisposition = i.OldDisposition }).ToList();
 
@@ -400,7 +401,9 @@ namespace DataReef.TM.Services.Services
                                     ThisMonth = personInquiryDates.Count(id => id.DateCreated >= dates.MonthStart),
                                     ThisWeek = personInquiryDates.Count(id => id.DateCreated.Date >= dates.CurrentWeekStart),
                                     Today = personInquiryDates.Count(id => id.DateCreated >= dates.TodayStart),
-                                    SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Count() : 0
+                                    SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Count() : 0,
+                                    ThisQuarter = personInquiryDates.Count(id => id.DateCreated >= dates.QuaterStart),
+                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personInquiryDates.Count(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay) : 0
                                 },
                                 DaysActive = new InquiryStatisticsByDate
                                 {
@@ -409,7 +412,9 @@ namespace DataReef.TM.Services.Services
                                     ThisMonth = personInquiryDates.Where(id => id.DateCreated >= dates.MonthStart).GroupBy(id => id.DateCreated.Date).Count(),
                                     ThisWeek = personInquiryDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).GroupBy(id => id.DateCreated.Date).Count(),
                                     Today = personInquiryDates.Where(id => id.DateCreated >= dates.TodayStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0
+                                    SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0,
+                                   ThisQuarter = personInquiryDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personInquiryDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
                                 }
                             });
                         }
@@ -583,6 +588,7 @@ namespace DataReef.TM.Services.Services
         internal DateTime YearStart { get; set; }
         internal DateTime MonthStart { get; set; }
         internal DateTime TodayStart { get; set; }
+        internal DateTime QuaterStart { get; set; }
         internal DateTime? SpecifiedStart { get; set; }
         internal DateTime? SpecifiedEnd { get; set; }
         internal bool HasSpecifiedDay { get; set; }
@@ -604,6 +610,10 @@ namespace DataReef.TM.Services.Services
             MonthStart = new DateTime(deviceDate.Year, deviceDate.Month, 1).Add(offset);
 
             TodayStart = deviceDate.Add(offset);
+           
+            int quarterNumber = (deviceDate.Month - 1) / 3 + 1;
+            QuaterStart = new DateTime(deviceDate.Year, (quarterNumber - 1) * 3 + 1, 1).Add(offset); 
+            //DateTime lastDayOfQuarter = firstDayOfQuarter.AddMonths(3).AddDays(-1);
         }
     }
 }

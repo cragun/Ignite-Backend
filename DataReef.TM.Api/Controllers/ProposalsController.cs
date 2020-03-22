@@ -9,6 +9,7 @@ using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.Solar;
+using GoogleMaps.LocationServices;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,32 @@ namespace DataReef.TM.Api.Controllers
             _proposalService = dataService;
             _personService = personService;
         }
+
+
+        //[AllowAnonymous]
+        //[InjectAuthPrincipal]
+        //[Route("getlatlongFromaddress")]
+        //[HttpGet]
+        //public IHttpActionResult getlatlongFromaddress(string gapikey)
+        //{
+        //    AddressData a = new AddressData // Belgium
+        //    {
+        //        Address = "Rue du Cornet 6",
+        //        City = "VERVIERS",
+        //        State = null,
+        //        Country = "Belgium",
+        //        Zip = "B-4800"
+        //    };
+
+        //    var gls = new GoogleLocationService(gapikey);
+        //    var latlong = gls.GetLatLongFromAddress(a);
+
+        //    if (latlong == null)
+        //        return null;
+        //    var latitude = latlong.Latitude;
+        //    var longitude = latlong.Longitude;
+        //    return Ok(latitude);
+        //}
 
         [AllowAnonymous]
         [InjectAuthPrincipal]

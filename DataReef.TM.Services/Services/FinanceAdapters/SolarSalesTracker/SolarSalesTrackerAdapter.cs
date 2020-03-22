@@ -420,18 +420,48 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                             .Get<ProposalData>()
                             .FirstOrDefault(pd => pd.Guid == proposalDataId);
 
+
+                var ProjectData = BuildProposalDataModelFromProposalData(proposalData);
+
                 var request = new SBProposalAttachRequest(proposal)
                 {
                     Lead = new SBLeadModel(proposal?.Property, dealer),
                     Proposal = new SBProposalModel
-                    {
-                        Name = proposalDoc.Description,
+                    { 
+
+                        //CustomerName =(proposal?.Property.Name).Replace(" ", ""),
+                        //ModuleQty= ProjectData?.ModuleCount.ToString(),
+                        //PanelBrand = (ProjectData?.ModuleModel).Replace(" ", ""),
+                        //PanelSize = ProjectData?.ModuleSize.ToString(),
+                        //SystemSize= ProjectData?.SystemSize + "kW",
+                        //Lender= (proposalDoc?.ProviderName).Replace(" ", ""),
+                        //TermInYears = proposalDoc?.Year.ToString(),
+                        //Apr = proposalDoc?.Apr.ToString(),
+                        //Year= proposalData?.SignatureDate?.Year.ToString(),
+                        //Month= proposalData?.SignatureDate?.Month.ToString(),
+                        //Day= proposalData?.SignatureDate?.Day.ToString(),
+                        //Hour= proposalData?.SignatureDate?.Hour.ToString(),
+                        //Minute= proposalData?.SignatureDate?.Minute.ToString(),
+
+                        Name = (proposal?.Property.Name + "_" +
+                                 ProjectData?.ModuleCount + "_" +
+                                ProjectData?.ModuleModel + "_" +
+                                ProjectData?.ModuleSize + "_" +
+                                ProjectData?.SystemSize + "kW_" +
+                                proposalDoc?.ProviderName + "_" +
+                                proposalDoc?.Year + "_" +
+                                proposalDoc?.Apr + "_" +
+                                proposalData?.SignatureDate?.Year + "." + proposalData?.SignatureDate?.Month + "." + proposalData?.SignatureDate?.Day + "_" +
+                                proposalData?.SignatureDate?.Hour + "." + proposalData?.SignatureDate?.Minute).Replace(" ", ""),
+
+
+                        ProposalName = proposalDoc.Description,
                         Url = proposalDoc.PDFUrl,
                         EnergyBillUrl = proposalDoc.EnergyBillUrl,
                         SignedDate = proposalData?.SignatureDate,
                         SignedLocation = proposalData?.MetaInformation?.AcceptLocation
                     },
-                    ProjectData = BuildProposalDataModelFromProposalData(proposalData),
+                    ProjectData = ProjectData,
                 };
                 SubmitProposal(integrationData, request, ouid.Value);
             }

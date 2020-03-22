@@ -338,15 +338,17 @@ namespace DataReef.TM.Api.Controllers
             // get the zip code of the property, and alternatively use it if the AccountID request does not work.
             // TODO: remove this once Genability's API start working w/ AccountID.
             string zipCode = null;
+            bool? usagecollected = null;
 
             if (proposalID.HasValue)
             {
                 var proposal = _proposalService.Get(proposalID.Value, "Property");
                 zipCode = proposal?.Property?.ZipCode;
+                usagecollected = proposal?.Property?.UsageCollected;
             }
 
             var provider = new IntegrationProvider(credentials.Url, AddAuditData);
-            var response = provider.GetAccountPriceResult(credentials.AppID, credentials.AppKey, accountId, zipCode);
+            var response = provider.GetAccountPriceResult(credentials.AppID, credentials.AppKey, accountId, zipCode, usagecollected);
 
             // if both AccountID and ZipCode requests failed, try to get an older Tariff that has data.
             if (response == null)
@@ -363,7 +365,8 @@ namespace DataReef.TM.Api.Controllers
                         TariffID = tariff.TariffID,
                         TariffName = tariff.TariffName,
                         UtilityID = tariff.UtilityID,
-                        UtilityName = tariff.UtilityName
+                        UtilityName = tariff.UtilityName,
+                        UsageCollected = usagecollected
                     };
                 }
             }

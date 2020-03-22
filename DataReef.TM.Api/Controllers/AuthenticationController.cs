@@ -6,6 +6,7 @@ using DataReef.TM.Contracts.FaultContracts;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs.Persons;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -23,11 +24,15 @@ namespace DataReef.TM.Api.Controllers
     {
         private readonly IAuthenticationService authService;
         private readonly IDataService<Credential> credentialService;
+        private readonly Lazy<IUserInvitationService> _userInvitationService;
 
-        public AuthenticationController(IAuthenticationService authService,IDataService<Credential> credentialService)
+        public AuthenticationController(IAuthenticationService authService,
+            IDataService<Credential> credentialService,
+            Lazy<IUserInvitationService> userInvitationService)
         {
             this.authService = authService;
             this.credentialService = credentialService;
+            this._userInvitationService = userInvitationService;
         }
 
         /// <summary>
@@ -94,12 +99,63 @@ namespace DataReef.TM.Api.Controllers
 
         }
 
-         /// <summary>
-         /// Using the reset guid sent in the email, accepts a new password and completes the reset process
-         /// </summary>
-         /// <param name="completionObject"></param>
-         /// <returns>AuthenticationToken</returns>
-          [GenericRoute("reset/complete")]
+        /// <summary>
+        /// Creates a new user and returns an authentication token
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [GenericRoute("createuser/{apiKey}")]
+        [HttpPost]
+        [AllowAnonymous]
+        public IHttpActionResult CreateUserFromSmartBoard([FromBody]CreateUserDTO user, string apiKey)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
+                }
+
+                var createdUserInvitation = this._userInvitationService.Value.SilentInsertFromSmartboard(user, apiKey);
+                if(createdUserInvitation == null)
+                {
+                    throw new Exception("Could not create the user invitation");
+                }
+
+                var userCreator = new NewUser
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    InvitationGuid = createdUserInvitation.Guid,
+                    Password = user.Password
+                };
+
+                authService.CreateUser(userCreator);
+                return Ok(true);
+            }
+            catch (System.ServiceModel.FaultException fe)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(fe.Message) });
+            }
+            catch (ResourceExistsException ree)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(ree.Message) });
+            }
+            catch (Exception ex)
+            {
+                throw;
+                //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+            }
+
+        }
+
+        /// <summary>
+        /// Using the reset guid sent in the email, accepts a new password and completes the reset process
+        /// </summary>
+        /// <param name="completionObject"></param>
+        /// <returns>AuthenticationToken</returns>
+        [GenericRoute("reset/complete")]
           [HttpPost]
           [AllowAnonymous]
           public IHttpActionResult CompleteResetPassword(PasswordResetCompletion completionObject)

@@ -8,6 +8,8 @@ namespace DataReef.TM.Models.DTOs
 {
 
     public class SBNoteDTO
+
+      
     {
         public Guid? Guid { get; set; }
 
@@ -35,6 +37,7 @@ namespace DataReef.TM.Models.DTOs
 
         }
 
+       
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
             if (note != null)
@@ -53,5 +56,47 @@ namespace DataReef.TM.Models.DTOs
                 IgniteID = property.Id;
             }
         }
+
+
+
+
+    }
+
+
+    public class Territories
+    {
+        public Guid TerritoryId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class TerritoryModel
+    {
+        public string apikey { get; set; }
+        public IEnumerable<Territories> TerritorieswithLatLong { get; set; }
+        public IEnumerable<Territories> Territories { get; set; }
+    }
+
+
+
+    public class zapierOus
+    {
+        public Guid Ouid { get; set; }
+        public string Name { get; set; }
+    }
+
+
+    public class zapierOusModel
+    {
+        public float? Latitude { get; set; }
+        public float? Longitude { get; set; }
+
+        public IEnumerable<zapierOus> ouslist {get;set;}
+    }
+
+    public class SBUpdateProperty
+    {
+        public Guid PropertyId { get; set; }
+        public long? LeadId { get; set; }
+        public string apiKey { get; set; }
     }
 }

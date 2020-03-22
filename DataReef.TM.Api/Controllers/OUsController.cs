@@ -18,6 +18,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
+using GoogleMaps.LocationServices;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -291,6 +292,18 @@ namespace DataReef.TM.Api.Controllers
         /// <summary>
         /// Get method used by SmartBoard to retrieve the specified OU
         /// </summary>
+        /// <param name="apiKey"></param>
+        [HttpGet, Route("sb/roles/{apiKey}")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<SBOURoleDTO>))]
+        public IEnumerable<SBOURoleDTO> GetRoles(string apiKey)
+        {
+            return ouService.GetAllRoles(apiKey);
+        }
+
+        /// <summary>
+        /// Get method used by SmartBoard to retrieve the specified OU
+        /// </summary>
         /// <param name="ouID"></param>
         /// <param name="apiKey"></param>
         [HttpGet, Route("sb/{ouID}/{apiKey}")]
@@ -312,6 +325,73 @@ namespace DataReef.TM.Api.Controllers
         {
             return ouService.GetSmartboardAllOus(apiKey);
         }
+
+
+        /// <summary>
+        /// Gets all Ous by location Address for Zapier Leads
+        /// </summary>
+        /// <param name="Address"></param>
+        /// <param name="City"></param>
+        /// <param name="State"></param>
+        /// <param name="Country"></param>
+        /// <param name="Zip"></param>
+        [HttpGet, Route("sbzapierOus")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(zapierOusModel))]
+
+        // api/v1/ous/sbzapierOus?Address=&City=&State=&Country=&Zip=
+        // api/v1/ous/sbzapierOus?Address=Rue du Cornet 6&City=VERVIERS&State=null&Country=Belgium&Zip=B-4800
+        public IHttpActionResult GetzapierOus(string Address, string City, string State, string Country, string Zip)
+        {
+            try
+            {
+                AddressData a = new AddressData { Address = Address, City = City, State = State, Country = Country, Zip = Zip };
+                var gls = new GoogleLocationService(DataReef.Core.Constants.GoogleLocationApikey);
+                var latlong = gls.GetLatLongFromAddress(a);
+                if (latlong == null)
+                    return null;
+                zapierOusModel zapierou = new zapierOusModel();
+                zapierou.Latitude = (float)latlong.Latitude;
+                zapierou.Longitude = (float)latlong.Longitude;
+                zapierou.ouslist = ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
+                return Ok(zapierou);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Gets all Territories by lat,long and ouid for Zapier Leads
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <param name="ouid"></param>
+        [HttpGet, Route("TerritoriesByOu")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(TerritoryModel))]
+
+
+        // api/v1/ous/TerritoriesByOu?latitude=&longitude=&ouid=
+        public IHttpActionResult GetTerritoriesByOu(float? latitude, float? longitude, Guid ouid)
+        {
+            try
+            {
+                TerritoryModel teritory = new TerritoryModel();
+                teritory.apikey = ouService.GetApikeyByOU(ouid);
+                teritory.TerritorieswithLatLong = ouService.GetTerritoriesListByOu(latitude, longitude, ouid);
+                teritory.Territories = ouService.GetTerritoriesListByOu(0, 0, ouid);
+                return Ok(teritory);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
 
         protected override string PrepareEntityForNavigationPropertiesAttachment(OU entity)
         {

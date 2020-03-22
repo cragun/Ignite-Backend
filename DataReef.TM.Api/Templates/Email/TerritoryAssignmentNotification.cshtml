@@ -1,34 +1,31 @@
 ﻿@model DataReef.TM.Classes.TerritoryAssignmentNotificationTemplate
 @{
-    Layout = "_Layout.cshml";
+    Layout = null;
 }
 
-<div class="content salesOrderConfirmation">
-    <div class="row">
-        You have been assigned to the @Model.TerritoryName territory. 
-        @if(Model.PropertyCount > 0)
-        {
-            <div>This territory has @Model.PropertyCount homes available to contact.This territory is ready to prescreen.</div>
-        }
-        
-    </div>
+<p>
 
-    @if ((Model.SampleHomeNames != null) && (Model.SampleHomeNames.Length > 0))
-    {
-        <div class="row">
-            Included are a few of the homes:
-            @foreach (string homeName in Model.SampleHomeNames)
-            {
-                <div class="subrow">
-                    @homeName
-                </div>
-            }
-        </div>
+    You have been assigned to the @Model.TerritoryName territory.
+</p>
+@if (Model.PropertyCount > 0)
+{
+    <p>This territory has @Model.PropertyCount homes available to contact.This territory is ready to prescreen.</p>
+}
+
+@if ((Model.SampleHomeNames != null) && (Model.SampleHomeNames.Length > 0))
+{
+    <p>
+        Included are a few of the homes:
+        @foreach (string homeName in Model.SampleHomeNames)
+        {
+        <p>@homeName</p>
+    }
+        </p>
     }
 
-    <div class="row">
-        <span>You can access your new territory in IGNITE for iPad </span>
-        @if(!string.IsNullOrWhiteSpace(Model.TerritoryLink)) { <a href="@Model.TerritoryLink">by clicking on the following link</a> }
-        <span>.</span>
-</div>
-</div>
+<p>
+    <span>You can access your new territory in IGNITE for iPad </span>
+    @if (!string.IsNullOrWhiteSpace(Model.TerritoryLink))
+    {<a href="@Model.TerritoryLink">by clicking on the following link</a>}
+    <span>.</span>
+</p>

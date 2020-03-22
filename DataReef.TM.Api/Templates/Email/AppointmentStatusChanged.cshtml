@@ -1,26 +1,24 @@
 ﻿@model DataReef.TM.Classes.AppointmentStatusChangedTemplate
 @{
-    Layout = "_Layout.cshml";
+    Layout = null;
 }
 
-    <div class="content userInvitation">
-        <div class="row">
+    
+        <p>
             The appointment for the property @Model.PropertyName changed its status to <b>@Model.AppointmentStatus</b>. Address is: @Model.Address
-        </div>
+        </p>
 
         <h4>Appointment details</h4>
-        <div class="row">
+        <p>
             <b>Start Date: </b> @Model.AppointmentStartDate.ToString()
-        </div>
+        </p>
         @if (Model.AppointmentEndDate != null)
         {
-            <div class="row">
+            <p>
                 <b>End Date: </b> @Model.AppointmentEndDate.ToString()
-            </div>
+            </p>
         }
 
-        <div class="row">
+        <p>
             <b>Description: </b> @Model.AppointmentDetails
-        </div>
-
-    </div>
+        </p>

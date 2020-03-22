@@ -1,45 +1,22 @@
 ﻿@model DataReef.TM.Classes.UserInvitationTemplate
 @{
-    Layout = "_Layout.cshml";
+    Layout = null;
 }
-
-<div class="content userInvitation">
-    <div class="row">
-        You have been invited to join @(Model.OUName).
-    </div>
+    <p>You have been invited to join @(Model.OUName).</p>
     @if (Model.UserWasDeleted)
     {
-        <div class="row">
-            Your user was deleted but is now restored because of this invitation. You may use your credentials to log in.
-        </div>
-    }
-
-    <div class="row">
-        <p>
-            Make sure IGNITE application is installed on your iOS device. If IGNITE is not installed, please check the information below to download it.
-        </p>
-        <p>
-            If you are logged in, please go to the main organizations screen and accept the invitation from there.
-        </p>
-    </div>
+        <p>Your user was deleted but is now restored because of this invitation. You may use your credentials to log in.</p>
+    }    
+        <p>Make sure IGNITE application is installed on your iOS device. If IGNITE is not installed, please check the information below to download it.</p>
+        <p>If you are logged in, please go to the main organizations screen and accept the invitation from there.</p>
 
     @if (!string.IsNullOrWhiteSpace(Model.DownloadURL))
     {
-        <div class="row">
-            <a class="button" href="@Raw(Model.DownloadURL)">Download app</a>
-        </div>
-        <div class="row">
+        <p><a href="@Raw(Model.DownloadURL)">Download app</a></p>
             <p>After downloading the app, on your device, tap the link below to accept this invitation.</p>
-        </div>
     }
     else
-    {
-        <div class="row">
-            <p>Please check you e-mail for the latest Test Flight invitation or contact our Support Team to receive a new one. After installing the app, tap the link below to accept this invitation.</p>
-        </div>        
+    {        
+            <p>Please check you e-mail for the latest Test Flight invitation or contact our Support Team to receive a new one. After installing the app, tap the link below to accept this invitation.</p>                
     }
-
-    <div class="row">
-        <a class="button" href="@Raw(Model.InvitationURL)">Accept invitation</a>
-    </div>
-</div>
+    <p><a href="@Raw(Model.InvitationURL)">Accept invitation</a>

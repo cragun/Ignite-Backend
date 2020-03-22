@@ -1235,10 +1235,26 @@ namespace DataReef.TM.Services.Services
 
                 var documentUrls = GetProposalURLs(contractorID, data.Guid, signedDocuments, ouSettings);
                 var planName = financePlan.Name;
+
+              
+                float apr = financePlan.FinancePlanDefinition.Apr;
+                float year = financePlan.FinancePlanDefinition.TermInYears;
+                var FinanceProvider = dataContext
+                            .FinanceProviders
+                            .FirstOrDefault(fd => fd.Guid == financePlan.FinancePlanDefinition.ProviderID);
+                
+
                 var attachmentPDFs = new List<Tuple<byte[], string>>();
                 documentUrls?
                         .ForEach(d =>
                         {
+
+                          
+                            d.ProviderName = FinanceProvider?.Name;
+                            d.Apr = apr;
+                            d.Year = year;
+                        
+
                             d.Description = $"{d.Name} [{planName.AsFileName()}]";
                             d.ProposalDataID = proposalDataId;
                             if (d.Name == "Proposal")

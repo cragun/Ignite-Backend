@@ -16,5 +16,6 @@ namespace DataReef.TM.Models.DTOs.Inquiries
         public string Color { get; set; }
 
         public string Icon { get; set; }
+        public int? SBTypeId { get; set; }
     }
 }

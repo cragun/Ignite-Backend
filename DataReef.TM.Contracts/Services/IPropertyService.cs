@@ -55,5 +55,12 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         SBPropertyDTO CreatePropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey);
+
+        [OperationContract]
+        IEnumerable<Territories> GetTerritoriesList(Guid propertyid, string apiKey);
+
+        [OperationContract]
+        SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request);
+
     }
 }

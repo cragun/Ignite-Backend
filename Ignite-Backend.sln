@@ -117,6 +117,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReef.Integrations.LoanP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReef.Integrations.Sunnova", "DataReef.Integrations.Sunnova\DataReef.Integrations.Sunnova.csproj", "{3683AF7D-373B-4646-878C-4ACA56182B6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMaps.LocationServices", "GoogleMaps.LocationServices\GoogleMaps.LocationServices.csproj", "{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1154,6 +1156,38 @@ Global
 		{3683AF7D-373B-4646-878C-4ACA56182B6B}.Stage|x64.Build.0 = Release|Any CPU
 		{3683AF7D-373B-4646-878C-4ACA56182B6B}.Stage|x86.ActiveCfg = Release|Any CPU
 		{3683AF7D-373B-4646-878C-4ACA56182B6B}.Stage|x86.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|ARM.Build.0 = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|x64.Build.0 = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Debug|x86.Build.0 = Debug|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|Any CPU.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|Any CPU.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|ARM.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|ARM.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|x64.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|x64.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|x86.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.QA|x86.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|ARM.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|ARM.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|x64.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|x64.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|x86.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Release|x86.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|Any CPU.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|ARM.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|ARM.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|x64.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|x64.Build.0 = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|x86.ActiveCfg = Release|Any CPU
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54}.Stage|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1199,6 +1233,7 @@ Global
 		{98E3A5FD-B7A6-4972-BC51-77CF4EBE44F0} = {8657CA82-AB63-40BB-9184-3D7EFD9ABFA6}
 		{789D5400-9B5E-4F62-832C-20FA8428E572} = {E250DB23-EBE0-4E55-885B-964EBAE2595D}
 		{3683AF7D-373B-4646-878C-4ACA56182B6B} = {E250DB23-EBE0-4E55-885B-964EBAE2595D}
+		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54} = {3B930DCA-49C9-4789-9838-3FA9A57A0274}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.Integration.WPF.6.0.1304.0\lib\NET45

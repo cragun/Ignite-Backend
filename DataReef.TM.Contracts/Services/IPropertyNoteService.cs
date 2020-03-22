@@ -26,9 +26,16 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
+        IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey);
+
+
+        [OperationContract]
         void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
 
         [OperationContract]
         IEnumerable<Models.Person> QueryForPerson(Guid propertyID, string email, string name);
+
+        [OperationContract]
+        SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
     }
 }

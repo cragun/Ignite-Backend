@@ -2,6 +2,7 @@
 using DataReef.Core.Logging;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.PropertyAttachments;
 using DataReef.TM.Models.Solar;
 using Newtonsoft.Json;
@@ -33,6 +34,32 @@ namespace DataReef.TM.Api.Controllers
             this.propertyService = propertyService;
             _propertyAttachmentServiceFactory = propertyAttachmentServiceFactory;
         }
+
+
+
+        /// <summary>
+        /// / Gets all Territories regardless of Lat - Long, for a property
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [Route("{propertyID:guid}/territories/{apiKey}")]
+        [ResponseType(typeof(IEnumerable<Territories>))]
+        [HttpGet]
+        public IHttpActionResult GetTerritoriesForProperty(Guid propertyID, string apiKey)
+        {
+            try
+            {
+                var result = propertyService.GetTerritoriesList(propertyID, apiKey);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+
 
 
         /// <summary>

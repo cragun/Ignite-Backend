@@ -202,7 +202,7 @@ namespace DataReef.TM.Services.Services
             return result;
         }
 
-        public ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, IEnumerable<Guid> excludedReps = null)
+        public ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
         {
             var result = new List<InquiryStatisticsForPerson>();
 
@@ -246,12 +246,12 @@ namespace DataReef.TM.Services.Services
 
             if(associatedPersonIds?.Any() == true)
             {
-                result = _personKPIService.Value.GetSelfTrackedStatisticsForSalesPeopleTerritories(associatedPersonIds, reportSettings.PersonReportItems, specifiedDay, excludedReps).ToList();
+                result = _personKPIService.Value.GetSelfTrackedStatisticsForSalesPeopleTerritories(associatedPersonIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
             }
             
             if(territoryIds?.Any() == true)
             {
-                var inquiries = _inquiryService.GetInquiryStatisticsForSalesPeopleTerritories(territoryIds, reportSettings.PersonReportItems, specifiedDay, excludedReps).ToList();
+                var inquiries = _inquiryService.GetInquiryStatisticsForSalesPeopleTerritories(territoryIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
 
                 foreach(var inquiryResult in inquiries)
                 {
@@ -265,6 +265,8 @@ namespace DataReef.TM.Services.Services
                         matchingItem.Actions.ThisMonth += inquiryResult.Actions.ThisMonth;
                         matchingItem.Actions.ThisYear += inquiryResult.Actions.ThisYear;
                         matchingItem.Actions.SpecifiedDay += inquiryResult.Actions.SpecifiedDay;
+                        matchingItem.Actions.RangeDay += inquiryResult.Actions.RangeDay;
+                        matchingItem.Actions.ThisQuarter += inquiryResult.Actions.ThisQuarter;
 
                         matchingItem.DaysActive.AllTime = Math.Max(matchingItem.DaysActive.AllTime, inquiryResult.DaysActive.AllTime);
                         matchingItem.DaysActive.Today = Math.Max(matchingItem.DaysActive.Today, inquiryResult.DaysActive.Today);
@@ -272,6 +274,8 @@ namespace DataReef.TM.Services.Services
                         matchingItem.DaysActive.ThisMonth = Math.Max(matchingItem.DaysActive.ThisMonth, inquiryResult.DaysActive.ThisMonth);
                         matchingItem.DaysActive.ThisYear = Math.Max(matchingItem.DaysActive.ThisYear, inquiryResult.DaysActive.ThisYear);
                         matchingItem.DaysActive.SpecifiedDay = Math.Max(matchingItem.DaysActive.SpecifiedDay, inquiryResult.DaysActive.SpecifiedDay);
+                        matchingItem.DaysActive.RangeDay = Math.Max(matchingItem.DaysActive.SpecifiedDay, inquiryResult.DaysActive.RangeDay);
+                        matchingItem.DaysActive.ThisQuarter = Math.Max(matchingItem.DaysActive.SpecifiedDay, inquiryResult.DaysActive.ThisQuarter);
                     }
                     else
                     {
@@ -378,6 +382,18 @@ namespace DataReef.TM.Services.Services
             }
 
             return ou;
+        }
+
+        public IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                return dc.OURoles.Select(x => new SBOURoleDTO
+                {
+                    Guid = x.Guid,
+                    Name = x.Name
+                }).ToList();
+            }
         }
 
         public SBOUDTO GetSmartboardOus(Guid ouID, string apiKey)
@@ -1940,7 +1956,64 @@ namespace DataReef.TM.Services.Services
         //{
         //    csv.WriteRecords(records);
         //}
+
+
+        public IEnumerable<zapierOus> GetzapierOusList(float? Lat, float? Lon, string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                //-- exec usp_GetOUIdsNameForGeoCoordinates 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                var zapierOusList = dc
+             .Database
+             .SqlQuery<zapierOus>("exec usp_GetOUIdsNameForGeoCoordinates @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", apiKey))
+             .ToList();
+
+                return zapierOusList;
+            }
+        }
+
+        public string  GetApikeyByOU(Guid ouid)
+        {
+            // validate apiKey
+            var sbSettings = _settingsService
+                                .Value
+                                .GetSettingsByOUID(ouid)
+                                ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                .Data?
+                                .SMARTBoard;
+
+            return sbSettings.ApiKey;
+        }
+
+
+
+
+        public IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
+        {
+            Lat = Lat == null ? 0 : Lat;
+            Lon = Lon == null ? 0 : Lon;
+            using (var dc = new DataContext())
+            {
+                //-- exec usp_GetTerritoryIdsNameByapiKey 29.920071,-95.498855,NULL,'1E9E5809-45F2-4CEE-AACB-6617DD232A40'
+                var TerritoriesList = dc
+             .Database
+             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey, @ouid", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", "NULL"), new SqlParameter("@ouid", ouid))
+             .ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+
     }
+    
+
+
+
+
+
 
     //public void UpdateFinancing()
     //{

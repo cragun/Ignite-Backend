@@ -9,6 +9,7 @@ using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
@@ -21,10 +22,12 @@ using DataReef.TM.Services.Extensions;
 using DataReef.TM.Services.InternalServices.Geo;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using EntityFramework.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
+using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.ServiceModel;
@@ -47,6 +50,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
+        private readonly Lazy<IInquiryService> _inquiryService;
 
 
         public PropertyService(ILogger logger,
@@ -58,7 +62,8 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
-            Lazy<IAppointmentService> appointmentService)
+            Lazy<IAppointmentService> appointmentService,
+            Lazy<IInquiryService> inquiryService)
             : base(logger, unitOfWorkFactory)
         {
             _geoProvider = geoProvider;
@@ -69,6 +74,7 @@ namespace DataReef.TM.Services.Services
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
             _appointmentService = appointmentService;
+            _inquiryService = inquiryService;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -187,6 +193,20 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
+
+
+            //send new lead to SMARTBOARD
+            try
+            {
+                _sbAdapter.Value.SubmitLead(entity.Guid);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Error submitting SB lead!", ex);
+            }
+            //send new lead to SMARTBOARD
+
+
 
             //update territory date modified because a new property was added
             using (var dataContext = new DataContext())
@@ -1196,5 +1216,132 @@ namespace DataReef.TM.Services.Services
                         .FirstOrDefault();
             }
         }
+
+
+
+        public IEnumerable<Territories> GetTerritoriesList(Guid propertyid, string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                //first get the property
+                var property = dc.Properties.FirstOrDefault(x => x.Guid == propertyid);
+
+                if (property == null)
+                {
+                    throw new Exception("No lead found with the specified ID(s)");
+                }
+
+                //-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+                var TerritoriesList = dc
+             .Database
+             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey", new SqlParameter("@latitude", property.Latitude), new SqlParameter("@longitude", property.Longitude), new SqlParameter("@apiKey", apiKey))
+             .ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+
+
+
+        public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
+        {
+            using (var dc = new DataContext())
+            {                
+                //first get the property
+                var property = dc.Properties.Include(x => x.Occupants)
+                                            .Include(x => x.PropertyBag)
+                                            .FirstOrDefault(x => x.Id == igniteID);
+
+                if (property == null)
+                {
+                    throw new Exception("No lead found with the specified ID");
+                }
+
+                //get the user who transfered the Lead Territory
+                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                               && ((x.EmailAddressString.Equals(Request.UserEmailId)) || (x.SmartBoardID == Request.UserId)));
+                if (user == null)
+                {
+                    throw new Exception("No user found with the specified ID");
+                }
+
+                if (Request.DispositionTypeId != property.DispositionTypeId)
+                {                    
+                    var dispSettings = _ouSettingService.Value.GetSettingsByPropertyID(property.Guid)?.Where(s => s.Name == OUSetting.NewDispositions)?.ToList();
+                    var dispositions = dispSettings?.SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?.ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault(); 
+
+                    property.DispositionTypeId = dispositions != null ? Request.DispositionTypeId : property.DispositionTypeId;
+                    property.LatestDisposition = dispositions != null? dispositions.Name : property.LatestDisposition;
+                    property.Updated(user.Guid);
+                    dc.SaveChanges();
+
+                  
+                    var inquiry = new Inquiry
+                    {
+                        Guid = Guid.NewGuid(),
+                        PropertyID = property.Guid,
+                        PersonID = user.Guid,
+                        Notes = "Sales Rap(SB): " + user.Name ,
+                        Lat = property.Latitude,
+                        Lon = property.Longitude,
+                        Name = property.LatestDisposition,
+                        DateCreated = DateTime.UtcNow,
+                        CreatedByID = property.CreatedByID,
+                        Disposition = property.LatestDisposition,
+                        DispositionTypeId = property.DispositionTypeId,
+                        IsNew = true
+                    };
+
+                    _inquiryService.Value.Insert(inquiry);
+
+                }
+
+                var mainOccupant = property.GetMainOccupant();
+                if (mainOccupant != null)
+                {
+                    if(mainOccupant.FirstName == Request.ExistFirstName && mainOccupant.LastName == Request.ExistLastName && mainOccupant.Guid != null)
+                    {
+
+                        using (var dataContext = new DataContext())
+                        {
+                           var occupant =  dataContext.Occupants.Where(x => x.Guid == mainOccupant.Guid).FirstOrDefault();
+                            occupant.FirstName = Request.NewFirstName;
+                            occupant.LastName = Request.NewLastName;
+                            dataContext.SaveChanges();
+                        }
+
+                            //update new fname - lname into occupant and Property 
+                            if (property?.PropertyBag?.FirstOrDefault(f => f.DisplayName == "Email Address")?.Value == Request.ExistEmailAddress)
+                        {
+                            using (var dataContext = new DataContext())
+                            {
+                                // update propertybag 
+                                var Fields = property?.PropertyBag?.FirstOrDefault(f => f.DisplayName == "Email Address");
+                                Fields.Value = Request.NewEmailAddress;
+                                dataContext.SaveChanges();
+                            }
+                        }
+                       
+                        property.Name = $"{Request.NewFirstName} {mainOccupant.MiddleInitial} {Request.NewLastName}".Replace("  ", " ");
+                        property.DateLastModified = DateTime.UtcNow;
+                        dc.SaveChanges();
+
+                    }
+                }
+
+                
+                using (var data = new DataContext())
+                {
+                     property = data.Properties.Include(x => x.Occupants).Include(x => x.PropertyBag).FirstOrDefault(x => x.Id == igniteID);
+                }
+               // Update(Latestproperty);
+
+
+                return new SBPropertyDTO(property);
+            }
+        }
+
+
     }
 }
