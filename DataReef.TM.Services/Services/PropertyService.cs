@@ -527,40 +527,47 @@ namespace DataReef.TM.Services.Services
 
             using (DataContext dc = new DataContext())
             {
+                int skipcnt = pageIndex * itemsPerPage;
                 dc.Database.CommandTimeout = 60;
-                var ouHierarchy = dc
-                                    .Database
-                                    .SqlQuery<Guid>("select Guid from dbo.OUTree({0})", ouID)
-                                    .ToList();
+                //-- exec [dbo].[usp_GetProposalsByOuId] '3f78b1b0-c0c5-4987-a5d5-32ee1c893460', NULL, 0,20 
+                var propIds = dc.Database.SqlQuery<Guid>(" exec usp_GetOUPropertiesIdwithProposal {0} ,{1}, {2}, {3}", ouID, propertyNameSearch, skipcnt, itemsPerPage).ToList();
 
-                var setQuery = dc
-                                .Properties
-                                .Where(p => !p.IsDeleted &&
-                                            ouHierarchy.Contains(p.Territory.OUID) &&
-                                            (string.IsNullOrEmpty(propertyNameSearch) || p.Name.Contains(propertyNameSearch)));
+                var retQuery = dc.Properties.Where(p => propIds.Contains(p.Guid));
 
-                var propIds = setQuery
-                                .Select(p => p.Guid)
-                                .ToList();
 
-                var propWithProposalIds = dc
-                                .Proposal
-                                .Where(p => !p.IsDeleted && propIds.Contains(p.PropertyID))
-                                .Select(p => p.PropertyID)
-                                .ToList();
+                //var ouHierarchy = dc
+                //                    .Database
+                //                    .SqlQuery<Guid>("select Guid from dbo.OUTree({0})", ouID)
+                //                    .ToList();
 
-                var retQuery = setQuery
-                                .Where(p => propWithProposalIds.Contains(p.Guid))
-                                .OrderBy(p => p.Name)
-                                .Skip(pageIndex * itemsPerPage)
-                                .Take(itemsPerPage);
+                //var setQuery = dc
+                //                .Properties
+                //                .Where(p => !p.IsDeleted &&
+                //                            ouHierarchy.Contains(p.Territory.OUID) &&
+                //                            (string.IsNullOrEmpty(propertyNameSearch) || p.Name.Contains(propertyNameSearch)));
+
+                //var propIds = setQuery
+                //                .Select(p => p.Guid)
+                //                .ToList();
+
+                //var propWithProposalIds = dc
+                //                .Proposal
+                //                .Where(p => !p.IsDeleted && propIds.Contains(p.PropertyID))
+                //                .Select(p => p.PropertyID)
+                //                .ToList();
+
+                //var retQuery = setQuery
+                //                .Where(p => propWithProposalIds.Contains(p.Guid))
+                //                .OrderBy(p => p.Name)
+                //                .Skip(pageIndex * itemsPerPage)
+                //                .Take(itemsPerPage);
 
                 AssignIncludes(include, ref retQuery);
                 ret = retQuery.ToList();
 
-                propIds = ret
-                            .Select(p => p.Guid)
-                            .ToList();
+                //var propIds = ret
+                //            .Select(p => p.Guid)
+                //            .ToList();
 
                 // we use a different context not to get navitation properties for results
                 using (var uow = UnitOfWorkFactory())
