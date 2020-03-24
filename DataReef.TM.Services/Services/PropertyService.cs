@@ -196,8 +196,8 @@ namespace DataReef.TM.Services.Services
 
 
             //send new lead to SMARTBOARD
-
-            if (entity.LatestDisposition.Equals("DoorKnocked"))
+            if (entity.LatestDisposition.Equals("DoorKnocked") || entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null)
+            //if (entity.LatestDisposition.Equals("DoorKnocked"))
             {
                 try
                 {
