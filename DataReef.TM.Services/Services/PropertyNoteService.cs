@@ -314,7 +314,7 @@ namespace DataReef.TM.Services.Services
 
                 //get user by the the smartboardId
                 var user = dc.People.FirstOrDefault(x => !x.IsDeleted
-                                                      && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+                                                      && (noteRequest.UserID != null &&  x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
                                                             || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
                 if (user == null)
                 {
