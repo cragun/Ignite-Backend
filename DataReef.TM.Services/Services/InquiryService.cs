@@ -54,7 +54,7 @@ namespace DataReef.TM.Services.Services
 
             if (inquiry.SaveResult.Success)
             {
-                UpdateLatestStatus(inquiry.PropertyID, inquiry.Disposition);
+                UpdateLatestStatus(inquiry.PropertyID, inquiry.Disposition, inquiry.DispositionTypeId);
 
                 var pbi = new PBI_DispositionChanged
                 {
@@ -121,7 +121,7 @@ namespace DataReef.TM.Services.Services
 
                 try
                 {
-                    var property = UpdateLatestStatus(entity.PropertyID, entity.Disposition);
+                    var property = UpdateLatestStatus(entity.PropertyID, entity.Disposition, entity.DispositionTypeId);
 
                     base.ProcessApiWebHooks(property.Guid, ApiObjectType.Customer, EventDomain.Disposition, EventAction.Created, property.Guid);
                 }
@@ -554,7 +554,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        private Property UpdateLatestStatus(Guid propertyId, string newDisposition)
+        private Property UpdateLatestStatus(Guid propertyId, string newDisposition, int? newDispositionTypeId)
         {
             using (var uow = UnitOfWorkFactory())
             {
@@ -568,6 +568,7 @@ namespace DataReef.TM.Services.Services
 
                 if (property.LatestDisposition != newDisposition)
                 {
+                    property.DispositionTypeId = newDispositionTypeId;
                     property.LatestDisposition = newDisposition;
                     territoryNeedsSave = true;
                 }

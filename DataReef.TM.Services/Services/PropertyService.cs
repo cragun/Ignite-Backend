@@ -196,14 +196,20 @@ namespace DataReef.TM.Services.Services
 
 
             //send new lead to SMARTBOARD
-            try
+
+            if (entity.LatestDisposition.Equals("DoorKnocked"))
             {
-                _sbAdapter.Value.SubmitLead(entity.Guid);
+                try
+                {
+                    _sbAdapter.Value.SubmitLead(entity.Guid);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error submitting SB lead!", ex);
+                }
+
             }
-            catch (Exception ex)
-            {
-                logger.Error("Error submitting SB lead!", ex);
-            }
+
             //send new lead to SMARTBOARD
 
 
@@ -269,6 +275,8 @@ namespace DataReef.TM.Services.Services
 
         public override Property Update(Property entity)
         {
+
+          
             Property ret = null;
             Appointment appointmentBefore = null;
             using(var dc = new DataContext())
@@ -394,16 +402,20 @@ namespace DataReef.TM.Services.Services
                             _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
                         });
 
+                        
+
                         if (needToUpdateSB && !pushedToSB)
                         {
-                            try
-                            {
-                                _sbAdapter.Value.SubmitLead(entity.Guid);
-                            }
-                            catch (Exception ex)
-                            {
-                                logger.Error("Error submitting SB lead!", ex);
-                            }
+                             try
+                                {
+                                    _sbAdapter.Value.SubmitLead(entity.Guid);
+                                }
+                                catch (Exception ex)
+                                {
+                                    logger.Error("Error submitting SB lead!", ex);
+                                }
+
+                            
                         }
 
                         
