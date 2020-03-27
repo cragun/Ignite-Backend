@@ -262,15 +262,19 @@ namespace DataReef.TM.Services
             foreach (var col in settings.PersonReportItems)
             {
                 var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);
-                
-                
                 if (matchingStat != null)
                 {
-                   // var tr = matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions).Equals(0);
-                    isallZeroproptype = isallZeroproptype && matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions).Equals(0);
-
                     if (IsDeleted == true)
-                    {                        
+                    {
+                        if(!string.IsNullOrEmpty(proptype))
+                        {
+                            isallZeroproptype = isallZeroproptype && matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions).Equals(0);
+                        }
+                        else
+                        {
+                            isallZeroproptype = false;
+                        }
+                        
                         isallZero = isallZero && matchingStat.Actions.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.Actions) as int?), 0));
                         isallZero = isallZero && matchingStat.DaysActive.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.DaysActive) as int?), 0));
                     }
@@ -290,7 +294,7 @@ namespace DataReef.TM.Services
                 }
 
             }
-            if(isallZeroproptype == true)
+            if(isallZeroproptype == true && IsDeleted == true)
             {
                 row.InquiryStatistics = new List<InquiryStatisticsForPerson>();
             }
