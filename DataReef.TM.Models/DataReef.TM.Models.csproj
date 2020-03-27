@@ -157,7 +157,9 @@
     <Compile Include="DataViews\Geo\IdAndCountResponse.cs" />
     <Compile Include="DataViews\Geo\TerritoryIdAndWKTRequest.cs" />
     <Compile Include="DataViews\GuidNamePair.cs" />
+    <Compile Include="DataViews\Inquiries\InquiryStatisticsByDateDeactive.cs" />
     <Compile Include="DataViews\Inquiries\InquiryStatisticsByDate.cs" />
+    <Compile Include="DataViews\Inquiries\InquiryStatisticsForPersonDeactive.cs" />
     <Compile Include="DataViews\Inquiries\InquiryStatisticsForPerson.cs" />
     <Compile Include="DataViews\Inquiries\InquiryStatisticsForOrganization.cs" />
     <Compile Include="DataViews\OnBoarding\FinancePlanDataView.cs" />

@@ -19,6 +19,7 @@ namespace DataReef.TM.Models.DataViews.Inquiries
         [DataMember]
         public int ThisWeek { get; set; }
 
+        //[DataMember(Name= "Today", EmitDefaultValue=false)]
         [DataMember]
         public int Today { get; set; }
 
