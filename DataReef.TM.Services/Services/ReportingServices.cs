@@ -264,6 +264,7 @@ namespace DataReef.TM.Services
                 {
                     if (IsDeleted == true)
                     {
+                        
                         isallZero = isallZero && matchingStat.Actions.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.Actions) as int?), 0));
                         isallZero = isallZero && matchingStat.DaysActive.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.DaysActive) as int?), 0));
                     }

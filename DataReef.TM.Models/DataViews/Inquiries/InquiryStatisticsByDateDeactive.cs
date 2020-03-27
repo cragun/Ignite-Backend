@@ -5,7 +5,7 @@ namespace DataReef.TM.Models.DataViews.Inquiries
 {
     [DataContract]
     [NotMapped]
-    public class InquiryStatisticsByDate
+    public class InquiryStatisticsByDateDeactive
     {
         [DataMember(Name= "AllTime", EmitDefaultValue=false)]
         public int AllTime { get; set; }
