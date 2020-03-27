@@ -1,4 +1,5 @@
 ﻿using DataReef.TM.Contracts.Services;
+using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
@@ -18,6 +19,17 @@ namespace DataReef.TM.Services.Services
                     dc.ApiLogEntries.Add(apiLogEntry);
                 }
             }*/
+
+
+            using (var dc = new DataContext())
+            {
+                if (apiLogEntry.RequestMethod == "CreateNoteFromSmartboardtocheck")
+                {
+                    dc.ApiLogEntries.Add(apiLogEntry);
+                    dc.SaveChanges();
+                }
+            }
+
         }
     }
 }

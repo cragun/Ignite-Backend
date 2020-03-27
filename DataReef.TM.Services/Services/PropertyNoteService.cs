@@ -33,6 +33,8 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IUserInvitationService> _userInvitationService;
         private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly IApiLoggingService _apiLoggingService;
+
 
         public PropertyNoteService(
             ILogger logger,
@@ -42,7 +44,8 @@ namespace DataReef.TM.Services.Services
             Lazy<IAssignmentService> assignmentService,
             Lazy<IUserInvitationService> userInvitationService,
             Lazy<IPersonService> personService,
-            Lazy<ISolarSalesTrackerAdapter> sbAdapter) : base(logger, unitOfWorkFactory)
+            Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            IApiLoggingService apiLoggingService) : base(logger, unitOfWorkFactory)
         {
             _ouSettingService = ouSettingService;
             _ouService = ouService;
@@ -50,6 +53,7 @@ namespace DataReef.TM.Services.Services
             _userInvitationService = userInvitationService;
             _personService = personService;
             _sbAdapter = sbAdapter;
+            _apiLoggingService = apiLoggingService;
         }
 
         public IEnumerable<PropertyNote> GetNotesByPropertyID(Guid propertyID)
@@ -303,6 +307,23 @@ namespace DataReef.TM.Services.Services
 
         public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
+            ApiLogEntry apilog = new ApiLogEntry
+            {
+                Id = Guid.NewGuid(),
+                RequestMethod = "CreateNoteFromSmartboardtocheck",
+                RequestTimestamp = DateTime.UtcNow,
+                User = noteRequest.Guid != null ? noteRequest.Guid.HasValue.ToString() : "",
+                Machine = noteRequest.PropertyID != null ? noteRequest.PropertyID.ToString() : "",
+                RequestContentType = noteRequest.IgniteID != null ? noteRequest.IgniteID.ToString() : "",
+                RequestRouteTemplate = noteRequest.LeadID != null ? noteRequest.LeadID.ToString() : "",
+                RequestRouteData = noteRequest.Content != null ? noteRequest.Content.ToString() : "",
+                RequestIpAddress = noteRequest.UserID != null ? noteRequest.UserID.ToString() : "",
+                RequestHeaders = noteRequest.Email != null ? noteRequest.Email.ToString() : "",
+                RequestUri = noteRequest.DateCreated != null ? noteRequest.DateCreated.ToString() : ""
+            };
+
+            _apiLoggingService.LogToDatabase(apilog);
+
             using (var dc = new DataContext())
             {
                 //first get the property
@@ -313,6 +334,9 @@ namespace DataReef.TM.Services.Services
                 var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
 
                 //get user by the the smartboardId
+                //var user = dc.People.FirstOrDefault(x => !x.IsDeleted && (noteRequest.UserID != null &&  x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+                //                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
+
                 var user = dc.People.FirstOrDefault(x => !x.IsDeleted
                                                       && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
                                                             || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
