@@ -13,7 +13,7 @@ namespace DataReef.TM.Contracts.Services
         ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay = null);
 
         [OperationContract]
-        ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null);
+        ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, string proptype = null);
 
         [OperationContract]
         ICollection<OrganizationSelfTrackedReportRow> GetOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);

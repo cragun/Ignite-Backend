@@ -7,28 +7,29 @@ namespace DataReef.TM.Models.DataViews.Inquiries
     [NotMapped]
     public class InquiryStatisticsByDate
     {
-        [DataMember(Name= "AllTime", EmitDefaultValue=false)]
+        [DataMember]
         public int AllTime { get; set; }
 
-        [DataMember(Name= "ThisYear", EmitDefaultValue=false)]
+        [DataMember]
         public int ThisYear { get; set; }
 
-        [DataMember(Name= "ThisMonth", EmitDefaultValue=false)]
+        [DataMember]
         public int ThisMonth { get; set; }
 
-        [DataMember(Name= "ThisWeek", EmitDefaultValue=false)]
+        [DataMember]
         public int ThisWeek { get; set; }
 
-        [DataMember(Name= "Today", EmitDefaultValue=false)]
+        //[DataMember(Name= "Today", EmitDefaultValue=false)]
+        [DataMember]
         public int Today { get; set; }
 
-        [DataMember(Name= "SpecifiedDay", EmitDefaultValue=false)]
+        [DataMember]
         public int SpecifiedDay { get; set; }
 
-        [DataMember(Name= "ThisQuarter", EmitDefaultValue=false)]
+        [DataMember]
         public int ThisQuarter { get; set; }
 
-        [DataMember(Name= "RangeDay", EmitDefaultValue=false)]
+        [DataMember]
         public int RangeDay { get; set; }
     }
 }
