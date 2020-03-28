@@ -15,6 +15,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
+using DataReef.Auth.Helpers;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -97,6 +98,41 @@ namespace DataReef.TM.Api.Controllers
         public IHttpActionResult CreateNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
         {
             var result = _propertyNoteService.AddNoteFromSmartboard(request, apiKey);
+
+            return Ok(result);
+        }
+
+
+
+
+        public class testmodel
+        {
+            public string OriginalApiKey { get; set; }
+            public string EncryptedApiKey { get; set; }
+            public string EncryptTextOfOriginalApiKey { get; set; }
+            public string DecyptTextOfEncryptedApiKey { get; set; }
+           
+        }
+        /// <summary>
+        /// Check Apikey Encryption and Decryption
+        /// </summary>
+        /// <param name="originalapikey"></param>
+        /// <param name="Encryptedapikey"></param>
+        /// <returns></returns>
+        [Route("EncryptApikey/{originalapikey}/{Encryptedapikey}")]
+        [HttpGet]
+        public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey, string Encryptedapikey)
+        {
+            string EncryptApiKey = CryptographyHelper.EncryptAPI(originalapikey);
+           // string DecyptvalueofEncryptkey = CryptographyHelper.DecryptApiKey(EncryptApiKey);
+            string DecyptApiKey = CryptographyHelper.DecryptApiKey(Encryptedapikey);
+            var result = new testmodel
+            {
+                OriginalApiKey = originalapikey,
+                EncryptedApiKey = Encryptedapikey,
+                EncryptTextOfOriginalApiKey = EncryptApiKey,
+                DecyptTextOfEncryptedApiKey = DecyptApiKey
+            };
 
             return Ok(result);
         }
