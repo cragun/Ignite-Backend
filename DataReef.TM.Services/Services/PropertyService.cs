@@ -974,13 +974,13 @@ namespace DataReef.TM.Services.Services
             // get geo properties
             var newProperties = new List<Property>();
 
-            var geoProperties = _geographyBridgeFactory().GetPropertiesForWellKnownText(territory.WellKnownText, 5000).ToList();
+            var geoProperties = _geographyBridgeFactory().GetPropertiesForWellKnownText(territory.WellKnownText, 10000).ToList();
 
-                var commonProperties = geoProperties.Where(gp => territoryProperties.Any(p => gp.Id.Equals(p.ExternalID, StringComparison.InvariantCultureIgnoreCase))).ToList();
-                geoProperties = geoProperties.Except(commonProperties).ToList();
-                newProperties = geoProperties.Select(p => p.ToCoreProperty(territoryid)).ToList();
+            var commonProperties = geoProperties.Where(gp => territoryProperties.Any(p => gp.Id.Equals(p.ExternalID, StringComparison.InvariantCultureIgnoreCase))).ToList();
+            geoProperties = geoProperties.Except(commonProperties).ToList();
+            newProperties = geoProperties.Select(p => p.ToCoreProperty(territoryid)).ToList();
 
-            var propertieslist = territoryProperties.Union(newProperties).Where(x => x.Name.Contains(searchvalue) || x.Address1.Contains(searchvalue)).ToList();
+            var propertieslist = territoryProperties.Union(newProperties).Where(x => x.Name.ToLowerInvariant().Contains(searchvalue.ToLowerInvariant()) || x.Address1.ToLowerInvariant().Contains(searchvalue.ToLowerInvariant())).ToList();
             return propertieslist;
         }
 
