@@ -10,7 +10,7 @@ namespace DataReef.TM.Mail
 {
     public class Library
     {
-        private static string _senderEmail = ConfigurationManager.AppSettings["SenderEmail"] ?? "donotreply@smartboardcrm.com";
+        private static string _senderEmail = ConfigurationManager.AppSettings["SenderEmail"] ?? "support@smartboardcrm.com";
         public static string SenderName = ConfigurationManager.AppSettings["Email.SenderName"] ?? "Ingite App";
 
         public static void SendOUAssoicationConfirmationToAdmin(string toPersonName, string toPersonEmail, string fromPersonName, string ouName)

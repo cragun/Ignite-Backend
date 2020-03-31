@@ -47,6 +47,19 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        [Route("getpropertiesSearch/{territoryid}")]
+        public IHttpActionResult GetPropertiesSearch(Guid territoryid, string searchvalue)
+        {
+            if (string.IsNullOrEmpty(searchvalue))
+                return BadRequest($"Invalid searchvalue.");
+
+            var response = _propertyServiceFactory().GetPropertiesSearch(territoryid, searchvalue);
+
+            return Ok(response);
+        }
+
+
         [HttpGet]
         [Route("sync/{propertyID:guid}")]
         public IHttpActionResult SyncProperty(Guid propertyID, string include = "")

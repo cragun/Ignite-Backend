@@ -35,6 +35,10 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         ICollection<Property> GetProperties(GetPropertiesRequest propertiesRequest);
 
+
+        [OperationContract]
+        ICollection<Property> GetPropertiesSearch(Guid territoryid, string searchvalue);
+
         [OperationContract]
         void SyncPrescreenBatchPropertiesAttributes(Guid prescreenBatchId);
 
