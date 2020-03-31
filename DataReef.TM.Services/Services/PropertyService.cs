@@ -980,7 +980,8 @@ namespace DataReef.TM.Services.Services
                 geoProperties = geoProperties.Except(commonProperties).ToList();
                 newProperties = geoProperties.Select(p => p.ToCoreProperty(territoryid)).ToList();
 
-            return territoryProperties.Union(newProperties).ToList();
+            var propertieslist = territoryProperties.Union(newProperties).Where(x => x.Name.Contains(searchvalue) || x.Address1.Contains(searchvalue)).ToList();
+            return propertieslist;
         }
 
         public void SyncPrescreenBatchPropertiesAttributes(Guid prescreenBatchId)
