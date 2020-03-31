@@ -955,6 +955,34 @@ namespace DataReef.TM.Services.Services
                 : newProperties;
         }
 
+
+        public ICollection<Property> GetPropertiesSearch(Guid territoryid, string searchvalue)
+        {
+            // return new List<Property>();
+            var territoryProperties = List(itemsPerPage: int.MaxValue, filter: $"TerritoryID={territoryid}", include: string.Empty).ToList();
+
+            if (territoryProperties?.Any() == true)
+            {
+                territoryProperties.ForEach(x =>
+                {
+                    x.PropertyNotesCount = x.PropertyNotes?.Where(p => !p.IsDeleted)?.Count();
+                });
+            }
+
+            var territory = UnitOfWorkFactory().Get<Territory>().FirstOrDefault(t => t.Guid == territoryid);
+
+            // get geo properties
+            var newProperties = new List<Property>();
+
+            var geoProperties = _geographyBridgeFactory().GetPropertiesForWellKnownText(territory.WellKnownText, 5000).ToList();
+
+                var commonProperties = geoProperties.Where(gp => territoryProperties.Any(p => gp.Id.Equals(p.ExternalID, StringComparison.InvariantCultureIgnoreCase))).ToList();
+                geoProperties = geoProperties.Except(commonProperties).ToList();
+                newProperties = geoProperties.Select(p => p.ToCoreProperty(territoryid)).ToList();
+
+            return territoryProperties.Union(newProperties).ToList();
+        }
+
         public void SyncPrescreenBatchPropertiesAttributes(Guid prescreenBatchId)
         {
             if (prescreenBatchId == Guid.Empty) throw new ArgumentException(nameof(prescreenBatchId));
