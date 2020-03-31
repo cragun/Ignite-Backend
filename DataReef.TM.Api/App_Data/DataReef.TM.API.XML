@@ -377,6 +377,14 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckEncryptDecryptApikey(System.String,System.String)">
+            <summary>
+            Check Apikey Encryption and Decryption
+            </summary>
+            <param name="originalapikey"></param>
+            <param name="Encryptedapikey"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.EditNoteFromSmartboard(DataReef.TM.Models.DTOs.SBNoteDTO,System.String)">
             <summary>
             edits a note from smartboard
