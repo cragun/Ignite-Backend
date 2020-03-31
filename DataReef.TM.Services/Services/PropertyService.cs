@@ -974,7 +974,7 @@ namespace DataReef.TM.Services.Services
             // get geo properties
             var newProperties = new List<Property>();
 
-            var geoProperties = _geographyBridgeFactory().GetPropertiesForWellKnownText(territory.WellKnownText, 10000).ToList();
+            var geoProperties = _geographyBridgeFactory().GetPropertiesForWellKnownText(territory.WellKnownText, 5000).ToList();
 
             var commonProperties = geoProperties.Where(gp => territoryProperties.Any(p => gp.Id.Equals(p.ExternalID, StringComparison.InvariantCultureIgnoreCase))).ToList();
             geoProperties = geoProperties.Except(commonProperties).ToList();
