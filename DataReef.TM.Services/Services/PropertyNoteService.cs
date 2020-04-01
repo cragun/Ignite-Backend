@@ -654,7 +654,38 @@ namespace DataReef.TM.Services.Services
 
         }
 
+        public string getApiKey(long? smartboardLeadID, long? igniteID, string apiKey)
+        {
 
+            using (var dc = new DataContext())
+            {
+                if (!smartboardLeadID.HasValue)
+                {
+                    return null;
+                }
+                //first get the property
+                var property = dc.Properties
+                    .Include(x => x.Territory)
+                    .Include(x => x.PropertyNotes)
+                    .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
+
+                if (property == null)
+                {
+                    throw new Exception("No lead found with the specified ID(s)");
+                }
+                property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
+                //validate the token
+                var sbSettings = _ouSettingService
+                                    .Value
+                                    .GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(property.Guid, SolarTrackerResources.SelectedSettingName)?
+                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                    .Data?
+                                    .SMARTBoard;
+
+                return sbSettings?.ApiKey;
+            }
+
+        }
 
         public IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey)
         {

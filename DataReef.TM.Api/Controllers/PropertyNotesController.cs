@@ -67,7 +67,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
         /// <summary>
-        /// / Gets the notes linked to the specified smartboard lead Id
+        /// Gets the notes linked to the specified smartboard lead Id
         /// </summary>
         /// <param name="leadId"></param>
         /// <param name="apiKey"></param>
@@ -84,6 +84,39 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+        public class testmodelforapi
+        {
+            public string ApiKey { get; set; }
+            public long SBLeadId { get; set; }
+            public long IgniteId { get; set; }
+
+        }
+        /// <summary>
+        /// Gets apikey
+        /// </summary>
+        /// <param name="leadId"></param>
+        /// <param name="apiKey"></param>
+        /// <param name="igniteId"></param>
+        /// <returns></returns>
+        [Route("SendApikey/{leadId}/{apiKey}")]
+        [ResponseType(typeof(ICollection<SBNoteDTO>))]
+        [HttpGet]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult GetApikey(long leadId, string apiKey, long igniteId)
+        {
+
+            string apikey = _propertyNoteService.getApiKey(leadId, igniteId, apiKey);
+
+            var result = new testmodelforapi
+            {
+                ApiKey = apikey,
+                SBLeadId = leadId,
+                IgniteId = igniteId
+            };
+
+
+            return Ok(result);
+        }
 
         /// <summary>
         /// creates a new note from smartboard
