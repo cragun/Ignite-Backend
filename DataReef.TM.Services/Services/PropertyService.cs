@@ -201,7 +201,14 @@ namespace DataReef.TM.Services.Services
             {
                 try
                 {
-                    _sbAdapter.Value.SubmitLead(entity.Guid);
+                    var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+
+                    if (response.Message.Type.Equals("error"))
+                    {
+
+                        throw new Exception(response.Message.Text);
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -408,7 +415,15 @@ namespace DataReef.TM.Services.Services
                         {
                              try
                                 {
-                                    _sbAdapter.Value.SubmitLead(entity.Guid);
+                                var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+
+                                if (response.Message.Type.Equals("error"))
+                                {
+
+                                    throw new Exception(response.Message.Text);
+                                }
+
+                            
                                 }
                                 catch (Exception ex)
                                 {
@@ -976,11 +991,12 @@ namespace DataReef.TM.Services.Services
 
             var geoProperties = _geographyBridgeFactory().GetPropertiesForWellKnownText(territory.WellKnownText, 5000).ToList();
 
-                var commonProperties = geoProperties.Where(gp => territoryProperties.Any(p => gp.Id.Equals(p.ExternalID, StringComparison.InvariantCultureIgnoreCase))).ToList();
-                geoProperties = geoProperties.Except(commonProperties).ToList();
-                newProperties = geoProperties.Select(p => p.ToCoreProperty(territoryid)).ToList();
+            var commonProperties = geoProperties.Where(gp => territoryProperties.Any(p => gp.Id.Equals(p.ExternalID, StringComparison.InvariantCultureIgnoreCase))).ToList();
+            geoProperties = geoProperties.Except(commonProperties).ToList();
+            newProperties = geoProperties.Select(p => p.ToCoreProperty(territoryid)).ToList();
 
-            return territoryProperties.Union(newProperties).ToList();
+            var propertieslist = territoryProperties.Union(newProperties).Where(x => x.Name.ToLowerInvariant().Contains(searchvalue.ToLowerInvariant()) || x.Address1.ToLowerInvariant().Contains(searchvalue.ToLowerInvariant())).ToList();
+            return propertieslist;
         }
 
         public void SyncPrescreenBatchPropertiesAttributes(Guid prescreenBatchId)

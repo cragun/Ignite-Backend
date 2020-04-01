@@ -47,7 +47,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("getpropertiesSearch/{territoryid}")]
         public IHttpActionResult GetPropertiesSearch(Guid territoryid, string searchvalue)
         {
