@@ -17,6 +17,9 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<PropertyNote> GetNotesByPropertyID(Guid propertyID);
 
         [OperationContract]
+        string getApiKey(long? smartboardLeadID, long? igniteID, string apiKey);
+
+        [OperationContract]
         IEnumerable<SBNoteDTO> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey);
 
         [OperationContract]
