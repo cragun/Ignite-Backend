@@ -232,7 +232,8 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 {
                     var smarterIncentivesTotal = smarterIncentives.Sum(i => i.GetGrandTotal(smarterRequest.SystemSize));
                     // for cash ee use the Smart Amount to finance as NetCost.
-                    proposal.ForecastScenario.NetCost = stdRequest.GrossSystemCostWithTaxAndDealerFee - stdRequest.FederalTaxIncentive - smarterIncentivesTotal;
+                  //  #133 old formulla - 02-04-2020  proposal.ForecastScenario.NetCost = stdRequest.GrossSystemCostWithTaxAndDealerFee - stdRequest.FederalTaxIncentive - smarterIncentivesTotal;
+                    proposal.ForecastScenario.NetCost = stdRequest.GrossSystemCostWithAddersTaxAndDealearFee - stdRequest.FederalTaxIncentive - smarterIncentivesTotal;
                 }
                 else
                 {
