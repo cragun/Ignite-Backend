@@ -203,11 +203,11 @@ namespace DataReef.TM.Services.Services
                 {
                     var response = _sbAdapter.Value.SubmitLead(entity.Guid);
 
-                    //if (response.Message.Type.Equals("error"))
-                    //{
+                    if (response.Message.Type.Equals("error"))
+                    {
 
-                    //    throw new Exception(response.Message.Text);
-                    //}
+                        throw new Exception(response.Message.Text);
+                    }
 
                 }
                 catch (Exception ex)
@@ -417,14 +417,14 @@ namespace DataReef.TM.Services.Services
                                 {
                                 var response = _sbAdapter.Value.SubmitLead(entity.Guid);
 
-                                //if (response.Message.Type.Equals("error"))
-                                //{
+                                if (response.Message.Type.Equals("error"))
+                                {
 
-                                //    throw new Exception(response.Message.Text);
-                                //}
-
-                            
+                                    throw new Exception(response.Message.Text);
                                 }
+
+
+                            }
                                 catch (Exception ex)
                                 {
                                     logger.Error("Error submitting SB lead!", ex);
