@@ -152,6 +152,9 @@ namespace DataReef.TM.Services.Services
 
         public override Property Insert(Property entity)
         {
+
+            Property ret = null;
+
             entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
             // IX_UniqueProperty requires unique TerritoryId & External Id pair.
@@ -160,6 +163,11 @@ namespace DataReef.TM.Services.Services
             {
                 using (var dataContext = new DataContext())
                 {
+
+                    ret = base.Update(entity, dataContext);
+                    if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
+                   
+
                     var existingProp = dataContext
                                         .Properties
                                         .FirstOrDefault(p => p.TerritoryID == entity.TerritoryID
@@ -203,12 +211,10 @@ namespace DataReef.TM.Services.Services
                 {
                     var response = _sbAdapter.Value.SubmitLead(entity.Guid);
 
-                    if (response.Message.Type.Equals("error"))
+                    if (response != null && response.Message.Type.Equals("error"))
                     {
-
-                        throw new Exception(response.Message.Text);
+                        ret.SBLeadError = response.Message.Text;
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -409,8 +415,8 @@ namespace DataReef.TM.Services.Services
 
                         
 
-                        //if (needToUpdateSB && !pushedToSB)
-                        //{
+                        if (needToUpdateSB && !pushedToSB)
+                        {
                              try
                                 {
                                 var response = _sbAdapter.Value.SubmitLead(entity.Guid);
@@ -423,10 +429,8 @@ namespace DataReef.TM.Services.Services
                                 catch (Exception ex)
                                 {
                                     logger.Error("Error submitting SB lead!", ex);
-                                }
-
-                            
-                        //}
+                                }                            
+                        }
 
                         
                     }
