@@ -411,8 +411,8 @@ namespace DataReef.TM.Services.Services
 
                         
 
-                        if (needToUpdateSB && !pushedToSB)
-                        {
+                        //if (needToUpdateSB && !pushedToSB)
+                        //{
                              try
                                 {
                                 var response = _sbAdapter.Value.SubmitLead(entity.Guid);
@@ -431,7 +431,7 @@ namespace DataReef.TM.Services.Services
                                 }
 
                             
-                        }
+                        //}
 
                         
                     }
