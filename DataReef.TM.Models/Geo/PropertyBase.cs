@@ -17,6 +17,10 @@ namespace DataReef.TM.Models.Geo
         #region Properties
 
 
+        [DataMember]
+        [NotMapped]
+        public string SBLeadError { get; set; }
+
         [DataMember(EmitDefaultValue = false)]
         public double? Latitude { get; set; }
 
@@ -175,12 +179,14 @@ namespace DataReef.TM.Models.Geo
         }
     }
 
+
+    
+
+
     [DataContract]
     [NotMapped]
     public class PropertySaveResultPayload
     {
-
-
         [DataMember]
         public Guid? AppointmentID { get; set; }
 

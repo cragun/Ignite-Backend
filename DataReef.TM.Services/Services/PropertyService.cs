@@ -282,8 +282,6 @@ namespace DataReef.TM.Services.Services
 
         public override Property Update(Property entity)
         {
-
-          
             Property ret = null;
             Appointment appointmentBefore = null;
             using(var dc = new DataContext())
@@ -416,15 +414,12 @@ namespace DataReef.TM.Services.Services
                              try
                                 {
                                 var response = _sbAdapter.Value.SubmitLead(entity.Guid);
-
-                                if (response.Message.Type.Equals("error"))
-                                {
-
-                                    throw new Exception(response.Message.Text);
-                                }
-
-
-                            }
+                          
+                                     if (response != null && response.Message.Type.Equals("error"))
+                                           {
+                                               ret.SBLeadError = response.Message.Text;
+                                           }
+                                 }
                                 catch (Exception ex)
                                 {
                                     logger.Error("Error submitting SB lead!", ex);
