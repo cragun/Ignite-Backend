@@ -289,6 +289,7 @@ namespace DataReef.TM.Services.Services
         public override Property Update(Property entity)
         {
             Property ret = null;
+            
             Appointment appointmentBefore = null;
             using(var dc = new DataContext())
             {
@@ -358,7 +359,7 @@ namespace DataReef.TM.Services.Services
 
                         ret = base.Update(entity, dataContext);
                         if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
-
+                        ret.SBLeadError = "";
                         UpdateNavigationProperties(entity, dataContext: dataContext);
 
                         //update territory date modified because a new property was added
@@ -415,8 +416,8 @@ namespace DataReef.TM.Services.Services
 
                         
 
-                        if (needToUpdateSB && !pushedToSB)
-                        {
+                       // if (needToUpdateSB && !pushedToSB)
+                       // {
                              try
                                 {
                                 var response = _sbAdapter.Value.SubmitLead(entity.Guid);
@@ -430,7 +431,7 @@ namespace DataReef.TM.Services.Services
                                 {
                                     logger.Error("Error submitting SB lead!", ex);
                                 }                            
-                        }
+//}
 
                         
                     }

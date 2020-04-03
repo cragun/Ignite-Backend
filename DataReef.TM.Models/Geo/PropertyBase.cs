@@ -19,6 +19,7 @@ namespace DataReef.TM.Models.Geo
 
         [DataMember]
         [NotMapped]
+        //[StringLength(200)]
         public string SBLeadError { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
