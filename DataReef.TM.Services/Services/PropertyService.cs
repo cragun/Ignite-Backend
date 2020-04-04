@@ -213,7 +213,7 @@ namespace DataReef.TM.Services.Services
 
                     if (response != null && response.Message.Type.Equals("error"))
                     {
-                        ret.SBLeadError = response.Message.Text;
+                        ret.SBLeadError = response.Message.Text + ", This Property will not save in the SmartBoard.";
                     }
                 }
                 catch (Exception ex)
