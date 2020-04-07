@@ -289,6 +289,24 @@ namespace DataReef.TM.Services.Services
 
                 var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
 
+                ApiLogEntry apilog = new ApiLogEntry
+                {
+                    Id = Guid.NewGuid(),
+                    RequestMethod = "checksbuserid",
+                    RequestTimestamp = DateTime.UtcNow,
+                    User = "",
+                    Machine =  "",
+                    RequestContentType =  "",
+                    RequestRouteTemplate =  "",
+                    RequestRouteData =  "",
+                    RequestIpAddress =  "",
+                    RequestHeaders =  "",
+                    RequestUri =  "",
+                    RequestContentBody = SmartPrincipal.UserId != null ? SmartPrincipal.UserId.ToString() : ""
+                };
+
+                _apiLoggingService.LogToDatabase(apilog);
+
 
                 return property.PropertyNotes?.Select(x => new SBNoteDTO
                 {
@@ -319,7 +337,8 @@ namespace DataReef.TM.Services.Services
                 RequestRouteData = noteRequest.Content != null ? noteRequest.Content.ToString() : "",
                 RequestIpAddress = noteRequest.UserID != null ? noteRequest.UserID.ToString() : "",
                 RequestHeaders = noteRequest.Email != null ? noteRequest.Email.ToString() : "",
-                RequestUri = noteRequest.DateCreated != null ? noteRequest.DateCreated.ToString() : ""
+                RequestUri = noteRequest.DateCreated != null ? noteRequest.DateCreated.ToString() : "",
+                RequestContentBody = SmartPrincipal.UserId != null ? SmartPrincipal.UserId.ToString() : ""
             };
 
             _apiLoggingService.LogToDatabase(apilog);
@@ -356,7 +375,6 @@ namespace DataReef.TM.Services.Services
                 };
 
                 dc.PropertyNotes.Add(note);
-
                 dc.SaveChanges();
 
                 //send notifications to the tagged users
@@ -368,7 +386,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                       // SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
