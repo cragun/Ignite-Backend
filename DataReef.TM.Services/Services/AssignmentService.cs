@@ -20,7 +20,7 @@ namespace DataReef.TM.Services
     {
         //private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "noreply@datareef.com";
         private string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmail"] ?? "support@smartboardcrm.com";
-        
+
         private readonly ILogger _logger;
 
         public AssignmentService(ILogger logger, Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
@@ -30,12 +30,12 @@ namespace DataReef.TM.Services
 
         public override Assignment Insert(Assignment ass)
         {
-            bool IsFromSmartBoard = false;
-            if (ass.Notes == "FromSmartBoard")
-            {
-                IsFromSmartBoard = true;
-                ass.Notes = null;
-            }
+            //bool IsFromSmartBoard = false;
+            //if (ass.Notes == "FromSmartBoard")
+            //{
+            //    IsFromSmartBoard = true;
+            //    ass.Notes = null;
+            //}
             Assignment existingAssignment;
             // I saw lots of duplicate assignments, and I added a validation
             using (var dataContext = new DataContext())
@@ -57,8 +57,8 @@ namespace DataReef.TM.Services
             }
 
             Assignment ret = existingAssignment ?? base.Insert(ass);
-            
-            if (IsFromSmartBoard == false)
+
+            if (ass.Notes != "FromNotes")
             {
                 this.SendTerritoryAssignmentNotification(new Assignment[] { ret });
             }
@@ -90,36 +90,39 @@ namespace DataReef.TM.Services
 
                     foreach (var assignmentItem in assignments)
                     {
-                        bool userIsSelfAssigned = assignmentItem.CreatedByID.HasValue && (assignmentItem.CreatedByID.Value == assignmentItem.PersonID);
-                        if (!userIsSelfAssigned)
+                        if (assignmentItem.Notes != "FromNotes")
                         {
-                            Territory territory = assignmentItem.Territory;
-                            if ((territory == null) && (assignmentItem.TerritoryID != Guid.Empty))
+                            bool userIsSelfAssigned = assignmentItem.CreatedByID.HasValue && (assignmentItem.CreatedByID.Value == assignmentItem.PersonID);
+                            if (!userIsSelfAssigned)
                             {
-                                territory = dataContext.Territories.FirstOrDefault(t => t.Guid.Equals(assignmentItem.TerritoryID));
-                            }
+                                Territory territory = assignmentItem.Territory;
+                                if ((territory == null) && (assignmentItem.TerritoryID != Guid.Empty))
+                                {
+                                    territory = dataContext.Territories.FirstOrDefault(t => t.Guid.Equals(assignmentItem.TerritoryID));
+                                }
 
-                            Person person = assignmentItem.Person;
-                            if ((person == null) && (assignmentItem.PersonID != Guid.Empty))
-                            {
-                                person = dataContext.People.FirstOrDefault(p => p.Guid.Equals(assignmentItem.PersonID));
-                            }
+                                Person person = assignmentItem.Person;
+                                if ((person == null) && (assignmentItem.PersonID != Guid.Empty))
+                                {
+                                    person = dataContext.People.FirstOrDefault(p => p.Guid.Equals(assignmentItem.PersonID));
+                                }
 
-                            if ((territory != null) && (person != null))
-                            {
-                                string emailAddress = person.EmailAddressString;
+                                if ((territory != null) && (person != null))
+                                {
+                                    string emailAddress = person.EmailAddressString;
 
-                                Mail.Library.SendTerritoryAssignmentNotification(
-                                    template: new Classes.TerritoryAssignmentNotificationTemplate()
-                                    {
-                                        TerritoryName = territory.Name,
-                                        PropertyCount = territory.Summary != null ? territory.Summary.PropertyCount : 0,
-                                        TerritoryLink = string.Format("datareef-tm://territory?guid={0}", territory.Guid)
-                                    },
-                                    from: senderEmailAddress,
-                                    fromName: Mail.Library.SenderName,
-                                    subject: "New Territory Assigned",
-                                    toPersonEmail: emailAddress);
+                                    Mail.Library.SendTerritoryAssignmentNotification(
+                                        template: new Classes.TerritoryAssignmentNotificationTemplate()
+                                        {
+                                            TerritoryName = territory.Name,
+                                            PropertyCount = territory.Summary != null ? territory.Summary.PropertyCount : 0,
+                                            TerritoryLink = string.Format("datareef-tm://territory?guid={0}", territory.Guid)
+                                        },
+                                        from: senderEmailAddress,
+                                        fromName: Mail.Library.SenderName,
+                                        subject: "New Territory Assigned",
+                                        toPersonEmail: emailAddress);
+                                }
                             }
                         }
                     }

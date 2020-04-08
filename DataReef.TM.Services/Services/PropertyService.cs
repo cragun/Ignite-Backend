@@ -166,7 +166,7 @@ namespace DataReef.TM.Services.Services
 
                     ret = base.Update(entity, dataContext);
                     if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
-                   
+
 
                     var existingProp = dataContext
                                         .Properties
@@ -201,7 +201,7 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
-
+            prop.SBLeadError = "";
 
             //send new lead to SMARTBOARD
             if (entity.LatestDisposition.Equals("DoorKnocked") || entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null)
@@ -213,7 +213,7 @@ namespace DataReef.TM.Services.Services
 
                     if (response != null && response.Message.Type.Equals("error"))
                     {
-                        ret.SBLeadError = response.Message.Text + ", This Property will not save in the SmartBoard.";
+                        prop.SBLeadError = response.Message.Text + ", This Property will not save in the SmartBoard.";
                     }
                 }
                 catch (Exception ex)
@@ -289,9 +289,9 @@ namespace DataReef.TM.Services.Services
         public override Property Update(Property entity)
         {
             Property ret = null;
-            
+
             Appointment appointmentBefore = null;
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 appointmentBefore = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
             }
@@ -390,7 +390,7 @@ namespace DataReef.TM.Services.Services
                                                 .Where(inq => inq.IsNew == true)?
                                                 .ToList();
 
-                        
+
                         var pushedToSB = false;
                         if (newInquiries?.Any() == true)
                         {
@@ -414,26 +414,22 @@ namespace DataReef.TM.Services.Services
                             _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
                         });
 
-                        
-
-                       // if (needToUpdateSB && !pushedToSB)
-                       // {
-                             try
-                                {
+                        if (needToUpdateSB && !pushedToSB)
+                        {
+                            try
+                            {
                                 var response = _sbAdapter.Value.SubmitLead(entity.Guid);
-                          
-                                     if (response != null && response.Message.Type.Equals("error"))
-                                           {
-                                               ret.SBLeadError = response.Message.Text+", This Property will not save in the SmartBoard.";
-                                           }
-                                 }
-                                catch (Exception ex)
-                                {
-                                    logger.Error("Error submitting SB lead!", ex);
-                                }                            
-//}
 
-                        
+                                if (response != null && response.Message.Type.Equals("error"))
+                                {
+                                    ret.SBLeadError = response.Message.Text + ", This Property will not save in the SmartBoard.";
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.Error("Error submitting SB lead!", ex);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -447,7 +443,7 @@ namespace DataReef.TM.Services.Services
                     using (var dc = new DataContext())
                     {
                         var appointmentAfter = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
-                        if(appointmentBefore != null && appointmentAfter != null)
+                        if (appointmentBefore != null && appointmentAfter != null)
                         {
                             //check if the appointment was cancelled while processing the inquiries
                             if (appointmentBefore.Status != appointmentAfter.Status && appointmentAfter.Status == AppointmentStatus.Cancelled)
@@ -1310,7 +1306,7 @@ namespace DataReef.TM.Services.Services
         public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
         {
             using (var dc = new DataContext())
-            {                
+            {
                 //first get the property
                 var property = dc.Properties.Include(x => x.Occupants)
                                             .Include(x => x.PropertyBag)
@@ -1330,22 +1326,22 @@ namespace DataReef.TM.Services.Services
                 }
 
                 if (Request.DispositionTypeId != property.DispositionTypeId)
-                {                    
+                {
                     var dispSettings = _ouSettingService.Value.GetSettingsByPropertyID(property.Guid)?.Where(s => s.Name == OUSetting.NewDispositions)?.ToList();
-                    var dispositions = dispSettings?.SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?.ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault(); 
+                    var dispositions = dispSettings?.SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?.ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault();
 
                     property.DispositionTypeId = dispositions != null ? Request.DispositionTypeId : property.DispositionTypeId;
-                    property.LatestDisposition = dispositions != null? dispositions.Name : property.LatestDisposition;
+                    property.LatestDisposition = dispositions != null ? dispositions.Name : property.LatestDisposition;
                     property.Updated(user.Guid);
                     dc.SaveChanges();
 
-                  
+
                     var inquiry = new Inquiry
                     {
                         Guid = Guid.NewGuid(),
                         PropertyID = property.Guid,
                         PersonID = user.Guid,
-                        Notes = "Sales Rap(SB): " + user.Name ,
+                        Notes = "Sales Rap(SB): " + user.Name,
                         Lat = property.Latitude,
                         Lon = property.Longitude,
                         Name = property.LatestDisposition,
@@ -1363,19 +1359,19 @@ namespace DataReef.TM.Services.Services
                 var mainOccupant = property.GetMainOccupant();
                 if (mainOccupant != null)
                 {
-                    if(mainOccupant.FirstName == Request.ExistFirstName && mainOccupant.LastName == Request.ExistLastName && mainOccupant.Guid != null)
+                    if (mainOccupant.FirstName == Request.ExistFirstName && mainOccupant.LastName == Request.ExistLastName && mainOccupant.Guid != null)
                     {
 
                         using (var dataContext = new DataContext())
                         {
-                           var occupant =  dataContext.Occupants.Where(x => x.Guid == mainOccupant.Guid).FirstOrDefault();
+                            var occupant = dataContext.Occupants.Where(x => x.Guid == mainOccupant.Guid).FirstOrDefault();
                             occupant.FirstName = Request.NewFirstName;
                             occupant.LastName = Request.NewLastName;
                             dataContext.SaveChanges();
                         }
 
-                            //update new fname - lname into occupant and Property 
-                            if (property?.PropertyBag?.FirstOrDefault(f => f.DisplayName == "Email Address")?.Value == Request.ExistEmailAddress)
+                        //update new fname - lname into occupant and Property 
+                        if (property?.PropertyBag?.FirstOrDefault(f => f.DisplayName == "Email Address")?.Value == Request.ExistEmailAddress)
                         {
                             using (var dataContext = new DataContext())
                             {
@@ -1385,7 +1381,7 @@ namespace DataReef.TM.Services.Services
                                 dataContext.SaveChanges();
                             }
                         }
-                       
+
                         property.Name = $"{Request.NewFirstName} {mainOccupant.MiddleInitial} {Request.NewLastName}".Replace("  ", " ");
                         property.DateLastModified = DateTime.UtcNow;
                         dc.SaveChanges();
@@ -1393,12 +1389,12 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
-                
+
                 using (var data = new DataContext())
                 {
-                     property = data.Properties.Include(x => x.Occupants).Include(x => x.PropertyBag).FirstOrDefault(x => x.Id == igniteID);
+                    property = data.Properties.Include(x => x.Occupants).Include(x => x.PropertyBag).FirstOrDefault(x => x.Id == igniteID);
                 }
-               // Update(Latestproperty);
+                // Update(Latestproperty);
 
 
                 return new SBPropertyDTO(property);

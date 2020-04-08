@@ -832,7 +832,7 @@ namespace DataReef.TM.Services.Services
                                 PersonID = person.Guid,
                                 TerritoryID = property.TerritoryID,
                                 Status = AssignmentStatus.Open,
-                                Notes = (IsFromSmartBoard == true) ? "FromSmartBoard" : null                                
+                                Notes = (IsFromSmartBoard == true) ? "FromNotes" : null                                
                             });
                         }
                     }
