@@ -103,7 +103,7 @@ namespace DataReef.TM.Services.Services
                     {
                         var emails = taggedPersons?.Select(x => x.EmailAddressString);
                         var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
+                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
                         if (emails?.Any() == true)
                         {
                             SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
@@ -133,7 +133,7 @@ namespace DataReef.TM.Services.Services
                     {
                         var emails = taggedPersons?.Select(x => x.EmailAddressString);
                         var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
+                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
                         if (emails?.Any() == true)
                         {
                             SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
@@ -167,7 +167,7 @@ namespace DataReef.TM.Services.Services
                         {
                             var emails = taggedPersons?.Select(x => x.EmailAddressString);
                             var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
+                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
                             if (emails?.Any() == true)
                             {
                                 SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
@@ -229,7 +229,7 @@ namespace DataReef.TM.Services.Services
                     {
                         var emails = taggedPersons?.Select(x => x.EmailAddressString);
                         var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
+                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
                         if (emails?.Any() == true)
                         {
                             SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
@@ -263,7 +263,7 @@ namespace DataReef.TM.Services.Services
                         {
                             var emails = taggedPersons?.Select(x => x.EmailAddressString);
                             var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, false);
+                            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
                             if (emails?.Any() == true)
                             {
                                 SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
@@ -319,7 +319,8 @@ namespace DataReef.TM.Services.Services
                 RequestRouteData = noteRequest.Content != null ? noteRequest.Content.ToString() : "",
                 RequestIpAddress = noteRequest.UserID != null ? noteRequest.UserID.ToString() : "",
                 RequestHeaders = noteRequest.Email != null ? noteRequest.Email.ToString() : "",
-                RequestUri = noteRequest.DateCreated != null ? noteRequest.DateCreated.ToString() : ""
+                RequestUri = noteRequest.DateCreated != null ? noteRequest.DateCreated.ToString() : "",
+                RequestContentBody = SmartPrincipal.UserId != null ? SmartPrincipal.UserId.ToString() : ""
             };
 
             _apiLoggingService.LogToDatabase(apilog);
@@ -356,7 +357,6 @@ namespace DataReef.TM.Services.Services
                 };
 
                 dc.PropertyNotes.Add(note);
-
                 dc.SaveChanges();
 
                 //send notifications to the tagged users
@@ -365,7 +365,7 @@ namespace DataReef.TM.Services.Services
                 {
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true , user.Guid);
                     if (emails?.Any() == true)
                     {
                         SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
@@ -442,7 +442,7 @@ namespace DataReef.TM.Services.Services
                 {
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
                     if (emails?.Any() == true)
                     {
                         SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
@@ -781,7 +781,7 @@ namespace DataReef.TM.Services.Services
             });
         }
 
-        private void VerifyUserAssignmentsAndInvite(IEnumerable<Guid> userIds, Property property, bool IsFromSmartBoard)
+        private void VerifyUserAssignmentsAndInvite(IEnumerable<Guid> userIds, Property property, bool IsFromSmartBoard, Guid? sbuserid)
         {
             if (userIds?.Any() != true)
             {
@@ -814,13 +814,13 @@ namespace DataReef.TM.Services.Services
                                 //user is not associated with the OU. send an invitation
                                 var invite = new UserInvitation
                                 {
-                                    FromPersonID = SmartPrincipal.UserId,
+                                    FromPersonID = sbuserid != null ? sbuserid.Value : SmartPrincipal.UserId,
                                     EmailAddress = person.EmailAddressString,
                                     FirstName = person.FirstName,
                                     LastName = person.LastName,
                                     OUID = property.Territory.OUID,
                                     RoleID = OURole.MemberRoleID,
-                                    CreatedByID = SmartPrincipal.UserId,
+                                    CreatedByID = sbuserid != null ? sbuserid : SmartPrincipal.UserId
                                 };
                                 _userInvitationService.Value.Insert(invite);
                             }
@@ -832,7 +832,7 @@ namespace DataReef.TM.Services.Services
                                 PersonID = person.Guid,
                                 TerritoryID = property.TerritoryID,
                                 Status = AssignmentStatus.Open,
-                                Notes = (IsFromSmartBoard == true) ? "FromSmartBoard" : null                                
+                                Notes = (IsFromSmartBoard == true) ? "FromNotes" : null                                
                             });
                         }
                     }

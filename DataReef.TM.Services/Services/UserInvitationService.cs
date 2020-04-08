@@ -53,12 +53,12 @@ namespace DataReef.TM.Services
                     }
                 }
             }
-            return userInvitations; 
+            return userInvitations;
         }
 
         public UserInvitation SilentInsertFromSmartboard(CreateUserDTO user, string apiKey)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 //get the OU based on the apiKey
                 var ouSetting = dc
@@ -72,7 +72,7 @@ namespace DataReef.TM.Services
 
                     });
 
-                if(ouSetting == null)
+                if (ouSetting == null)
                 {
                     return null;
                 }
@@ -209,7 +209,7 @@ namespace DataReef.TM.Services
             {
                 SendUserInvitationEmail(userInvitation, fromName, ouName, userWasDeleted);
             }
-            
+
             return userInvitation;
         }
 
