@@ -44,7 +44,7 @@ namespace DataReef.TM.Services
             _inquiryService = inquiryService;
         }
 
-        public ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay)
+        public ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay , DateTime? EndRangeDay )
         {
             var results = new List<OrganizationReportRow>();
 
@@ -97,8 +97,8 @@ namespace DataReef.TM.Services
                         Id = ou.Guid,
                         OfficeName = ou.Name,
                         TotalReps = reps.Count,
-                        WorkingReps = _inquiryService.Value.GetWorkingRepsDisposition(reps, reportSettings?.WorkingRepsDispositions, specifiedDay),
-                        InquiryStatistics = _ouService.Value.GetInquiryStatisticsForOrganization(ou.Guid, reportSettings, specifiedDay, repExclusionList)
+                        WorkingReps = _inquiryService.Value.GetWorkingRepsDisposition(reps, reportSettings?.WorkingRepsDispositions, specifiedDay, StartRangeDay, EndRangeDay),
+                        InquiryStatistics = _ouService.Value.GetInquiryStatisticsForOrganization(ou.Guid, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList)
                     };
                     results.Add(reportRow);
                 }

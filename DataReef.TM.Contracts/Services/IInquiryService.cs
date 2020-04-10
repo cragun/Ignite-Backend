@@ -13,16 +13,16 @@ namespace DataReef.TM.Contracts.Services
     public interface IInquiryService : IDataService<Inquiry>
     {
         [OperationContract]
-        ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganizationTerritories(ICollection<Guid> territoryIds, IEnumerable<OUReportingSettingsItem> reportItems, DateTime? specifiedDay = null, IEnumerable<Guid> excludedReps = null);
+        ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganizationTerritories(ICollection<Guid> territoryIds, IEnumerable<OUReportingSettingsItem> reportItems, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
 
         [OperationContract]
         ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeopleTerritories(ICollection<Guid> territoryIds, IEnumerable<PersonReportingSettingsItem> reportItems, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
 
         [OperationContract]
-        ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForPerson(Guid personId, ICollection<string> dispositions, DateTime? specifiedDay);
+        ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForPerson(Guid personId, ICollection<string> dispositions, DateTime? specifiedDay, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null);
 
         [OperationContract]
-        InquiryStatisticsByDate GetWorkingRepsDisposition(IEnumerable<Guid> repIds, IEnumerable<string> dispositions, DateTime? specifiedDay);
+        InquiryStatisticsByDate GetWorkingRepsDisposition(IEnumerable<Guid> repIds, IEnumerable<string> dispositions, DateTime? specifiedDay, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null);
 
         [OperationContract]
         string GetLatestPropertyDisposition(Guid propertyID, Guid? skipInquiryId = null);

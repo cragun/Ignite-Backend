@@ -56,6 +56,10 @@ namespace DataReef.TM.Contracts.Services
         string SavePropertySurvey(Guid personID, Guid propertyID, string survey);
 
         [OperationContract]
+        string SendEmailSummarytoCustomer(Guid propertyID, string summary);
+        
+
+        [OperationContract]
         string GetSurveyUrl(Guid personID, Guid propertyID);
     }
 }

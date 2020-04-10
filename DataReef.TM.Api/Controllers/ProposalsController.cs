@@ -274,6 +274,22 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = result });
         }
 
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("EmailSummarytoCustomer/{propertyID}")]
+        [HttpPost]
+        public IHttpActionResult SendEmailSummarytoCust(Guid propertyID, [FromBody] GenericRequest<string> request)
+        {
+
+            //var result = peopleService.SaveUserSurvey(SmartPrincipal.UserId, request?.Request);
+            //return Ok(new GenericResponse<string> { Response = result });
+
+            var result = _personService.Value.SendEmailSummarytoCustomer(propertyID, request?.Request);
+            return Ok(new GenericResponse<string> { Response = request?.Request });
+        }
+
+
+
         private async Task<DocumentSignRequest> GetProposalRequest()
         {
             var data = await GetMultiPartData<DocumentSignRequest>("RequestValue");
