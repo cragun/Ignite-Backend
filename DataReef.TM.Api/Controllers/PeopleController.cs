@@ -343,6 +343,21 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        
+        [Route("allUserList")]
+        [HttpGet]
+        public IHttpActionResult GetAllUserList()
+        {
+            try
+            {
+                ICollection<Person> list = peopleService.AllUserList();
+                return Ok(list);
+
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

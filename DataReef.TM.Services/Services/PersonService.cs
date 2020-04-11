@@ -960,5 +960,12 @@ namespace DataReef.TM.Services
 
             return dest;
         }
+
+        public ICollection<Person> AllUserList()
+        {
+            ICollection<Person> ret = base.GetAllUserList();
+            PopulateSummary(ret);
+            return ret;
+        }
     }
 }

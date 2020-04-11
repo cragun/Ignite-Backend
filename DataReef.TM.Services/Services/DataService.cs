@@ -58,6 +58,23 @@ namespace DataReef.TM.Services
             }
         }
 
+        public virtual ICollection<T> GetAllUserList()
+        {
+            using (var repository = UnitOfWorkFactory())
+            {
+                IQueryable<T> setQuery = repository.Get<T>();
+
+
+                setQuery = setQuery.OrderBy(i => i.Name);
+
+
+                IList<T> returnData = setQuery.ToList();
+
+
+                return returnData;
+            }
+        }
+
         public virtual T Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             using (var repository = UnitOfWorkFactory())
