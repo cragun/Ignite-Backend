@@ -213,7 +213,7 @@ namespace DataReef.TM.Services.Services
 
                     if (response != null && response.Message.Type.Equals("error"))
                     {
-                        prop.SBLeadError = response.Message.Text + ", This Property will not save in the SmartBoard.";
+                        prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                     }
                 }
                 catch (Exception ex)
@@ -422,7 +422,7 @@ namespace DataReef.TM.Services.Services
 
                                 if (response != null && response.Message.Type.Equals("error"))
                                 {
-                                    ret.SBLeadError = response.Message.Text + ", This Property will not save in the SmartBoard.";
+                                    ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                                 }
                             }
                             catch (Exception ex)

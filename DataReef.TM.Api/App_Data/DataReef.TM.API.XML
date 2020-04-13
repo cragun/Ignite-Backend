@@ -513,6 +513,13 @@
             <param name="post"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.AuthUserBySuperAdmin(System.Guid)">
+            <summary>
+            Authenticates UserName and Password and returns an Authentication Token
+            </summary>
+            <param name="personid"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.AcceptInvitation(DataReef.TM.Models.DataViews.NewUser)">
             <summary>
             Creates a new user and returns an authentication token

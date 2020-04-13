@@ -276,15 +276,15 @@ namespace DataReef.TM.Api.Controllers
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
-        [Route("EmailSummarytoCustomer/{propertyID}")]
+        [Route("EmailSummarytoCustomer/{ProposalID}")]
         [HttpPost]
-        public IHttpActionResult SendEmailSummarytoCust(Guid propertyID, [FromBody] GenericRequest<string> request)
+        public IHttpActionResult SendEmailSummarytoCust(Guid ProposalID, [FromBody] GenericRequest<string> request)
         {
 
             //var result = peopleService.SaveUserSurvey(SmartPrincipal.UserId, request?.Request);
             //return Ok(new GenericResponse<string> { Response = result });
 
-            var result = _personService.Value.SendEmailSummarytoCustomer(propertyID, request?.Request);
+            var result = _personService.Value.SendEmailSummarytoCustomer(ProposalID, request?.Request);
             return Ok(new GenericResponse<string> { Response = request?.Request });
         }
 

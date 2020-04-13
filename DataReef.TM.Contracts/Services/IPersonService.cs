@@ -61,8 +61,5 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string GetSurveyUrl(Guid personID, Guid propertyID);
-
-        [OperationContract]
-        ICollection<Person> AllUserList();
     }
 }

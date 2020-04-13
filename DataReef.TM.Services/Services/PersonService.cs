@@ -669,18 +669,24 @@ namespace DataReef.TM.Services
 
 
 
-        public string SendEmailSummarytoCustomer(Guid propertyID, string summary)
+        public string SendEmailSummarytoCustomer(Guid ProposalID, string summary)
         {
             using (var dc = new DataContext())
             {
-                var property = dc.Properties.FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == propertyID);
+                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID);
+                if (Proposal == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                var property = dc.Properties.FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == Proposal.PropertyID);
                 if (property == null)
                 {
                     throw new Exception("Property not found");
                 }
                 var email = property.GetMainEmailAddress();
                 Task.Factory.StartNew(() =>
-                {  
+                {
                     var body = summary + " " + email;
 
                     // Mail.Library.SendEmail(email, string.Empty, $"test proposal email", body, true);
@@ -959,13 +965,6 @@ namespace DataReef.TM.Services
             dest = dest.Replace("$propertyAddress$", $"{property?.Address1 ?? string.Empty}, {property?.Address2 ?? string.Empty}");
 
             return dest;
-        }
-
-        public ICollection<Person> AllUserList()
-        {
-            ICollection<Person> ret = base.GetAllUserList();
-            PopulateSummary(ret);
-            return ret;
         }
     }
 }
