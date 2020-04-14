@@ -13,6 +13,7 @@ namespace DataReef.Core
         public static string SmartboardURL = ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"];
         public static string IPadVersionSettingName = "RequiredVersion.Ipad";
         public static string IPadMinimumVersionSettingName = "MinimumRequiredVersion.Ipad";
+        public static string LoginDays = "Ignite.Portal.LoginDays";
         public static string FromEmailName = "Ignite App";
     }
 

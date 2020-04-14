@@ -89,6 +89,27 @@ namespace DataReef.TM.Api.Controllers
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(ex.Message) });
             }
         }
+        /// <summary>
+        ///Update User Status
+        /// </summary>
+        [Route("UserStatus/{userId}/{value}")]
+        [HttpGet]
+        // [AllowAnonymous]
+        public IHttpActionResult UpdateUserStatus(bool value, Guid userId)
+        {
+
+
+                var status = authService.updateUser(value, userId);
+
+
+                return Ok(status);
+
+           
+            
+            
+        }
+
+
 
         /// <summary>
         /// Creates a new user and returns an authentication token

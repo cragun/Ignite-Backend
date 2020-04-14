@@ -25,6 +25,10 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         [AnonymousAccess]
+        int GetLoginDays();
+
+        [OperationContract]
+        [AnonymousAccess]
         bool TestPushNotifications(string token, string payload);
     }
 }

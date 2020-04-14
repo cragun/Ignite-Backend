@@ -45,6 +45,7 @@ namespace DataReef.Application.Services
         private readonly Lazy<IDataService<Credential>> _credentialService;
         private readonly Lazy<IPowerBIBridge> _powerBIBridge;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly IAppSettingService _appSettingService = null;
 
         public AuthenticationService(ILogger logger,
             Lazy<IMailChimpAdapter> mailChimpAdapter,
@@ -52,7 +53,8 @@ namespace DataReef.Application.Services
             Lazy<IDataService<PasswordReset>> resetService,
             Lazy<IDataService<Credential>> credentialService,
             Lazy<IPowerBIBridge> powerBIBridge,
-            Lazy<ISolarSalesTrackerAdapter> sbAdapter)
+            Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            IAppSettingService appSettingService)
         {
             this.logger = logger;
             _mailChimpAdapter = mailChimpAdapter;
@@ -61,6 +63,7 @@ namespace DataReef.Application.Services
             _credentialService = credentialService;
             _powerBIBridge = powerBIBridge;
             _sbAdapter = sbAdapter;
+            _appSettingService = appSettingService;
         }
 
         public AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword)
@@ -294,6 +297,50 @@ namespace DataReef.Application.Services
                                 int.TryParse(setting.Value, out expirationDays);
                             }
 
+                            var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
+
+
+                            int logindays = _appSettingService.GetLoginDays();
+
+                            DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
+
+                            var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
+
+                            if (lastLoginCount == 0)
+                            {
+
+                                var person = dc
+                                     .People
+                                     .SingleOrDefault(p => p.Guid == c.UserID
+                                                  && p.IsDeleted == false);
+
+                                if (person != null && !person.IsDeleted)
+                                {
+                                    person.IsDeleted = true;
+                                }
+                                var user = dc
+                                     .Users
+                                     .SingleOrDefault(u => u.PersonID == c.UserID
+                                                && u.IsDeleted == false);
+
+                                if (user != null && !user.IsDeleted)
+                                {
+                                    user.IsDeleted = true;
+                                }
+                                var credential = dc
+                                    .Credentials
+                                    .SingleOrDefault(u => u.PersonID == c.UserID
+                                               && u.IsDeleted == false);
+
+                                if (credential != null && !credential.IsDeleted)
+                                {
+                                    credential.IsDeleted = true;
+                                }
+                                dc.SaveChanges();
+
+                                throw new ArgumentException("Account is suspended!");
+                            }
+
                             AuthenticationToken token = new AuthenticationToken();
                             token.Audience = "tm";
                             token.ClientSecret = "asdfjkl;qweruipo";
@@ -341,6 +388,42 @@ namespace DataReef.Application.Services
 
         }
 
+        public bool updateUser(bool value, Guid userId)
+        {
+                using (DataContext dc = new DataContext())
+                {
+                var person = dc
+                     .People
+                     .SingleOrDefault(p => p.Guid == userId);
+                var user = dc
+                     .Users
+                     .SingleOrDefault(u => u.PersonID == userId);
+                var credential = dc
+                     .Credentials
+                     .SingleOrDefault(u => u.PersonID == userId);
+                if (person != null && user != null && credential != null)
+                {
+                    if (value)
+                    {
+                        person.IsDeleted = false;
+                        user.IsDeleted = false;
+                        credential.IsDeleted = false;
+                        dc.SaveChanges();
+                        return true;
+                    }
+                    else
+                    {
+                        person.IsDeleted = true;
+                        user.IsDeleted = true;
+                        credential.IsDeleted = true;
+                        dc.SaveChanges();
+                        return true;
+                    }
+                }
+            }
+            return false;
+
+        }
 
         public AuthenticationToken AuthenticateUserBySuperAdmin(Guid personid)
         {

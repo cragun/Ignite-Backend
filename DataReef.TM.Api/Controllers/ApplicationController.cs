@@ -62,6 +62,28 @@ namespace DataReef.TM.API.Controllers
             return false;
         }
 
+        /// <summary>
+        /// Set LoginDays 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpPatch]
+        [Route("loginDays/{value}")]
+        public bool SetLoginDays(string value)
+        {
+            try
+            {
+                _settingsService.SetValue(Constants.LoginDays, value);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("SetLoginDays", ex);
+            }
+            return false;
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [Route("push/test")]

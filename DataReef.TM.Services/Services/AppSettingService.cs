@@ -103,6 +103,12 @@ namespace DataReef.TM.Services.Services
             //}
         }
 
+        public int GetLoginDays()
+        {
+            var loginDays = GetValue(Constants.LoginDays);
+            return int.Parse(loginDays);
+        }
+
 
         public Version GetMinimumRequiredVersionForIPad()
         {
