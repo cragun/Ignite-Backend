@@ -130,7 +130,9 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult CreateNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
         {
-            var result = _propertyNoteService.AddNoteFromSmartboard(request, apiKey);
+            string DecyptApiKey = CryptographyHelper.DecryptApiKey(apiKey);
+
+            var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
 
             return Ok(result);
         }

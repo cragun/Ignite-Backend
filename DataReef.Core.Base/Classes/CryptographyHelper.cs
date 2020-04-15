@@ -59,7 +59,7 @@ namespace DataReef.Auth.Helpers
 
             return password.ToString();
         }
-
+       
         public static string Encrypt(string text, string key, string initializationVector = "")
         {
             bool generateRandomInitializationVector = false;
@@ -92,48 +92,57 @@ namespace DataReef.Auth.Helpers
             return Encoding.Unicode.GetString(outputBuffer);
         }
 
-        public static string DecryptApiKey(string DecryptText)
-        {
-            string keyValue = "q7KYLwNhYzVccCjc8S0pyYHu4izm2squk7NOPN5Y";
 
-            byte[] SrctArray;
-            byte[] DrctArray = Convert.FromBase64String(DecryptText);
-            SrctArray = UTF8Encoding.UTF8.GetBytes(keyValue);
-            TripleDESCryptoServiceProvider objt = new TripleDESCryptoServiceProvider();
-            MD5CryptoServiceProvider objmdcript = new MD5CryptoServiceProvider();
-            SrctArray = objmdcript.ComputeHash(UTF8Encoding.UTF8.GetBytes(keyValue));
-            objmdcript.Clear();
-            objt.Key = SrctArray;
-            objt.Mode = CipherMode.ECB;
-            objt.Padding = PaddingMode.PKCS7;
-            ICryptoTransform crptotrns = objt.CreateDecryptor();
-            byte[] resArray = crptotrns.TransformFinalBlock(DrctArray, 0, DrctArray.Length);
-            objt.Clear();
-            return UTF8Encoding.UTF8.GetString(resArray);
+        public static string EncryptAPI(string clearText)
+        {
+            string secretKey = "q7KYLwNhYz";
+            try
+            {
+                TripleDESCryptoServiceProvider tripleDESProvider = new TripleDESCryptoServiceProvider();
+                byte[] byteKey = Encoding.UTF8.GetBytes(secretKey.PadRight(24, '\0'));
+                if (byteKey.Length > 24)
+                {
+                    byte[] bytePass = new byte[24];
+                    Buffer.BlockCopy(byteKey, 0, bytePass, 0, 24);
+                    byteKey = bytePass;
+                }
+                byte[] byteText = Encoding.UTF8.GetBytes(clearText);
+                tripleDESProvider.Key = byteKey;
+                tripleDESProvider.Mode = CipherMode.ECB;
+                byte[] byteMessage = tripleDESProvider.CreateEncryptor().TransformFinalBlock(byteText, 0, byteText.Length);
+                return Convert.ToBase64String(byteMessage);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
-
-        public static string EncryptAPI(string Encryptval)
+        public static string DecryptApiKey(string data)
         {
-
-            string keyValue = "q7KYLwNhYzVccCjc8S0pyYHu4izm2squk7NOPN5Y";
-
-            byte[] SrctArray;
-            byte[] EnctArray = UTF8Encoding.UTF8.GetBytes(Encryptval);
-            SrctArray = UTF8Encoding.UTF8.GetBytes(keyValue);
-            TripleDESCryptoServiceProvider objt = new TripleDESCryptoServiceProvider();
-            MD5CryptoServiceProvider objcrpt = new MD5CryptoServiceProvider();
-            SrctArray = objcrpt.ComputeHash(UTF8Encoding.UTF8.GetBytes(keyValue));
-            objcrpt.Clear();
-            objt.Key = SrctArray;
-            objt.Mode = CipherMode.ECB;
-            objt.Padding = PaddingMode.PKCS7;
-            ICryptoTransform crptotrns = objt.CreateEncryptor();
-            byte[] resArray = crptotrns.TransformFinalBlock(EnctArray, 0, EnctArray.Length);
-            objt.Clear();
-            return Convert.ToBase64String(resArray, 0, resArray.Length);
-
+            string secretKey = "q7KYLwNhYz";
+            try
+            {
+                byte[] byteData = Convert.FromBase64String(data);
+                byte[] byteKey = Encoding.UTF8.GetBytes(secretKey.PadRight(24, '\0'));
+                if (byteKey.Length > 24)
+                {
+                    byte[] bytePass = new byte[24];
+                    Buffer.BlockCopy(byteKey, 0, bytePass, 0, 24);
+                    byteKey = bytePass;
+                }
+                TripleDESCryptoServiceProvider tripleDESProvider = new TripleDESCryptoServiceProvider();
+                tripleDESProvider.Key = byteKey;
+                tripleDESProvider.Mode = CipherMode.ECB;
+                byte[] byteText = tripleDESProvider.CreateDecryptor().TransformFinalBlock(byteData, 0, byteData.Length);
+                return Encoding.UTF8.GetString(byteText);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
+       
 
     }
 }
