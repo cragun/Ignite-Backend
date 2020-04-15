@@ -132,7 +132,22 @@ namespace DataReef.TM.Api.Controllers
         {
             string DecyptApiKey = CryptographyHelper.DecryptApiKey(apiKey);
 
-            var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
+            string[] str = DecyptApiKey.Split('_');
+
+            string APIKEY = str[0];
+            long unixTime = long.Parse(str[5]);
+
+           
+            long curruntUnixTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            long time = curruntUnixTime-unixTime;
+
+            if (time>300)
+            {
+                throw new Exception("Invalid Encryption");
+            }
+
+            
+            var result = _propertyNoteService.AddNoteFromSmartboard(request, APIKEY);
 
             return Ok(result);
         }
@@ -156,17 +171,17 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("EncryptApikey/{originalapikey}/{Encryptedapikey}")]
         [HttpGet]
-        public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey, string Encryptedapikey)
+        public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey,string Encryptedapikey)
         {
             string EncryptApiKey = CryptographyHelper.EncryptAPI(originalapikey);
            // string DecyptvalueofEncryptkey = CryptographyHelper.DecryptApiKey(EncryptApiKey);
-            string DecyptApiKey = CryptographyHelper.DecryptApiKey(Encryptedapikey);
+          string DecyptApiKey = CryptographyHelper.DecryptApiKey(Encryptedapikey);
             var result = new testmodel
             {
                 OriginalApiKey = originalapikey,
-                EncryptedApiKey = Encryptedapikey,
+                 EncryptedApiKey = Encryptedapikey,
                 EncryptTextOfOriginalApiKey = EncryptApiKey,
-                DecyptTextOfEncryptedApiKey = DecyptApiKey
+            DecyptTextOfEncryptedApiKey = DecyptApiKey
             };
 
             return Ok(result);
