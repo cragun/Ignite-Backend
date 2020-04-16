@@ -50,6 +50,10 @@ namespace DataReef.TM.Services.Services
 
         public override Inquiry Update(Inquiry entity)
         {
+            if(entity.StartDate != null && entity.EndDate != null)
+            {
+                //entity.ClockDiff = entity.EndDate.Value.Tot
+            }
             var inquiry = base.Update(entity);
 
             if (inquiry.SaveResult.Success)

@@ -1287,6 +1287,10 @@
     <Compile Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.Designer.cs">
       <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004161013136_Add field in inquiries.cs" />
+    <Compile Include="Migrations\202004161013136_Add field in inquiries.Designer.cs">
+      <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2211,6 +2215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.resx">
       <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004161013136_Add field in inquiries.resx">
+      <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

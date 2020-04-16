@@ -27,6 +27,21 @@ namespace DataReef.TM.Models
         [DataMember]
         public DateTime? FollowUpDate { get; set; }
 
+        [DataType(DataType.DateTime)]
+        [DataMember]
+        public DateTime? StartDate { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [DataMember]
+        public DateTime? EndDate { get; set; }
+
+        [DataMember]
+        public long ClockDiff { get; set; }
+
+        [StringLength(50)]
+        [DataMember]
+        public string ClockType { get; set; }
+
         [DataMember]
         public bool? ShouldIntegrateWithCalendar { get; set; }
 
