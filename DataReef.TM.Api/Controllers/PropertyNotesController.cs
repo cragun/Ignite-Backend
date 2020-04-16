@@ -141,10 +141,10 @@ namespace DataReef.TM.Api.Controllers
             long curruntUnixTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             long time = curruntUnixTime-unixTime;
 
-            if (time>300)
-            {
-                throw new Exception("Invalid Encryption");
-            }
+            //if (time>300)
+            //{
+            //    throw new Exception("Invalid Encryption");
+            //}
 
             
             var result = _propertyNoteService.AddNoteFromSmartboard(request, APIKEY);
