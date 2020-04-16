@@ -145,7 +145,6 @@ namespace DataReef.TM.Api.Controllers
             //{
             //    throw new Exception("Invalid Encryption");
             //}
-
             
             var result = _propertyNoteService.AddNoteFromSmartboard(request, APIKEY);
 
