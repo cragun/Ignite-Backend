@@ -52,7 +52,8 @@ namespace DataReef.TM.Services.Services
         {
             if(entity.StartDate != null && entity.EndDate != null)
             {
-                //entity.ClockDiff = entity.EndDate.Value.Tot
+                TimeSpan t = entity.EndDate.Value.Subtract(entity.StartDate.Value);
+                entity.ClockDiff = Convert.ToInt64(t.TotalMinutes);
             }
             var inquiry = base.Update(entity);
 
@@ -77,6 +78,11 @@ namespace DataReef.TM.Services.Services
 
         public override Inquiry Insert(Inquiry entity)
         {
+            if (entity.StartDate != null && entity.EndDate != null)
+            {
+                TimeSpan t = entity.EndDate.Value.Subtract(entity.StartDate.Value);
+                entity.ClockDiff = Convert.ToInt64(t.TotalMinutes);
+            }
             var ret = base.Insert(entity);
             if (ret == null)
             {
