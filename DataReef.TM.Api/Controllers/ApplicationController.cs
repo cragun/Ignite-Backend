@@ -62,6 +62,27 @@ namespace DataReef.TM.API.Controllers
             return false;
         }
 
+
+        /// <summary>
+        /// Get the login Days
+        /// </summary>
+        /// <returns></returns>
+        [Route("loginDays")]
+        [HttpGet]
+        public string GetloginDays()
+        {
+            try
+            {
+
+                return _settingsService.GetValue(Constants.LoginDays);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("GetloginDays", ex);
+                return String.Empty;
+            }
+        }
+
         /// <summary>
         /// Set LoginDays 
         /// </summary>

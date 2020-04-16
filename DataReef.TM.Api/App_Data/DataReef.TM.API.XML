@@ -1757,6 +1757,12 @@
             <param name="value"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.API.Controllers.ApplicationController.GetloginDays">
+            <summary>
+            Get the login Days
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.API.Controllers.ApplicationController.SetLoginDays(System.String)">
             <summary>
             Set LoginDays 
