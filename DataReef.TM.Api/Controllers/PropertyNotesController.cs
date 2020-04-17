@@ -130,23 +130,13 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult CreateNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
         {
-            string DecyptApiKey = CryptographyHelper.DecryptApiKey(apiKey);
 
-            string[] str = DecyptApiKey.Split('_');
-
-            string APIKEY = str[0];
-            long unixTime = long.Parse(str[5]);
-
-           
-            long curruntUnixTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-            long time = curruntUnixTime-unixTime;
-
-            //if (time>300)
-            //{
-            //    throw new Exception("Invalid Encryption");
-            //}
             
-            var result = _propertyNoteService.AddNoteFromSmartboard(request, APIKEY);
+          //  bool checkTime= CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+
+            var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
 
             return Ok(result);
         }
@@ -173,14 +163,19 @@ namespace DataReef.TM.Api.Controllers
         public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey,string Encryptedapikey)
         {
             string EncryptApiKey = CryptographyHelper.EncryptAPI(originalapikey);
-           // string DecyptvalueofEncryptkey = CryptographyHelper.DecryptApiKey(EncryptApiKey);
-          string DecyptApiKey = CryptographyHelper.DecryptApiKey(Encryptedapikey);
+
+            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(EncryptApiKey);
+
+            string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
+
+            // string DecyptvalueofEncryptkey = CryptographyHelper.DecryptApiKey(EncryptApiKey);
+            string DecyptApiKey = CryptographyHelper.DecryptApiKey(Encryptedapikey);
             var result = new testmodel
             {
                 OriginalApiKey = originalapikey,
-                 EncryptedApiKey = Encryptedapikey,
-                EncryptTextOfOriginalApiKey = EncryptApiKey,
-            DecyptTextOfEncryptedApiKey = DecyptApiKey
+                EncryptedApiKey = Encryptedapikey,
+                EncryptTextOfOriginalApiKey = returnValue,
+                DecyptTextOfEncryptedApiKey = DecyptApiKey
             };
 
             return Ok(result);

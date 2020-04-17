@@ -95,6 +95,7 @@ namespace DataReef.Auth.Helpers
 
         public static string EncryptAPI(string clearText)
         {
+
             string secretKey = "q7KYLwNhYz";
             try
             {
@@ -143,6 +144,44 @@ namespace DataReef.Auth.Helpers
             }
         }
        
+        public static string getDecryptAPIKey(string apikey)
+        {
+           byte[] encodedDataAsBytes  = System.Convert.FromBase64String(apikey);
+
+            string returnValue = System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+            
+            string DecyptApiKey = DecryptApiKey(returnValue);
+
+            string[] str = DecyptApiKey.Split('_');
+
+            string APIKEY = str[0];
+
+            return APIKEY;
+        }
+        public static bool checkTime(string apikey)
+        {
+            byte[] encodedDataAsBytes = System.Convert.FromBase64String(apikey);
+
+            string returnValue = System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+
+            string DecyptApiKey = DecryptApiKey(returnValue);
+
+            string[] str = DecyptApiKey.Split('_');
+
+            long unixTime = long.Parse(str[3]);
+
+            long curruntUnixTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+            long time = curruntUnixTime - unixTime;
+
+            if (time > 300)
+            {
+                throw new Exception("Please send valid apikey.");
+                
+            }
+            
+            return true;
+        }
+
 
     }
 }
