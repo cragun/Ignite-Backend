@@ -1291,6 +1291,10 @@
     <Compile Include="Migrations\202004161013136_Add field in inquiries.Designer.cs">
       <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004171154569_Remove Extra Field from inquiries.cs" />
+    <Compile Include="Migrations\202004171154569_Remove Extra Field from inquiries.Designer.cs">
+      <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2218,6 +2222,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004161013136_Add field in inquiries.resx">
       <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004171154569_Remove Extra Field from inquiries.resx">
+      <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
