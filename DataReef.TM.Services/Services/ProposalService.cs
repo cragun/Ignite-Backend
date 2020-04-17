@@ -693,6 +693,8 @@ namespace DataReef.TM.Services.Services
 
                     var homeOwnerName = property.Name;
 
+                    string ccEmails = ouSettings?.FirstOrDefault(os => os.Name == OUSetting.Proposal_Features_EmailsToCC)?.Value;
+
                     Task.Factory.StartNew(() =>
                     {
                         var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the attached file or the link below: <br/> <br/> <a href='{proposalUrl}'>Proposal for {homeOwnerName}</a> <br/>";
@@ -708,7 +710,7 @@ namespace DataReef.TM.Services.Services
                             };
                             }
                         }
-                        Mail.Library.SendEmail(salesRepEmailAddress, null, $"Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        Mail.Library.SendEmail(salesRepEmailAddress, ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
 
@@ -1348,10 +1350,10 @@ namespace DataReef.TM.Services.Services
                         var mediaItemLinks = string.Join("<br/>", mediaItems.Select(mi => $"<a target='_blank' href='{mi.Value}'>{mi.Key}</a>"));
                         var mediaItemsBody = mediaItems.Count == 0 ? "" : $"<br/>Attached documents and images: <br/>{mediaItemLinks}";
 
-                        var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
+                        var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
                         var to = disableSendingToCustomer ? salesRepEmailAddress : $"{salesRepEmailAddress};{homeOwnerEmailAddress}";
 
-                        Mail.Library.SendEmail(to, ccEmails, $"Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
                 //var isSolarSalesTrackerEnabled = ouSettings.GetValue<SSTSettings>(SolarTrackerResources.SettingName)?.Enabled?.IsTrue() == true;
