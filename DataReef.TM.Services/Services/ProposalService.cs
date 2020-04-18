@@ -931,7 +931,6 @@ namespace DataReef.TM.Services.Services
                     throw new ApplicationException("Could not find Proposal Data!");
                 }
 
-
                 var proposal = dataContext
                                 .Proposal
                                 .Include(x => x.Property)
