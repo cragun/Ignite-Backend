@@ -970,6 +970,7 @@ namespace DataReef.TM.Services
                         person.ClockType = "ClockOut";
                         dc.SaveChanges();
 
+
                         person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
                     }                    
                 }
