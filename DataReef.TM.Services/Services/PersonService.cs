@@ -953,6 +953,33 @@ namespace DataReef.TM.Services
             return result;
         }
 
+        public PersonClockTime GetPersonClock(Guid personID)
+        {
+            PersonClockTime person;
+            using (DataContext dc = new DataContext())
+            {
+                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
+
+                if (person != null)
+                {
+                    if(person.EndDate.Value <= DateTime.Now)
+                    {
+                        TimeSpan timespan = person.EndDate.Value - person.StartDate.Value;
+                        int diffMin = timespan.Minutes;
+                        person.ClockDiff = person.ClockDiff + diffMin;
+                        person.ClockType = "ClockOut";
+                        dc.SaveChanges();
+
+                        person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
+                    }                    
+                }
+            }
+
+            return person;
+        }
+
+
+        
         private string ReplaceTokens(string source, Property property)
         {
             if (property == null)

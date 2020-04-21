@@ -261,6 +261,9 @@ namespace DataReef.TM.Services.Services
 
             if (entity.Inquiries?.Any() == true)
             {
+                //person clocktime 
+                InquiryService.UpdatePersonClockTime();
+
                 using (var uow = UnitOfWorkFactory())
                 {
                     var property = uow
@@ -362,6 +365,12 @@ namespace DataReef.TM.Services.Services
 
 
                         ret = base.Update(entity, dataContext);
+
+                        if(oldProp.LatestDisposition != entity.LatestDisposition)
+                        {
+                            //person clocktime 
+                            InquiryService.UpdatePersonClockTime();
+                        }
                         if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
                         ret.SBLeadError = "";
                         UpdateNavigationProperties(entity, dataContext: dataContext);

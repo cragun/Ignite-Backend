@@ -61,5 +61,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string GetSurveyUrl(Guid personID, Guid propertyID);
+
+        [OperationContract]
+        PersonClockTime GetPersonClock(Guid personID);
     }
 }
