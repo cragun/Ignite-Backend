@@ -163,13 +163,15 @@ namespace DataReef.TM.Api.Controllers
         public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey,string Encryptedapikey)
         {
             string EncryptApiKey = CryptographyHelper.EncryptAPI(originalapikey);
-
             byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(EncryptApiKey);
-
             string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
 
             // string DecyptvalueofEncryptkey = CryptographyHelper.DecryptApiKey(EncryptApiKey);
-            string DecyptApiKey = CryptographyHelper.DecryptApiKey(Encryptedapikey);
+
+            byte[] encodedDataAsBytes = System.Convert.FromBase64String(Encryptedapikey);
+            string returnValueDecrypted = System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+            string DecyptApiKey = CryptographyHelper.DecryptApiKey(returnValueDecrypted);
+
             var result = new testmodel
             {
                 OriginalApiKey = originalapikey,

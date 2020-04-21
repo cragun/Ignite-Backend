@@ -1295,6 +1295,10 @@
     <Compile Include="Migrations\202004171154569_Remove Extra Field from inquiries.Designer.cs">
       <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004180627228_Add PersonClockTime table.cs" />
+    <Compile Include="Migrations\202004180627228_Add PersonClockTime table.Designer.cs">
+      <DependentUpon>202004180627228_Add PersonClockTime table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2225,6 +2229,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004171154569_Remove Extra Field from inquiries.resx">
       <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004180627228_Add PersonClockTime table.resx">
+      <DependentUpon>202004180627228_Add PersonClockTime table.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -76,6 +76,46 @@ namespace DataReef.TM.Services.Services
             if (ret == null)
             {
                 entity.SaveResult = SaveResult.SuccessfulInsert;
+               
+
+                using (DataContext dc = new DataContext())
+                {
+                    var personClockTime = dc
+                        .PersonClockTime
+                        .Where(p =>p.PersonID == SmartPrincipal.UserId && p.DateCreated.Value.Date==DateTime.UtcNow.Date)
+                        .FirstOrDefault();
+
+                    if (personClockTime != null)
+                    {
+
+                        TimeSpan timespan;
+                        timespan = DateTime.UtcNow - personClockTime.StartDate.Value;
+                        int diffMin = timespan.Minutes;
+                        personClockTime.ClockDiff = personClockTime.ClockDiff + diffMin;
+                        personClockTime.StartDate = DateTime.Now;
+                        personClockTime.EndDate = (DateTime.Now).AddMinutes(20);
+                        personClockTime.ClockType = "ClockIn";
+                        dc.SaveChanges();
+                    }
+                    else
+                    {
+                        PersonClockTime personClock = new PersonClockTime();
+                        personClock.Guid = Guid.NewGuid();
+                        personClock.PersonID = SmartPrincipal.UserId;
+                        personClock.DateCreated = DateTime.Now;
+                        personClock.StartDate = DateTime.Now;
+                        personClock.EndDate = (DateTime.Now).AddMinutes(20);
+                        personClock.ClockDiff = 0 ;
+                        personClock.ClockType = "ClockIn";
+                        personClock.CreatedByID = SmartPrincipal.UserId;
+                        dc.PersonClockTime.Add(personClock);
+                        dc.SaveChanges();  
+
+                    }
+                    
+                }
+                
+
                 return entity;
             }
 
@@ -127,6 +167,7 @@ namespace DataReef.TM.Services.Services
                 catch (Exception)
                 {
                 }
+               
             }
 
             return ret;
@@ -663,7 +704,10 @@ namespace DataReef.TM.Services.Services
                 return property;
             }
         }
+        
+
     }
+    
 
     internal class StatisticDates
     {
