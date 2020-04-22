@@ -19,6 +19,12 @@ namespace DataReef.TM.Models
         [DataMember]
         public long ClockDiff { get; set; }
 
+        [DataMember]
+        public long ClockMin { get; set; }
+
+        [DataMember]
+        public long ClockHours { get; set; }
+
         [DataType(DataType.DateTime)]
         [DataMember]
         public DateTime? StartDate { get; set; }

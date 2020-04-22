@@ -500,30 +500,35 @@ namespace DataReef.TM.Services.Services
                                 }
                             });
 
-                            var personTotalHour = dc.PersonClockTime.Where(id => id.PersonID == personId).Select(i => new { PersonID = i.PersonID, DateCreated = i.DateCreated, ClockDiff = i.ClockDiff }).ToList();
 
-                            if (personTotalHour != null)
+                            if(col.ColumnName == "ClockHours")
                             {
-                                inquiryStatistics.Add(new InquiryStatisticsForPerson
-                                {
-                                    PersonId = personId,
-                                    Name = "ClockHours",
-                                    Actions = new InquiryStatisticsByDate
-                                    {
-                                        AllTime = personTotalHour.Sum(x => x.ClockDiff),
-                                        ThisYear = personTotalHour.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.ClockDiff),
-                                        ThisMonth = personTotalHour.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.ClockDiff),
-                                        ThisWeek = personTotalHour.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.ClockDiff),
-                                        Today = personTotalHour.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.ClockDiff),
-                                        SpecifiedDay = specifiedDay.HasValue ? personTotalHour.Where(id => id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value).Sum(x => x.ClockDiff) : 0,
-                                        ThisQuarter = personTotalHour.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.ClockDiff),
-                                        RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personTotalHour.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.ClockDiff) : 0
-                                    },
-                                    DaysActive = new InquiryStatisticsByDate
-                                    { }
+                                var personTotalHour = dc.PersonClockTime.Where(id => id.PersonID == personId).Select(i => new { PersonID = i.PersonID, DateCreated = i.DateCreated, ClockMin = i.ClockMin }).ToList();
 
-                                });
+                                if (personTotalHour != null)
+                                {
+                                    inquiryStatistics.Add(new InquiryStatisticsForPerson
+                                    {
+                                        PersonId = personId,
+                                        Name = col.ColumnName,
+                                        Actions = new InquiryStatisticsByDate
+                                        {
+                                            AllTime = personTotalHour.Sum(x => x.ClockMin),
+                                            ThisYear = personTotalHour.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.ClockMin),
+                                            ThisMonth = personTotalHour.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.ClockMin),
+                                            ThisWeek = personTotalHour.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.ClockMin),
+                                            Today = personTotalHour.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.ClockMin),
+                                            SpecifiedDay = specifiedDay.HasValue ? personTotalHour.Where(id => id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value).Sum(x => x.ClockMin) : 0,
+                                            ThisQuarter = personTotalHour.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.ClockMin),
+                                            RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personTotalHour.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.ClockMin) : 0
+                                        },
+                                        DaysActive = new InquiryStatisticsByDate
+                                        { }
+
+                                    });
+                                }
                             }
+                           
                         }
                     }
                 }
@@ -711,8 +716,11 @@ namespace DataReef.TM.Services.Services
                     }
 
                     long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+                    long diffHours = (long)Math.Floor(timespan.TotalHours);
                     personClockTime.TenantID = 1;
-                    personClockTime.ClockDiff = personClockTime.ClockDiff + diffMin;
+                    personClockTime.ClockDiff = 0;
+                    personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
+                    personClockTime.ClockHours = personClockTime.ClockHours + diffHours;
                     personClockTime.StartDate = DateTime.Now;
                     personClockTime.EndDate = (DateTime.Now).AddMinutes(20);
                     personClockTime.ClockType = "ClockIn";
@@ -729,6 +737,8 @@ namespace DataReef.TM.Services.Services
                     personClock.StartDate = DateTime.Now;
                     personClock.EndDate = (DateTime.Now).AddMinutes(20);
                     personClock.ClockDiff = 0;
+                    personClock.ClockMin = 0;
+                    personClock.ClockHours = 0;
                     personClock.ClockType = "ClockIn";
                     personClock.CreatedByID = SmartPrincipal.UserId;
                     personClock.TenantID = 0;
