@@ -686,10 +686,13 @@ namespace DataReef.TM.Services.Services
                     }
                         
                     int diffMin = timespan.Minutes;
+                    personClockTime.TenantID = 1;
                     personClockTime.ClockDiff = personClockTime.ClockDiff + diffMin;
                     personClockTime.StartDate = DateTime.Now;
                     personClockTime.EndDate = (DateTime.Now).AddMinutes(20);
                     personClockTime.ClockType = "ClockIn";
+                    personClockTime.Version += 1;
+                    personClockTime.DateLastModified = DateTime.UtcNow;
                     dc.SaveChanges();
                 }
                 else
@@ -703,6 +706,7 @@ namespace DataReef.TM.Services.Services
                     personClock.ClockDiff = 0;
                     personClock.ClockType = "ClockIn";
                     personClock.CreatedByID = SmartPrincipal.UserId;
+                    personClock.TenantID = 0;
                     dc.PersonClockTime.Add(personClock);
                     dc.SaveChanges();
                 }
