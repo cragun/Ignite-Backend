@@ -91,6 +91,11 @@ namespace DataReef.TM.Services
                             {
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{smartBoardID}", property.SmartBoardId.ToString() ?? string.Empty);
                             }
+
+                            if (url.CreditCheckUrl.Contains("{smartBoardID}"))
+                            {
+                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("{smartBoardID}", property.SmartBoardId.ToString() ?? string.Empty);
+                            }
                         }
 
                         return creditCheckUrls;

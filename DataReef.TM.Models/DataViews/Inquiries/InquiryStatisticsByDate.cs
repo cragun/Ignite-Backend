@@ -8,28 +8,27 @@ namespace DataReef.TM.Models.DataViews.Inquiries
     public class InquiryStatisticsByDate
     {
         [DataMember]
-        public int AllTime { get; set; }
+        public long AllTime { get; set; }
 
         [DataMember]
-        public int ThisYear { get; set; }
+        public long ThisYear { get; set; }
 
         [DataMember]
-        public int ThisMonth { get; set; }
+        public long ThisMonth { get; set; }
 
         [DataMember]
-        public int ThisWeek { get; set; }
-
-        //[DataMember(Name= "Today", EmitDefaultValue=false)]
-        [DataMember]
-        public int Today { get; set; }
+        public long ThisWeek { get; set; }
 
         [DataMember]
-        public int SpecifiedDay { get; set; }
+        public long Today { get; set; }
 
         [DataMember]
-        public int ThisQuarter { get; set; }
+        public long SpecifiedDay { get; set; }
 
         [DataMember]
-        public int RangeDay { get; set; }
+        public long ThisQuarter { get; set; }
+
+        [DataMember]
+        public long RangeDay { get; set; }
     }
 }

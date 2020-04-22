@@ -955,7 +955,7 @@ namespace DataReef.TM.Services
 
         public PersonClockTime GetPersonClock(Guid personID)
         {
-            PersonClockTime person;
+            PersonClockTime person = new PersonClockTime();
             using (DataContext dc = new DataContext())
             {
                 person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
@@ -963,7 +963,8 @@ namespace DataReef.TM.Services
                 if (person != null)
                 {
                     TimeSpan timespan = person.EndDate.Value - person.StartDate.Value;
-                    int diffMin = timespan.Minutes;
+                    long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+
                     if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
                     {                          
                         person.ClockDiff = person.ClockDiff + diffMin;
