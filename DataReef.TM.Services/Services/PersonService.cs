@@ -962,31 +962,21 @@ namespace DataReef.TM.Services
 
                 if (person != null)
                 {
-                    TimeSpan timespan = person.EndDate.Value - person.StartDate.Value;
-                    long diffMin = (long)Math.Floor(timespan.TotalMinutes);
-                    long diffHours = (long)Math.Floor(timespan.TotalHours);
-
                     if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
                     {                          
                         person.ClockDiff = 20;
-                        person.ClockMin = person.ClockMin + diffMin;
-                        person.ClockHours = person.ClockHours + diffHours;
                         person.ClockType = "ClockOut";
                         person.TenantID = 0;
                         person.Version += 1;
                         person.DateLastModified = DateTime.UtcNow;
                         dc.SaveChanges();
-                    }  
-                    else if(diffMin == 15 && person.ClockType == "ClockIn")
-                    {
-                        person.ClockDiff = diffMin;
-                        person.TenantID = 1;
-                        dc.SaveChanges();
                     }
                     else
                     {
+                        TimeSpan timespan = DateTime.Now - person.StartDate.Value;
+                        long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+
                         person.ClockDiff = diffMin;
-                        person.TenantID = 0;
                         dc.SaveChanges();
                     }
                     person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();

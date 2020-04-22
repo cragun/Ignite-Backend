@@ -709,18 +709,24 @@ namespace DataReef.TM.Services.Services
 
                 if (personClockTime != null)
                 {
-                    TimeSpan timespan = personClockTime.EndDate.Value - personClockTime.StartDate.Value;
-                    if (personClockTime.EndDate.Value > DateTime.Now)
-                    {
-                        timespan = DateTime.Now - personClockTime.StartDate.Value;
-                    }
+                    //TimeSpan timespan = personClockTime.EndDate.Value - personClockTime.StartDate.Value;
+                    //if (personClockTime.EndDate.Value > DateTime.Now)
+                    //{
+                    //    timespan = DateTime.Now - personClockTime.StartDate.Value;
+                    //}
 
-                    long diffMin = (long)Math.Floor(timespan.TotalMinutes);
-                    long diffHours = (long)Math.Floor(timespan.TotalHours);
-                    personClockTime.TenantID = 1;
+                    //long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+                    //long diffHours = (long)Math.Floor(timespan.TotalHours);
+
+                    //personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
+                    //personClockTime.ClockHours = personClockTime.ClockHours + 0;
+                    if(personClockTime.ClockType == "ClockIn")
+                    {
+                        TimeSpan timespan = DateTime.Now - personClockTime.StartDate.Value;
+                        long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+                        personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
+                    }
                     personClockTime.ClockDiff = 0;
-                    personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
-                    personClockTime.ClockHours = personClockTime.ClockHours + diffHours;
                     personClockTime.StartDate = DateTime.Now;
                     personClockTime.EndDate = (DateTime.Now).AddMinutes(20);
                     personClockTime.ClockType = "ClockIn";
@@ -741,7 +747,6 @@ namespace DataReef.TM.Services.Services
                     personClock.ClockHours = 0;
                     personClock.ClockType = "ClockIn";
                     personClock.CreatedByID = SmartPrincipal.UserId;
-                    personClock.TenantID = 0;
                     dc.PersonClockTime.Add(personClock);
                     dc.SaveChanges();
                 }
