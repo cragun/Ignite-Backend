@@ -958,7 +958,7 @@ namespace DataReef.TM.Services
             PersonClockTime person = new PersonClockTime();
             using (DataContext dc = new DataContext())
             {
-                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
+                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
 
                 if (person != null)
                 {
@@ -968,7 +968,7 @@ namespace DataReef.TM.Services
                         person.ClockType = "ClockOut";
                         person.TenantID = 0;
                         person.Version += 1;
-                        person.DateLastModified = DateTime.UtcNow;
+                        person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
                     }
                     else
@@ -979,7 +979,7 @@ namespace DataReef.TM.Services
                         person.ClockDiff = diffMin;
                         dc.SaveChanges();
                     }
-                    person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
+                    person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
                 }
             }
 

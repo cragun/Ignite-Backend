@@ -513,14 +513,14 @@ namespace DataReef.TM.Services.Services
                                         Name = col.ColumnName,
                                         Actions = new InquiryStatisticsByDate
                                         {
-                                            AllTime = personTotalHour.Sum(x => x.ClockMin),
-                                            ThisYear = personTotalHour.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.ClockMin),
-                                            ThisMonth = personTotalHour.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.ClockMin),
-                                            ThisWeek = personTotalHour.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.ClockMin),
-                                            Today = personTotalHour.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.ClockMin),
-                                            SpecifiedDay = specifiedDay.HasValue ? personTotalHour.Where(id => id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value).Sum(x => x.ClockMin) : 0,
-                                            ThisQuarter = personTotalHour.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.ClockMin),
-                                            RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personTotalHour.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.ClockMin) : 0
+                                            AllTime = Convert.ToInt64(Math.Round(personTotalHour.Sum(x => x.ClockMin) / (double)60)),
+                                            ThisYear = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.ClockMin) / (double)60)),
+                                            ThisMonth = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.ClockMin) / (double)60)),
+                                            ThisWeek = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.ClockMin) / (double)60)),
+                                            Today = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.ClockMin) / (double)60)),
+                                            SpecifiedDay = Convert.ToInt64(Math.Round(specifiedDay.HasValue ? personTotalHour.Where(id => id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value).Sum(x => x.ClockMin) : 0 / (double)60)),
+                                            ThisQuarter = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.ClockMin) / (double)60)),
+                                            RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.ClockMin) / (double)60)) : 0
                                         },
                                         DaysActive = new InquiryStatisticsByDate
                                         { }
@@ -709,29 +709,21 @@ namespace DataReef.TM.Services.Services
 
                 if (personClockTime != null)
                 {
-                    //TimeSpan timespan = personClockTime.EndDate.Value - personClockTime.StartDate.Value;
-                    //if (personClockTime.EndDate.Value > DateTime.Now)
-                    //{
-                    //    timespan = DateTime.Now - personClockTime.StartDate.Value;
-                    //}
-
-                    //long diffMin = (long)Math.Floor(timespan.TotalMinutes);
-                    //long diffHours = (long)Math.Floor(timespan.TotalHours);
-
-                    //personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
-                    //personClockTime.ClockHours = personClockTime.ClockHours + 0;
                     if(personClockTime.ClockType == "ClockIn")
                     {
                         TimeSpan timespan = DateTime.Now - personClockTime.StartDate.Value;
                         long diffMin = (long)Math.Floor(timespan.TotalMinutes);
                         personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
+                        TimeSpan spWorkMin = TimeSpan.FromMinutes(personClockTime.ClockMin);
+                        personClockTime.TagString = string.Format("{0:00}:{1:00}", (int)spWorkMin.TotalHours, spWorkMin.Minutes);
+                        personClockTime.ClockHours = Convert.ToInt64(Math.Round(personClockTime.ClockMin / (double)60));
                     }
                     personClockTime.ClockDiff = 0;
                     personClockTime.StartDate = DateTime.Now;
                     personClockTime.EndDate = (DateTime.Now).AddMinutes(20);
                     personClockTime.ClockType = "ClockIn";
                     personClockTime.Version += 1;
-                    personClockTime.DateLastModified = DateTime.UtcNow;
+                    personClockTime.DateLastModified = DateTime.Now;
                     dc.SaveChanges();
                 }
                 else

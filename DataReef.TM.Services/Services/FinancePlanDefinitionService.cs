@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using DataReef.Core.Infrastructure.Repository;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.Financing;
+using DataReef.Core.Infrastructure.Authorization;
 
 namespace DataReef.TM.Services
 {
@@ -80,7 +81,8 @@ namespace DataReef.TM.Services
                 if (financePlan != null)
                 {
                     var property = dc.Properties.FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
-                    if(property != null)
+                    var salesperson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId && !x.IsDeleted);
+                    if (property != null)
                     {
                         var metaData = financePlan.GetMetaData<FinancePlanDataModel>();
 
@@ -92,9 +94,12 @@ namespace DataReef.TM.Services
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{smartBoardID}", property.SmartBoardId.ToString() ?? string.Empty);
                             }
 
-                            if (url.CreditCheckUrl.Contains("{smartBoardID}"))
+                            if (url.CreditCheckUrl.Contains("{loanpaldata}"))
                             {
-                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("{smartBoardID}", property.SmartBoardId.ToString() ?? string.Empty);
+                                string s = "??lname="+ property.GetMainOccupant().LastName + "&fname=" + property.GetMainOccupant().FirstName + "&street=" + property.Address1 + "&city=" + property.City + "&state=" + property.State + "&zip=" + property.ZipCode + "&email=" + property.GetMainEmailAddress() + "&phone=" + property.GetMainPhoneNumber() + "&srfn=" + salesperson.FirstName + "&srln=" + salesperson.LastName + "&sre=" + salesperson.EmailAddressString 
+                                    //+ "&cost=" + property.Name + "&refnum=" + property.Name + "&loanterms=" + property.Name 
+                                    + "&language=english";
+                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("{loanpaldata}", property.SmartBoardId.ToString() ?? string.Empty);
                             }
                         }
 
