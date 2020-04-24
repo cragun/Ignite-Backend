@@ -358,7 +358,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         dc.SaveChanges();
 
                     }
-                    SaveRequest(null, response, url, headers);
+                    SaveRequest(null, response, url, headers, integrationData.ApiKey);
                 }
                 catch (Exception)
                 {
@@ -576,7 +576,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                     try
                     {
-                        SaveRequest(null, response, url, null);
+                        SaveRequest(null, response, url, null, integrationData.ApiKey);
                     }
                     catch (Exception)
                     {
@@ -628,7 +628,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 try
                 {
-                    SaveRequest(null, response, url, null);
+                    SaveRequest(null, response, url, null, integrationData.ApiKey);
                 }
                 catch (Exception)
                 {
@@ -652,7 +652,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             try
             {
-                SaveRequest(JsonConvert.SerializeObject(request), response, url, null);
+                SaveRequest(JsonConvert.SerializeObject(request), response, url, null, settings.ApiKey);
             }
             catch (Exception)
             {
@@ -675,7 +675,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null);
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, settings.ApiKey);
                 }
                 catch (Exception)
                 {

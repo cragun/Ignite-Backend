@@ -68,7 +68,7 @@ namespace DataReef.TM.Services
             return response;
         }
 
-        protected void SaveRequest(string request, string response, string url, string headers)
+        protected void SaveRequest(string request, string response, string url, string headers, string apikey)
         {
             var adapterRequest = new AdapterRequest
             {
@@ -76,7 +76,8 @@ namespace DataReef.TM.Services
                 Request = request,
                 Response = response,
                 Url = url,
-                Headers = headers
+                Headers = headers,
+                TagString = apikey
             };
 
             using (var context = new DataContext())
@@ -86,13 +87,13 @@ namespace DataReef.TM.Services
             }
         }
 
-        protected void SaveRequest(object request, object response, string url, object headers)
+        protected void SaveRequest(object request, object response, string url, object headers, string apikey)
         {
             var headersString = headers == null ? null : JsonConvert.SerializeObject(headers);
             var requestString = request == null ? null : JsonConvert.SerializeObject(request);
             var responseString = response == null ? null : JsonConvert.SerializeObject(response);
 
-            SaveRequest(requestString, responseString, url, headersString);
+            SaveRequest(requestString, responseString, url, headersString, apikey);
         }
     }
 }

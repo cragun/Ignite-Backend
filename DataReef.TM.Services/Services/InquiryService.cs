@@ -53,8 +53,6 @@ namespace DataReef.TM.Services.Services
             var inquiry = base.Update(entity);
             if (inquiry.SaveResult.Success)
             {
-                UpdatePersonClockTime();
-
                 UpdateLatestStatus(inquiry.PropertyID, inquiry.Disposition, inquiry.DispositionTypeId);
 
                 var pbi = new PBI_DispositionChanged
@@ -78,7 +76,6 @@ namespace DataReef.TM.Services.Services
             if (ret == null)
             {
                 entity.SaveResult = SaveResult.SuccessfulInsert;
-                UpdatePersonClockTime();
                 return entity;
             }
 
@@ -684,6 +681,7 @@ namespace DataReef.TM.Services.Services
 
                 if (property.LatestDisposition != newDisposition)
                 {
+                    UpdatePersonClockTime(property.Territory.OUID);
                     property.DispositionTypeId = newDispositionTypeId;
                     property.LatestDisposition = newDisposition;
                     territoryNeedsSave = true;
@@ -698,16 +696,25 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
-
-        public static void UpdatePersonClockTime()
+        public class PersonClock
         {
+            public long ClockTimeInMin { get; set; }
+
+            public bool IsEnabled { get; set; }
+        }
+
+
+        public void UpdatePersonClockTime(Guid propertyid)
+        {
+
+            var PersonClockSetting = _ouSettingService.Value.GetOUSettingForPropertyID<PersonClock>(propertyid, OUSetting.LegionOUPersonClockInfo);
+
             using (DataContext dc = new DataContext())
             {
                 var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date)
                     .FirstOrDefault();
 
-                if (personClockTime != null)
+                if (personClockTime != null && PersonClockSetting.IsEnabled == true)
                 {
                     if(personClockTime.ClockType == "ClockIn")
                     {
@@ -720,7 +727,7 @@ namespace DataReef.TM.Services.Services
                     }
                     personClockTime.ClockDiff = 0;
                     personClockTime.StartDate = DateTime.Now;
-                    personClockTime.EndDate = (DateTime.Now).AddMinutes(20);
+                    personClockTime.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
                     personClockTime.ClockType = "ClockIn";
                     personClockTime.Version += 1;
                     personClockTime.DateLastModified = DateTime.Now;
@@ -733,7 +740,7 @@ namespace DataReef.TM.Services.Services
                     personClock.PersonID = SmartPrincipal.UserId;
                     personClock.DateCreated = DateTime.Now;
                     personClock.StartDate = DateTime.Now;
-                    personClock.EndDate = (DateTime.Now).AddMinutes(20);
+                    personClock.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
                     personClock.ClockDiff = 0;
                     personClock.ClockMin = 0;
                     personClock.ClockHours = 0;

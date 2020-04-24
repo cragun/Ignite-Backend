@@ -283,12 +283,12 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [Route("PersonClock")]
+        [Route("PersonClock/{min}")]
         [HttpGet]
         [ResponseType(typeof(PersonClockTime))]
-        public IHttpActionResult PersonClock()
+        public IHttpActionResult PersonClock(long min)
         {
-            var person = peopleService.GetPersonClock(SmartPrincipal.UserId);
+            var person = peopleService.GetPersonClock(SmartPrincipal.UserId, min);
 
             return Ok(person);
         }

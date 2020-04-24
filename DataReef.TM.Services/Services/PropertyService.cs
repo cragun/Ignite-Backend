@@ -262,7 +262,7 @@ namespace DataReef.TM.Services.Services
             if (entity.Inquiries?.Any() == true)
             {
                 //person clocktime 
-                InquiryService.UpdatePersonClockTime();
+                _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
 
                 using (var uow = UnitOfWorkFactory())
                 {
@@ -369,7 +369,7 @@ namespace DataReef.TM.Services.Services
                         if(oldProp.LatestDisposition != entity.LatestDisposition)
                         {
                             //person clocktime 
-                            InquiryService.UpdatePersonClockTime();
+                            _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
                         }
                         if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
                         ret.SBLeadError = "";

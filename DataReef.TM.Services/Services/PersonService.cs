@@ -953,7 +953,7 @@ namespace DataReef.TM.Services
             return result;
         }
 
-        public PersonClockTime GetPersonClock(Guid personID)
+        public PersonClockTime GetPersonClock(Guid personID, long min)
         {
             PersonClockTime person = new PersonClockTime();
             using (DataContext dc = new DataContext())
@@ -964,7 +964,7 @@ namespace DataReef.TM.Services
                 {
                     if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
                     {                          
-                        person.ClockDiff = 20;
+                        person.ClockDiff = min;
                         person.ClockType = "ClockOut";
                         person.TenantID = 0;
                         person.Version += 1;

@@ -29,5 +29,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         bool IsInquiryFirstForUser(Guid inquiryId, Guid userId);
+
+        [OperationContract]
+        void UpdatePersonClockTime(Guid propertyid);
     }
 }

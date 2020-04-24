@@ -52,7 +52,7 @@ namespace DataReef.TM.Services
             var req = Mapper.Map<ApplicationRequest>(request);
             var response = _bridge.Value.SubmitApplication(req);
 
-            SaveRequest(req, response, null, null);
+            SaveRequest(req, response, null, null, null);
 
             return Mapper.Map<LoanPalApplicationResponse>(response);
         }
