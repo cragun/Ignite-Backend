@@ -16,6 +16,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
+using DataReef.Auth.Helpers;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -110,7 +111,11 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public IHttpActionResult MarkNotificationAsReadFromSmartboard(string apiKey, string notificationID)
         {
-            var result = _notificationService.MarkAsReadFromSmartboard(notificationID, apiKey);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _notificationService.MarkAsReadFromSmartboard(notificationID, DecyptApiKey);
 
             return Ok(result);
         }

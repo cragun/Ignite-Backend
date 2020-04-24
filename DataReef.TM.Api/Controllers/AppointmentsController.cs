@@ -10,6 +10,7 @@ using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Models.Enums;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using DataReef.Auth.Helpers;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -83,7 +84,11 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public SBAppointmentDTO CreateNewAppointmentFromSmartBoard(SBCreateAppointmentRequest request, string apiKey)
         {
-            return _appointmentService.InsertNewAppointment(request, apiKey);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            return _appointmentService.InsertNewAppointment(request, DecyptApiKey);
         }
 
         /// <summary>

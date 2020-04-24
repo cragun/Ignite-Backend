@@ -79,7 +79,11 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult GetAllForSmartboard(long leadId, string apiKey, long? igniteId)
         {
-            var result = _propertyNoteService.GetAllNotesForProperty(leadId, igniteId, apiKey);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _propertyNoteService.GetAllNotesForProperty(leadId, igniteId, DecyptApiKey);
 
             return Ok(result);
         }
@@ -107,9 +111,11 @@ namespace DataReef.TM.Api.Controllers
 
             string apikey = _propertyNoteService.getApiKey(leadId, igniteId, apiKey);
 
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(apikey);
+
             var result = new testmodelforapi
             {
-                ApiKey = apikey,
+                ApiKey = encryptedAPIkey,
                 SBLeadId = leadId,
                 IgniteId = igniteId
             };
@@ -132,7 +138,7 @@ namespace DataReef.TM.Api.Controllers
         {
 
             
-          //  bool checkTime= CryptographyHelper.checkTime(apiKey);
+             bool checkTime= CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
 
@@ -162,21 +168,19 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey,string Encryptedapikey)
         {
-            string EncryptApiKey = CryptographyHelper.EncryptAPI(originalapikey);
-            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(EncryptApiKey);
-            string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
+            string EncryptApiKey = CryptographyHelper.getEncryptAPIKey(originalapikey);
+            
 
             // string DecyptvalueofEncryptkey = CryptographyHelper.DecryptApiKey(EncryptApiKey);
 
-            byte[] encodedDataAsBytes = System.Convert.FromBase64String(Encryptedapikey);
-            string returnValueDecrypted = System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
-            string DecyptApiKey = CryptographyHelper.DecryptApiKey(returnValueDecrypted);
+            
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(Encryptedapikey);
 
             var result = new testmodel
             {
                 OriginalApiKey = originalapikey,
                 EncryptedApiKey = Encryptedapikey,
-                EncryptTextOfOriginalApiKey = returnValue,
+                EncryptTextOfOriginalApiKey = EncryptApiKey,
                 DecyptTextOfEncryptedApiKey = DecyptApiKey
             };
 
@@ -196,7 +200,11 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult EditNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
         {
-            var result = _propertyNoteService.EditNoteFromSmartboard(request, apiKey);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _propertyNoteService.EditNoteFromSmartboard(request, DecyptApiKey);
 
             return Ok(result);
         }
@@ -214,7 +222,11 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult DeleteNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
         {
-            _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, apiKey, email);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, DecyptApiKey, email);
 
             return Ok();
         }
@@ -232,7 +244,11 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult CheckCanTransferLead(long leadId, string apiKey)
         {
-            var result = _propertyNoteService.GetTerritoriesList(leadId, apiKey);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _propertyNoteService.GetTerritoriesList(leadId, DecyptApiKey);
             return Ok(result);
         }
 
@@ -249,7 +265,11 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult UpdateTerritoryIdInProperty([FromBody]SBNoteDTO request , string apiKey)
         {
-            var result = _propertyNoteService.UpdateTerritoryIdInProperty(request.LeadID, request.Guid, apiKey, request.Email);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _propertyNoteService.UpdateTerritoryIdInProperty(request.LeadID, request.Guid, DecyptApiKey, request.Email);
             return Ok(result);
         }
 

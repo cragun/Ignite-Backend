@@ -143,7 +143,22 @@ namespace DataReef.Auth.Helpers
                 return ex.Message;
             }
         }
-       
+
+        public static string getEncryptAPIKey(string apikey)
+        {
+            long curruntUnixTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
+
+            string addUnixTime = apikey+ "_" + curruntUnixTime;
+
+            string EncryptApiKey = CryptographyHelper.EncryptAPI(addUnixTime);
+
+            byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(EncryptApiKey);
+            string returnValue = System.Convert.ToBase64String(toEncodeAsBytes);
+            
+
+            return returnValue;
+        }
+
         public static string getDecryptAPIKey(string apikey)
         {
            byte[] encodedDataAsBytes  = System.Convert.FromBase64String(apikey);

@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Description;
+using DataReef.Auth.Helpers;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -265,7 +266,11 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public SBPropertyDTO CreateNewPropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
         {
-            return _propertyServiceFactory().CreatePropertyFromSmartBoard(request, apiKey);
+
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            return _propertyServiceFactory().CreatePropertyFromSmartBoard(request, DecyptApiKey);
         }
 
 
