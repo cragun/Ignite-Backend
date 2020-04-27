@@ -293,6 +293,16 @@ namespace DataReef.TM.Api.Controllers
             return Ok(person);
         }
 
+
+        [Route("deleteuser/{guid}")]
+        [HttpPost]
+        public HttpResponseMessage DeleteUserByGuid(Guid guid)
+        {
+            var ret = base.DeleteByGuid(guid);
+            return ret;
+        }
+
+
         public override HttpResponseMessage DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();
