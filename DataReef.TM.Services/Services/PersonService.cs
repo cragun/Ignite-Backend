@@ -987,7 +987,43 @@ namespace DataReef.TM.Services
         }
 
 
-        
+        public List<Person> personDetails(Guid ouid, DateTime date)
+        {
+
+            using (DataContext dc = new DataContext())
+            {
+                var territory = dc
+                    .Territories
+                    .Where(t => t.OUID == ouid)
+                    .Select(t => t.Guid);
+
+                var property = dc
+                    .Properties
+                    .Where(p => territory.Contains(p.TerritoryID))
+                    .Select(p => p.Guid);
+
+                var appointmentList = dc
+                    .Appointments
+                    .Where(a => property.Contains(a.PropertyID))
+                    .ToList();
+
+                var appointment = appointmentList.Where(a => a.StartDate.Date == date.Date && a.GoogleEventID != null)
+                    .Select(a => a.AssigneeID);
+
+
+                var person = dc
+                              .People?
+                              .Include(p => p.AssignedAppointments)
+                              .Where(p => appointment.Contains(p.Guid) && p.IsDeleted == false)
+                              .ToList();
+
+                return person;
+
+            }
+        }
+
+
+
         private string ReplaceTokens(string source, Property property)
         {
             if (property == null)

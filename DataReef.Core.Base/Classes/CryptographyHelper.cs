@@ -183,7 +183,7 @@ namespace DataReef.Auth.Helpers
 
             string[] str = DecyptApiKey.Split('_');
 
-            long unixTime = long.Parse(str[3]);
+            long unixTime = long.Parse(str[1]);
 
             long curruntUnixTime = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             long time = curruntUnixTime - unixTime;
