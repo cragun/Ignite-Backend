@@ -268,7 +268,11 @@ namespace DataReef.TM.Services
                     {
                         if(!string.IsNullOrEmpty(proptype))
                         {
-                            isallZeroproptype = isallZeroproptype && matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions).Equals(0);
+                           // isallZeroproptype = isallZeroproptype && matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions).Equals(0);
+                            long isitzero = Convert.ToInt64(matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions));
+                            isallZeroproptype = isallZeroproptype && (isitzero == 0);
+                            long isitzeroa = Convert.ToInt64(matchingStat.DaysActive.GetType().GetProperty(proptype).GetValue(matchingStat.DaysActive));
+                            isallZeroproptype = isallZeroproptype && (isitzeroa == 0);
                         }
                         else
                         {
