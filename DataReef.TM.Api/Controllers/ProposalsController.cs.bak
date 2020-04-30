@@ -37,7 +37,7 @@ namespace DataReef.TM.Api.Controllers
             _proposalService = dataService;
             _personService = personService;
         }
-        
+
         [AllowAnonymous]
         [InjectAuthPrincipal]
         [Route("data/{proposalDataId}/{utilityInflationRate=null}")]

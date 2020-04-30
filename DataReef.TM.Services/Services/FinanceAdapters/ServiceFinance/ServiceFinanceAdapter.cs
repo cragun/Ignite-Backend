@@ -92,7 +92,7 @@ namespace DataReef.TM.Services
 
                         try
                         {
-                            SaveRequest(payloadJson, resultString, url, JsonConvert.SerializeObject(request.Headers));
+                            SaveRequest(payloadJson, resultString, url, JsonConvert.SerializeObject(request.Headers), null);
                         }
                         catch (Exception)
                         {
