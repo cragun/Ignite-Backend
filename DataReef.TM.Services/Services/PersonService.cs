@@ -971,7 +971,7 @@ namespace DataReef.TM.Services
                         person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
                     }
-                    else
+                    else if (person.ClockType == "ClockIn")
                     {
                         TimeSpan timespan = DateTime.Now - person.StartDate.Value;
                         long diffMin = (long)Math.Floor(timespan.TotalMinutes);
@@ -989,33 +989,16 @@ namespace DataReef.TM.Services
 
         public List<Person> personDetails(Guid ouid, DateTime date)
         {
-
             using (DataContext dc = new DataContext())
             {
-                var territory = dc
-                    .Territories
-                    .Where(t => t.OUID == ouid)
-                    .Select(t => t.Guid);
+                var territory = dc.Territories.Where(t => t.OUID == ouid).Select(t => t.Guid);
+                var property = dc.Properties.Where(p => territory.Contains(p.TerritoryID)).Select(p => p.Guid);
+                var appointment = dc.Appointments.Where(a => property.Contains(a.PropertyID) && DbFunctions.TruncateTime(a.DateCreated.Date) == date.Date && a.GoogleEventID != null).Select(a => a.AssigneeID);
 
-                var property = dc
-                    .Properties
-                    .Where(p => territory.Contains(p.TerritoryID))
-                    .Select(p => p.Guid);
+                //var appointment = appointmentList.Where(a => a.StartDate.Date == date.Date && a.GoogleEventID != null)
+                //    .Select(a => a.AssigneeID);
 
-                var appointmentList = dc
-                    .Appointments
-                    .Where(a => property.Contains(a.PropertyID))
-                    .ToList();
-
-                var appointment = appointmentList.Where(a => a.StartDate.Date == date.Date && a.GoogleEventID != null)
-                    .Select(a => a.AssigneeID);
-
-
-                var person = dc
-                              .People?
-                              .Include(p => p.AssignedAppointments)
-                              .Where(p => appointment.Contains(p.Guid) && p.IsDeleted == false)
-                              .ToList();
+                var person = dc.People?.Include(p => p.AssignedAppointments).Where(p => appointment.Contains(p.Guid) && p.IsDeleted == false).ToList();
 
                 return person;
 

@@ -175,6 +175,15 @@
             <param name="pageNumber"></param>
             <param name="itemsPerPage"></param>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.GetMembers(DataReef.TM.Models.DataViews.OUMembersRequest,System.Guid,System.String,System.String)">
+            <summary>
+            POST method used by SmartBoard to retrieve appointments for the specified OUID per PersonId
+            </summary>
+            <param name="request"> </param>
+            <param name="ouID">the ID for the OU </param>
+            <param name="apiKey"></param>
+            <param name="date"></param>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.GetAppointmentsAssignedToSmartboardUser(System.String,System.String)">
             <summary>
             Get method used by SmartBoard to retrieve appointments for the specified property
