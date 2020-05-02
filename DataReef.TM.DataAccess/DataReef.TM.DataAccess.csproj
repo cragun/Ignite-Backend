@@ -1255,9 +1255,9 @@
     <Compile Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.Designer.cs">
       <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202004211035099_Add PersonClockTime.cs" />
-    <Compile Include="Migrations\202004211035099_Add PersonClockTime.Designer.cs">
-      <DependentUpon>202004211035099_Add PersonClockTime.cs</DependentUpon>
+    <Compile Include="Migrations\202005020532320_Add PersonClockTime Table.cs" />
+    <Compile Include="Migrations\202005020532320_Add PersonClockTime Table.Designer.cs">
+      <DependentUpon>202005020532320_Add PersonClockTime Table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2160,8 +2160,8 @@
     <EmbeddedResource Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.resx">
       <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004211035099_Add PersonClockTime.resx">
-      <DependentUpon>202004211035099_Add PersonClockTime.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202005020532320_Add PersonClockTime Table.resx">
+      <DependentUpon>202005020532320_Add PersonClockTime Table.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

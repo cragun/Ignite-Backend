@@ -9,7 +9,6 @@ namespace DataReef.TM.Models
     [Table("PersonClockTime")]
     public class PersonClockTime : EntityBase
     {
-
         [DataMember]
         public Guid PersonID { get; set; }
 

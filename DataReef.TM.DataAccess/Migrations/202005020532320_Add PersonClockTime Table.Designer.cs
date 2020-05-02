@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddPersonClockTime : IMigrationMetadata
+    public sealed partial class AddPersonClockTimeTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddPersonClockTime));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddPersonClockTimeTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202004211035099_Add PersonClockTime"; }
+            get { return "202005020532320_Add PersonClockTime Table"; }
         }
         
         string IMigrationMetadata.Source
