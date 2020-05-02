@@ -963,13 +963,21 @@ namespace DataReef.TM.Services
                 if (person != null)
                 {
                     if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
-                    {                          
-                        person.ClockDiff = min;
+                    {
+                        TimeSpan timespan = person.EndDate.Value - person.StartDate.Value;
+                        long difMin = (long)Math.Floor(timespan.TotalMinutes);
+
+                        person.ClockMin = person.ClockMin + difMin;
+                        TimeSpan spWorkMin = TimeSpan.FromMinutes(person.ClockMin);
+                        person.TagString = string.Format("{0:00}:{1:00}", (int)spWorkMin.TotalHours, spWorkMin.Minutes);
+                        person.ClockHours = Convert.ToInt64(Math.Round(person.ClockMin / (double)60));
+                        person.ClockDiff = 0;
                         person.ClockType = "ClockOut";
                         person.TenantID = 0;
                         person.Version += 1;
                         person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
+
                     }
                     else if (person.ClockType == "ClockIn")
                     {
