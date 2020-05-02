@@ -303,6 +303,18 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
+
+        [Route("{ouid}/{date}")]
+        [HttpGet]
+        [ResponseType(typeof(Person))]
+        public IHttpActionResult personDetails(Guid ouid, DateTime date)
+        {
+
+            var person = peopleService.personDetails(ouid, date);
+
+            return Ok(person);
+        }
+
         public override HttpResponseMessage DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();

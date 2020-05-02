@@ -64,5 +64,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         PersonClockTime GetPersonClock(Guid personID, long min);
+
+        [OperationContract]
+        List<Person> personDetails(Guid ouid, DateTime date);
     }
 }

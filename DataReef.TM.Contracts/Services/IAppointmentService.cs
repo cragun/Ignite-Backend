@@ -28,6 +28,9 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SBAppointmentDTO> GetSmartboardAppointmentsForOUID(Guid ouID, int pageIndex, int itemsPerPage, string apiKey);
 
         [OperationContract]
+        ICollection<Person> GetMembersWithAppointment(OUMembersRequest request, Guid ouID, string apiKey, DateTime date);
+
+        [OperationContract]
         IEnumerable<SBAppointmentDTO> GetSmartboardAppointmentsAssignedToUserId(string smartboardUserId, string apiKey);
 
         [OperationContract]

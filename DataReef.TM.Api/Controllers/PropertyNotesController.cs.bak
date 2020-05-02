@@ -185,9 +185,8 @@ namespace DataReef.TM.Api.Controllers
             };
 
             return Ok(result);
-        }     
-
-
+        }
+        
         /// <summary>
         /// edits a note from smartboard
         /// </summary>

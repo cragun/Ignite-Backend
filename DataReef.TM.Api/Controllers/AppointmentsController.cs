@@ -11,6 +11,7 @@ using DataReef.TM.Models.Enums;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using DataReef.Auth.Helpers;
+using DataReef.TM.Models.DataViews;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -59,6 +60,24 @@ namespace DataReef.TM.Api.Controllers
         public IEnumerable<SBAppointmentDTO> GetAppointmentsForOU(Guid ouID, string apiKey, int pageNumber = 1, int itemsPerPage = 20)
         {
             return _appointmentService.GetSmartboardAppointmentsForOUID(ouID, pageNumber, itemsPerPage, apiKey);
+        }
+
+
+        /// <summary>
+        /// POST method used by SmartBoard to retrieve appointments for the specified OUID per PersonId
+        /// </summary>
+        /// <param name="request"> </param>
+        /// <param name="ouID">the ID for the OU </param>
+        /// <param name="apiKey"></param>
+        /// <param name="date"></param>
+        [HttpPost]
+        [Route("sb/ouAppointment/{ouID}/{apiKey}/{date}")]
+        public IHttpActionResult GetMembers([FromBody]OUMembersRequest request, Guid ouID, string apiKey, string date)
+        {
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+            var data =  _appointmentService.GetMembersWithAppointment(request, ouID, DecyptApiKey, DateTime.Parse(date));
+            return Ok(data);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ using DataReef.TM.Classes;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.FinanceAdapters.SST;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.SmartBoard;
@@ -415,14 +416,8 @@ namespace DataReef.TM.Services
             using (var uow = UnitOfWorkFactory())
             {
                 // we validate the token
-                var sbSettings = _ouSettingsService
-                                    .Value
-                                    .GetSettingsByOUID(ouID)
-                                    ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
-                                    ?.GetValue<ICollection<SelectedIntegrationOption>>()?
-                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
-                                    .Data?
-                                    .SMARTBoard;
+                var sbSettings = _ouSettingsService.Value.GetSettingsByOUID(ouID)?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                    ?.GetValue<ICollection<SelectedIntegrationOption>>()?.FirstOrDefault(s => s.Data?.SMARTBoard != null)?.Data?.SMARTBoard;
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
@@ -456,6 +451,33 @@ namespace DataReef.TM.Services
 
             }
             yield break;
+        }
+
+
+
+
+        public ICollection<Person> GetMembersWithAppointment(OUMembersRequest request, Guid ouID, string apiKey ,DateTime date)
+        {
+            using (var uow = UnitOfWorkFactory())
+            {
+                // we validate the token
+                var sbSettings = _ouSettingsService
+                                    .Value
+                                    .GetSettingsByOUID(ouID)
+                                    ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                    ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                    .Data?
+                                    .SMARTBoard;
+
+                if (sbSettings?.ApiKey != apiKey)
+                {
+                    throw new Exception("ApiKey invalid");
+                }
+            }
+
+            var Appointmentdata = _ouService.Value.GetMembers(request);
+            return Appointmentdata;
         }
 
         public override ICollection<Appointment> InsertMany(ICollection<Appointment> entities)
