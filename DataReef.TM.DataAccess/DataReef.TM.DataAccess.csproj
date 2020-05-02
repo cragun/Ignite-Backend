@@ -1255,21 +1255,9 @@
     <Compile Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.Designer.cs">
       <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202004161013136_Add field in inquiries.cs" />
-    <Compile Include="Migrations\202004161013136_Add field in inquiries.Designer.cs">
-      <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202004171154569_Remove Extra Field from inquiries.cs" />
-    <Compile Include="Migrations\202004171154569_Remove Extra Field from inquiries.Designer.cs">
-      <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\202004211035099_Add PersonClockTime.cs" />
     <Compile Include="Migrations\202004211035099_Add PersonClockTime.Designer.cs">
       <DependentUpon>202004211035099_Add PersonClockTime.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202004221019382_Add new field in personclocktime.cs" />
-    <Compile Include="Migrations\202004221019382_Add new field in personclocktime.Designer.cs">
-      <DependentUpon>202004221019382_Add new field in personclocktime.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2172,17 +2160,8 @@
     <EmbeddedResource Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.resx">
       <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004161013136_Add field in inquiries.resx">
-      <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004171154569_Remove Extra Field from inquiries.resx">
-      <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004211035099_Add PersonClockTime.resx">
       <DependentUpon>202004211035099_Add PersonClockTime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004221019382_Add new field in personclocktime.resx">
-      <DependentUpon>202004221019382_Add new field in personclocktime.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
