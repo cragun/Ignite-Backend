@@ -1002,7 +1002,7 @@ namespace DataReef.TM.Services.Services
                     var agreementSignedDocument = GetSignedAgreementUrl(contractorID, data.Guid, ouSettings);
                     signedDocuments.Add(agreementSignedDocument);
                 }
-                
+
                 var attachmentPDFs = new List<Tuple<byte[], string>>();
                 signedDocuments?
                         .ForEach(d =>
@@ -1037,7 +1037,7 @@ namespace DataReef.TM.Services.Services
                             attachmentPDFs.Add(new Tuple<byte[], string>(pdfContent, $"{d.Description}.pdf"));
                         });
 
-                var proposalDocuments = 
+                var proposalDocuments =
                     string.IsNullOrEmpty(proposal.SignedDocumentsJSON)
                     ? new List<SignedDocumentDTO>()
                     : JsonConvert.DeserializeObject<List<SignedDocumentDTO>>(proposal.SignedDocumentsJSON);
@@ -1064,7 +1064,7 @@ namespace DataReef.TM.Services.Services
 
                 if (sendEmail)
                 {
-                    
+
                     var property = proposal.Property;
 
                     var propertyAddress = proposal.GetPropertyAddress();
@@ -1238,24 +1238,24 @@ namespace DataReef.TM.Services.Services
                 var documentUrls = GetProposalURLs(contractorID, data.Guid, signedDocuments, ouSettings);
                 var planName = financePlan.Name;
 
-              
+
                 float apr = financePlan.FinancePlanDefinition.Apr;
                 float year = financePlan.FinancePlanDefinition.TermInYears;
                 var FinanceProvider = dataContext
                             .FinanceProviders
                             .FirstOrDefault(fd => fd.Guid == financePlan.FinancePlanDefinition.ProviderID);
-                
+
 
                 var attachmentPDFs = new List<Tuple<byte[], string>>();
                 documentUrls?
                         .ForEach(d =>
                         {
 
-                          
+
                             d.ProviderName = FinanceProvider?.Name;
                             d.Apr = apr;
                             d.Year = year;
-                        
+
 
                             d.Description = $"{d.Name} [{planName.AsFileName()}]";
                             d.ProposalDataID = proposalDataId;

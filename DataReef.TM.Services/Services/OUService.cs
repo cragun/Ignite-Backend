@@ -153,7 +153,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganization(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, IEnumerable<Guid> excludedReps = null)
+        public ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganization(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
         {
             var result = new List<InquiryStatisticsForOrganization>();
 
@@ -198,7 +198,7 @@ namespace DataReef.TM.Services.Services
                 return result;
             }
 
-            result = _inquiryService.GetInquiryStatisticsForOrganizationTerritories(territoryIds, reportSettings.ReportItems, specifiedDay, excludedReps).ToList();
+            result = _inquiryService.GetInquiryStatisticsForOrganizationTerritories(territoryIds, reportSettings.ReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
             return result;
         }
 

@@ -232,6 +232,35 @@ namespace DataReef.TM.Services
                                     RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personKpiDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
                                 }
                             });
+
+                            if(col.ColumnName == "ClockHours")
+                            {
+                                var PersonClockTime = dc.PersonClockTime.Where(id => id.PersonID == personId).Select(i => new { PersonID = i.PersonID, DateCreated = i.DateCreated, ClockMin = i.ClockMin }).ToList();
+
+                                if (PersonClockTime != null)
+                                {
+                                    kpiStatistics.Add(new InquiryStatisticsForPerson
+                                    {
+                                        PersonId = personId,
+                                        Name = col.ColumnName,
+                                        Actions = new InquiryStatisticsByDate
+                                        {
+                                            AllTime = Convert.ToInt64(Math.Round(PersonClockTime.Sum(x => x.ClockMin) / (double)60)),
+                                            ThisYear = Convert.ToInt64(Math.Round(PersonClockTime.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.ClockMin) / (double)60)),
+                                            ThisMonth = Convert.ToInt64(Math.Round(PersonClockTime.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.ClockMin) / (double)60)),
+                                            ThisWeek = Convert.ToInt64(Math.Round(PersonClockTime.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.ClockMin) / (double)60)),
+                                            Today = Convert.ToInt64(Math.Round(PersonClockTime.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.ClockMin) / (double)60)),
+                                            SpecifiedDay = Convert.ToInt64(Math.Round(specifiedDay.HasValue ? PersonClockTime.Where(id => id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value).Sum(x => x.ClockMin) : 0 / (double)60)),
+                                            ThisQuarter = Convert.ToInt64(Math.Round(PersonClockTime.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.ClockMin) / (double)60)),
+                                            RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? Convert.ToInt64(Math.Round(PersonClockTime.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.ClockMin) / (double)60)) : 0
+                                        },
+                                        DaysActive = new InquiryStatisticsByDate
+                                        { }
+
+                                    });
+                                }
+                            }
+
                         }
                     }
                 }

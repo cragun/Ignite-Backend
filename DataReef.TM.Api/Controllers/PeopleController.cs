@@ -253,7 +253,7 @@ namespace DataReef.TM.Api.Controllers
         public IHttpActionResult GetMySurvey()
         {
             var result = peopleService.GetUserSurvey(SmartPrincipal.UserId);
-            return Ok(new GenericResponse<string>{ Response = result});
+            return Ok(new GenericResponse<string> { Response = result });
         }
 
         [HttpPost]
@@ -272,14 +272,34 @@ namespace DataReef.TM.Api.Controllers
         {
             var result = peopleService.GetSurveyUrl(SmartPrincipal.UserId, propertyID);
             return Ok(new GenericResponse<string> { Response = result });
-        }       
+        }
 
         [HttpGet]
         [Route("crm/LeadSources/{ouid}")]
         [ResponseType(typeof(GenericResponse<List<CRMLeadSource>>))]
         public IHttpActionResult GetCRMLeadSources(Guid ouid)
-        {            
+        {
             return Ok(new GenericResponse<List<CRMLeadSource>> { Response = peopleService.CRMGetAvailableLeadSources(ouid) });
+        }
+
+
+        [Route("PersonClock/{min}")]
+        [HttpGet]
+        [ResponseType(typeof(PersonClockTime))]
+        public IHttpActionResult PersonClock(long min)
+        {
+            var person = peopleService.GetPersonClock(SmartPrincipal.UserId, min);
+
+            return Ok(person);
+        }
+
+
+        [Route("deleteuser/{guid}")]
+        [HttpPost]
+        public HttpResponseMessage DeleteUserByGuid(Guid guid)
+        {
+            var ret = base.DeleteByGuid(guid);
+            return ret;
         }
 
 
@@ -342,7 +362,5 @@ namespace DataReef.TM.Api.Controllers
                 }
             }
         }
-
-        
     }
 }

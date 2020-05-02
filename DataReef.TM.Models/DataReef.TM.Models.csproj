@@ -358,6 +358,7 @@
     <Compile Include="FinancialIntegration\SmartBOARD\GetPageRequest.cs" />
     <Compile Include="KeyValue.cs" />
     <Compile Include="Notification.cs" />
+    <Compile Include="PersonClockTime.cs" />
     <Compile Include="PropertyNote.cs" />
     <Compile Include="PropertySurvey.cs" />
     <Compile Include="PersonKPI.cs" />

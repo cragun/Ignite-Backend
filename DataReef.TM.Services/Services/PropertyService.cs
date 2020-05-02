@@ -204,6 +204,8 @@ namespace DataReef.TM.Services.Services
             prop.SBLeadError = "";
 
             //send new lead to SMARTBOARD
+            //if (entity.LatestDisposition.Equals("DoorKnocked") || entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null)
+            //if (entity.LatestDisposition.Equals("DoorKnocked"))
             if (entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null)
             {
                 try
@@ -259,6 +261,9 @@ namespace DataReef.TM.Services.Services
 
             if (entity.Inquiries?.Any() == true)
             {
+                //person clocktime 
+                _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+
                 using (var uow = UnitOfWorkFactory())
                 {
                     var property = uow
@@ -314,6 +319,12 @@ namespace DataReef.TM.Services.Services
                                         .FirstOrDefault(p => p.Guid == entity.Guid);
                         }
 
+                        //needToUpdateSB = oldProp.SmartBoardId.HasValue
+                        //                && (oldProp.Name != entity.Name
+                        //                    || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
+                        //                    || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber()
+                        //                    || oldProp.UtilityProviderID != entity.UtilityProviderID);
+
                         needToUpdateSB = (oldProp.Name != entity.Name || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
                                             || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID);
 
@@ -354,6 +365,12 @@ namespace DataReef.TM.Services.Services
 
 
                         ret = base.Update(entity, dataContext);
+
+                        if(oldProp.LatestDisposition != entity.LatestDisposition)
+                        {
+                            //person clocktime 
+                            _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
+                        }
                         if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
                         ret.SBLeadError = "";
                         UpdateNavigationProperties(entity, dataContext: dataContext);
@@ -410,6 +427,7 @@ namespace DataReef.TM.Services.Services
                             _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
                         });
 
+                        //if (needToUpdateSB && !pushedToSB)
                         if (needToUpdateSB)
                         {
                             try

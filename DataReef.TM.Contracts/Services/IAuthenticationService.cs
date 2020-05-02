@@ -16,6 +16,12 @@ namespace DataReef.TM.Contracts.Services
         AuthenticationToken Authenticate(string userName, string password);
 
         [OperationContract]
+        AuthenticationToken AuthenticateUserBySuperAdmin(Guid personid);
+
+        [OperationContract]
+        bool updateUser(bool value,Guid userId);
+
+        [OperationContract]
         bool IsUserActive(Guid userId);
 
         [OperationContract]

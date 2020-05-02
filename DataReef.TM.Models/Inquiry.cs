@@ -25,7 +25,7 @@ namespace DataReef.TM.Models
 
         [DataType(DataType.DateTime)]
         [DataMember]
-        public DateTime? FollowUpDate { get; set; }
+        public DateTime? FollowUpDate { get; set; }        
 
         [DataMember]
         public bool? ShouldIntegrateWithCalendar { get; set; }

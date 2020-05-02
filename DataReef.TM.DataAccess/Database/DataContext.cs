@@ -79,6 +79,7 @@ namespace DataReef.TM.DataAccess.Database
         public DbSet<OUShape> OUShapes { get; set; }
         public DbSet<PasswordReset> PasswordResets { get; set; }
         public DbSet<Person> People { get; set; }
+        public DbSet<PersonClockTime> PersonClockTime { get; set; }
         public DbSet<PersonSetting> PersonSettings { get; set; }
         public DbSet<PersonKPI> PersonKPIs { get; set; }
         public DbSet<PersonalConnection> PersonalConnections { get; set; }

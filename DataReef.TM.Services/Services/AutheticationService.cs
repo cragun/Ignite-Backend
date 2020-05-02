@@ -15,6 +15,7 @@ using DataReef.TM.Models.Accounting;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Blobs;
 using DataReef.TM.Models.DTOs.Persons;
+using DataReef.TM.Models.Enums;
 using DataReef.TM.Services;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using System;
@@ -44,6 +45,7 @@ namespace DataReef.Application.Services
         private readonly Lazy<IDataService<Credential>> _credentialService;
         private readonly Lazy<IPowerBIBridge> _powerBIBridge;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly IAppSettingService _appSettingService = null;
 
         public AuthenticationService(ILogger logger,
             Lazy<IMailChimpAdapter> mailChimpAdapter,
@@ -51,7 +53,8 @@ namespace DataReef.Application.Services
             Lazy<IDataService<PasswordReset>> resetService,
             Lazy<IDataService<Credential>> credentialService,
             Lazy<IPowerBIBridge> powerBIBridge,
-            Lazy<ISolarSalesTrackerAdapter> sbAdapter)
+            Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            IAppSettingService appSettingService)
         {
             this.logger = logger;
             _mailChimpAdapter = mailChimpAdapter;
@@ -60,6 +63,7 @@ namespace DataReef.Application.Services
             _credentialService = credentialService;
             _powerBIBridge = powerBIBridge;
             _sbAdapter = sbAdapter;
+            _appSettingService = appSettingService;
         }
 
         public AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword)
@@ -293,6 +297,50 @@ namespace DataReef.Application.Services
                                 int.TryParse(setting.Value, out expirationDays);
                             }
 
+                            var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
+
+
+                            int logindays = _appSettingService.GetLoginDays();
+
+                            DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
+
+                            var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
+
+                            if (lastLoginCount == 0)
+                            {
+
+                                var person = dc
+                                     .People
+                                     .SingleOrDefault(p => p.Guid == c.UserID
+                                                  && p.IsDeleted == false);
+
+                                if (person != null && !person.IsDeleted)
+                                {
+                                    person.IsDeleted = true;
+                                }
+                                var user = dc
+                                     .Users
+                                     .SingleOrDefault(u => u.PersonID == c.UserID
+                                                && u.IsDeleted == false);
+
+                                if (user != null && !user.IsDeleted)
+                                {
+                                    user.IsDeleted = true;
+                                }
+                                var credential = dc
+                                    .Credentials
+                                    .SingleOrDefault(u => u.PersonID == c.UserID
+                                               && u.IsDeleted == false);
+
+                                if (credential != null && !credential.IsDeleted)
+                                {
+                                    credential.IsDeleted = true;
+                                }
+                                dc.SaveChanges();
+
+                                throw new ArgumentException("Account is suspended!");
+                            }
+
                             AuthenticationToken token = new AuthenticationToken();
                             token.Audience = "tm";
                             token.ClientSecret = "asdfjkl;qweruipo";
@@ -330,6 +378,139 @@ namespace DataReef.Application.Services
                     else
                     {
                         throw new ArgumentException("Invalid User Name or Password");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid User Name or Password");
+                }
+            }
+
+        }
+
+        public bool updateUser(bool value, Guid userId)
+        {
+                using (DataContext dc = new DataContext())
+                {
+                var person = dc
+                     .People
+                     .SingleOrDefault(p => p.Guid == userId);
+                var user = dc
+                     .Users
+                     .SingleOrDefault(u => u.PersonID == userId);
+                var credential = dc
+                     .Credentials
+                     .SingleOrDefault(u => u.PersonID == userId);
+                if (person != null && user != null && credential != null)
+                {
+                    if (value)
+                    {
+                        person.IsDeleted = false;
+                        user.IsDeleted = false;
+                        credential.IsDeleted = false;
+                        dc.SaveChanges();
+                        return true;
+                    }
+                    else
+                    {
+                        person.IsDeleted = true;
+                        user.IsDeleted = true;
+                        credential.IsDeleted = true;
+                        dc.SaveChanges();
+                        return true;
+                    }
+                }
+            }
+            return false;
+
+        }
+
+        public AuthenticationToken AuthenticateUserBySuperAdmin(Guid personid)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var isSuperAdmin = dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId && oa.OURole.RoleType == OURoleType.SuperAdmin).ToList();
+
+                if(isSuperAdmin.Count == 0)
+                {
+                    throw new ArgumentException("Super-Admin can access only.");
+                }
+
+                var credentials = dc 
+                                .Credentials
+                                .Include(cred => cred.User.Person.PersonSettings)
+                                .Include(cred => cred.User.UserDevices)
+                                .Where(cc => cc.PersonID == personid)
+                                .ToList();
+
+                // there are cases when there are multiple credentials, some of them deleted
+                // we try to get the 1st one that's not deleted
+                Credential c = credentials
+                            .FirstOrDefault(cred => !cred.IsDeleted
+                                                 && !cred.User.IsDeleted
+                                                 && !cred.User.Person.IsDeleted);
+
+                // if there are not credentials, or all are deleted
+                // we'll get the first one ... or the default (null)
+                if (c == null)
+                {
+                    c = credentials.FirstOrDefault();
+                }
+
+                if (c != null)
+                {
+                    if (c.IsDeleted ||
+                        c.User.IsDeleted
+                        || (c.User.Person != null && c.User.Person.IsDeleted))
+                    {
+                        throw new ArgumentException("Account is suspended!");
+                    }
+
+                    if (c.User.IsDisabled)
+                    {
+                        throw new ArgumentException("User is Disabled");
+                    }
+                    else if (c.RequiresPasswordChange)
+                    {
+                        throw new ArgumentException("Credential Requires Password Change");
+                    }
+                    else
+                    {
+                        if (c.User != null && c.User.UserDevices != null)
+                        {
+                            var userDevices = c
+                                                .User
+                                                .UserDevices
+                                                .ToList();
+
+                            var currentDevice = userDevices.FirstOrDefault(d => d.DeviceID == SmartPrincipal.DeviceId);
+
+                            DeviceService.HandleDevice(dc, c.User.NumberOfDevicesAllowed, userDevices, currentDevice, SmartPrincipal.DeviceId, c.UserID);
+                        }
+
+                        //TODO: refactor to throw an error if multi account access and missing an accountid from the header
+                        //for now just grab the first one
+                        AccountAssociation aa = dc.AccountAssociations.FirstOrDefault(aas => aas.PersonID == c.User.PersonID);
+
+                        var setting = c
+                                        .User?
+                                        .Person?
+                                        .PersonSettings?
+                                        .FirstOrDefault(s => !s.IsDeleted && s.Name == CUSTOM_TOKEN_VALIDITY);
+
+                        var expirationDays = TOKEN_EXPIRATION_DAYS;
+                        if (setting != null)
+                        {
+                            int.TryParse(setting.Value, out expirationDays);
+                        }
+
+                        AuthenticationToken token = new AuthenticationToken();
+                        token.Audience = "tm";
+                        token.ClientSecret = "asdfjkl;qweruipo";
+                        token.Expiration = System.DateTime.UtcNow.AddDays(expirationDays).ToUnixTime();
+                        token.UserID = c.UserID;
+                        if (aa != null) token.AccountID = aa.AccountID;
+                        return token;
                     }
                 }
                 else
@@ -555,7 +736,7 @@ namespace DataReef.Application.Services
 
                     //get the smartboardId for the user. We can use any apikey
                     var ouSetting = dc.OUSettings.FirstOrDefault(x => !x.IsDeleted && x.Name == SolarTrackerResources.SelectedSettingName);
-                    if(ouSetting != null)
+                    if (ouSetting != null)
                     {
                         //the method also updates the Ignite user's SmartBoardId property
                         _sbAdapter.Value.GetSBToken(ouSetting.OUID);

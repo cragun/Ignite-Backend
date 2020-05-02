@@ -62,12 +62,61 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Authenticates UserName and Password and returns an Authentication Token
+        /// </summary>
+        /// <param name="personid"></param>
+        /// <returns></returns>
+        [Route("SuperAdm/{personid}")]
+        [HttpPost]
+       // [AllowAnonymous]
+        public IHttpActionResult AuthUserBySuperAdmin(Guid personid)
+        {
+            try
+            {
+                if (personid == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
+                }
+
+                AuthenticationToken token = authService.AuthenticateUserBySuperAdmin(personid);
+                Jwt ret = this.EncodeToken(token);
+                return Ok<Jwt>(ret);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(ex.Message) });
+            }
+        }
+        /// <summary>
+        ///Update User Status
+        /// </summary>
+        [Route("UserStatus/{userId}/{value}")]
+        [HttpGet]
+        // [AllowAnonymous]
+        public IHttpActionResult UpdateUserStatus(bool value, Guid userId)
+        {
+
+
+                var status = authService.updateUser(value, userId);
+
+
+                return Ok(status);
+
+           
+            
+            
+        }
+
+
+
         /// <summary>
         /// Creates a new user and returns an authentication token
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-          [GenericRoute("acceptinvitation")]
+        [GenericRoute("acceptinvitation")]
         [HttpPost]
         [AllowAnonymous]
         public IHttpActionResult AcceptInvitation(NewUser user)

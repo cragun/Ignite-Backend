@@ -27,6 +27,7 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -393,7 +394,7 @@ namespace DataReef.TM.Services
             // Get all the OUs for the logged in user
 
             var rootGuids = _ouService.Value.ListRootGuidsForPerson(SmartPrincipal.UserId);
-           // rootGuids.Add(ouid);
+            // rootGuids.Add(ouid);
 
             var settings = _ouSettingsService
                         .Value
@@ -404,7 +405,7 @@ namespace DataReef.TM.Services
                     .Where(s => s.Name == OUSetting.LegionOULeadSource)?
                     .ToList();
 
-            if(leadSettings.Count == 0 && ouid != null)
+            if (leadSettings.Count == 0 && ouid != null)
             {
                 leadSettings = _ouSettingsService.Value.GetSettingsByOUID(ouid)?.Where(x => x.Name == OUSetting.LegionOULeadSource)?.ToList();
             }
@@ -419,7 +420,7 @@ namespace DataReef.TM.Services
         }
 
 
-        
+
 
 
 
@@ -538,7 +539,7 @@ namespace DataReef.TM.Services
 
         public string GetUserSurvey(Guid personID, Guid? propertyID = null)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var surveyPersonSetting = dc
                     .PersonSettings
@@ -548,7 +549,7 @@ namespace DataReef.TM.Services
                 if (propertyID.HasValue)
                 {
                     property = dc.Properties.FirstOrDefault(p => !p.IsDeleted && !p.IsArchive && p.Guid == propertyID.Value);
-                    
+
                     //check if the survey has already been signed
                     var propSurvey = dc.PropertySurveys
                         ?.Where(p => p.PropertyID == propertyID.Value && p.PersonID == personID)
@@ -561,7 +562,7 @@ namespace DataReef.TM.Services
                     }
                 }
 
-                
+
 
                 if (surveyPersonSetting != null)
                 {
@@ -570,7 +571,7 @@ namespace DataReef.TM.Services
 
                 //try to fallback to the default survey from the db
                 var defaultSurveySetting = dc.OUSettings.FirstOrDefault(x => !x.IsDeleted && x.Name == "Ignite.Survey.Default");
-                if(defaultSurveySetting != null)
+                if (defaultSurveySetting != null)
                 {
                     return ReplaceTokens(defaultSurveySetting.Value, property);
                 }
@@ -583,7 +584,7 @@ namespace DataReef.TM.Services
             using (var dc = new DataContext())
             {
                 var property = dc.Properties.FirstOrDefault(p => !p.IsDeleted && !p.IsArchive && p.Guid == propertyID);
-                if(property == null)
+                if (property == null)
                 {
                     throw new Exception("Property not found");
                 }
@@ -638,16 +639,16 @@ namespace DataReef.TM.Services
 
         public string SavePropertySurvey(Guid personID, Guid propertyID, string survey)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var person = dc.People.Include(x => x.PersonSettings).FirstOrDefault(x => !x.IsDeleted && x.Guid == personID);
-                if(person == null)
+                if (person == null)
                 {
                     throw new Exception("Person not found");
                 }
 
                 var property = dc.Properties.FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == propertyID);
-                if(property == null)
+                if (property == null)
                 {
                     throw new Exception("Property not found");
                 }
@@ -665,6 +666,37 @@ namespace DataReef.TM.Services
                 return propertySurvey.Value;
             }
         }
+
+
+
+        public string SendEmailSummarytoCustomer(Guid ProposalID, string summary)
+        {
+            using (var dc = new DataContext())
+            {
+                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID);
+                if (Proposal == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                var property = dc.Properties.FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == Proposal.PropertyID);
+                if (property == null)
+                {
+                    throw new Exception("Property not found");
+                }
+                var email = property.GetMainEmailAddress();
+                Task.Factory.StartNew(() =>
+                {
+                    var body = summary + " " + email;
+
+                    // Mail.Library.SendEmail(email, string.Empty, $"test proposal email", body, true);
+                    Mail.Library.SendEmail("ankita@hevintechnoweb.com", string.Empty, $"test proposal email", body, true);
+                });
+
+                return summary;
+            }
+        }
+
 
         public PaginatedResult<Property> CRMGetProperties(CRMFilterRequest request)
         {
@@ -765,7 +797,7 @@ namespace DataReef.TM.Services
                 //multiple dispositions query
                 if (request.DispositionsQuery?.Any() == true)
                 {
-                    if(request.DispositionsQuery?.Any(x => x == "Appointments") == true)
+                    if (request.DispositionsQuery?.Any(x => x == "Appointments") == true)
                     {
                         propertiesQuery = propertiesQuery
                                             .Where(p => p.Appointments.Any(app => app.CreatedByID == SmartPrincipal.UserId && !app.IsDeleted));
@@ -852,9 +884,9 @@ namespace DataReef.TM.Services
                                     .Take(request.PageSize)
                                     .ToList();
 
-                if(result?.Any() == true)
+                if (result?.Any() == true)
                 {
-                    foreach(var prop in result)
+                    foreach (var prop in result)
                     {
                         prop.PropertyNotesCount = prop.PropertyNotes?.Where(x => !x.IsDeleted)?.Count();
 
@@ -921,9 +953,44 @@ namespace DataReef.TM.Services
             return result;
         }
 
+        public PersonClockTime GetPersonClock(Guid personID, long min)
+        {
+            PersonClockTime person = new PersonClockTime();
+            using (DataContext dc = new DataContext())
+            {
+                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+
+                if (person != null)
+                {
+                    if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
+                    {                          
+                        person.ClockDiff = min;
+                        person.ClockType = "ClockOut";
+                        person.TenantID = 0;
+                        person.Version += 1;
+                        person.DateLastModified = DateTime.Now;
+                        dc.SaveChanges();
+                    }
+                    else
+                    {
+                        TimeSpan timespan = DateTime.Now - person.StartDate.Value;
+                        long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+
+                        person.ClockDiff = diffMin;
+                        dc.SaveChanges();
+                    }
+                    person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                }
+            }
+
+            return person;
+        }
+
+
+        
         private string ReplaceTokens(string source, Property property)
         {
-            if(property == null)
+            if (property == null)
             {
                 return source;
             }

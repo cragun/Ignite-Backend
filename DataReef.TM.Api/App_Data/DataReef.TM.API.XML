@@ -513,6 +513,18 @@
             <param name="post"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.AuthUserBySuperAdmin(System.Guid)">
+            <summary>
+            Authenticates UserName and Password and returns an Authentication Token
+            </summary>
+            <param name="personid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.UpdateUserStatus(System.Boolean,System.Guid)">
+             <summary>
+            Update User Status
+             </summary>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.AcceptInvitation(DataReef.TM.Models.DataViews.NewUser)">
             <summary>
             Creates a new user and returns an authentication token
@@ -1741,6 +1753,19 @@
         <member name="M:DataReef.TM.API.Controllers.ApplicationController.SetIpadApplicationBuild(System.String)">
             <summary>
             Set the iPad version 
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.API.Controllers.ApplicationController.GetloginDays">
+            <summary>
+            Get the login Days
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.API.Controllers.ApplicationController.SetLoginDays(System.String)">
+            <summary>
+            Set LoginDays 
             </summary>
             <param name="value"></param>
             <returns></returns>
