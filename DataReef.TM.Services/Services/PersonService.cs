@@ -230,6 +230,12 @@ namespace DataReef.TM.Services
                     credentials.ForEach(c => c.IsDeleted = false);
                 }
 
+                var LastAuthRecord = dc.Authentications.Where(a => a.UserID == personId).ToList().OrderByDescending(x => x.DateAuthenticated).FirstOrDefault();
+                if (LastAuthRecord != null)
+                {
+                    LastAuthRecord.DateAuthenticated = DateTime.UtcNow;
+                }
+
                 dc.SaveChanges();
 
                 var template = new ReactivateAccountTemplate
