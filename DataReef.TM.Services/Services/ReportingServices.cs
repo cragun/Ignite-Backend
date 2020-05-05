@@ -262,6 +262,44 @@ namespace DataReef.TM.Services
             foreach (var col in settings.PersonReportItems)
             {
                 var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);
+
+                if (col.ColumnName == "CAPP(%)")
+                {
+                    var ApptsCAPP = stats.Where(x => x.Name == "Appts CAPP").FirstOrDefault();
+                    var OPP = stats.Where(x => x.Name == "OPP").FirstOrDefault();
+
+                    if (ApptsCAPP != null && OPP != null)
+                    {
+                        row.InquiryStatistics.Add(new Models.DataViews.Inquiries.InquiryStatisticsForPerson
+                        {
+                            PersonId = personId,
+                            Name = col.ColumnName,
+                            Actions = new InquiryStatisticsByDate
+                            {
+                                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.Actions.AllTime * 100) / OPP.Actions.AllTime : 0,
+                                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.Actions.ThisYear * 100) / OPP.Actions.ThisYear : 0,
+                                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.Actions.ThisMonth * 100) / OPP.Actions.ThisMonth : 0,
+                                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.Actions.ThisWeek * 100) / OPP.Actions.ThisWeek : 0,
+                                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.Actions.Today * 100) / OPP.Actions.Today : 0,
+                                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.Actions.SpecifiedDay * 100) / OPP.Actions.SpecifiedDay : 0,
+                                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.Actions.ThisQuarter * 100) / OPP.Actions.ThisQuarter : 0,
+                                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.Actions.RangeDay * 100) / OPP.Actions.RangeDay : 0
+                            },
+                            DaysActive = new InquiryStatisticsByDate
+                            {
+                                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.DaysActive.AllTime * 100) / OPP.DaysActive.AllTime : 0,
+                                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.DaysActive.ThisYear * 100) / OPP.DaysActive.ThisYear : 0,
+                                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.DaysActive.ThisMonth * 100) / OPP.DaysActive.ThisMonth : 0,
+                                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.DaysActive.ThisWeek * 100) / OPP.DaysActive.ThisWeek : 0,
+                                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.DaysActive.Today * 100) / OPP.DaysActive.Today : 0,
+                                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.DaysActive.SpecifiedDay * 100) / OPP.DaysActive.SpecifiedDay : 0,
+                                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.DaysActive.ThisQuarter * 100) / OPP.DaysActive.ThisQuarter : 0,
+                                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.DaysActive.RangeDay * 100) / OPP.DaysActive.RangeDay : 0
+                            }
+                        });
+                    }
+                }
+
                 if (matchingStat != null)
                 {
                     if (IsDeleted == true)
