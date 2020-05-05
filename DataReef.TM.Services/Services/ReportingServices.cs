@@ -263,7 +263,31 @@ namespace DataReef.TM.Services
             {
                 var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);
 
-                if (col.ColumnName == "CAPP(%)")
+                
+
+                if (matchingStat != null)
+                {
+                    if (IsDeleted == true)
+                    {
+                        if(!string.IsNullOrEmpty(proptype))
+                        {
+                            long isitzero = Convert.ToInt64(matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions));
+                            isallZeroproptype = isallZeroproptype && (isitzero == 0);
+                            long isitzeroa = Convert.ToInt64(matchingStat.DaysActive.GetType().GetProperty(proptype).GetValue(matchingStat.DaysActive));
+                            isallZeroproptype = isallZeroproptype && (isitzeroa == 0);
+                        }
+                        else
+                        {
+                            isallZeroproptype = false;
+                        }
+                        
+                        isallZero = isallZero && matchingStat.Actions.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.Actions) as int?), 0));
+                        isallZero = isallZero && matchingStat.DaysActive.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.DaysActive) as int?), 0));
+                    }
+
+                    row.InquiryStatistics.Add(matchingStat);
+                }
+                else if (col.ColumnName == "CAPP(%)")
                 {
                     var ApptsCAPP = stats.Where(x => x.Name == "Appts CAPP").FirstOrDefault();
                     var OPP = stats.Where(x => x.Name == "OPP").FirstOrDefault();
@@ -298,29 +322,6 @@ namespace DataReef.TM.Services
                             }
                         });
                     }
-                }
-
-                if (matchingStat != null)
-                {
-                    if (IsDeleted == true)
-                    {
-                        if(!string.IsNullOrEmpty(proptype))
-                        {
-                            long isitzero = Convert.ToInt64(matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions));
-                            isallZeroproptype = isallZeroproptype && (isitzero == 0);
-                            long isitzeroa = Convert.ToInt64(matchingStat.DaysActive.GetType().GetProperty(proptype).GetValue(matchingStat.DaysActive));
-                            isallZeroproptype = isallZeroproptype && (isitzeroa == 0);
-                        }
-                        else
-                        {
-                            isallZeroproptype = false;
-                        }
-                        
-                        isallZero = isallZero && matchingStat.Actions.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.Actions) as int?), 0));
-                        isallZero = isallZero && matchingStat.DaysActive.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.DaysActive) as int?), 0));
-                    }
-
-                    row.InquiryStatistics.Add(matchingStat);
                 }
                 else
                 {
