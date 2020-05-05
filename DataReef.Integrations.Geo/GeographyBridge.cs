@@ -71,7 +71,7 @@ namespace DataReef.Integrations
             var request = new RestRequest(resource, Method.POST);
 
             var body = JsonConvert.SerializeObject(propertiesRequests);
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
+            request.AddParameter("application/json", body, ParameterType.RequestBody); 
             request.AddDataReefAuthHeader();
 
             var response = client.Execute(request);

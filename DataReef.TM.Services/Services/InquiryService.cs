@@ -503,7 +503,7 @@ namespace DataReef.TM.Services.Services
                                 var CappPropertyids = inquiryDates.Where(x => x.Disposition == "ProposalPresented" && x.PersonID == personId).Select(i => i.PropertyID);
 
                                 var opprtunityDataList = dc.Appointments.Where(i => i.IsDeleted == false && i.GoogleEventID != null &&
-                                                           i.AssigneeID != null && !CappPropertyids.Contains(i.PropertyID))
+                                                           i.AssigneeID == personId && !CappPropertyids.Contains(i.PropertyID))
                                                 .Select(i => new { Guid = i.Guid, AssigneeID = i.AssigneeID, StartDate = i.StartDate }).ToList();
 
                                 if (opprtunityDataList != null)

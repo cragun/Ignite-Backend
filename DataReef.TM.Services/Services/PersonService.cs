@@ -230,7 +230,14 @@ namespace DataReef.TM.Services
                     credentials.ForEach(c => c.IsDeleted = false);
                 }
 
+                var LastAuthRecord = dc.Authentications.Where(a => a.UserID == personId).ToList().OrderByDescending(x => x.DateAuthenticated).FirstOrDefault();
+                if (LastAuthRecord != null)
+                {
+                    LastAuthRecord.DateAuthenticated = DateTime.UtcNow;
+                }
+
                 dc.SaveChanges();
+
 
                 var template = new ReactivateAccountTemplate
                 {
@@ -953,6 +960,40 @@ namespace DataReef.TM.Services
             return result;
         }
 
+        //public PersonClockTime GetPersonClock(Guid personID, long min)
+        //{
+        //    PersonClockTime person = new PersonClockTime();
+        //    using (DataContext dc = new DataContext())
+        //    {
+        //        person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+
+        //        if (person != null)
+        //        {
+        //            if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
+        //            {                          
+        //                person.ClockDiff = min;
+        //                person.ClockType = "ClockOut";
+        //                person.TenantID = 0;
+        //                person.Version += 1;
+        //                person.DateLastModified = DateTime.Now;
+        //                dc.SaveChanges();
+        //            }
+        //            else if (person.ClockType == "ClockIn")
+        //            {
+        //                TimeSpan timespan = DateTime.Now - person.StartDate.Value;
+        //                long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+
+        //                person.ClockDiff = diffMin;
+        //                dc.SaveChanges();
+        //            }
+        //            person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+        //        }
+        //    }
+
+        //    return person;
+        //}
+
+
         public PersonClockTime GetPersonClock(Guid personID, long min)
         {
             PersonClockTime person = new PersonClockTime();
@@ -963,13 +1004,21 @@ namespace DataReef.TM.Services
                 if (person != null)
                 {
                     if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
-                    {                          
-                        person.ClockDiff = min;
+                    {
+                        TimeSpan timespan = person.EndDate.Value - person.StartDate.Value;
+                        long difMin = (long)Math.Floor(timespan.TotalMinutes);
+
+                        person.ClockMin = person.ClockMin + difMin;
+                        TimeSpan spWorkMin = TimeSpan.FromMinutes(person.ClockMin);
+                        person.TagString = string.Format("{0:00}:{1:00}", (int)spWorkMin.TotalHours, spWorkMin.Minutes);
+                        person.ClockHours = Convert.ToInt64(Math.Round(person.ClockMin / (double)60));
+                        person.ClockDiff = 0;
                         person.ClockType = "ClockOut";
                         person.TenantID = 0;
                         person.Version += 1;
                         person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
+
                     }
                     else if (person.ClockType == "ClockIn")
                     {
