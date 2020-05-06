@@ -372,6 +372,64 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
         }
 
+        
+
+        public void SBActiveDeactiveUser(bool IsActive,Guid userId)
+        {
+            
+            using (DataContext dc = new DataContext())
+            {
+
+                var ret = dc
+                        .Database
+                        .SqlQuery<OU>("exec proc_OUsForPerson {0}", SmartPrincipal.UserId)
+                        .Where(o => !o.IsArchived)
+                        .ToList();
+
+               var ous=ret.Where(o => dc.OUSettings.Any(os => os.OUID == o.Guid && os.Name == SolarTrackerResources.SettingName)).FirstOrDefault();
+
+
+
+
+                var person = dc.People.FirstOrDefault(p => p.Guid == userId);
+                
+                var headers = new Dictionary<string, string>
+                {
+                     {"x-sm-email", person.EmailAddressString},
+                };
+
+                var url = "";
+                if (IsActive)
+                {
+                     url = "/apis/deactivate_user/" + person.SmartBoardID;
+                }
+                else
+                {
+                     url = "/apis/activate_user/" + person.SmartBoardID;
+                }
+
+                var response = MakeRequest(ous.Guid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.POST);
+
+
+                if (response != null)
+                {
+                    try
+                    {
+                        SaveRequest(null, response, url, headers,null);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                
+
+            }
+            
+        }
+
+        
+
+
         public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;

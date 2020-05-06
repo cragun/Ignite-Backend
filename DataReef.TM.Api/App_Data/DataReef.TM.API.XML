@@ -930,6 +930,14 @@
             <param name="personID"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PeopleController.ActivateUser(System.String)">
+            <param name="SmartBoardId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PeopleController.DeactivateUser(System.String)">
+            <param name="SmartBoardId"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PeopleController.OUsControllerCacheInvalidation">
             <summary>
             Invalidate cache for OUsController GET methods.

@@ -40,17 +40,21 @@ namespace DataReef.TM.Services
         private readonly Lazy<IMailChimpAdapter> _mailChimpAdapter;
         private readonly Lazy<IOUService> _ouService;
         private readonly Lazy<IOUSettingService> _ouSettingsService;
+        private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+
 
         public PersonService(ILogger logger,
             IOUAssociationService ouAssociationService,
             Lazy<IMailChimpAdapter> mailChimpAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingsService,
+            Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
         {
             _ouAssociationService = ouAssociationService;
             _mailChimpAdapter = mailChimpAdapter;
             _ouService = ouService;
+            _sbAdapter = sbAdapter;
             _ouSettingsService = ouSettingsService;
         }
 
@@ -197,15 +201,22 @@ namespace DataReef.TM.Services
         /// This method will also send an email letting the person know that the account has been reactivated
         /// </summary>
         /// <param name="personId"></param>
+        /// <param name="smartBoardId"></param>
         /// <param name="environment"></param>
-        public void Reactivate(Guid personId)
+        public void Reactivate(Guid personId,string smartBoardId)
         {
+            
             using (DataContext dc = new DataContext())
             {
+
+
                 var person = dc
-                                .People
-                                .SingleOrDefault(p => p.Guid == personId
-                                                  && p.IsDeleted == true);
+                .People
+ .Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true)
+ .FirstOrDefault();
+                
+
+
                 if (person == null)
                 {
                     throw new ArgumentException("Couldn't find the person among the deleted ones!");
@@ -215,7 +226,7 @@ namespace DataReef.TM.Services
 
                 var user = dc
                             .Users
-                            .SingleOrDefault(p => p.Guid == personId);
+                            .SingleOrDefault(p => p.Guid == person.Guid);
                 if (user != null && user.IsDeleted)
                 {
                     user.IsDeleted = false;
@@ -223,14 +234,14 @@ namespace DataReef.TM.Services
 
                 var credentials = dc
                                     .Credentials
-                                    .Where(c => c.UserID == personId)
+                                    .Where(c => c.UserID == person.Guid)
                                     .ToList();
                 if (credentials != null && credentials.Any())
                 {
                     credentials.ForEach(c => c.IsDeleted = false);
                 }
 
-                var LastAuthRecord = dc.Authentications.Where(a => a.UserID == personId).ToList().OrderByDescending(x => x.DateAuthenticated).FirstOrDefault();
+                var LastAuthRecord = dc.Authentications.Where(a => a.UserID == person.Guid).ToList().OrderByDescending(x => x.DateAuthenticated).FirstOrDefault();
                 if (LastAuthRecord != null)
                 {
                     LastAuthRecord.DateAuthenticated = DateTime.UtcNow;
@@ -238,6 +249,8 @@ namespace DataReef.TM.Services
 
                 dc.SaveChanges();
 
+                //the method also updates the Ignite user's SmartBoardId property
+                _sbAdapter.Value.SBActiveDeactiveUser(false, person.Guid);
 
                 var template = new ReactivateAccountTemplate
                 {
@@ -261,6 +274,48 @@ namespace DataReef.TM.Services
                 }
             }
         }
+
+        
+
+
+        public void DeactivateUser(string smartBoardId)
+        {
+
+            using (DataContext dc = new DataContext())
+            {
+                var person = dc
+                                .People
+                                .SingleOrDefault(p => p.SmartBoardID == smartBoardId
+                                                  && p.IsDeleted == false);
+                if (person == null)
+                {
+                    throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                }
+                person.IsDeleted = true;
+                var user = dc
+                            .Users
+                            .SingleOrDefault(p => p.Guid == person.Guid);
+                if (user != null && !user.IsDeleted)
+                {
+                    user.IsDeleted = true;
+                }
+                var credentials = dc
+                                    .Credentials
+                                    .Where(c => c.UserID == person.Guid)
+                                    .ToList();
+                if (credentials != null )
+                {
+                    credentials.ForEach(c => c.IsDeleted = true);
+                }
+                dc.SaveChanges();
+                _sbAdapter.Value.SBActiveDeactiveUser(true, person.Guid);
+
+            }
+                
+        }
+
+
+
 
         public override SaveResult Delete(Guid uniqueId)
         {

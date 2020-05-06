@@ -168,9 +168,31 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public IHttpActionResult Reactivate(Guid personID)
         {
-            peopleService.Reactivate(personID);
+            peopleService.Reactivate(personID, null);
             return Ok();
         }
+
+
+        /// <param name="SmartBoardId"></param>
+        /// <returns></returns>
+        [Route("ActivateUser/{SmartBoardId}")]
+        [HttpPost]
+        public IHttpActionResult ActivateUser(string SmartBoardId)
+        {
+            peopleService.Reactivate(Guid.Empty, SmartBoardId);
+            return Ok();
+        }
+
+        /// <param name="SmartBoardId"></param>
+        /// <returns></returns>
+        [Route("DeactivateUser/{SmartBoardId}")]
+        [HttpPost]
+        public IHttpActionResult DeactivateUser(string SmartBoardId)
+        {
+            peopleService.DeactivateUser(SmartBoardId);
+            return Ok();
+        }
+
 
         [HttpGet]
         [Route("{personID:guid}/settings/{group?}")]
