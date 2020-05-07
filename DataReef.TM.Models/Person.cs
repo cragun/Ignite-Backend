@@ -82,15 +82,15 @@ namespace DataReef.TM.Models
         public string OnlineAppointmentPara { get; set; }
 
 
-        [DataMember(EmitDefaultValue = false)]
-        public DateTime LastLoginTime { get; set; }
+        [DataMember]
+        public DateTime LastLoginDate { get; set; }
+
+        [DataMember]
+        public DateTime? LastActivityDate { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public DateTime LastActivityTime { get; set; }
-
-        [DataMember(EmitDefaultValue = false)]
-        [StringLength(100)]        
-        public string LastActivityName { get; set; }
+        [StringLength(250)]
+        public string ActivityName { get; set; }
 
 
         [DataMember(EmitDefaultValue = false)]

@@ -302,7 +302,7 @@ namespace DataReef.Application.Services
                                 var per = db.People.Where(p => p.Guid == c.User.PersonID).FirstOrDefault();
                                 if (per != null)
                                 {
-                                    per.LastLoginTime = DateTime.UtcNow;
+                                    per.LastLoginDate = DateTime.UtcNow;
                                     db.SaveChanges();
                                 }
                             }

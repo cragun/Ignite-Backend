@@ -13,7 +13,7 @@ namespace DataReef.TM.DataAccess.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202005070836425_Added New Column in People"; }
+            get { return "202005070958127_Added New Column in People"; }
         }
         
         string IMigrationMetadata.Source
