@@ -30,7 +30,7 @@ namespace DataReef.Engines.FinancialEngine.Integrations
             int termInMonths = planDefinition.TermInMonths != 0 ? planDefinition.TermInMonths : planDefinition.TermInYears * 12;
             int scenarioTermInMonths = request.ScenarioTermInYears * 12;
             var amountToFinance = request.AmountToFinance;
-
+            
             var months = new List<PaymentMonth>();
             decimal federalTaxIncentive = request.ApplyITCToLoan ? request.FederalTaxIncentive : 0;
 
@@ -75,7 +75,7 @@ namespace DataReef.Engines.FinancialEngine.Integrations
                 MainLoanApr = planDefinition.Apr,
                 PaymentFactorsFirstPeriod = SunnovaFinancingPlanData.FirstPeriodNumberOfMonths,
                 DeferredPeriodInMonths = 0,
-                Months = months,
+                Months = months,          
             };
         }
     }

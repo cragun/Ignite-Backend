@@ -25,7 +25,10 @@ namespace DataReef.TM.Contracts.Services
         List<PersonLite> GetPeopleForOU(Guid ouID, bool deep);
 
         [OperationContract]
-        void Reactivate(Guid personId);
+        void Reactivate(Guid personId,string smartBoardId);
+
+        [OperationContract]
+        void DeactivateUser(string smartBoardId);
 
         [OperationContract]
         IntegrationToken GenerateIntegrationToken();
