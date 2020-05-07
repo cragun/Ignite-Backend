@@ -374,55 +374,38 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         
 
-        public void SBActiveDeactiveUser(bool IsActive,Guid userId)
+        public void SBActiveDeactiveUser(bool IsActive,string sbid)
         {
-            
+
             using (DataContext dc = new DataContext())
             {
-
                 var ret = dc
                         .Database
                         .SqlQuery<OU>("exec proc_OUsForPerson {0}", SmartPrincipal.UserId)
                         .Where(o => !o.IsArchived)
                         .ToList();
 
-               var ous=ret.Where(o => dc.OUSettings.Any(os => os.OUID == o.Guid && os.Name == SolarTrackerResources.SettingName)).FirstOrDefault();
+                // var ous = ret.Where(o => dc.OUSettings.Any(os => os.OUID == o.Guid && os.Name == SolarTrackerResources.SettingName)).FirstOrDefault();
+                //  var person = dc.People.FirstOrDefault(p => p.Guid == userId);
 
+                //    var headers = new Dictionary<string, string>
+                //{
+                //     {"x-sm-email", person.EmailAddressString},
+                //};
+                var ouid = ret.FirstOrDefault().Guid;
 
+                var apiMethod = IsActive ? "deactivate_user" : "activate_user";
+                var url = $"/apis/{apiMethod}/{sbid}";
 
+                var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
 
-                var person = dc.People.FirstOrDefault(p => p.Guid == userId);
-                
-                var headers = new Dictionary<string, string>
+                try
                 {
-                     {"x-sm-email", person.EmailAddressString},
-                };
-
-                var url = "";
-                if (IsActive)
-                {
-                     url = "/apis/deactivate_user/" + person.SmartBoardID;
+                    SaveRequest(null, response, url, null, null);
                 }
-                else
+                catch (Exception)
                 {
-                     url = "/apis/activate_user/" + person.SmartBoardID;
                 }
-
-                var response = MakeRequest(ous.Guid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.POST);
-
-
-                if (response != null)
-                {
-                    try
-                    {
-                        SaveRequest(null, response, url, headers,null);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-                
-
             }
             
         }

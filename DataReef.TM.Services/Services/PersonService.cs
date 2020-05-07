@@ -170,6 +170,10 @@ namespace DataReef.TM.Services
                     var peopleList = peopleQuery.ToList();
                     foreach (var person in peopleList)
                     {
+                        if(person.IsDeleted == true)
+                        {
+                            continue;
+                        }
                         if (result.Any(r => r.Guid == person.Guid))
                         {
                             continue;
@@ -249,8 +253,11 @@ namespace DataReef.TM.Services
 
                 dc.SaveChanges();
 
-                //the method also updates the Ignite user's SmartBoardId property
-                _sbAdapter.Value.SBActiveDeactiveUser(false, person.Guid);
+                if(string.IsNullOrEmpty(smartBoardId))
+                {
+                    //the method also updates the Ignite user's SmartBoardId property
+                    _sbAdapter.Value.SBActiveDeactiveUser(false, person.SmartBoardID);
+                }
 
                 var template = new ReactivateAccountTemplate
                 {
@@ -308,7 +315,7 @@ namespace DataReef.TM.Services
                     credentials.ForEach(c => c.IsDeleted = true);
                 }
                 dc.SaveChanges();
-                _sbAdapter.Value.SBActiveDeactiveUser(true, person.Guid);
+                _sbAdapter.Value.SBActiveDeactiveUser(true, person.SmartBoardID);
 
             }
                 
@@ -1014,40 +1021,6 @@ namespace DataReef.TM.Services
             result.PermissionType = permissionType;
             return result;
         }
-
-        //public PersonClockTime GetPersonClock(Guid personID, long min)
-        //{
-        //    PersonClockTime person = new PersonClockTime();
-        //    using (DataContext dc = new DataContext())
-        //    {
-        //        person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
-
-        //        if (person != null)
-        //        {
-        //            if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
-        //            {                          
-        //                person.ClockDiff = min;
-        //                person.ClockType = "ClockOut";
-        //                person.TenantID = 0;
-        //                person.Version += 1;
-        //                person.DateLastModified = DateTime.Now;
-        //                dc.SaveChanges();
-        //            }
-        //            else if (person.ClockType == "ClockIn")
-        //            {
-        //                TimeSpan timespan = DateTime.Now - person.StartDate.Value;
-        //                long diffMin = (long)Math.Floor(timespan.TotalMinutes);
-
-        //                person.ClockDiff = diffMin;
-        //                dc.SaveChanges();
-        //            }
-        //            person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
-        //        }
-        //    }
-
-        //    return person;
-        //}
-
 
         public PersonClockTime GetPersonClock(Guid personID, long min)
         {

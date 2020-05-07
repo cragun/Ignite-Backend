@@ -1307,6 +1307,10 @@
     <Compile Include="Migrations\202005070958127_Added New Column in People.Designer.cs">
       <DependentUpon>202005070958127_Added New Column in People.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005071311480_Set NULL in Logindate.cs" />
+    <Compile Include="Migrations\202005071311480_Set NULL in Logindate.Designer.cs">
+      <DependentUpon>202005071311480_Set NULL in Logindate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2246,6 +2250,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005070958127_Added New Column in People.resx">
       <DependentUpon>202005070958127_Added New Column in People.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005071311480_Set NULL in Logindate.resx">
+      <DependentUpon>202005071311480_Set NULL in Logindate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

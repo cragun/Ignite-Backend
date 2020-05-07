@@ -83,7 +83,7 @@ namespace DataReef.TM.Models
 
 
         [DataMember]
-        public DateTime LastLoginDate { get; set; }
+        public DateTime? LastLoginDate { get; set; }
 
         [DataMember]
         public DateTime? LastActivityDate { get; set; }
