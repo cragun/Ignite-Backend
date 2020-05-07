@@ -67,5 +67,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<Person> personDetails(Guid ouid, DateTime date);
+
+        [OperationContract]
+        IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid);
     }
 }

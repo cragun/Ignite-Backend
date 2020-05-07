@@ -1069,5 +1069,21 @@ namespace DataReef.TM.Services
 
             return dest;
         }
+
+
+        public IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var OUAssociation = dc.OUAssociations?.Include(p => p.OU).Include(p => p.OURole).Where(x => x.PersonID == personid).ToList();
+                var OUAss = OUAssociation?.Select(x => new PersonOffboard
+                {
+                    AssociateOuName = x.OU?.Name,
+                    RoleName = x.OURole?.Name
+                });
+
+                return OUAss;
+            }
+        }
     }
 }

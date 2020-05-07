@@ -315,6 +315,15 @@ namespace DataReef.TM.Api.Controllers
             return Ok(person);
         }
 
+
+        [HttpGet]
+        [Route("ouassociation/{personid}")]
+        [ResponseType(typeof(ICollection<PersonOffboard>))]
+        public IHttpActionResult GetOuassociationRoleName(Guid personid)
+        {
+            var persn = peopleService.OuassociationRoleName(personid);
+            return Ok(persn);
+        }
         public override HttpResponseMessage DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();
