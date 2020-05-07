@@ -323,6 +323,18 @@ namespace DataReef.TM.Services
                             }
                         });
                     }
+                    else
+                    {
+                        //add the object with default values
+                        row.InquiryStatistics.Add(new Models.DataViews.Inquiries.InquiryStatisticsForPerson
+                        {
+                            PersonId = personId,
+                            Name = col.ColumnName,
+                            Actions = new InquiryStatisticsByDate(),
+                            DaysActive = new InquiryStatisticsByDate()
+                        });
+                    }
+
                 }
                 else {
                     //add the object with default values

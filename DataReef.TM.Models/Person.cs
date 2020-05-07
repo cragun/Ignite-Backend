@@ -83,6 +83,17 @@ namespace DataReef.TM.Models
 
 
         [DataMember(EmitDefaultValue = false)]
+        public DateTime LastLoginTime { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public DateTime LastActivityTime { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        [StringLength(100)]        
+        public string LastActivityName { get; set; }
+
+
+        [DataMember(EmitDefaultValue = false)]
         public List<string> EmailAddresses
         {
             get

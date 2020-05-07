@@ -1303,6 +1303,10 @@
     <Compile Include="Migrations\202004221019382_Add new field in personclocktime.Designer.cs">
       <DependentUpon>202004221019382_Add new field in personclocktime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005070836425_Added New Column in People.cs" />
+    <Compile Include="Migrations\202005070836425_Added New Column in People.Designer.cs">
+      <DependentUpon>202005070836425_Added New Column in People.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2239,6 +2243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004221019382_Add new field in personclocktime.resx">
       <DependentUpon>202004221019382_Add new field in personclocktime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005070836425_Added New Column in People.resx">
+      <DependentUpon>202005070836425_Added New Column in People.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

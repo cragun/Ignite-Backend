@@ -363,6 +363,15 @@ namespace DataReef.Application.Services
                                 }
                             });
 
+
+                            var per = dc.People.Where(p => p.Guid == c.UserID).FirstOrDefault();
+                            if (per != null)
+                            {
+                                per.LastLoginTime = DateTime.UtcNow;
+                                dc.SaveChanges();
+                            }
+
+
                             var pbi = new PBI_ActiveUser
                             {
                                 UserID = c.UserID,
