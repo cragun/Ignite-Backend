@@ -297,8 +297,17 @@ namespace DataReef.Application.Services
                                 int.TryParse(setting.Value, out expirationDays);
                             }
 
-                            var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
+                            using (DataContext db = new DataContext())
+                            {
+                                var per = db.People.Where(p => p.Guid == c.User.PersonID).FirstOrDefault();
+                                if (per != null)
+                                {
+                                    per.LastLoginTime = DateTime.UtcNow;
+                                    db.SaveChanges();
+                                }
+                            }
 
+                            var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
 
                             int logindays = _appSettingService.GetLoginDays();
 
@@ -361,15 +370,7 @@ namespace DataReef.Application.Services
                                     });
                                     dataContext.SaveChanges();
                                 }
-                            });
-
-
-                            var per = dc.People.Where(p => p.Guid == c.UserID).FirstOrDefault();
-                            if (per != null)
-                            {
-                                per.LastLoginTime = DateTime.UtcNow;
-                                dc.SaveChanges();
-                            }
+                            });                           
 
 
                             var pbi = new PBI_ActiveUser
