@@ -261,7 +261,7 @@ namespace DataReef.TM.Services
             }
             foreach (var col in settings.PersonReportItems)
             {
-                var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);               
+                var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);              
 
                 if (matchingStat != null)
                 {

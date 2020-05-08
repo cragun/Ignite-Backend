@@ -242,6 +242,7 @@
     <Compile Include="DTOs\Persons\CreateUserDTO.cs" />
     <Compile Include="DTOs\Persons\PersonDTO.cs" />
     <Compile Include="DTOs\Persons\PersonKPIScreenshotRequest.cs" />
+    <Compile Include="DTOs\Persons\PersonOffboard.cs" />
     <Compile Include="DTOs\Properties\CanCreateAppointmentRequest.cs" />
     <Compile Include="DTOs\Properties\CanCreateAppointmentResponse.cs" />
     <Compile Include="DTOs\Properties\PropertyNoteTagDTO.cs" />

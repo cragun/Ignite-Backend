@@ -21,6 +21,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using DataReef.Auth.Helpers;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 {
@@ -322,15 +323,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
             //get user email by its id
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
             string email;
             using (DataContext dc = new DataContext())
             {
                 email = dc.Credentials.FirstOrDefault(x => x.UserID == SmartPrincipal.UserId)?.UserName;
             }
 
+
             var headers = new Dictionary<string, string>
             {
-                {"x-sm-api-key", integrationData.ApiKey},
+                {"x-sm-api-key", encryptedAPIkey},
                 {"x-sm-email", email},
             };
 
@@ -355,7 +358,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         dc.SaveChanges();
 
                     }
-                    SaveRequest(null, response, url, headers);
+                    SaveRequest(null, response, url, headers, integrationData.ApiKey);
                 }
                 catch (Exception)
                 {
@@ -365,10 +368,46 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 Message = response?.Message?.Text,
                 Token = response?.User?.Token,
-                ApiKey = integrationData.ApiKey
+                ApiKey = encryptedAPIkey
             };
         }
 
+
+        public void SBActiveDeactiveUser(bool IsActive,string sbid)
+        {
+
+            using (DataContext dc = new DataContext())
+            {
+                var ret = dc
+                        .Database
+                        .SqlQuery<OU>("exec proc_OUsForPerson {0}", SmartPrincipal.UserId)
+                        .Where(o => !o.IsArchived)
+                        .ToList();
+
+                // var ous = ret.Where(o => dc.OUSettings.Any(os => os.OUID == o.Guid && os.Name == SolarTrackerResources.SettingName)).FirstOrDefault();
+                //  var person = dc.People.FirstOrDefault(p => p.Guid == userId);
+
+                //    var headers = new Dictionary<string, string>
+                //{
+                //     {"x-sm-email", person.EmailAddressString},
+                //};
+                var ouid = ret.FirstOrDefault().Guid;
+
+                var apiMethod = IsActive ? "deactivate_user" : "activate_user";
+                var url = $"/apis/{apiMethod}/{sbid}";
+
+                var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+
+                try
+                {
+                    SaveRequest(null, response, url, null, null);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            
+        }
         public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;
@@ -564,13 +603,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 if(!string.IsNullOrEmpty(createdBySmartboardID) && !string.IsNullOrEmpty(taggedSmartboardID))
                 {
                     SetSSTSettings(integrationData);
-                    var url = $"/apis/add_user_tagging_notification/{integrationData.ApiKey}?lead_id={property.SmartBoardId}&from={createdBySmartboardID}&to={taggedSmartboardID}";
+
+                    string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+                    var url = $"/apis/add_user_tagging_notification/{encryptedAPIkey}?lead_id={property.SmartBoardId}&from={createdBySmartboardID}&to={taggedSmartboardID}";
 
                     var response = MakeRequest(ouid.Value, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
 
                     try
                     {
-                        SaveRequest(null, response, url, null);
+                        SaveRequest(null, response, url, null, integrationData.ApiKey);
                     }
                     catch (Exception)
                     {
@@ -613,13 +655,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             using (var dc = new DataContext())
             {
                 SetSSTSettings(integrationData);
-                var url = $"/apis/dismiss_user_tagging_notification/{integrationData.ApiKey}?notification_id={smartboardNotificationID}";
+
+                string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+                var url = $"/apis/dismiss_user_tagging_notification/{encryptedAPIkey}?notification_id={smartboardNotificationID}";
 
                 var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
 
                 try
                 {
-                    SaveRequest(null, response, url, null);
+                    SaveRequest(null, response, url, null, integrationData.ApiKey);
                 }
                 catch (Exception)
                 {
@@ -634,13 +679,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             SetSSTSettings(settings);
 
             var apiMethod = update ? "update" : "create";
-            var url = $"/apis/{apiMethod}/{settings.ApiKey}";
+
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(settings.ApiKey);
+
+            var url = $"/apis/{apiMethod}/{encryptedAPIkey}";
 
             var response = MakeRequest(ouid, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
 
             try
             {
-                SaveRequest(JsonConvert.SerializeObject(request), response, url, null);
+                SaveRequest(JsonConvert.SerializeObject(request), response, url, null, settings.ApiKey);
             }
             catch (Exception)
             {
@@ -654,14 +702,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
         {
             SetSSTSettings(settings);
 
-            var url = $"/apis/attach_proposal/{settings.ApiKey}";
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(settings.ApiKey);
+
+            var url = $"/apis/attach_proposal/{encryptedAPIkey}";
 
             var response = MakeRequest(ouid, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
             if (response != null)
             {
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null);
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, settings.ApiKey);
                 }
                 catch (Exception)
                 {

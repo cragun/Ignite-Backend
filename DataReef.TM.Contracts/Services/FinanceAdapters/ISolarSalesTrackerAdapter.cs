@@ -26,6 +26,9 @@ namespace DataReef.TM.Contracts.Services
         void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc);
 
         [OperationContract]
+        void SBActiveDeactiveUser(bool IsActive, string sbid);
+
+        [OperationContract]
         void SetSSTSettings(SMARTBoardIntegrationOptionData sstSettings);
 
         [OperationContract]

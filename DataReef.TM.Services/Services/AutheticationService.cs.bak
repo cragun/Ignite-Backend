@@ -370,8 +370,7 @@ namespace DataReef.Application.Services
                                     });
                                     dataContext.SaveChanges();
                                 }
-                            });                           
-
+                            });
 
                             var pbi = new PBI_ActiveUser
                             {

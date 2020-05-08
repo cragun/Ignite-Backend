@@ -1263,6 +1263,10 @@
     <Compile Include="Migrations\202005020539298_Add PersonClockTime.Designer.cs">
       <DependentUpon>202005020539298_Add PersonClockTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005081308354_Add Fields in person .cs" />
+    <Compile Include="Migrations\202005081308354_Add Fields in person .Designer.cs">
+      <DependentUpon>202005081308354_Add Fields in person .cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2169,6 +2173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005020539298_Add PersonClockTime.resx">
       <DependentUpon>202005020539298_Add PersonClockTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005081308354_Add Fields in person .resx">
+      <DependentUpon>202005081308354_Add Fields in person .cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

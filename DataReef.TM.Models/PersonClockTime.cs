@@ -32,6 +32,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public DateTime? EndDate { get; set; }
 
+        [DataMember]
+        public bool IsRemainFiveMin { get; set; }
+
         #region Navigation
 
         [ForeignKey("PersonID")]

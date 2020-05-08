@@ -42,7 +42,6 @@ namespace DataReef.TM.Services
         private readonly Lazy<IOUSettingService> _ouSettingsService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
 
-
         public PersonService(ILogger logger,
             IOUAssociationService ouAssociationService,
             Lazy<IMailChimpAdapter> mailChimpAdapter,
