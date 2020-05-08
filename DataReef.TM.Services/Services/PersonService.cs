@@ -1044,6 +1044,7 @@ namespace DataReef.TM.Services
                         person.ClockType = "ClockOut";
                         person.TenantID = 0;
                         person.Version += 1;
+                        person.IsRemainFiveMin = false;
                         person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
 
@@ -1053,7 +1054,15 @@ namespace DataReef.TM.Services
                         TimeSpan timespan = DateTime.Now - person.StartDate.Value;
                         long diffMin = (long)Math.Floor(timespan.TotalMinutes);
 
+                        TimeSpan FiveMin = person.EndDate.Value - DateTime.Now;
+                        long ReFiveMin = (long)Math.Floor(FiveMin.TotalMinutes);
+                        person.IsRemainFiveMin = false;
+                        if (ReFiveMin == 5)
+                        {
+                            person.IsRemainFiveMin = true;
+                        }                        
                         person.ClockDiff = diffMin;
+                        person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
                     }
                     person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();

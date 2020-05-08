@@ -810,6 +810,7 @@ namespace DataReef.TM.Services.Services
                     personClockTime.ClockType = "ClockIn";
                     personClockTime.Version += 1;
                     personClockTime.DateLastModified = DateTime.Now;
+                    personClockTime.IsRemainFiveMin = false;
                     dc.SaveChanges();
                 }
                 else
@@ -825,6 +826,7 @@ namespace DataReef.TM.Services.Services
                     personClock.ClockHours = 0;
                     personClock.ClockType = "ClockIn";
                     personClock.CreatedByID = SmartPrincipal.UserId;
+                    personClockTime.IsRemainFiveMin = false;
                     dc.PersonClockTime.Add(personClock);
                     dc.SaveChanges();
                 }
