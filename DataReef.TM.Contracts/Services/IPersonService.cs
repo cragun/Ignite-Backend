@@ -69,7 +69,7 @@ namespace DataReef.TM.Contracts.Services
         PersonClockTime GetPersonClock(Guid personID, long min);
 
         [OperationContract]
-        List<Person> personDetails(Guid ouid, DateTime date);
+        IEnumerable<Person> personDetails(Guid ouid, DateTime date);
 
         [OperationContract]
         IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid);
