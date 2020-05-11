@@ -326,7 +326,7 @@ namespace DataReef.TM.Services.Services
                         //                    || oldProp.UtilityProviderID != entity.UtilityProviderID);
 
                         needToUpdateSB = (oldProp.Name != entity.Name || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
-                                            || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID);
+                                            || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID || oldProp.LatestDisposition != entity.LatestDisposition);
 
                         entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
