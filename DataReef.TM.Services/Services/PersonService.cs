@@ -170,7 +170,7 @@ namespace DataReef.TM.Services
                     var peopleList = peopleQuery.ToList();
                     foreach (var person in peopleList)
                     {
-                        if(person.IsDeleted == true)
+                        if (person.IsDeleted == true)
                         {
                             continue;
                         }
@@ -207,9 +207,9 @@ namespace DataReef.TM.Services
         /// <param name="personId"></param>
         /// <param name="smartBoardId"></param>
         /// <param name="environment"></param>
-        public void Reactivate(Guid personId,string smartBoardId)
+        public void Reactivate(Guid personId, string smartBoardId)
         {
-            
+
             using (DataContext dc = new DataContext())
             {
 
@@ -218,7 +218,7 @@ namespace DataReef.TM.Services
                 .People
  .Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true)
  .FirstOrDefault();
-                
+
 
 
                 if (person == null)
@@ -253,7 +253,7 @@ namespace DataReef.TM.Services
 
                 dc.SaveChanges();
 
-                if(string.IsNullOrEmpty(smartBoardId))
+                if (string.IsNullOrEmpty(smartBoardId))
                 {
                     //the method also updates the Ignite user's SmartBoardId property
                     _sbAdapter.Value.SBActiveDeactiveUser(false, person.SmartBoardID);
@@ -282,7 +282,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        
+
 
 
         public void DeactivateUser(string smartBoardId)
@@ -310,7 +310,7 @@ namespace DataReef.TM.Services
                                     .Credentials
                                     .Where(c => c.UserID == person.Guid)
                                     .ToList();
-                if (credentials != null )
+                if (credentials != null)
                 {
                     credentials.ForEach(c => c.IsDeleted = true);
                 }
@@ -318,7 +318,7 @@ namespace DataReef.TM.Services
                 _sbAdapter.Value.SBActiveDeactiveUser(true, person.SmartBoardID);
 
             }
-                
+
         }
 
 
@@ -736,13 +736,25 @@ namespace DataReef.TM.Services
             }
         }
 
-
+        public class summarymodel
+        {
+            public string Label { get; set; }
+            public string Data { get; set; }
+        }
 
         public string SendEmailSummarytoCustomer(Guid ProposalID, string summary)
         {
             using (var dc = new DataContext())
             {
-                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID);
+
+                var Proposalsdata = dc.ProposalData.FirstOrDefault(x => x.Guid == ProposalID);
+                if (Proposalsdata == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+
+                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID || x.Guid == Proposalsdata.ProposalID);
                 if (Proposal == null)
                 {
                     throw new Exception("Proposal not found");
@@ -753,15 +765,27 @@ namespace DataReef.TM.Services
                 {
                     throw new Exception("Property not found");
                 }
-                var email = property.GetMainEmailAddress();
-                Task.Factory.StartNew(() =>
+
+                var ProposalSummaryData = JsonConvert.DeserializeObject<List<summarymodel>>(summary);
+
+                string mailbody = "<p>The following Data for the proposal : " + Proposal.Name + "</p>";
+
+                foreach (var item in ProposalSummaryData)
                 {
-                    var body = summary + " " + email;
+                    mailbody = mailbody + "<p><b> " + item.Label + ": </b> " + item.Data + "</p>";
+                }
 
-                    // Mail.Library.SendEmail(email, string.Empty, $"test proposal email", body, true);
-                    Mail.Library.SendEmail("ankita@hevintechnoweb.com", string.Empty, $"test proposal email", body, true);
-                });
+                var email = property.GetMainEmailAddress();
 
+                Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"Proposal Summary Data", mailbody + email, true);
+
+                if (email != null)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        Mail.Library.SendEmail(email, string.Empty, $"Proposal Summary Data", mailbody, true);                        
+                    });
+                }
                 return summary;
             }
         }
@@ -1060,7 +1084,7 @@ namespace DataReef.TM.Services
                         if (ReFiveMin == 5)
                         {
                             person.IsRemainFiveMin = true;
-                        }                        
+                        }
                         person.ClockDiff = diffMin;
                         person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
@@ -1115,7 +1139,7 @@ namespace DataReef.TM.Services
 
             return dest;
         }
-        
+
         public IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid)
         {
             using (DataContext dc = new DataContext())
