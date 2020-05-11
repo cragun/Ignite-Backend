@@ -826,7 +826,7 @@ namespace DataReef.TM.Services.Services
                     personClock.ClockHours = 0;
                     personClock.ClockType = "ClockIn";
                     personClock.CreatedByID = SmartPrincipal.UserId;
-                    personClockTime.IsRemainFiveMin = false;
+                    personClock.IsRemainFiveMin = false;
                     dc.PersonClockTime.Add(personClock);
                     dc.SaveChanges();
                 }
