@@ -191,7 +191,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return SubmitLeadRequest(integrationData, createLeadRequest, ouid);
         }
 
-        public SstResponse SubmitLead(Guid propertyID, Guid? overrideEC = null, bool disposeRepo = true)
+        public SstResponse SubmitLead(Guid propertyID, Guid? overrideEC = null, bool disposeRepo = true, bool IsdispositionChanged = false)
         {
             var repository = _repository.Value;
 
@@ -250,6 +250,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             //var mainOccupant = property.GetMainOccupant();
             var appointment = property.GetLatestAppointment();
+            if(IsdispositionChanged)
+            {
+                appointment = null;
+            }
+
             var proposal = property.Proposals?.FirstOrDefault();
             var tariff = proposal?.Tariff;
 
