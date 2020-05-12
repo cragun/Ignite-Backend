@@ -323,6 +323,8 @@ namespace DataReef.TM.Services
                         Success = false
                     };
 
+
+
                 // Get All UserInvitation ids that need to be deleted
                 var ids = person.ConnectionInvitationsReceived?.Select(ui => ui.Guid)
                     .ToList() ?? new List<Guid>();
