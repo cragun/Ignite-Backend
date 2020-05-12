@@ -17,7 +17,7 @@ namespace DataReef.TM.Contracts.Services
         SstResponse SubmitSolarData(Guid financePlanID);
 
         [OperationContract]
-        SstResponse SubmitLead(Guid propertyID, Guid? overrideEc = null, bool disposeRepo = true);
+        SstResponse SubmitLead(Guid propertyID, Guid? overrideEc = null, bool disposeRepo = true, bool IsdispositionChanged = false);
 
         [OperationContract]
         SBIntegrationLoginModel GetSBToken(Guid ouid);

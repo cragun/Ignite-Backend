@@ -430,9 +430,15 @@ namespace DataReef.TM.Services.Services
                         //if (needToUpdateSB && !pushedToSB)
                         if (needToUpdateSB)
                         {
+                            bool IsdispositionChanged = false;
+                            if (oldProp.LatestDisposition != entity.LatestDisposition && entity.LatestDisposition != "AppointmentSet")
+                            {
+                                IsdispositionChanged = true;
+                            }
+
                             try
                             {
-                                var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+                                var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);                                
 
                                 if (response != null && response.Message.Type.Equals("error"))
                                 {
