@@ -311,7 +311,6 @@ namespace DataReef.TM.Api.Controllers
         public IHttpActionResult PersonClock(long min)
         {
             var person = peopleService.GetPersonClock(SmartPrincipal.UserId, min);
-
             return Ok(person);
         }
 
@@ -321,6 +320,7 @@ namespace DataReef.TM.Api.Controllers
         public HttpResponseMessage DeleteUserByGuid(Guid guid)
         {
             var ret = base.DeleteByGuid(guid);
+            peopleService.SBDeactivate(guid);
             return ret;
         }
 

@@ -73,5 +73,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid);
+
+        [OperationContract]
+        void SBDeactivate(Guid personid);
+
     }
 }

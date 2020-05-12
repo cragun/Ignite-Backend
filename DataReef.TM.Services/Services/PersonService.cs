@@ -212,14 +212,7 @@ namespace DataReef.TM.Services
 
             using (DataContext dc = new DataContext())
             {
-
-
-                var person = dc
-                .People
- .Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true)
- .FirstOrDefault();
-
-
+                var person = dc.People.Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true).FirstOrDefault();
 
                 if (person == null)
                 {
@@ -287,40 +280,30 @@ namespace DataReef.TM.Services
 
         public void DeactivateUser(string smartBoardId)
         {
-
             using (DataContext dc = new DataContext())
             {
-                var person = dc
-                                .People
-                                .SingleOrDefault(p => p.SmartBoardID == smartBoardId
-                                                  && p.IsDeleted == false);
+                var person = dc.People.SingleOrDefault(p => p.SmartBoardID == smartBoardId && p.IsDeleted == false);
                 if (person == null)
                 {
                     throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
-                person.IsDeleted = true;
-                var user = dc
-                            .Users
-                            .SingleOrDefault(p => p.Guid == person.Guid);
-                if (user != null && !user.IsDeleted)
-                {
-                    user.IsDeleted = true;
-                }
-                var credentials = dc
-                                    .Credentials
-                                    .Where(c => c.UserID == person.Guid)
-                                    .ToList();
-                if (credentials != null)
-                {
-                    credentials.ForEach(c => c.IsDeleted = true);
-                }
-                dc.SaveChanges();
-                _sbAdapter.Value.SBActiveDeactiveUser(true, person.SmartBoardID);
-
+                Delete(person.Guid);
             }
-
         }
 
+
+        public void SBDeactivate(Guid personid)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var person = dc.People.SingleOrDefault(p => p.Guid == personid);
+                if (person == null)
+                {
+                    throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                }
+                _sbAdapter.Value.SBActiveDeactiveUser(true, person.SmartBoardID);
+            }
+        }
 
 
 
@@ -354,7 +337,7 @@ namespace DataReef.TM.Services
 
                 uow.SaveChanges();
 
-                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();
+                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();                    
             }
 
             //  unregister user from MailChimp
@@ -369,8 +352,7 @@ namespace DataReef.TM.Services
             {
             }
 
-            var result = base.Delete(uniqueId);
-
+            var result = base.Delete(uniqueId);            
             return result;
         }
 
