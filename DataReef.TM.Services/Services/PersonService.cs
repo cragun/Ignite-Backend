@@ -1076,9 +1076,9 @@ namespace DataReef.TM.Services
                     person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
                 }
             }
-
+            if(person == null) { person = new PersonClockTime(); };
             return person;
-        }
+        } 
 
 
         public IEnumerable<Person> personDetails(Guid ouid, DateTime date)
