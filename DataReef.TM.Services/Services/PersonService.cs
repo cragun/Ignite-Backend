@@ -282,43 +282,34 @@ namespace DataReef.TM.Services
             }
         }
 
-        
+
 
 
         public void DeactivateUser(string smartBoardId)
         {
-
             using (DataContext dc = new DataContext())
             {
-                var person = dc
-                                .People
-                                .SingleOrDefault(p => p.SmartBoardID == smartBoardId
-                                                  && p.IsDeleted == false);
+                var person = dc.People.SingleOrDefault(p => p.SmartBoardID == smartBoardId && p.IsDeleted == false);
                 if (person == null)
                 {
                     throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
-                person.IsDeleted = true;
-                var user = dc
-                            .Users
-                            .SingleOrDefault(p => p.Guid == person.Guid);
-                if (user != null && !user.IsDeleted)
-                {
-                    user.IsDeleted = true;
-                }
-                var credentials = dc
-                                    .Credentials
-                                    .Where(c => c.UserID == person.Guid)
-                                    .ToList();
-                if (credentials != null )
-                {
-                    credentials.ForEach(c => c.IsDeleted = true);
-                }
-                dc.SaveChanges();
-                _sbAdapter.Value.SBActiveDeactiveUser(true, person.SmartBoardID);
-
+                Delete(person.Guid);
             }
-                
+        }
+
+
+        public void SBDeactivate(Guid personid)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var person = dc.People.SingleOrDefault(p => p.Guid == personid);
+                if (person == null)
+                {
+                    throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                }
+                _sbAdapter.Value.SBActiveDeactiveUser(true, person.SmartBoardID);
+            }
         }
 
 
@@ -1073,20 +1064,29 @@ namespace DataReef.TM.Services
         }
 
 
-        public List<Person> personDetails(Guid ouid, DateTime date)
+        public IEnumerable<Person> personDetails(Guid ouid, DateTime date)
         {
             using (DataContext dc = new DataContext())
             {
                 var territory = dc.Territories.Where(t => t.OUID == ouid).Select(t => t.Guid);
                 var property = dc.Properties.Where(p => territory.Contains(p.TerritoryID)).Select(p => p.Guid);
-                var appointment = dc.Appointments.Where(a => property.Contains(a.PropertyID) && DbFunctions.TruncateTime(a.DateCreated.Date) == date.Date && a.GoogleEventID != null).Select(a => a.AssigneeID);
+                var appointment = dc.Appointments.Where(a => property.Contains(a.PropertyID) && a.GoogleEventID != null).Select(i => new { StartDate = i.StartDate, AssigneeID = i.AssigneeID, Guid = i.Guid }).ToList();
+                var appointmentids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.Guid);
+                var appointmentassignids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.AssigneeID);
 
-                //var appointment = appointmentList.Where(a => a.StartDate.Date == date.Date && a.GoogleEventID != null)
-                //    .Select(a => a.AssigneeID);
+                var peopleList = dc.People?.Include(p => p.AssignedAppointments).Where(x => appointmentassignids.Contains(x.Guid) && x.IsDeleted == false).ToList();
 
-                var person = dc.People?.Include(p => p.AssignedAppointments).Where(p => appointment.Contains(p.Guid) && p.IsDeleted == false).ToList();
-
-                return person;
+                var result = new List<Person>();
+                foreach (var person in peopleList)
+                {
+                    person.AssignedAppointments = person.AssignedAppointments.Where(x => appointmentids.Contains(x.Guid)).ToList();
+                    if (result.Any(r => r.Guid == person.Guid))
+                    {
+                        continue;
+                    }
+                    result.Add(person);
+                }
+                return result;
 
             }
         }

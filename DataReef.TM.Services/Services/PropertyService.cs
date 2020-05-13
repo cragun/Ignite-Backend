@@ -430,10 +430,10 @@ namespace DataReef.TM.Services.Services
                         //if (needToUpdateSB && !pushedToSB)
                         if (needToUpdateSB)
                         {
-                            bool IsdispositionChanged = false;
-                            if (oldProp.LatestDisposition != entity.LatestDisposition && entity.LatestDisposition != "AppointmentSet")
+                            bool IsdispositionChanged = true;
+                            if (entity.LatestDisposition == "AppointmentSet")
                             {
-                                IsdispositionChanged = true;
+                                IsdispositionChanged = false;
                             }
 
                             try
@@ -1345,36 +1345,40 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("No user found with the specified ID");
                 }
 
-                if (Request.DispositionTypeId != property.DispositionTypeId)
+                if(Request.DispositionTypeId != null && Request.DispositionTypeId > 0)
                 {
-                    var dispSettings = _ouSettingService.Value.GetSettingsByPropertyID(property.Guid)?.Where(s => s.Name == OUSetting.NewDispositions)?.ToList();
-                    var dispositions = dispSettings?.SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?.ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault();
-
-                    property.DispositionTypeId = dispositions != null ? Request.DispositionTypeId : property.DispositionTypeId;
-                    property.LatestDisposition = dispositions != null ? dispositions.Name : property.LatestDisposition;
-                    property.Updated(user.Guid);
-                    dc.SaveChanges();
-
-
-                    var inquiry = new Inquiry
+                    if (Request.DispositionTypeId != property.DispositionTypeId)
                     {
-                        Guid = Guid.NewGuid(),
-                        PropertyID = property.Guid,
-                        PersonID = user.Guid,
-                        Notes = "Sales Rap(SB): " + user.Name,
-                        Lat = property.Latitude,
-                        Lon = property.Longitude,
-                        Name = property.LatestDisposition,
-                        DateCreated = DateTime.UtcNow,
-                        CreatedByID = property.CreatedByID,
-                        Disposition = property.LatestDisposition,
-                        DispositionTypeId = property.DispositionTypeId,
-                        IsNew = true
-                    };
+                        var dispSettings = _ouSettingService.Value.GetSettingsByPropertyID(property.Guid)?.Where(s => s.Name == OUSetting.NewDispositions)?.ToList();
+                        var dispositions = dispSettings?.SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?.ToList().Where(x => x.SBTypeId == Request.DispositionTypeId).FirstOrDefault();
 
-                    _inquiryService.Value.Insert(inquiry);
+                        property.DispositionTypeId = dispositions != null ? Request.DispositionTypeId : property.DispositionTypeId;
+                        property.LatestDisposition = dispositions != null ? dispositions.Name : property.LatestDisposition;
+                        property.Updated(user.Guid);
+                        dc.SaveChanges();
 
+
+                        var inquiry = new Inquiry
+                        {
+                            Guid = Guid.NewGuid(),
+                            PropertyID = property.Guid,
+                            PersonID = user.Guid,
+                            Notes = "Sales Rap(SB): " + user.Name,
+                            Lat = property.Latitude,
+                            Lon = property.Longitude,
+                            Name = property.LatestDisposition,
+                            DateCreated = DateTime.UtcNow,
+                            CreatedByID = property.CreatedByID,
+                            Disposition = property.LatestDisposition,
+                            DispositionTypeId = property.DispositionTypeId,
+                            IsNew = true
+                        };
+
+                        _inquiryService.Value.Insert(inquiry);
+
+                    }
                 }
+
 
                 var mainOccupant = property.GetMainOccupant();
                 if (mainOccupant != null)
