@@ -315,7 +315,7 @@ namespace DataReef.Application.Services
 
                             var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
 
-                            if (lastLoginCount == 0)
+                            if (dayvalidation.Count > 0 && lastLoginCount == 0)
                             {
 
                                 var person = dc
