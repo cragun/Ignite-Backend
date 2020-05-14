@@ -264,8 +264,8 @@ namespace DataReef.TM.Services.Services
 
             if (entity.Inquiries?.Any() == true)
             {
-                ////person clocktime 
-                //_inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+                //person clocktime 
+                _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
 
                 using (var uow = UnitOfWorkFactory())
                 {
