@@ -203,6 +203,9 @@ namespace DataReef.TM.Services.Services
             var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
             prop.SBLeadError = "";
 
+            //person clocktime 
+            _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+
             //send new lead to SMARTBOARD
             //if (entity.LatestDisposition.Equals("DoorKnocked") || entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null)
             //if (entity.LatestDisposition.Equals("DoorKnocked"))
@@ -261,8 +264,8 @@ namespace DataReef.TM.Services.Services
 
             if (entity.Inquiries?.Any() == true)
             {
-                //person clocktime 
-                _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+                ////person clocktime 
+                //_inquiryService.Value.UpdatePersonClockTime(prop.Guid);
 
                 using (var uow = UnitOfWorkFactory())
                 {
