@@ -438,7 +438,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
             }
-            
+
         }
 
         

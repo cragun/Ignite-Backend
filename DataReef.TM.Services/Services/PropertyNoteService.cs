@@ -61,7 +61,10 @@ namespace DataReef.TM.Services.Services
             using (var dc = new DataContext())
             {
                 //get property along with the notes
-                var notes = dc.PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted).ToList();
+                var notes = dc
+                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted)
+                    .OrderByDescending(p => p.DateCreated)
+                    .ToList();
                 return notes ?? new List<PropertyNote>();
             }
         }
