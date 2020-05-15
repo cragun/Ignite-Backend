@@ -166,29 +166,10 @@ namespace DataReef.TM.Services.Services
                     bool imageWasCached = false;
                     hiResImg = _geoBridge.GetHiResImageByLatLon(lat, lon);
 
-
-                    //try
-                    //{
-                    //    SaveRequest("_geoBridge.GetHiResImageByLatLon", "test", "test", "test", "test");
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    throw new ApplicationException(ex.Message);
-                    //}
-
                     if (hiResImg == null)
                     {
                         // now get the binary
-                        var bytes = _eagleViewService.GetImageBytesForSearchResult(result, result.Width, result.Height);
-
-                        try
-                        {
-                            SaveRequest("GetImageBytesForSearchResult", bytes.ToString(), result.Url, "test", "test");
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new ApplicationException(ex.Message);
-                        }
+                        var bytes = _eagleViewService.GetImageBytesForSearchResult(result, result.Width, result.Height);                       
 
                         Image image = null;
 
@@ -201,15 +182,6 @@ namespace DataReef.TM.Services.Services
                         }
 
                         _eagleViewService.PopulateMetaDataForSearchResult(result);
-
-                        try
-                        {
-                            SaveRequest("PopulateMetaDataForSearchResult", bytes.ToString(), image.Width.ToString(), "test", "test");
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new ApplicationException(ex.Message);
-                        }
 
                         // create a new imageMetaModel, the guid will also be the name of the key for AWS-S3
                         hiResImg = new HighResImage
@@ -238,16 +210,20 @@ namespace DataReef.TM.Services.Services
                             throw new ApplicationException(ex.Message);
                         }
 
-                        _geoBridge.SaveHiResImage(hiResImg);
-
+                       
                         try
                         {
-                            SaveRequest("SaveHiResImage", hiResImg.Top.ToString(), image.Width.ToString(), "test", "test");
+                            var s = _geoBridge.SaveHiResImagetest(hiResImg);
+                            SaveRequest("SaveHiResImagetest", s, image.Width.ToString(), "test", "test");
                         }
                         catch (Exception ex)
                         {
                             throw new ApplicationException(ex.Message);
                         }
+
+                        _geoBridge.SaveHiResImage(hiResImg);
+
+                      
 
                         if (bytes != null)
                         {

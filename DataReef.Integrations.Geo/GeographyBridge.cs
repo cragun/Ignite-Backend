@@ -133,6 +133,23 @@ namespace DataReef.Integrations
             return null;
         }
 
+        public string SaveHiResImagetest(HighResImage image)
+        {
+            try
+            {
+                var request = new RestRequest($"api/v1/imagery", Method.POST);
+                request.AddJsonBody(image);
+                request.AddDataReefAuthHeader();
+
+                var response = client.Execute(request);
+                return response.ResponseStatus.ToString();
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
+            
+        }
         public void SaveHiResImage(HighResImage image)
         {
             var request = new RestRequest($"api/v1/imagery", Method.POST);
