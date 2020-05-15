@@ -23,6 +23,7 @@ using System.Data.Entity;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using Newtonsoft.Json.Linq;
+using DataReef.TM.Models.FinancialIntegration;
 
 namespace DataReef.TM.Services.Services
 {
@@ -62,6 +63,26 @@ namespace DataReef.TM.Services.Services
             var ret = results.Select(r => r.OrientationString).ToList();
             return ret;
         }
+
+        protected void SaveRequest(string request, string response, string url, string headers, string apikey)
+        {
+            var adapterRequest = new AdapterRequest
+            {
+                AdapterName = "test",
+                Request = request,
+                Response = response,
+                Url = url,
+                Headers = headers,
+                TagString = apikey
+            };
+
+            using (var context = new DataContext())
+            {
+                context.AdapterRequests.Add(adapterRequest);
+                context.SaveChanges();
+            }
+        }
+
 
         public BlobModel PurchaseHighResImageAtCoordinates(Guid propertyID, double top, double left, double bottom, double right, string direction)
         {
@@ -129,16 +150,7 @@ namespace DataReef.TM.Services.Services
 
             try
             {
-                var jsonlogfile = System.IO.File.ReadAllText("~/App_Data/json.json");
-                var jObject = JObject.Parse(jsonlogfile);
-                JArray nots = (JArray)jObject["NoteList"];
-                Random random = new Random();
-                int randomNumber = random.Next(0, 1000);
-                var newNote = "{ 'Id': " + randomNumber + ", 'url': '" + "GetLinksForLatLon" + "', 'jsonResponse': '" + "137" + "'}";
-                nots.Add(JObject.Parse(newNote));
-                jObject["NoteList"] = nots;
-                string output = Newtonsoft.Json.JsonConvert.SerializeObject(jObject, Newtonsoft.Json.Formatting.Indented);
-                System.IO.File.WriteAllText("wwwroot/JsonFile/Notes.json", output);
+                SaveRequest("GetLinksForLatLon", "test","test","test","test");
             }
             catch (Exception ex)
             {
@@ -157,16 +169,7 @@ namespace DataReef.TM.Services.Services
 
                     try
                     {
-                        var jsonlogfile = System.IO.File.ReadAllText("~/App_Data/json.json");
-                        var jObject = JObject.Parse(jsonlogfile);
-                        JArray nots = (JArray)jObject["NoteList"];
-                        Random random = new Random();
-                        int randomNumber = random.Next(0, 1000);
-                        var newNote = "{ 'Id': " + randomNumber + ", 'url': '" + "GetHiResImageByLatLon" + "', 'jsonResponse': '" + "165" + "'}";
-                        nots.Add(JObject.Parse(newNote));
-                        jObject["NoteList"] = nots;
-                        string output = Newtonsoft.Json.JsonConvert.SerializeObject(jObject, Newtonsoft.Json.Formatting.Indented);
-                        System.IO.File.WriteAllText("wwwroot/JsonFile/Notes.json", output);
+                        SaveRequest("_geoBridge.GetHiResImageByLatLon", "test", "test", "test", "test");
                     }
                     catch (Exception ex)
                     {
@@ -177,6 +180,15 @@ namespace DataReef.TM.Services.Services
                     {
                         // now get the binary
                         var bytes = _eagleViewService.GetImageBytesForSearchResult(result, result.Width, result.Height);
+                        try
+                        {
+                            SaveRequest("GetImageBytesForSearchResult", "test", "test", "test", "test");
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new ApplicationException(ex.Message);
+                        }
+
                         Image image = null;
 
                         if (bytes != null)
