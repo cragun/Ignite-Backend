@@ -107,7 +107,6 @@ namespace DataReef.TM.Services.Services
 #if (DEBUG)
                 userID = new Guid("7D49D3AF-C08C-4AA9-AC76-A6652A8EE884"); //make sure there is an account.  this is Vlads test account
 #endif
-
                 if (!freeHiResImages)
                 {
                     ledger = _tokensProvider.GetDefaultLedgerForPerson(userID);

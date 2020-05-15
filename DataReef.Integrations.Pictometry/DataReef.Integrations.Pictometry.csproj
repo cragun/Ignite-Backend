@@ -70,6 +70,14 @@
       <Project>{8B0773F4-E04A-40EA-8C02-8ECFE1DCD428}</Project>
       <Name>DataReef.Core.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.DataAccess\DataReef.TM.DataAccess.csproj">
+      <Project>{D8C35AC6-25A6-46A8-9A6F-5DB8442EAD21}</Project>
+      <Name>DataReef.TM.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.Models\DataReef.TM.Models.csproj">
+      <Project>{F5644194-5AB2-4FBA-8632-46630FB5DDD3}</Project>
+      <Name>DataReef.TM.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
