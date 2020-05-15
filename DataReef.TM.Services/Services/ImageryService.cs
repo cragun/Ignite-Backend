@@ -22,6 +22,7 @@ using System.ServiceModel.Activation;
 using System.Data.Entity;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using Newtonsoft.Json.Linq;
 
 namespace DataReef.TM.Services.Services
 {
@@ -125,6 +126,24 @@ namespace DataReef.TM.Services.Services
             HighResImage hiResImg = null;
 
             var searchResults = _eagleViewService.GetLinksForLatLon(lat, lon);
+
+            try
+            {
+                var jsonlogfile = System.IO.File.ReadAllText("~/App_Data/json.json");
+                var jObject = JObject.Parse(jsonlogfile);
+                JArray nots = (JArray)jObject["NoteList"];
+                Random random = new Random();
+                int randomNumber = random.Next(0, 1000);
+                var newNote = "{ 'Id': " + randomNumber + ", 'url': '" + "GetLinksForLatLon" + "', 'jsonResponse': '" + "137" + "'}";
+                nots.Add(JObject.Parse(newNote));
+                jObject["NoteList"] = nots;
+                string output = Newtonsoft.Json.JsonConvert.SerializeObject(jObject, Newtonsoft.Json.Formatting.Indented);
+                System.IO.File.WriteAllText("wwwroot/JsonFile/Notes.json", output);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
             SearchResult result = searchResults.FirstOrDefault(sr => sr.OrientationString == direction);
 
             if (result != null)
@@ -134,6 +153,25 @@ namespace DataReef.TM.Services.Services
                 {
                     bool imageWasCached = false;
                     hiResImg = _geoBridge.GetHiResImageByLatLon(lat, lon);
+
+
+                    try
+                    {
+                        var jsonlogfile = System.IO.File.ReadAllText("~/App_Data/json.json");
+                        var jObject = JObject.Parse(jsonlogfile);
+                        JArray nots = (JArray)jObject["NoteList"];
+                        Random random = new Random();
+                        int randomNumber = random.Next(0, 1000);
+                        var newNote = "{ 'Id': " + randomNumber + ", 'url': '" + "GetHiResImageByLatLon" + "', 'jsonResponse': '" + "165" + "'}";
+                        nots.Add(JObject.Parse(newNote));
+                        jObject["NoteList"] = nots;
+                        string output = Newtonsoft.Json.JsonConvert.SerializeObject(jObject, Newtonsoft.Json.Formatting.Indented);
+                        System.IO.File.WriteAllText("wwwroot/JsonFile/Notes.json", output);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ApplicationException(ex.Message);
+                    }
 
                     if (hiResImg == null)
                     {

@@ -175,25 +175,7 @@ namespace DataReef.Integrations.Pictometry
             using (WebClient wc = new WebClient())
             {
                 var json = wc.DownloadString(url);
-                JObject obj = JObject.Parse(json);
-
-                try
-                {
-                    var jsonlogfile = System.IO.File.ReadAllText("Content/Images/json.json");
-                    var jObject = JObject.Parse(jsonlogfile);
-                    JArray nots = (JArray)jObject["NoteList"];
-                    Random random = new Random();
-                    int randomNumber = random.Next(0, 1000);
-                    var newNote = "{ 'Id': " + randomNumber + ", 'url': '" + url + "', 'jsonResponse': '" + json + "'}";
-                    nots.Add(JObject.Parse(newNote));
-                    jObject["NoteList"] = nots;
-                    string output = Newtonsoft.Json.JsonConvert.SerializeObject(jObject, Newtonsoft.Json.Formatting.Indented);
-                    System.IO.File.WriteAllText("wwwroot/JsonFile/Notes.json", output);
-                }
-                catch (Exception ex)
-                {
-                    throw new ApplicationException(ex.Message);
-                }
+                JObject obj = JObject.Parse(json);                
 
                 if (obj?["response"]?["statusCode"] != null)
                 {
