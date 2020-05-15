@@ -240,6 +240,15 @@ namespace DataReef.TM.Services.Services
 
                         _geoBridge.SaveHiResImage(hiResImg);
 
+                        try
+                        {
+                            SaveRequest("SaveHiResImage", hiResImg.Top.ToString(), image.Width.ToString(), "test", "test");
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new ApplicationException(ex.Message);
+                        }
+
                         if (bytes != null)
                         {
                             hiResImageContent = new BlobModel { Content = bytes, ContentType = "image/jpeg" };
