@@ -135,6 +135,7 @@ namespace DataReef.Integrations
 
         public string SaveHiResImagetest(HighResImage image)
         {
+
             try
             {
                 var request = new RestRequest($"api/v1/imagery", Method.POST);
