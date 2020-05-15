@@ -200,16 +200,6 @@ namespace DataReef.TM.Services.Services
                             Source = "Pictometry",
                             CreatedBy = SmartPrincipal.UserId
                         };
-
-                        try
-                        {
-                            SaveRequest("hiResImg", hiResImg.Top.ToString(), image.Width.ToString(), "test", "test");
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new ApplicationException(ex.Message);
-                        }
-
                        
                         try
                         {

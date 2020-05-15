@@ -142,7 +142,7 @@ namespace DataReef.Integrations
                 request.AddDataReefAuthHeader();
 
                 var response = client.Execute(request);
-                return response.ResponseStatus.ToString();
+                return response.ResponseStatus.ToString() + "test" + request.JsonSerializer.ToString() ;
             }
             catch(Exception ex)
             {
