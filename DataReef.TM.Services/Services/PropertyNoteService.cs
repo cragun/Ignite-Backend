@@ -501,6 +501,14 @@ namespace DataReef.TM.Services.Services
               
                 return new SBNoteDTO
                 {
+                    Guid = note.Guid,
+                    PropertyID = property.Guid,
+                    LeadID = property.SmartBoardId,
+                    Email = user.EmailAddressString,
+                    Content = note.Content,
+                    DateCreated = note.DateCreated,
+                    DateLastModified = note.DateLastModified,
+                    UserID = user.SmartBoardID,
                     Massage = "Note deleted successfully."
                 };
 
