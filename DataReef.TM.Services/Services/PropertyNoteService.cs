@@ -498,9 +498,10 @@ namespace DataReef.TM.Services.Services
                 note.Updated(user.Guid);
 
                 dc.SaveChanges();
-              
+
                 return new SBNoteDTO
                 {
+                    Action = "Delete",
                     Guid = note.Guid,
                     PropertyID = property.Guid,
                     LeadID = property.SmartBoardId,
@@ -508,8 +509,7 @@ namespace DataReef.TM.Services.Services
                     Content = note.Content,
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
-                    UserID = user.SmartBoardID,
-                    Massage = "Note deleted successfully."
+                    UserID = user.SmartBoardID
                 };
 
             }

@@ -28,7 +28,7 @@ namespace DataReef.TM.Models.DTOs
 
         public string Email { get; set; }
 
-        public string Massage { get; set; }
+        public string Action { get; set; }
 
         public DateTime DateCreated { get; set; }
 
