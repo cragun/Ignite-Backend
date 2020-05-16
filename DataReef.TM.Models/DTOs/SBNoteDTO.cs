@@ -11,6 +11,9 @@ namespace DataReef.TM.Models.DTOs
 
       
     {
+
+        public string Action { get; set; }
+
         public Guid? Guid { get; set; }
 
         public Guid PropertyID { get; set; }
@@ -27,8 +30,6 @@ namespace DataReef.TM.Models.DTOs
         public string UserID { get; set; }
 
         public string Email { get; set; }
-
-        public string Action { get; set; }
 
         public DateTime DateCreated { get; set; }
 
