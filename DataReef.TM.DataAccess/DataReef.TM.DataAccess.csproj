@@ -1315,6 +1315,10 @@
     <Compile Include="Migrations\202005081147569_Add IsRemainFiveMin PersonClockTime.Designer.cs">
       <DependentUpon>202005081147569_Add IsRemainFiveMin PersonClockTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005151142309_Add column in PropertyNotes table.cs" />
+    <Compile Include="Migrations\202005151142309_Add column in PropertyNotes table.Designer.cs">
+      <DependentUpon>202005151142309_Add column in PropertyNotes table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2260,6 +2264,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005081147569_Add IsRemainFiveMin PersonClockTime.resx">
       <DependentUpon>202005081147569_Add IsRemainFiveMin PersonClockTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005151142309_Add column in PropertyNotes table.resx">
+      <DependentUpon>202005151142309_Add column in PropertyNotes table.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

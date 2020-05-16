@@ -28,6 +28,8 @@ namespace DataReef.TM.Models.DTOs
 
         public string Email { get; set; }
 
+        public string Massage { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public DateTime? DateLastModified { get; set; }

@@ -472,7 +472,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
+        public SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
         {
             using (var dc = new DataContext())
             {
@@ -498,6 +498,12 @@ namespace DataReef.TM.Services.Services
                 note.Updated(user.Guid);
 
                 dc.SaveChanges();
+              
+                return new SBNoteDTO
+                {
+                    Massage = "Note deleted successfully."
+                };
+
             }
         }
 

@@ -33,7 +33,7 @@ namespace DataReef.TM.Contracts.Services
 
 
         [OperationContract]
-        void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
+        SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
 
         [OperationContract]
         IEnumerable<Models.Person> QueryForPerson(Guid propertyID, string email, string name);

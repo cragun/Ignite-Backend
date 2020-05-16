@@ -34,6 +34,12 @@ namespace DataReef.TM.Models
         [DataMember]
         public string Content { get; set; }
 
+        [DataMember]
+        public Guid ParentID { get; set; }
+
+        [DataMember]
+        public string ContentType { get; set; }
+
         #endregion
 
         #region Navigation
