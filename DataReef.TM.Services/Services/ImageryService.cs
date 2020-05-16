@@ -86,6 +86,33 @@ namespace DataReef.TM.Services.Services
 
         public BlobModel PurchaseHighResImageAtCoordinates(Guid propertyID, double top, double left, double bottom, double right, string direction)
         {
+            try
+            {
+                var hiResImge = new HighResImage
+                {
+                    Top = 100,
+                    Left = 100,
+                    Bottom = 100,
+                    Right = 100,
+                    Width = 100,
+                    Height = 100,
+                    MapUnitsPerPixelX = 100,
+                    MapUnitsPerPixelY = 100,
+                    SkewX = 100,
+                    SkewY = 100,
+                    Resolution = 100,
+                    Source = "test",
+                    CreatedBy = SmartPrincipal.UserId
+                };
+
+                var s = _geoBridge.SaveHiResImagetest(hiResImge);
+                SaveRequest("SaveHiResImagetest", s, hiResImge.Width.ToString(), "test", "test");
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+
             double lon, lat;
 
             int tokenCost = 1;
@@ -147,15 +174,6 @@ namespace DataReef.TM.Services.Services
             HighResImage hiResImg = null;
 
             var searchResults = _eagleViewService.GetLinksForLatLon(lat, lon);
-
-            //try
-            //{
-            //    SaveRequest("GetLinksForLatLon", "test","test","test","test");
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new ApplicationException(ex.Message);
-            //}
             SearchResult result = searchResults.FirstOrDefault(sr => sr.OrientationString == direction);
 
             if (result != null)
@@ -169,7 +187,7 @@ namespace DataReef.TM.Services.Services
                     if (hiResImg == null)
                     {
                         // now get the binary
-                        var bytes = _eagleViewService.GetImageBytesForSearchResult(result, result.Width, result.Height);                       
+                        var bytes = _eagleViewService.GetImageBytesForSearchResult(result, result.Width, result.Height);
 
                         Image image = null;
 
@@ -200,20 +218,10 @@ namespace DataReef.TM.Services.Services
                             Source = "Pictometry",
                             CreatedBy = SmartPrincipal.UserId
                         };
-                       
-                        try
-                        {
-                            var s = _geoBridge.SaveHiResImagetest(hiResImg);
-                            SaveRequest("SaveHiResImagetest", s, image.Width.ToString(), "test", "test");
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new ApplicationException(ex.Message);
-                        }
 
                         _geoBridge.SaveHiResImage(hiResImg);
 
-                      
+
 
                         if (bytes != null)
                         {
