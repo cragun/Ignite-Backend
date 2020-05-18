@@ -201,10 +201,8 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
-            prop.SBLeadError = "";
-
-            //person clocktime 
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+            prop.SBLeadError = "";            
 
             //send new lead to SMARTBOARD
             //if (entity.LatestDisposition.Equals("DoorKnocked") || entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null)
@@ -290,6 +288,8 @@ namespace DataReef.TM.Services.Services
             {
                 _deviceService.Value.PushToSubscribers<Territory, Property>(prop.TerritoryID.ToString(), prop.Guid.ToString(), DataAction.Insert, alert: $"Property {prop.Name} has been created!");
             });
+
+            _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             return prop;
         }
 

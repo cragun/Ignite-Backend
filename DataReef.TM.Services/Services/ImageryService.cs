@@ -86,33 +86,6 @@ namespace DataReef.TM.Services.Services
 
         public BlobModel PurchaseHighResImageAtCoordinates(Guid propertyID, double top, double left, double bottom, double right, string direction)
         {
-            try
-            {
-                var hiResImge = new HighResImage
-                {
-                    Top = 100,
-                    Left = 100,
-                    Bottom = 100,
-                    Right = 100,
-                    Width = 100,
-                    Height = 100,
-                    MapUnitsPerPixelX = 100,
-                    MapUnitsPerPixelY = 100,
-                    SkewX = 100,
-                    SkewY = 100,
-                    Resolution = 100,
-                    Source = "test",
-                    CreatedBy = SmartPrincipal.UserId
-                };
-
-                var s = _geoBridge.SaveHiResImagetest(hiResImge);
-                SaveRequest("SaveHiResImagetest", s, hiResImge.Width.ToString(), "test", "test");
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException(ex.Message);
-            }
-
             double lon, lat;
 
             int tokenCost = 1;
