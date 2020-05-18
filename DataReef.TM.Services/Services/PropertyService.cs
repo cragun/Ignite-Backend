@@ -193,7 +193,7 @@ namespace DataReef.TM.Services.Services
                         if (existingProp != null)
                         {
                             entity.Guid = existingProp.Guid;
-
+                            _inquiryService.Value.UpdatePersonClockTime(entity.Guid);
                             return Update(entity);
                         }
                     }
