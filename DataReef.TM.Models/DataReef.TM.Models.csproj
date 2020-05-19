@@ -310,11 +310,15 @@
     <Compile Include="DTOs\SmartBoard\SBCreateAppointmentRequest.cs" />
     <Compile Include="DTOs\SmartBoard\SBPropertyDTO.cs" />
     <Compile Include="DTOs\Solar\EnergyAveragesRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\Applicants.cs" />
     <Compile Include="DTOs\Solar\Finance\Incentive.cs" />
     <Compile Include="DTOs\Solar\Finance\ComparisonFinancePlanRequestData.cs" />
     <Compile Include="DTOs\Solar\Finance\DealerIncentive.cs" />
     <Compile Include="DTOs\Solar\Finance\LeaseParameters.cs" />
     <Compile Include="DTOs\Solar\Finance\ProductionPrice.cs" />
+    <Compile Include="DTOs\Solar\Finance\Projects.cs" />
+    <Compile Include="DTOs\Solar\Finance\SunlightApplicantResponse.cs" />
+    <Compile Include="DTOs\Solar\Finance\SunlightApplicantRequest.cs" />
     <Compile Include="DTOs\Solar\Genability\BaseResponse.cs" />
     <Compile Include="DTOs\Solar\Genability\UsageProfileRequest.cs" />
     <Compile Include="DTOs\Solar\Proposal\CloneSettings.cs" />

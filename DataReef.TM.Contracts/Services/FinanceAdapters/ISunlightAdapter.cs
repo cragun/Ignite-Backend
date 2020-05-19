@@ -12,6 +12,6 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     public interface ISunlightAdapter
     {
         [OperationContract]
-        string GetSunlightToken();
+        string CreateSunlightApplicant();
     }
 }

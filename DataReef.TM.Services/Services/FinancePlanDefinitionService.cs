@@ -133,7 +133,7 @@ namespace DataReef.TM.Services
 
         public string getsunlighttoken()
         {
-            var s =  _sunlightAdapter.Value.GetSunlightToken();
+            var s =  _sunlightAdapter.Value.CreateSunlightApplicant();
             return s;
         }
             public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)

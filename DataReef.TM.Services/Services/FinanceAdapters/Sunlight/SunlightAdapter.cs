@@ -1,11 +1,13 @@
 ﻿using DataReef.Core.Attributes;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Text;
@@ -39,6 +41,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             public string password { get; set; }
         }
 
+        public class TokenResponse
+        {
+            public string access_token { get; set; }
+        }
+
         public string GetSunlightToken()
         {
             try
@@ -54,10 +61,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 var response = client.Execute(request);
 
-                var requestString = request == null ? null : JsonConvert.SerializeObject(request);
-                var responseString = response == null ? null : JsonConvert.SerializeObject(response);
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new ApplicationException($"GetSunlightToken Failed. {response.Content}");
+                }
 
-                return requestString + "request:" + responseString;
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<TokenResponse>(content);
+
+                return ret.access_token;
+
+
             }
             catch (Exception ex)
             {
@@ -66,5 +80,52 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
         }
 
+
+        public string CreateSunlightApplicant()
+        {
+            try
+            {
+                Projects req = new Projects();
+
+                Applicants applicnt = new Applicants();
+                applicnt.firstName = "John";
+                applicnt.lastName = "Consumer";
+                applicnt.email = "slfapitesty@gmail.com";
+                applicnt.phone = "8015557799";
+                applicnt.isPrimary = true;
+
+                req.applicants.Add(applicnt);
+                req.installStreet = "3850 Sunny Side Drive";
+                req.installCity = "Austin";
+                req.installStateName = "Texas";
+                req.installZipCode = "45637";
+
+                string token = GetSunlightToken();
+                string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+                var request = new RestRequest($"/applicant/create/", Method.POST);
+                request.AddJsonBody(req);
+                request.AddHeader("Authorization", "Basic " + svcCredentials);
+                request.AddHeader("SFAccessToken", "Basic " + token);
+                
+                var response = client.Execute(request);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
+                }
+
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<Projects>(content);
+
+                return ret.hashId;
+
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+        }
     }
 }
