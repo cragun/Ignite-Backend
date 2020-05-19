@@ -137,7 +137,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<Projects>(content);
 
-                return ret.hashId;
+                return ret.hashId + "responsecontent" + content;
 
 
             }
