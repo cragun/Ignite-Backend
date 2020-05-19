@@ -24,5 +24,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID);
+
+        [OperationContract]
+        string getsunlighttoken();
     }
 }

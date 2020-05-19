@@ -33,6 +33,16 @@ namespace DataReef.TM.Api.Controllers
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinition(financePlanDefinitionId));
         }
 
+
+        [Route("Getsunlighttoken")]
+        [HttpGet]
+        public string Getsunlighttoken()
+        {
+            var s =_financePlanDefinitionService.Value.getsunlighttoken();
+            return s;
+        }
+
+
         [Route("{financePlanDefinitionId:guid}/{propertyId:guid}/creditcheckurls")]
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
