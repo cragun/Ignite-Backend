@@ -125,7 +125,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var request = new RestRequest($"/applicant/create/", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
-                request.AddHeader("SFAccessToken", "Basic " + token);
+                request.AddHeader("SFAccessToken", "Bearer " + token);
                 
                 var response = client.Execute(request);
 
