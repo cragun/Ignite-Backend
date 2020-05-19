@@ -12,7 +12,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string installCity { get; set; }
         public string installStateName { get; set; }
         public string installZipCode { get; set; }
-        public Applicants applicants { get; set; }
+        public List<Applicants> applicants { get; set; }
 
         public string id { get; set; }
         public string hashId { get; set; }

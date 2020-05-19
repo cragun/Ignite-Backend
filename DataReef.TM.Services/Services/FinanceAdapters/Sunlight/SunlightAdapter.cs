@@ -103,7 +103,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
         public class SunlightProjects
         {
-            public Projects Projects { get; set; }
+            public List<Projects> Projects { get; set; }
         }
 
         public string CreateSunlightApplicant()
@@ -112,21 +112,26 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             {
                 SunlightProjects req = new SunlightProjects();
                 Projects project = new Projects();
-
                 Applicants applicnt = new Applicants();
+
+
                 applicnt.firstName = "John";
                 applicnt.lastName = "Consumer";
                 applicnt.email = "slfapitesty@gmail.com";
                 applicnt.phone = "8015557799";
                 applicnt.isPrimary = true;
 
-                project.applicants  = applicnt;
+                project.applicants = new List<Applicants>();
+                project.applicants.Add(applicnt);
                 project.installStreet = "3850 Sunny Side Drive";
                 project.installCity = "Austin";
                 project.installStateName = "Texas";
                 project.installZipCode = "45637";
 
-                req.Projects = project;
+                req.Projects = new List<Projects>();
+                req.Projects.Add(project);
+
+                
 
                 string token = GetSunlightToken();
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
@@ -145,7 +150,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
 
-                return ret.Projects?.hashId + "responsecontent " + content + "token " + token ;
+                return ret.Projects?.FirstOrDefault().hashId + "responsecontent " + content + "token " + token ;
 
 
             }
