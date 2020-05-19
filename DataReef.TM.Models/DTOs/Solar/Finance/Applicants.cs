@@ -22,6 +22,6 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string residenceCity { get; set; }
         public string residenceStateName { get; set; }
         public string residenceZipCode { get; set; }
-        public bool isCreditRun { get; set; }
+        public bool? isCreditRun { get; set; }
     }
 }

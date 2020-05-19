@@ -81,6 +81,26 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         }
 
 
+        //public class SunlightApplicants
+        //{
+        //    public string firstName { get; set; }
+        //    public string lastName { get; set; }
+        //    public string email { get; set; }
+        //    public string phone { get; set; }
+        //    public bool isPrimary { get; set; }
+
+        //}
+
+        //public class SunlightProjects
+        //{
+        //    public string installStreet { get; set; }
+        //    public string installCity { get; set; }
+        //    public string installStateName { get; set; }
+        //    public string installZipCode { get; set; }
+        //    public SunlightApplicants applicants { get; set; }
+
+        //}
+
         public string CreateSunlightApplicant()
         {
             try
@@ -94,7 +114,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 applicnt.phone = "8015557799";
                 applicnt.isPrimary = true;
 
-                req.applicants.Add(applicnt);
+                req.applicants  = applicnt;
                 req.installStreet = "3850 Sunny Side Drive";
                 req.installCity = "Austin";
                 req.installStateName = "Texas";
