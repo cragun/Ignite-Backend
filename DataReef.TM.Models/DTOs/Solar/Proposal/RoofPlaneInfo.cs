@@ -16,6 +16,16 @@ namespace DataReef.TM.Models.DTOs.Solar.Proposal
         /// </summary>
         public decimal Size { get; set; }
 
+        /// <summary>
+        /// TargetOffset in percentage
+        /// </summary>
+        public int TargetOffset { get; set; }
+        /// <summary>
+        /// ArrayOffset in percentage
+        /// </summary>
+        public int ArrayOffset { get; set; }
+
+
         public int Tilt { get; set; }
 
         public int Azimuth { get; set; }

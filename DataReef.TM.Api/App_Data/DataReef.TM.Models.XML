@@ -4006,6 +4006,16 @@
             Size in Watts
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo.TargetOffset">
+            <summary>
+            TargetOffset in percentage
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo.ArrayOffset">
+            <summary>
+            ArrayOffset in percentage
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo.ProfileName">
             <summary>
             Genability PVWatts5 Usage Profile name.
