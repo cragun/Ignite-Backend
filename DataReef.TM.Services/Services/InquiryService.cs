@@ -760,7 +760,7 @@ namespace DataReef.TM.Services.Services
 
                 if (property.LatestDisposition != newDisposition)
                 {
-                    UpdatePersonClockTime(property.Territory.OUID);
+                  //  UpdatePersonClockTime(property.Territory.OUID);
                     property.DispositionTypeId = newDispositionTypeId;
                     property.LatestDisposition = newDisposition;
                     territoryNeedsSave = true;
