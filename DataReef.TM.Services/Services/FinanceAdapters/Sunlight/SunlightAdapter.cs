@@ -47,6 +47,67 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             public string access_token { get; set; }
         }
 
+
+        public string GetfullState(string shortState)
+        {
+            var list = new List<KeyValuePair<string, string>>();
+            list.Add(new KeyValuePair<string, string>("AL", "Alabama"));
+            list.Add(new KeyValuePair<string, string>("AK", "Alaska"));
+            list.Add(new KeyValuePair<string, string>("AZ", "Arizona"));
+            list.Add(new KeyValuePair<string, string>("AR", "Arkansas"));
+            list.Add(new KeyValuePair<string, string>("CA", "California"));
+            list.Add(new KeyValuePair<string, string>("CO", "Colorado"));
+            list.Add(new KeyValuePair<string, string>("CT", "Connecticut"));
+            list.Add(new KeyValuePair<string, string>("DE", "Delaware"));
+            list.Add(new KeyValuePair<string, string>("FL", "Florida"));
+            list.Add(new KeyValuePair<string, string>("GA", "Georgia"));
+            list.Add(new KeyValuePair<string, string>("HI", "Hawaii"));
+            list.Add(new KeyValuePair<string, string>("ID", "Idaho"));
+            list.Add(new KeyValuePair<string, string>("IL", "Illinois"));
+            list.Add(new KeyValuePair<string, string>("IN", "Indiana"));
+            list.Add(new KeyValuePair<string, string>("IA", "Iowa"));
+            list.Add(new KeyValuePair<string, string>("KS", "Kansas"));
+            list.Add(new KeyValuePair<string, string>("KY", "Kentucky"));
+            list.Add(new KeyValuePair<string, string>("LA", "Louisiana"));
+            list.Add(new KeyValuePair<string, string>("ME", "Maine"));
+            list.Add(new KeyValuePair<string, string>("MD", "Maryland"));
+            list.Add(new KeyValuePair<string, string>("MA", "Massachusetts"));
+            list.Add(new KeyValuePair<string, string>("MI", "Michigan"));
+            list.Add(new KeyValuePair<string, string>("MN", "Minnesota"));
+            list.Add(new KeyValuePair<string, string>("MS", "Mississippi"));
+            list.Add(new KeyValuePair<string, string>("MO", "Missouri"));
+            list.Add(new KeyValuePair<string, string>("MT", "Montana"));
+            list.Add(new KeyValuePair<string, string>("NE", "Nebraska"));
+            list.Add(new KeyValuePair<string, string>("NV", "Nevada"));
+            list.Add(new KeyValuePair<string, string>("NH", "New Hampshire"));
+            list.Add(new KeyValuePair<string, string>("NJ", "New Jersey"));
+            list.Add(new KeyValuePair<string, string>("NM", "New Mexico"));
+            list.Add(new KeyValuePair<string, string>("NY", "New York"));
+            list.Add(new KeyValuePair<string, string>("NC", "North Carolina"));
+            list.Add(new KeyValuePair<string, string>("ND", "North Dakota"));
+            list.Add(new KeyValuePair<string, string>("OH", "Ohio"));
+            list.Add(new KeyValuePair<string, string>("OK", "Oklahoma"));
+            list.Add(new KeyValuePair<string, string>("OR", "Oregon"));
+            list.Add(new KeyValuePair<string, string>("PA", "Pennsylvania"));
+            list.Add(new KeyValuePair<string, string>("RI", "Rhode Island"));
+            list.Add(new KeyValuePair<string, string>("SC", "South Carolina"));
+            list.Add(new KeyValuePair<string, string>("SD", "South Dakota"));
+            list.Add(new KeyValuePair<string, string>("TN", "Tennessee"));
+            list.Add(new KeyValuePair<string, string>("TX", "Texas"));
+            list.Add(new KeyValuePair<string, string>("UT", "Utah"));
+            list.Add(new KeyValuePair<string, string>("VT", "Vermont"));
+            list.Add(new KeyValuePair<string, string>("VA", "Virginia"));
+            list.Add(new KeyValuePair<string, string>("WA", "Washington"));
+            list.Add(new KeyValuePair<string, string>("WV", "West Virginia"));
+            list.Add(new KeyValuePair<string, string>("WI", "Wisconsin"));
+            list.Add(new KeyValuePair<string, string>("WY", "Wyoming"));
+
+
+            string fullState = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
+
+            return fullState;
+        }
+
         public string GetSunlightToken()
         {
             try
@@ -89,6 +150,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         {
             try
             {
+
+                state = GetfullState(state);
+
                 SunlightProjects req = new SunlightProjects();
                 Projects project = new Projects();
                 Applicants applicnt = new Applicants();
