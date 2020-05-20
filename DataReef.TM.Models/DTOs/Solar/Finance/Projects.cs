@@ -22,12 +22,12 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string ownerName { get; set; }
         public string installerName { get; set; }
         public string projectCategory { get; set; }
-        public int? requestedLoanAmount { get; set; }
-        public int? amountDrawn { get; set; }
-        public int? amountRemaining { get; set; }
+        public decimal? requestedLoanAmount { get; set; }
+        public decimal? amountDrawn { get; set; }
+        public decimal? amountRemaining { get; set; }
         public bool? approvedForPayments { get; set; }
         public bool? blockDraw { get; set; }
-        public int? maxAvailable { get; set; }
+        public decimal? maxAvailable { get; set; }
         public int? drawCount { get; set; }
         public bool? drawExpired { get; set; }
         public string statusText { get; set; }
