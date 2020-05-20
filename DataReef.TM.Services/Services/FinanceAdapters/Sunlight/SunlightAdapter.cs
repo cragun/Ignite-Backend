@@ -127,7 +127,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
                 string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + ret.Projects?.FirstOrDefault().hashId);
 
-                return FrameUrl;
+                return frame;
             }
             catch (Exception ex)
             {
