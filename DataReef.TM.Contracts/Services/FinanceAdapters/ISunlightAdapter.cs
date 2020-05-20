@@ -12,6 +12,6 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     public interface ISunlightAdapter
     {
         [OperationContract]
-        string CreateSunlightApplicant();
+        string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode);
     }
 }

@@ -26,6 +26,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Password"];
         private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
         private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
+        private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
 
         private RestClient client
         {
@@ -77,36 +78,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             {
                 return ex.Message;
             }
-
         }
-
-
-        //public class SunlightApplicants
-        //{
-        //    public string firstName { get; set; }
-        //    public string lastName { get; set; }
-        //    public string email { get; set; }
-        //    public string phone { get; set; }
-        //    public bool isPrimary { get; set; }
-
-        //}
-
-        //public class SunlightProjects
-        //{
-        //    public string installStreet { get; set; }
-        //    public string installCity { get; set; }
-        //    public string installStateName { get; set; }
-        //    public string installZipCode { get; set; }
-        //    public SunlightApplicants applicants { get; set; }
-
-        //}
 
         public class SunlightProjects
         {
             public List<Projects> Projects { get; set; }
         }
 
-        public string CreateSunlightApplicant()
+        public string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode)
         {
             try
             {
@@ -114,24 +93,21 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 Projects project = new Projects();
                 Applicants applicnt = new Applicants();
 
-
-                applicnt.firstName = "John";
-                applicnt.lastName = "Consumer";
-                applicnt.email = "slfapitesty@gmail.com";
-                applicnt.phone = "8015557799";
+                applicnt.firstName = fname;
+                applicnt.lastName = lname;
+                applicnt.email = email;
+                applicnt.phone = phone;
                 applicnt.isPrimary = true;
 
                 project.applicants = new List<Applicants>();
                 project.applicants.Add(applicnt);
-                project.installStreet = "3850 Sunny Side Drive";
-                project.installCity = "Austin";
-                project.installStateName = "Texas";
-                project.installZipCode = "45637";
+                project.installStreet = street;
+                project.installCity = city;
+                project.installStateName = state;
+                project.installZipCode = zipcode;
 
                 req.Projects = new List<Projects>();
-                req.Projects.Add(project);
-
-                
+                req.Projects.Add(project);                
 
                 string token = GetSunlightToken();
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
@@ -149,10 +125,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+                string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + ret.Projects?.FirstOrDefault().hashId);
 
-                return ret.Projects?.FirstOrDefault().hashId + "responsecontent " + content + "token " + token ;
-
-
+                return FrameUrl;
             }
             catch (Exception ex)
             {

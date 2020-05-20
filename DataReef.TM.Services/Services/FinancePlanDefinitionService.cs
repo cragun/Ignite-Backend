@@ -131,15 +131,8 @@ namespace DataReef.TM.Services
         }
 
 
-        public string getsunlighttoken()
-        {
-            var s =  _sunlightAdapter.Value.CreateSunlightApplicant();
-            return s;
-        }
             public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
-           // _sunlightAdapter.Value.GetSunlightToken();
-
             using (var dc = new DataContext())
             {
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
@@ -170,9 +163,7 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-
-
-                                string sunlighturl = "";
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightApplicant(property.GetMainOccupant().FirstName, property.GetMainOccupant().LastName, property.GetMainEmailAddress(), property.GetMainPhoneNumber(), property.Address1, property.City, property.State, property.ZipCode);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
                         }

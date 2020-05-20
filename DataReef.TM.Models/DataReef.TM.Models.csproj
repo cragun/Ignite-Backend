@@ -317,8 +317,6 @@
     <Compile Include="DTOs\Solar\Finance\LeaseParameters.cs" />
     <Compile Include="DTOs\Solar\Finance\ProductionPrice.cs" />
     <Compile Include="DTOs\Solar\Finance\Projects.cs" />
-    <Compile Include="DTOs\Solar\Finance\SunlightApplicantResponse.cs" />
-    <Compile Include="DTOs\Solar\Finance\SunlightApplicantRequest.cs" />
     <Compile Include="DTOs\Solar\Genability\BaseResponse.cs" />
     <Compile Include="DTOs\Solar\Genability\UsageProfileRequest.cs" />
     <Compile Include="DTOs\Solar\Proposal\CloneSettings.cs" />
