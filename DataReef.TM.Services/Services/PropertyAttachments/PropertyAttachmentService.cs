@@ -152,7 +152,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                     {
                         img = System.Drawing.Image.FromStream(ms);
 
-                        var imageName = $"{propertyAttachmentItemName}/{uniqueImgIdentifier}";
+                        var imageName = $"{propertyAttachmentItemName}/{uniqueImgIdentifier}" + ".jpg";
 
                         var originalImageUrl = _blobService.Value.UploadByNameGetFileUrl(imageName, new BlobModel { Content = originalImageBytes, ContentType = GetMimeType(img.RawFormat) }, BlobAccessRights.PublicRead);
 
