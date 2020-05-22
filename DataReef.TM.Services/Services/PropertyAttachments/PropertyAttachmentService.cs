@@ -152,9 +152,9 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                     {
                         img = System.Drawing.Image.FromStream(ms);
 
-                        var imageName = $"{propertyAttachmentItemName}/{uniqueImgIdentifier}" + ".jpg";
+                        var imageName = $"{propertyAttachmentItemName}/{uniqueImgIdentifier}";
 
-                        var originalImageUrl = _blobService.Value.UploadByNameGetFileUrl(imageName, new BlobModel { Content = originalImageBytes, ContentType = GetMimeType(img.RawFormat) }, BlobAccessRights.PublicRead);
+                        var originalImageUrl = _blobService.Value.UploadByNameGetFileUrl(imageName + ".jpeg", new BlobModel { Content = originalImageBytes, ContentType = GetMimeType(img.RawFormat) }, BlobAccessRights.PublicRead);
 
                         //generate and upload thumbnails
                         var smallThumb = GetAndUploadThumbnail(img, ThumbnailType.Small, imageName);
@@ -167,7 +167,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                         {
                             ID = uniqueImgIdentifier,
                             UserID = SmartPrincipal.UserId,
-                            Name = imageName,
+                            Name = imageName + ".jpeg",
                             Url = originalImageUrl,
                             Thumbnails = new List<Thumbnail> { smallThumb, mediumThumb, largeThumb },
                             Location = location,
@@ -835,7 +835,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             string thumbUrl =
                 _blobService
                     .Value
-                    .UploadByNameGetFileUrl($"{name}_{width}",
+                    .UploadByNameGetFileUrl($"{name}_{width}.jpeg",
                         new BlobModel { Content = thumbBytes, ContentType = GetMimeType(img.RawFormat) },
                         BlobAccessRights.PublicRead);
 
