@@ -122,7 +122,7 @@ namespace DataReef.TM.Services
                 PutObjectRequest request = new PutObjectRequest
                 {
                     BucketName = bucketName ?? _s3BucketName,
-                    Key = name.ToLowerInvariant(),
+                    Key = name.ToLowerInvariant() + ".jpg",
                     InputStream = stream,
                     ContentType = blob.ContentType,
                     CannedACL = GetAccessRights(access)
