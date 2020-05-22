@@ -143,6 +143,7 @@ namespace DataReef.TM.DataAccess.Database
         public DbSet<SystemProductionMonth> SystemProductionMonths { get; set; }
         public DbSet<SolarTariff> SolarTariffs { get; set; }
         public DbSet<RoofPlane> RoofPlanes { get; set; }
+        public DbSet<ProposalRoofPlaneInfo> ProposalRoofPlaneInfo { get; set; }
         public DbSet<RoofPlaneEdge> RoofPlaneEdges { get; set; }
         public DbSet<RoofPlaneObstruction> RoofPlaneObstructions { get; set; }
         public DbSet<ObstructionPoint> ObstructionPoints { get; set; }

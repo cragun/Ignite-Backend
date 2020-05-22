@@ -594,6 +594,7 @@
     <Compile Include="Solar\RoofPlane.cs" />
     <Compile Include="Solar\RoofPlaneDetail.cs" />
     <Compile Include="Solar\RoofPlaneEdge.cs" />
+    <Compile Include="Solar\ProposalRoofPlaneInfo.cs" />
     <Compile Include="Solar\RoofPlaneObstruction.cs" />
     <Compile Include="Solar\RoofPlanePanel.cs" />
     <Compile Include="Solar\RoofPlanePoint.cs" />
