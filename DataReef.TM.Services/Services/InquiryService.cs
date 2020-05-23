@@ -369,14 +369,14 @@ namespace DataReef.TM.Services.Services
                             } ,
                             People = new InquiryStatisticsByDate
                             {
-                                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.People.AllTime * 100) / OPP.People.AllTime  : 0 ,
-                                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.People.ThisYear * 100) / OPP.People.ThisYear : 0 ,
-                                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.People.ThisMonth * 100) / OPP.People.ThisMonth : 0 ,
-                                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.People.ThisWeek * 100) / OPP.People.ThisWeek : 0 ,
-                                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.People.Today * 100) / OPP.People.Today : 0 ,
-                                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.People.SpecifiedDay * 100) / OPP.People.SpecifiedDay : 0 ,
-                                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.People.ThisQuarter * 100) / OPP.People.ThisQuarter : 0 ,
-                                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.People.RangeDay * 100) / OPP.People.RangeDay : 0
+                                AllTime = (ApptsCAPP.People.AllTime > 0 && OPP.People.AllTime > 0) ? (ApptsCAPP.People.AllTime * 100) / OPP.People.AllTime  : 0 ,
+                                ThisYear = (ApptsCAPP.People.ThisYear > 0 && OPP.People.ThisYear > 0) ? (ApptsCAPP.People.ThisYear * 100) / OPP.People.ThisYear : 0 ,
+                                ThisMonth = (ApptsCAPP.People.ThisMonth > 0 && OPP.People.ThisMonth > 0) ? (ApptsCAPP.People.ThisMonth * 100) / OPP.People.ThisMonth : 0 ,
+                                ThisWeek = (ApptsCAPP.People.ThisWeek > 0 && OPP.People.ThisWeek > 0) ? (ApptsCAPP.People.ThisWeek * 100) / OPP.People.ThisWeek : 0 ,
+                                Today = (ApptsCAPP.People.Today > 0 && OPP.People.Today > 0) ? (ApptsCAPP.People.Today * 100) / OPP.People.Today : 0 ,
+                                SpecifiedDay = (ApptsCAPP.People.SpecifiedDay > 0 && OPP.People.SpecifiedDay > 0) ? (ApptsCAPP.People.SpecifiedDay * 100) / OPP.People.SpecifiedDay : 0 ,
+                                ThisQuarter = (ApptsCAPP.People.ThisQuarter > 0 && OPP.People.ThisQuarter > 0) ? (ApptsCAPP.People.ThisQuarter * 100) / OPP.People.ThisQuarter : 0 ,
+                                RangeDay = (ApptsCAPP.People.RangeDay > 0 && OPP.People.RangeDay > 0) ? (ApptsCAPP.People.RangeDay * 100) / OPP.People.RangeDay : 0
                             }
                         });
                     }
