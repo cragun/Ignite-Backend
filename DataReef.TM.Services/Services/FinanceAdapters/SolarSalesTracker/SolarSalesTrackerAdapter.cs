@@ -441,7 +441,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-        
+       
 
 
         public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)

@@ -1045,6 +1045,7 @@ namespace DataReef.TM.Services.Services
 
                 proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
 
+                
                 // update territory DateLastModified
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
 

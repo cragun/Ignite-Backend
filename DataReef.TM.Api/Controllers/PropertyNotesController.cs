@@ -230,7 +230,27 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// returns data about notes created
+        /// </summary>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <param name="apiKey"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [Route("sb/aboutNoteCreated")]
+        [HttpGet]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult DataAboutNotesCreated(DateTime fromDate, DateTime toDate, string apiKey, string userId)
+        {
 
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _propertyNoteService.NotesCreate(fromDate, toDate, DecyptApiKey, userId);
+
+            return Ok(result);
+        }
 
         /// <summary>
         /// / Gets Territories where Lead can transfer using SB apikey

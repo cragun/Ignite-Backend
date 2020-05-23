@@ -21,11 +21,20 @@ namespace DataReef.TM.Models.DTOs
         /// <summary>
         /// You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
         /// </summary>
+        /// 
+
+
+        public string APIKey { get; set; }
+
         public long? IgniteID { get; set; }
 
         public long? LeadID { get; set; }
 
         public string Content { get; set; }
+
+        public string CustomerFirstName { get; set; }
+
+        public string CustomerLastName { get; set; }
 
         public string UserID { get; set; }
 
@@ -34,6 +43,10 @@ namespace DataReef.TM.Models.DTOs
         public DateTime DateCreated { get; set; }
 
         public DateTime? DateLastModified { get; set; }
+
+        public string UserFirstName { get; set; }
+
+        public string UserLastName { get; set; }
 
         public SBNoteDTO()
         {

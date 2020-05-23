@@ -20,12 +20,14 @@ using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
 using DataReef.Core;
 using System.Data.SqlClient;
+using DataReef.TM.Models.Enums;
+
 
 namespace DataReef.TM.Services.Services
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
-    public class PropertyNoteService : DataService<PropertyNote>, IPropertyNoteService
+    public class PropertyNoteService : DataService<PropertyNote>, IPropertyNoteService 
     {
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<IOUService> _ouService;
@@ -34,6 +36,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
         private readonly IApiLoggingService _apiLoggingService;
+        private readonly Lazy<IRepository> _repository;
 
 
         public PropertyNoteService(
@@ -41,6 +44,7 @@ namespace DataReef.TM.Services.Services
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<IOUService> ouService,
+            Lazy<IRepository> repository,
             Lazy<IAssignmentService> assignmentService,
             Lazy<IUserInvitationService> userInvitationService,
             Lazy<IPersonService> personService,
@@ -53,19 +57,22 @@ namespace DataReef.TM.Services.Services
             _userInvitationService = userInvitationService;
             _personService = personService;
             _sbAdapter = sbAdapter;
+            _repository = repository;
             _apiLoggingService = apiLoggingService;
         }
+
 
         public IEnumerable<PropertyNote> GetNotesByPropertyID(Guid propertyID)
         {
             using (var dc = new DataContext())
             {
                 //get property along with the notes
-                var notes = dc
+                var notesList = dc
                     .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted)
                     .OrderByDescending(p => p.DateCreated)
                     .ToList();
-                return notes ?? new List<PropertyNote>();
+
+                return notesList ?? new List<PropertyNote>();
             }
         }
 
@@ -122,6 +129,7 @@ namespace DataReef.TM.Services.Services
 
         public override PropertyNote Insert(PropertyNote entity, DataContext dataContext)
         {
+
             var ret = base.Insert(entity, dataContext);
 
             using (var dc = new DataContext())
@@ -515,7 +523,81 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public IEnumerable<SBNoteDTO> NotesCreate(DateTime fromDate, DateTime toDate, string apiKey, string userID)
+        {
+          
+            using (var dc = new DataContext())
+            {
+                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                             && x.SmartBoardID.Equals(userID, StringComparison.InvariantCultureIgnoreCase));
+                if (user == null)
+                {
+                    throw new Exception("No user found with the specified ID");
+                }
+                
+                var note = dc
+                    .PropertyNotes
+                    .Include(x=>x.Property)
+                    .Where(x => x.PersonID == user.Guid && (x.DateCreated >= fromDate && x.DateCreated <= toDate))
+                    .ToList();
+                if (note == null)
+                {
+                    throw new Exception("The note with the specified Guid was not found");
+                }
 
+
+
+                //var ret = dc
+                //        .Database
+                //        .SqlQuery<OU>("exec proc_OUsForPerson {0}", user.Guid)
+                //        .Where(o => !o.IsArchived)
+                //        .ToList();
+
+                //var ouid = ret.FirstOrDefault().Guid;
+
+                //_financialAdapterBase.EnsureInitialized(ouid);
+
+                //var integrationSettings = new IntegrationOptionSettings
+                //{
+                //    Options = _financialAdapterBase.ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                //    SelectedIntegrations = _financialAdapterBase.ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+                //};
+
+                //var integrationData =
+                //    integrationSettings
+                //    ?.SelectedIntegrations
+                //    ?.FirstOrDefault(x =>
+                //    {
+                //        var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                //        return matchingOption?.Type == IntegrationType.SMARTBoard;
+                //    })
+                //    ?.Data
+                //    ?.SMARTBoard;
+
+                //if (!integrationData.ApiKey.Equals(apiKey))
+                //{
+                //    throw new Exception("No APIKey found with the specified ID");
+                //}
+
+
+                return note?.Select(x => new SBNoteDTO
+                {
+                    PropertyID=x.Property.Guid,
+                    APIKey = apiKey,
+                    CustomerFirstName = x.Property?.GetMainOccupant()?.FirstName,
+                    CustomerLastName = x.Property?.GetMainOccupant()?.LastName,
+                    LeadID = x.Property?.SmartBoardId,
+                    UserID = user.SmartBoardID,
+                    UserFirstName =user.FirstName,
+                    UserLastName=user.LastName,
+                    DateCreated = x.DateCreated,
+
+                });
+
+            }
+        }
 
         public SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email)
         {
