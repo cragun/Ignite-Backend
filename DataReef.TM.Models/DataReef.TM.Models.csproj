@@ -275,6 +275,7 @@
     <Compile Include="DTOs\Reports\OrganizationSelfTrackedReportRow.cs" />
     <Compile Include="DTOs\Reports\SalesRepresentativeSelfTrackedReportRow.cs" />
     <Compile Include="DTOs\Reports\SimplePersonKPI.cs" />
+    <Compile Include="DTOs\NoteCreateDTO.cs" />
     <Compile Include="DTOs\SBNoteDTO.cs" />
     <Compile Include="DTOs\Signatures\AdderDataView.cs" />
     <Compile Include="DTOs\Signatures\DocumentSignRequest.cs" />

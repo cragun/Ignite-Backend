@@ -441,7 +441,66 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-       
+        public void SignAgreement(Proposal proposal, SignedDocumentDTO proposalDoc)
+        {
+            var ouid = proposal?.Property?.Territory?.OUID;
+            if (!ouid.HasValue || proposalDoc == null)
+            {
+                return;
+            }
+
+            EnsureInitialized(ouid.Value);
+
+            var integrationSettings = new IntegrationOptionSettings
+            {
+                Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+            };
+
+            var integrationData =
+                integrationSettings
+                ?.SelectedIntegrations
+                ?.FirstOrDefault(x =>
+                {
+                    var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                    return matchingOption?.Type == IntegrationType.SMARTBoard;
+                })
+                ?.Data
+                ?.SMARTBoard;
+            if (integrationData == null)
+            {
+                return;
+            }
+
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+            
+            var url = $"/apis/attach_contract/{encryptedAPIkey}";
+
+            var request = new SBProposalAttachRequest(proposal)
+            {
+                contract = new Contract
+                { 
+                        Name = proposalDoc.Name,
+                        Body = "",
+                        ExtraContent="",
+                        Type="pdf"
+                }
+            };
+            SubmitProposal(integrationData, request, ouid.Value);
+
+            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
+
+            try
+            {
+                SaveRequest(null, response, url, null, integrationData.ApiKey);
+            }
+            catch (Exception)
+            {
+            }
+
+        }
 
 
         public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)

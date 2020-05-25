@@ -523,79 +523,61 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public IEnumerable<SBNoteDTO> NotesCreate(DateTime fromDate, DateTime toDate, string apiKey, string userID)
+        public IEnumerable<SBNoteDTO> NotesCreate(NoteCreateDTO noteRequest,DateTime fromDate,DateTime toDate)
         {
           
             using (var dc = new DataContext())
             {
-                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
-                                             && x.SmartBoardID.Equals(userID, StringComparison.InvariantCultureIgnoreCase));
+
+                //var user = 
+                //        dc.People
+                //        .FirstOrDefault(x => !x.IsDeleted
+                //                                 && x.SmartBoardID.Equals(request.UserID, StringComparison.InvariantCultureIgnoreCase));
+
+                var user =
+                        dc.People
+                        .Where(x=>x.SmartBoardID.Contains(noteRequest.UserID))
+                        .ToList();
+
+
                 if (user == null)
                 {
                     throw new Exception("No user found with the specified ID");
                 }
-                
-                var note = dc
-                    .PropertyNotes
-                    .Include(x=>x.Property)
-                    .Where(x => x.PersonID == user.Guid && (x.DateCreated >= fromDate && x.DateCreated <= toDate))
-                    .ToList();
-                if (note == null)
-                {
-                    throw new Exception("The note with the specified Guid was not found");
-                }
+
+
+                //var note = dc
+                //    .PropertyNotes
+                //    .Include(x => x.Property)
+                //    .Where(x => user.Contains(x.PersonID) && (x.DateCreated >= fromDate && x.DateCreated <= toDate))
+                //    .OrderByDescending(p => p.DateCreated)
+                //    .ToList();
 
 
 
-                //var ret = dc
-                //        .Database
-                //        .SqlQuery<OU>("exec proc_OUsForPerson {0}", user.Guid)
-                //        .Where(o => !o.IsArchived)
-                //        .ToList();
-
-                //var ouid = ret.FirstOrDefault().Guid;
-
-                //_financialAdapterBase.EnsureInitialized(ouid);
-
-                //var integrationSettings = new IntegrationOptionSettings
-                //{
-                //    Options = _financialAdapterBase.ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
-                //    SelectedIntegrations = _financialAdapterBase.ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
-
-                //};
-
-                //var integrationData =
-                //    integrationSettings
-                //    ?.SelectedIntegrations
-                //    ?.FirstOrDefault(x =>
-                //    {
-                //        var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
-
-                //        return matchingOption?.Type == IntegrationType.SMARTBoard;
-                //    })
-                //    ?.Data
-                //    ?.SMARTBoard;
-
-                //if (!integrationData.ApiKey.Equals(apiKey))
-                //{
-                //    throw new Exception("No APIKey found with the specified ID");
-                //}
 
 
-                return note?.Select(x => new SBNoteDTO
-                {
-                    PropertyID=x.Property.Guid,
-                    APIKey = apiKey,
-                    CustomerFirstName = x.Property?.GetMainOccupant()?.FirstName,
-                    CustomerLastName = x.Property?.GetMainOccupant()?.LastName,
-                    LeadID = x.Property?.SmartBoardId,
-                    UserID = user.SmartBoardID,
-                    UserFirstName =user.FirstName,
-                    UserLastName=user.LastName,
-                    DateCreated = x.DateCreated,
 
-                });
+                // if (note == null)
+                // {
+                //     throw new Exception("The note with the specified Guid was not found");
+                // }
 
+
+                // return note?.Select(x => new SBNoteDTO
+                // {
+                //     PropertyID=x.Property.Guid,
+                //     APIKey = apiKey,
+                //     CustomerFirstName = x.Property?.GetMainOccupant()?.FirstName,
+                //     CustomerLastName = x.Property?.GetMainOccupant()?.LastName,
+                //     LeadID = x.Property?.SmartBoardId,
+                //     UserID = user.SmartBoardID,
+                //     UserFirstName =user.FirstName,
+                //     UserLastName=user.LastName,
+                //     DateCreated = x.DateCreated,
+
+                // });
+                return null;
             }
         }
 

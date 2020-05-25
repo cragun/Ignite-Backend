@@ -1045,6 +1045,7 @@ namespace DataReef.TM.Services.Services
 
                 proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
 
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
                 
                 // update territory DateLastModified
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
@@ -1292,7 +1293,7 @@ namespace DataReef.TM.Services.Services
                 {
                 }
 
-                // Push the proposal to SST
+                // Push the proposal to SB
                 _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
 
                 var pbi = new PBI_ProposalSigned
