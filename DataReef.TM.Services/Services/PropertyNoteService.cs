@@ -530,6 +530,7 @@ namespace DataReef.TM.Services.Services
                 
                 using (var dc = new DataContext())
                 {
+
                     var user =
                             dc.People
                             .Where(x => noteRequest.userId.Contains(x.SmartBoardID) && !x.IsDeleted).ToList();
