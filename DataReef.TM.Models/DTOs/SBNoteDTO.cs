@@ -11,6 +11,9 @@ namespace DataReef.TM.Models.DTOs
 
       
     {
+        public string userId { get; set; }
+
+        public string apiKey { get; set; }
 
         public string Action { get; set; }
 

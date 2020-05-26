@@ -235,17 +235,17 @@ namespace DataReef.TM.Api.Controllers
         /// </summary>
         /// <param name="fromDate"></param>
         /// <param name="toDate"></param>
-        /// <param name="apiKey"></param>
-        /// <param name="userId"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [Route("sb/aboutNoteCreated")]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult DataAboutNotesCreated([FromBody]NoteCreateDTO request,DateTime fromDate,DateTime toDate)
         {
-           
-                bool checkTime = CryptographyHelper.checkTime(request.ApiKey);
-                string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(request.ApiKey);
+
+            //bool checkTime = CryptographyHelper.checkTime(request.ApiKey); 
+          //  string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(request.apiKey);
+                    
 
             var result = _propertyNoteService.NotesCreate(request,fromDate,toDate);
 

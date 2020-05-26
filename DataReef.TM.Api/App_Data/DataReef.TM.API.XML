@@ -395,7 +395,7 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckEncryptDecryptApikey(System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckEncryptDecryptApikey(System.String,System.String)">
             <summary>
             Check Apikey Encryption and Decryption
             </summary>
@@ -421,14 +421,13 @@
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.DataAboutNotesCreated(System.DateTime,System.DateTime,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.DataAboutNotesCreated(DataReef.TM.Models.DTOs.NoteCreateDTO,System.DateTime,System.DateTime)">
             <summary>
             returns data about notes created
             </summary>
             <param name="fromDate"></param>
             <param name="toDate"></param>
-            <param name="apiKey"></param>
-            <param name="userId"></param>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckCanTransferLead(System.Int64,System.String)">
