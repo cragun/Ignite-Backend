@@ -84,9 +84,12 @@ namespace DataReef.TM.Models.Solar
             if (RoofPlanes == null || !RoofPlanes.Any()) return;
             var totaPanelsCount = RoofPlanes.Sum(rp => rp.PanelsCount);
             if (totaPanelsCount != PanelCount) throw new ApplicationException("PanelCount is not equal to the sum of panels on each roof plane!");
-
-            var isNotValid = RoofPlanes.Any(rp => !rp.IsValid);
-            if (isNotValid) throw new ApplicationException("There are roof planes that have no points!");
+            var isSimple = RoofPlanes.Any(rp => rp.Name.Contains("Simple System"));
+            if(!isSimple)
+            {
+                var isNotValid = RoofPlanes.Any(rp => !rp.IsValid);
+                if (isNotValid) throw new ApplicationException("There are roof planes that have no points!");
+            }            
         }
 
         public string GetEquipmentInfo()

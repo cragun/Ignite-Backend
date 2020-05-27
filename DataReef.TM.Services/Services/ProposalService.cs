@@ -188,7 +188,6 @@ namespace DataReef.TM.Services.Services
                 var req = JsonConvert.SerializeObject(entity);
                 try
                 {
-                    SaveRequest(req, "msgtest", totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(), "proposalupdate");
                     entity.SolarSystem.ValidateSystemValid();                    
                 }
                 catch(Exception ex)
