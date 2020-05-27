@@ -62,26 +62,7 @@ namespace DataReef.TM.Services.Services
             var results = _eagleViewService.GetLinksForLatLon(lat, lon);
             var ret = results.Select(r => r.OrientationString).ToList();
             return ret;
-        }
-
-        protected void SaveRequest(string request, string response, string url, string headers, string apikey)
-        {
-            var adapterRequest = new AdapterRequest
-            {
-                AdapterName = "test",
-                Request = request,
-                Response = response,
-                Url = url,
-                Headers = headers,
-                TagString = apikey
-            };
-
-            using (var context = new DataContext())
-            {
-                context.AdapterRequests.Add(adapterRequest);
-                context.SaveChanges();
-            }
-        }
+        }        
 
 
         public BlobModel PurchaseHighResImageAtCoordinates(Guid propertyID, double top, double left, double bottom, double right, string direction)

@@ -19,6 +19,7 @@ using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DTOs.Solar.Proposal;
 using DataReef.TM.Models.Enums;
+using DataReef.TM.Models.FinancialIntegration;
 using DataReef.TM.Models.Solar;
 using DataReef.TM.Services.Extensions;
 using DataReef.TM.Services.InternalServices;
@@ -152,8 +153,29 @@ namespace DataReef.TM.Services.Services
             return proposal;
         }
 
+
+        protected void SaveRequest(string request, string response, string url, string headers, string apikey)
+        {
+            var adapterRequest = new AdapterRequest
+            {
+                AdapterName = "test",
+                Request = request,
+                Response = response,
+                Url = url,
+                Headers = headers,
+                TagString = apikey
+            };
+
+            using (var context = new DataContext())
+            {
+                context.AdapterRequests.Add(adapterRequest);
+                context.SaveChanges();
+            }
+        }
+
         public override Proposal Update(Proposal entity)
         {
+            
             if (entity == null)
             {
                 return null;
@@ -161,7 +183,21 @@ namespace DataReef.TM.Services.Services
 
             if (entity.SolarSystem != null)
             {
-                entity.SolarSystem.ValidateSystemValid();
+               
+                var totaPanelsCount = entity.SolarSystem.RoofPlanes.Sum(rp => rp.PanelsCount);
+                var req = JsonConvert.SerializeObject(entity);
+                try
+                {
+                    entity.SolarSystem.ValidateSystemValid();
+                    
+                    SaveRequest(req, "msgtest", totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(), "proposalupdate");
+                }
+                catch(Exception ex)
+                {
+                    
+                    SaveRequest(req,  ex.Message, totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(),  "proposalupdateEX");
+                }
+                
             }
 
             var newRoofPlanes = (entity
