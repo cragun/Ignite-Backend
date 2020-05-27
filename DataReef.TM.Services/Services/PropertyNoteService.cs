@@ -576,10 +576,13 @@ namespace DataReef.TM.Services.Services
                         sbn.PropertyID = itm.PropertyID;
                         sbn.DateCreated = itm.DateCreated;
 
+                        if (sblist.Select(x => x.userId).Contains(itm.Person.SmartBoardID) && sblist.Select(x => x.LeadID).Contains(itm.Property.SmartBoardId) && sblist.Select(x => x.DateCreated.Date).Contains(itm.DateCreated.Date))
+                        {
+                            continue;
+                        }
+
                         sblist.Add(sbn);
-
-
-
+                        
                     }
 
 
