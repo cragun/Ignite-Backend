@@ -565,7 +565,12 @@ namespace DataReef.TM.Services.Services
                         sbn.PropertyID = itm.PropertyID;
                         sbn.DateCreated = itm.DateCreated;
 
-                        if (sbn.LeadID== null || sblist.Where(x => x.userId == sbn.userId && x.LeadID == sbn.LeadID && x.DateCreated.Date == sbn.DateCreated.Date).Count() > 0)
+                        if (sbn.LeadID == null || sbn.apiKey == null || sbn.DateCreated == null)
+                        {
+                            continue;
+                        }
+
+                        if (sblist.Where(x => x.userId == sbn.userId && x.LeadID == sbn.LeadID && x.DateCreated.Date == sbn.DateCreated.Date).Count() > 0)
                         {
                             continue;
                         }
