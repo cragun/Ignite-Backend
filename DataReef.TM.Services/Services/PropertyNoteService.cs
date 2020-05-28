@@ -527,28 +527,20 @@ namespace DataReef.TM.Services.Services
         {
             try
             {
-                
                 using (var dc = new DataContext())
                 {
-
                     var user =
                             dc.People
-                            .Where(x => noteRequest.userId.Contains(x.SmartBoardID) && !x.IsDeleted).ToList();
-                    
+                            .Where(x => noteRequest.userId.Contains(x.SmartBoardID) && !x.IsDeleted).Select(x => x.Guid);
+
                     if (user == null)
                     {
                         throw new Exception("No user found with the specified ID");
                     }
-                    
-                    var userID = user.Select(x => x.Guid);
 
-                    var note = dc
-                         .PropertyNotes
-                         .Include(x => x.Property)
-                         .Where(x => userID.Contains(x.PersonID) && (x.DateCreated >= fromDate && x.DateCreated <= toDate))
-                         .OrderByDescending(p => p.PersonID)
-                         .ToList();
-                
+                    var note = dc.PropertyNotes.Include(x => x.Property).Include(x => x.Person)
+                        .Where(x => user.Contains(x.PersonID) && (x.DateCreated >= fromDate && x.DateCreated <= toDate)).ToList();
+
                     if (note == null)
                     {
                         throw new Exception("The note with the specified Guid was not found");
@@ -561,7 +553,6 @@ namespace DataReef.TM.Services.Services
                         sbn.apiKey = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(itm.PropertyID, SolarTrackerResources.SelectedSettingName)?
                             .FirstOrDefault(s => s.Data?.SMARTBoard != null)?.Data?.SMARTBoard?.ApiKey;
 
-
                         if (!noteRequest.apiKey.Contains(sbn.apiKey))
                         {
                             continue;
@@ -571,31 +562,26 @@ namespace DataReef.TM.Services.Services
                         sbn.UserFirstName = itm.Person.FirstName;
                         sbn.UserLastName = itm.Person.LastName;
                         sbn.LeadID = itm.Property.SmartBoardId;
-                        sbn.CustomerFirstName = itm.Property?.GetMainOccupant()?.FirstName;
-                        sbn.CustomerLastName = itm.Property?.GetMainOccupant()?.LastName;
                         sbn.PropertyID = itm.PropertyID;
                         sbn.DateCreated = itm.DateCreated;
 
-                       if (sblist.Select(x => x.userId).Contains(sbn.userId) && sblist.Select(x => x.LeadID).Contains(sbn.LeadID) && sblist.Select(x => x.DateCreated.Date).Contains(sbn.DateCreated.Date))
+                        if (sbn.LeadID== null || sblist.Where(x => x.userId == sbn.userId && x.LeadID == sbn.LeadID && x.DateCreated.Date == sbn.DateCreated.Date).Count() > 0)
                         {
                             continue;
                         }
+
+                        sbn.CustomerFirstName = itm.Property?.GetMainOccupant()?.FirstName;
+                        sbn.CustomerLastName = itm.Property?.GetMainOccupant()?.LastName;
+
                         sblist.Add(sbn);
-                        
                     }
-
-                    //  notesrecord = notesrecord.ToList().Where(x => noteRequest.apiKey.Contains(x.APIKey)).ToList();
                     return sblist;
-
                 }
-
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            //}
-            // }
         }
 
 
