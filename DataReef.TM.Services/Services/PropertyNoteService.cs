@@ -548,7 +548,7 @@ namespace DataReef.TM.Services.Services
                          .Where(x => userID.Contains(x.PersonID) && (x.DateCreated >= fromDate && x.DateCreated <= toDate))
                          .OrderByDescending(p => p.PersonID)
                          .ToList();
-
+                
                     if (note == null)
                     {
                         throw new Exception("The note with the specified Guid was not found");
@@ -576,17 +576,13 @@ namespace DataReef.TM.Services.Services
                         sbn.PropertyID = itm.PropertyID;
                         sbn.DateCreated = itm.DateCreated;
 
-                        if (sblist.Select(x => x.userId).Contains(itm.Person.SmartBoardID) && sblist.Select(x => x.LeadID).Contains(itm.Property.SmartBoardId) && sblist.Select(x => x.DateCreated.Date).Contains(itm.DateCreated.Date))
+                       if (sblist.Select(x => x.userId).Contains(sbn.userId) && sblist.Select(x => x.LeadID).Contains(sbn.LeadID) && sblist.Select(x => x.DateCreated.Date).Contains(sbn.DateCreated.Date))
                         {
                             continue;
                         }
-
                         sblist.Add(sbn);
                         
                     }
-
-
-
 
                     //  notesrecord = notesrecord.ToList().Where(x => noteRequest.apiKey.Contains(x.APIKey)).ToList();
                     return sblist;
