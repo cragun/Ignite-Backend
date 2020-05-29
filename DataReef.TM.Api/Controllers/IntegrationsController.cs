@@ -44,6 +44,7 @@ namespace DataReef.TM.Api.Controllers
     public partial class IntegrationsController : ApiController
     {
         private readonly IDataService<User> _userService;
+        private readonly IDataService<ProposalRoofPlaneInfo> _proroofService;
         private readonly IPersonService _personService;
         private readonly IOUService _ouService;
         private readonly IBlobService _blobService;
@@ -62,6 +63,7 @@ namespace DataReef.TM.Api.Controllers
         private readonly string _spruceUrl = ConfigurationManager.AppSettings["SpruceUrl"];
 
         public IntegrationsController(IDataService<User> userService,
+                                      IDataService<ProposalRoofPlaneInfo> proroofService,
                                       IPersonService personService,
                                       IOUService ouService,
                                       IBlobService blobService,
@@ -79,6 +81,7 @@ namespace DataReef.TM.Api.Controllers
         {
             HttpContext.Current.Server.ScriptTimeout = 300;
             _userService = userService;
+            _proroofService = proroofService;
             _personService = personService;
             _ouService = ouService;
             _blobService = blobService;
@@ -542,10 +545,32 @@ namespace DataReef.TM.Api.Controllers
 
             var ouSettings = _ouSettingsService.Value.GetSettings(ouid, null);
 
+
+            //foreach(var itm in request.RoofPlanes)
+            //{
+            //    ProposalRoofPlaneInfo proroofplane = new ProposalRoofPlaneInfo();
+            //    proroofplane.ArrayName = itm.ProfileName;
+            //    proroofplane.ArrayOffset = itm.ArrayOffset;
+            //    proroofplane.Azimuth = itm.Azimuth;
+            //    proroofplane.InverterEfficiency = itm.InverterEfficiency;
+            //    proroofplane.Losses = itm.Losses;
+            //    proroofplane.Name  = itm.ProfileName;
+            //    proroofplane.PanelsEfficiency = itm.PanelsEfficiency;
+            //    proroofplane.ProfileName = itm.ProfileName;
+            //    proroofplane.ProposalId = Guid.Parse(proposalID.Value.ToString());
+            //    proroofplane.ProviderProfileId = itm.ProviderProfileId;
+            //    proroofplane.Shading = itm.Shading;
+            //    proroofplane.Size = itm.Size;
+            //    proroofplane.TargetOffset = itm.TargetOffset;
+            //    proroofplane.Tilt = itm.Tilt;
+            //    _proroofService.Insert(proroofplane);
+            //}
+            
+
+
+
             // call all these methods in parallel
-            var tasks = request
-                            .RoofPlanes
-                            .Select(p => CreatePVWatts5UsageProfileAsync(p, accountId, provider, credentials.AppID, credentials.AppKey, ouSettings));
+            var tasks = request.RoofPlanes.Select(p => CreatePVWatts5UsageProfileAsync(p, accountId, provider, credentials.AppID, credentials.AppKey, ouSettings));
 
             UpsertUsageProfileResponse[] pvWatts5Profiles = await Task.WhenAll(tasks);
 
