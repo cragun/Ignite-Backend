@@ -36,7 +36,7 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
 
         [OperationContract]
-        IEnumerable<SBNoteDTO> NotesCreate(NoteCreateDTO request,DateTime fromDate,DateTime toDate);
+        IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO request,DateTime fromDate,DateTime toDate);
 
         [OperationContract]
         IEnumerable<Models.Person> QueryForPerson(Guid propertyID, string email, string name);

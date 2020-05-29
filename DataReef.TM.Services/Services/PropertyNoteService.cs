@@ -523,7 +523,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public IEnumerable<SBNoteDTO> NotesCreate(NoteCreateDTO noteRequest, DateTime fromDate, DateTime toDate)
+        public IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO noteRequest, DateTime fromDate, DateTime toDate)
         {
             try
             {
@@ -535,7 +535,7 @@ namespace DataReef.TM.Services.Services
                     
                         var NoteList = dc
                             .Database
-                            .SqlQuery<SBNoteDTO>("exec usp_getnoteDatagroupbyProperty @fromdate, @todate, @apiKey, @userid",
+                            .SqlQuery<SBNoteData>("exec usp_getnoteDatagroupbyProperty @fromdate, @todate, @apiKey, @userid",
                             new SqlParameter("@fromdate", fromDate),
                             new SqlParameter("@todate", toDate),
                             new SqlParameter("@apiKey", apiKey),
@@ -543,7 +543,7 @@ namespace DataReef.TM.Services.Services
                             .ToList();
 
 
-                        NoteList.RemoveAll(x => x.LeadID == null || x.APIKey == null || x.DateCreated == null);
+                        NoteList.RemoveAll(x => x.LeadID == null || x.apiKey == null || x.DateCreated == null);
                     
                         return NoteList;
 
