@@ -303,8 +303,7 @@ namespace DataReef.TM.Services
 
                         if (ApptsCAPP != null && OPP != null)
                         {
-                            long ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.Actions.ThisYear * 100) / OPP.Actions.ThisYear : 0;
-                            row.InquiryStatistics.Add(new Models.DataViews.Inquiries.InquiryStatisticsForPerson
+                        	  row.InquiryStatistics.Add(new Models.DataViews.Inquiries.InquiryStatisticsForPerson
                             {
                                 PersonId = personId,
                                 Name = col.ColumnName,

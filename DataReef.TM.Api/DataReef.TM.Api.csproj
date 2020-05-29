@@ -413,6 +413,7 @@
     <Compile Include="Controllers\IntegrationsController.cs" />
     <Compile Include="Controllers\Web\HomeController.cs" />
     <Compile Include="CustomResponseTypes\TextResult.cs" />
+    <Compile Include="LogRequestAndResponseHandler.cs" />
     <Compile Include="Mappers\SpruceQuoteMapper.cs" />
     <Compile Include="Security\Certificates\Certificate.cs" />
     <Compile Include="Security\ClaimsTransformationHandler.cs" />
@@ -673,6 +674,10 @@
     <ProjectReference Include="..\DataReef.TM.Contracts\DataReef.TM.Contracts.csproj">
       <Project>{ea0a5a9e-ac18-4e7b-bde2-5abe8fbfdea1}</Project>
       <Name>DataReef.TM.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataReef.TM.DataAccess\DataReef.TM.DataAccess.csproj">
+      <Project>{D8C35AC6-25A6-46A8-9A6F-5DB8442EAD21}</Project>
+      <Name>DataReef.TM.DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\DataReef.TM.MailLibrary\DataReef.TM.MailLibrary.csproj">
       <Project>{303c7119-0f5c-4873-8b80-41fcb1c4bb93}</Project>
