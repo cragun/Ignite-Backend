@@ -526,11 +526,13 @@ namespace DataReef.TM.Services.Services
         public IEnumerable<SBNoteDTO> NotesCreate(NoteCreateDTO noteRequest, DateTime fromDate, DateTime toDate)
         {
             try
-            {                
+            {
                 using (var dc = new DataContext())
                 {
-                    var user = dc.People.Where(x => noteRequest.userId.Contains(x.SmartBoardID) && !x.IsDeleted).Select(x => x.Guid);
-                    
+                    var user =
+                            dc.People
+                            .Where(x => noteRequest.userId.Contains(x.SmartBoardID) && !x.IsDeleted).Select(x => x.Guid);
+
                     if (user == null)
                     {
                         throw new Exception("No user found with the specified ID");
@@ -563,7 +565,12 @@ namespace DataReef.TM.Services.Services
                         sbn.PropertyID = itm.PropertyID;
                         sbn.DateCreated = itm.DateCreated;
 
-                        if(sblist.Where(x => x.userId == sbn.userId && x.LeadID == sbn.LeadID && x.DateCreated.Date == sbn.DateCreated.Date).Count()  > 0)
+                        if (sbn.LeadID == null || sbn.apiKey == null || sbn.DateCreated == null)
+                        {
+                            continue;
+                        }
+
+                        if (sblist.Where(x => x.userId == sbn.userId && x.LeadID == sbn.LeadID && x.DateCreated.Date == sbn.DateCreated.Date).Count() > 0)
                         {
                             continue;
                         }
@@ -571,7 +578,7 @@ namespace DataReef.TM.Services.Services
                         sbn.CustomerFirstName = itm.Property?.GetMainOccupant()?.FirstName;
                         sbn.CustomerLastName = itm.Property?.GetMainOccupant()?.LastName;
 
-                        sblist.Add(sbn);                        
+                        sblist.Add(sbn);
                     }
                     return sblist;
                 }

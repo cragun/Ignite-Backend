@@ -430,15 +430,15 @@ namespace DataReef.TM.Services.Services
 
                     var peopleIds = inquiryDates.Select(p => p.PersonID).Distinct();
 
-                    
-                    foreach(var col in reportItems)
+
+                    foreach (var col in reportItems)
                     {
-                        if(col.IncludedDispositions?.Any() != true && col.ConditionalIncludedDispositions?.Any() != true)
+                        if (col.IncludedDispositions?.Any() != true && col.ConditionalIncludedDispositions?.Any() != true)
                         {
                             continue;
                         }
                         var inquiryDatesForDisposition = inquiryDates.Where(id => col.IncludedDispositions?.Contains(id.Disposition) == true)?.ToList();
-                        
+
                         //add conditional dispositions if they are configured
                         if (col.ConditionalIncludedDispositions?.Any() == true)
                         {
@@ -466,149 +466,147 @@ namespace DataReef.TM.Services.Services
 
                         foreach (var personId in peopleIds)
                         {
-                            
-                            var personInquiryDates = inquiryDatesForDisposition.Where(id => id.PersonID == personId).ToList();
+                                var personInquiryDates = inquiryDatesForDisposition.Where(id => id.PersonID == personId).ToList();
 
-                            inquiryStatistics.Add(new InquiryStatisticsForPerson
-                            {
-                                PersonId = personId,
-                                Name = col.ColumnName,
-                                Actions = new InquiryStatisticsByDate
+                                inquiryStatistics.Add(new InquiryStatisticsForPerson
                                 {
-                                    AllTime = personInquiryDates.Count(),
-                                    ThisYear = personInquiryDates.Count(id => id.DateCreated >= dates.YearStart),
-                                    ThisMonth = personInquiryDates.Count(id => id.DateCreated >= dates.MonthStart),
-                                    ThisWeek = personInquiryDates.Count(id => id.DateCreated.Date >= dates.CurrentWeekStart),
-                                    Today = personInquiryDates.Count(id => id.DateCreated >= dates.TodayStart),
-                                    SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Count() : 0,
-                                    ThisQuarter = personInquiryDates.Count(id => id.DateCreated >= dates.QuaterStart),
-                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personInquiryDates.Count(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay) : 0
-                                },
-                                DaysActive = new InquiryStatisticsByDate
-                                {
-                                    AllTime = personInquiryDates.GroupBy(id => id.DateCreated.Date).Count(),
-                                    ThisYear = personInquiryDates.Where(id => id.DateCreated >= dates.YearStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    ThisMonth = personInquiryDates.Where(id => id.DateCreated >= dates.MonthStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    ThisWeek = personInquiryDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    Today = personInquiryDates.Where(id => id.DateCreated >= dates.TodayStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0,
-                                   ThisQuarter = personInquiryDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personInquiryDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
-                                }
-                            });
-
-
-                            if (col.ColumnName == "OPP")
-                            {
-                                var CappPropertyids = inquiryDates.Where(x => x.Disposition == "ProposalPresented" && x.PersonID == personId).Select(i => i.PropertyID);
-
-                                var opprtunityDataList = dc.Appointments.Where(i => i.IsDeleted == false && i.GoogleEventID != null &&
-                                                           i.AssigneeID == personId && !CappPropertyids.Contains(i.PropertyID))
-                                                .Select(i => new { Guid = i.Guid, AssigneeID = i.AssigneeID, StartDate = i.StartDate }).ToList();
-
-                                if (opprtunityDataList != null)
-                                {
-                                    inquiryStatistics.Add(new InquiryStatisticsForPerson
+                                    PersonId = personId,
+                                    Name = col.ColumnName,
+                                    Actions = new InquiryStatisticsByDate
                                     {
-                                        PersonId = personId,
-                                        Name = col.ColumnName,
-                                        Actions = new InquiryStatisticsByDate
-                                        {
-                                            AllTime = opprtunityDataList.Count(),
-                                            ThisYear = opprtunityDataList.Count(id => id.StartDate >= dates.YearStart),
-                                            ThisMonth = opprtunityDataList.Count(id => id.StartDate >= dates.MonthStart),
-                                            ThisWeek = opprtunityDataList.Count(id => id.StartDate.Date >= dates.CurrentWeekStart),
-                                            Today = opprtunityDataList.Count(id => id.StartDate >= dates.TodayStart),
-                                            SpecifiedDay = specifiedDay.HasValue ? opprtunityDataList.Count(id => id.StartDate >= dates.SpecifiedStart.Value && id.StartDate < dates.SpecifiedEnd.Value) : 0,
-                                            ThisQuarter = opprtunityDataList.Count(id => id.StartDate >= dates.QuaterStart),
-                                            RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? opprtunityDataList.Count(id => id.StartDate >= StartRangeDay && id.StartDate <= EndRangeDay) : 0
-                                        },
-                                        DaysActive = new InquiryStatisticsByDate
-                                        {
-                                            AllTime = opprtunityDataList.GroupBy(id => id.StartDate.Date).Count(),
-                                            ThisYear = opprtunityDataList.Where(id => id.StartDate >= dates.YearStart).GroupBy(id => id.StartDate.Date).Count(),
-                                            ThisMonth = opprtunityDataList.Where(id => id.StartDate >= dates.MonthStart).GroupBy(id => id.StartDate.Date).Count(),
-                                            ThisWeek = opprtunityDataList.Where(id => id.StartDate.Date >= dates.CurrentWeekStart).GroupBy(id => id.StartDate.Date).Count(),
-                                            Today = opprtunityDataList.Where(id => id.StartDate >= dates.TodayStart).GroupBy(id => id.StartDate.Date).Count(),
-                                            SpecifiedDay = specifiedDay.HasValue ? opprtunityDataList.Where(id => id.StartDate >= dates.SpecifiedStart.Value && id.StartDate < dates.SpecifiedEnd.Value).GroupBy(id => id.StartDate.Date).Count() : 0,
-                                            ThisQuarter = opprtunityDataList.Where(id => id.StartDate >= dates.QuaterStart).GroupBy(id => id.StartDate.Date).Count(),
-                                            RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? opprtunityDataList.Where(id => id.StartDate >= StartRangeDay && id.StartDate <= EndRangeDay).GroupBy(id => id.StartDate.Date).Count() : 0
-                                        }
-                                    });
-                                }
-                            }
-
-
-                            if (col.ColumnName == "ClockHours")
-                            {
-                                var personTotalHour = dc.PersonClockTime.Where(id => id.PersonID == personId).Select(i => new { PersonID = i.PersonID, DateCreated = i.DateCreated, ClockMin = i.ClockMin }).ToList();
-
-                                if (personTotalHour != null)
-                                {
-                                    inquiryStatistics.Add(new InquiryStatisticsForPerson
+                                        AllTime = personInquiryDates.Count(),
+                                        ThisYear = personInquiryDates.Count(id => id.DateCreated >= dates.YearStart),
+                                        ThisMonth = personInquiryDates.Count(id => id.DateCreated >= dates.MonthStart),
+                                        ThisWeek = personInquiryDates.Count(id => id.DateCreated.Date >= dates.CurrentWeekStart),
+                                        Today = personInquiryDates.Count(id => id.DateCreated >= dates.TodayStart),
+                                        SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Count() : 0,
+                                        ThisQuarter = personInquiryDates.Count(id => id.DateCreated >= dates.QuaterStart),
+                                        RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personInquiryDates.Count(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay) : 0
+                                    },
+                                    DaysActive = new InquiryStatisticsByDate
                                     {
-                                        PersonId = personId,
-                                        Name = col.ColumnName,
-                                        Actions = new InquiryStatisticsByDate
+                                        AllTime = personInquiryDates.GroupBy(id => id.DateCreated.Date).Count(),
+                                        ThisYear = personInquiryDates.Where(id => id.DateCreated >= dates.YearStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        ThisMonth = personInquiryDates.Where(id => id.DateCreated >= dates.MonthStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        ThisWeek = personInquiryDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        Today = personInquiryDates.Where(id => id.DateCreated >= dates.TodayStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0,
+                                        ThisQuarter = personInquiryDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personInquiryDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
+                                    }
+                                });
+
+
+                                if (col.ColumnName == "OPP")
+                                {
+                                    var CappPropertyids = inquiryDates.Where(x => x.Disposition == "ProposalPresented" && x.PersonID == personId).Select(i => i.PropertyID);
+
+                                    var opprtunityDataList = dc.Appointments.Where(i => i.IsDeleted == false && i.GoogleEventID != null &&
+                                                               i.AssigneeID == personId && !CappPropertyids.Contains(i.PropertyID))
+                                                    .Select(i => new { Guid = i.Guid, AssigneeID = i.AssigneeID, StartDate = i.StartDate }).ToList();
+
+                                    if (opprtunityDataList != null)
+                                    {
+                                        inquiryStatistics.Add(new InquiryStatisticsForPerson
                                         {
-                                            AllTime = Convert.ToInt64(Math.Round(personTotalHour.Sum(x => x.ClockMin) / (double)60)),
-                                            ThisYear = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.ClockMin) / (double)60)),
-                                            ThisMonth = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.ClockMin) / (double)60)),
-                                            ThisWeek = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.ClockMin) / (double)60)),
-                                            Today = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.ClockMin) / (double)60)),
-                                            SpecifiedDay = Convert.ToInt64(Math.Round(specifiedDay.HasValue ? personTotalHour.Where(id => id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value).Sum(x => x.ClockMin) : 0 / (double)60)),
-                                            ThisQuarter = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.ClockMin) / (double)60)),
-                                            RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.ClockMin) / (double)60)) : 0
-                                        },
-                                        DaysActive = new InquiryStatisticsByDate
-                                        { }
-
-                                    });
+                                            PersonId = personId,
+                                            Name = col.ColumnName,
+                                            Actions = new InquiryStatisticsByDate
+                                            {
+                                                AllTime = opprtunityDataList.Count(),
+                                                ThisYear = opprtunityDataList.Count(id => id.StartDate >= dates.YearStart),
+                                                ThisMonth = opprtunityDataList.Count(id => id.StartDate >= dates.MonthStart),
+                                                ThisWeek = opprtunityDataList.Count(id => id.StartDate.Date >= dates.CurrentWeekStart),
+                                                Today = opprtunityDataList.Count(id => id.StartDate >= dates.TodayStart),
+                                                SpecifiedDay = specifiedDay.HasValue ? opprtunityDataList.Count(id => id.StartDate >= dates.SpecifiedStart.Value && id.StartDate < dates.SpecifiedEnd.Value) : 0,
+                                                ThisQuarter = opprtunityDataList.Count(id => id.StartDate >= dates.QuaterStart),
+                                                RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? opprtunityDataList.Count(id => id.StartDate >= StartRangeDay && id.StartDate <= EndRangeDay) : 0
+                                            },
+                                            DaysActive = new InquiryStatisticsByDate
+                                            {
+                                                AllTime = opprtunityDataList.GroupBy(id => id.StartDate.Date).Count(),
+                                                ThisYear = opprtunityDataList.Where(id => id.StartDate >= dates.YearStart).GroupBy(id => id.StartDate.Date).Count(),
+                                                ThisMonth = opprtunityDataList.Where(id => id.StartDate >= dates.MonthStart).GroupBy(id => id.StartDate.Date).Count(),
+                                                ThisWeek = opprtunityDataList.Where(id => id.StartDate.Date >= dates.CurrentWeekStart).GroupBy(id => id.StartDate.Date).Count(),
+                                                Today = opprtunityDataList.Where(id => id.StartDate >= dates.TodayStart).GroupBy(id => id.StartDate.Date).Count(),
+                                                SpecifiedDay = specifiedDay.HasValue ? opprtunityDataList.Where(id => id.StartDate >= dates.SpecifiedStart.Value && id.StartDate < dates.SpecifiedEnd.Value).GroupBy(id => id.StartDate.Date).Count() : 0,
+                                                ThisQuarter = opprtunityDataList.Where(id => id.StartDate >= dates.QuaterStart).GroupBy(id => id.StartDate.Date).Count(),
+                                                RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? opprtunityDataList.Where(id => id.StartDate >= StartRangeDay && id.StartDate <= EndRangeDay).GroupBy(id => id.StartDate.Date).Count() : 0
+                                            }
+                                        });
+                                    }
                                 }
+
+
+                                if (col.ColumnName == "ClockHours")
+                                {
+                                    var personTotalHour = dc.PersonClockTime.Where(id => id.PersonID == personId).Select(i => new { PersonID = i.PersonID, DateCreated = i.DateCreated, ClockMin = i.ClockMin }).ToList();
+
+                                    if (personTotalHour != null)
+                                    {
+                                        inquiryStatistics.Add(new InquiryStatisticsForPerson
+                                        {
+                                            PersonId = personId,
+                                            Name = col.ColumnName,
+                                            Actions = new InquiryStatisticsByDate
+                                            {
+                                                AllTime = Convert.ToInt64(Math.Round(personTotalHour.Sum(x => x.ClockMin) / (double)60)),
+                                                ThisYear = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.ClockMin) / (double)60)),
+                                                ThisMonth = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.ClockMin) / (double)60)),
+                                                ThisWeek = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.ClockMin) / (double)60)),
+                                                Today = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.ClockMin) / (double)60)),
+                                                SpecifiedDay = Convert.ToInt64(Math.Round(specifiedDay.HasValue ? personTotalHour.Where(id => id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value).Sum(x => x.ClockMin) : 0 / (double)60)),
+                                                ThisQuarter = Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.ClockMin) / (double)60)),
+                                                RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? Convert.ToInt64(Math.Round(personTotalHour.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.ClockMin) / (double)60)) : 0
+                                            },
+                                            DaysActive = new InquiryStatisticsByDate
+                                            { }
+
+                                        });
+                                    }
+                                }
+
+                                //if (col.ColumnName == "CAPP(%)")
+                                //{
+                                //    var ApptsCAPP = inquiryStatistics.Where(x => x.Name == "Appts CAPP").FirstOrDefault();
+                                //    var OPP = inquiryStatistics.Where(x => x.Name == "OPP").FirstOrDefault();
+
+                                //    if (ApptsCAPP != null && OPP != null)
+                                //    {
+                                //        inquiryStatistics.Add(new InquiryStatisticsForPerson
+                                //        {
+                                //            PersonId = personId,
+                                //            Name = col.ColumnName,
+                                //            Actions = new InquiryStatisticsByDate
+                                //            {
+                                //                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.Actions.AllTime * 100) / OPP.Actions.AllTime : 0,
+                                //                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.Actions.ThisYear * 100) / OPP.Actions.ThisYear : 0,
+                                //                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.Actions.ThisMonth * 100) / OPP.Actions.ThisMonth : 0,
+                                //                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.Actions.ThisWeek * 100) / OPP.Actions.ThisWeek : 0,
+                                //                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.Actions.Today * 100) / OPP.Actions.Today : 0,
+                                //                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.Actions.SpecifiedDay * 100) / OPP.Actions.SpecifiedDay : 0,
+                                //                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.Actions.ThisQuarter * 100) / OPP.Actions.ThisQuarter : 0,
+                                //                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.Actions.RangeDay * 100) / OPP.Actions.RangeDay : 0
+                                //            },
+                                //            DaysActive = new InquiryStatisticsByDate
+                                //            {
+                                //                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.DaysActive.AllTime * 100) / OPP.DaysActive.AllTime : 0,
+                                //                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.DaysActive.ThisYear * 100) / OPP.DaysActive.ThisYear : 0,
+                                //                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.DaysActive.ThisMonth * 100) / OPP.DaysActive.ThisMonth : 0,
+                                //                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.DaysActive.ThisWeek * 100) / OPP.DaysActive.ThisWeek : 0,
+                                //                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.DaysActive.Today * 100) / OPP.DaysActive.Today : 0,
+                                //                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.DaysActive.SpecifiedDay * 100) / OPP.DaysActive.SpecifiedDay : 0,
+                                //                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.DaysActive.ThisQuarter * 100) / OPP.DaysActive.ThisQuarter : 0,
+                                //                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.DaysActive.RangeDay * 100) / OPP.DaysActive.RangeDay : 0
+                                //            }
+                                //        });
+                                //    }
+                                //}
                             }
-
-                            //if (col.ColumnName == "CAPP(%)")
-                            //{
-                            //    var ApptsCAPP = inquiryStatistics.Where(x => x.Name == "Appts CAPP").FirstOrDefault();
-                            //    var OPP = inquiryStatistics.Where(x => x.Name == "OPP").FirstOrDefault();
-
-                            //    if (ApptsCAPP != null && OPP != null)
-                            //    {
-                            //        inquiryStatistics.Add(new InquiryStatisticsForPerson
-                            //        {
-                            //            PersonId = personId,
-                            //            Name = col.ColumnName,
-                            //            Actions = new InquiryStatisticsByDate
-                            //            {
-                            //                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.Actions.AllTime * 100) / OPP.Actions.AllTime : 0,
-                            //                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.Actions.ThisYear * 100) / OPP.Actions.ThisYear : 0,
-                            //                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.Actions.ThisMonth * 100) / OPP.Actions.ThisMonth : 0,
-                            //                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.Actions.ThisWeek * 100) / OPP.Actions.ThisWeek : 0,
-                            //                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.Actions.Today * 100) / OPP.Actions.Today : 0,
-                            //                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.Actions.SpecifiedDay * 100) / OPP.Actions.SpecifiedDay : 0,
-                            //                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.Actions.ThisQuarter * 100) / OPP.Actions.ThisQuarter : 0,
-                            //                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.Actions.RangeDay * 100) / OPP.Actions.RangeDay : 0
-                            //            },
-                            //            DaysActive = new InquiryStatisticsByDate
-                            //            {
-                            //                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.DaysActive.AllTime * 100) / OPP.DaysActive.AllTime : 0,
-                            //                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.DaysActive.ThisYear * 100) / OPP.DaysActive.ThisYear : 0,
-                            //                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.DaysActive.ThisMonth * 100) / OPP.DaysActive.ThisMonth : 0,
-                            //                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.DaysActive.ThisWeek * 100) / OPP.DaysActive.ThisWeek : 0,
-                            //                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.DaysActive.Today * 100) / OPP.DaysActive.Today : 0,
-                            //                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.DaysActive.SpecifiedDay * 100) / OPP.DaysActive.SpecifiedDay : 0,
-                            //                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.DaysActive.ThisQuarter * 100) / OPP.DaysActive.ThisQuarter : 0,
-                            //                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.DaysActive.RangeDay * 100) / OPP.DaysActive.RangeDay : 0
-                            //            }
-                            //        });
-                            //    }
-                            //}
-                        }
+                       
                     }
-
-
-                }
-
+                    }
+                
                 return inquiryStatistics;
             }
         }

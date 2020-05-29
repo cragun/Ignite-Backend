@@ -136,24 +136,27 @@ namespace DataReef.TM.Services
                         ouSettings
                         ?.FirstOrDefault(s => s.Name == OUSetting.OU_Reporting_Settings)
                         ?.GetValue<OUReportingSettings>();
-
-
+            
 
             var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct().ToList();
             var DeactivepeopleIds = _personService.Value.GetMany(peopleIds).Where(p => p.IsDeleted == true).Select(i => i.Guid).Distinct().ToList();
+            
             var people = _personService.Value.GetMany(peopleIds, "OUAssociations").Where(p => !repExclusionList.Contains(p.Guid));
+
             foreach (var personId in peopleIds)
             {
+               
                 var person = people.SingleOrDefault(p => p.Guid == personId);
 
                 var roleType = OURoleType.None;
-                if(person != null)
+                if (person != null)
                 {
                     person.OUAssociations.ToList().ForEach(ouAssociation => { roleType = roleType | ouAssociation.RoleType; });
-                }                
+                }
                 if (roleType.Equals(OURoleType.Member) || roleType.Equals(OURoleType.PhotosManager) || roleType.Equals(OURoleType.FranchiseManager))
                 {
+
                     var reportRow = NormalizeSalesRepresentativeReportRow(
                         personId,
                         person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???",
@@ -167,6 +170,7 @@ namespace DataReef.TM.Services
                         results.Add(reportRow);
                     }
                 }
+                
             }
             return results;
         }
