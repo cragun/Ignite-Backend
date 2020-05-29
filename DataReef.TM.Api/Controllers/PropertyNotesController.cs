@@ -242,11 +242,7 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult DataAboutNotesCreated([FromBody]NoteCreateDTO request,DateTime fromDate,DateTime toDate)
         {
-
-            //bool checkTime = CryptographyHelper.checkTime(request.ApiKey); 
-          //  string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(request.apiKey);
-                    
-
+            
             var result = _propertyNoteService.NotesCreate(request,fromDate,toDate);
 
             return Ok(result);

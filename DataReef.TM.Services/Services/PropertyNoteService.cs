@@ -523,65 +523,32 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public IEnumerable<SBNoteDTO> NotesCreate(NoteCreateDTO noteRequest, DateTime fromDate, DateTime toDate)
+        public IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO noteRequest, DateTime fromDate, DateTime toDate)
         {
             try
             {
+                string userID = string.Join(",", noteRequest.userId);
+                string apiKey = string.Join(",", noteRequest.apiKey);
+                
                 using (var dc = new DataContext())
                 {
-                    var user =
-                            dc.People
-                            .Where(x => noteRequest.userId.Contains(x.SmartBoardID) && !x.IsDeleted).Select(x => x.Guid);
+                    
+                        var NoteList = dc
+                            .Database
+                            .SqlQuery<SBNoteData>("exec usp_getnoteDatagroupbyProperty @fromdate, @todate, @apiKey, @userid",
+                            new SqlParameter("@fromdate", fromDate),
+                            new SqlParameter("@todate", toDate),
+                            new SqlParameter("@apiKey", apiKey),
+                            new SqlParameter("@userid", userID))
+                            .ToList();
 
-                    if (user == null)
-                    {
-                        throw new Exception("No user found with the specified ID");
-                    }
 
-                    var note = dc.PropertyNotes.Include(x => x.Property).Include(x => x.Person)
-                        .Where(x => user.Contains(x.PersonID) && (x.DateCreated >= fromDate && x.DateCreated <= toDate)).ToList();
+                        NoteList.RemoveAll(x => x.LeadID == null || x.apiKey == null || x.DateCreated == null);
+                    
+                        return NoteList;
 
-                    if (note == null)
-                    {
-                        throw new Exception("The note with the specified Guid was not found");
-                    }
-
-                    List<SBNoteDTO> sblist = new List<SBNoteDTO>();
-                    foreach (var itm in note)
-                    {
-                        SBNoteDTO sbn = new SBNoteDTO();
-                        sbn.apiKey = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(itm.PropertyID, SolarTrackerResources.SelectedSettingName)?
-                            .FirstOrDefault(s => s.Data?.SMARTBoard != null)?.Data?.SMARTBoard?.ApiKey;
-
-                        if (!noteRequest.apiKey.Contains(sbn.apiKey))
-                        {
-                            continue;
-                        }
-
-                        sbn.userId = itm.Person.SmartBoardID;
-                        sbn.UserFirstName = itm.Person.FirstName;
-                        sbn.UserLastName = itm.Person.LastName;
-                        sbn.LeadID = itm.Property.SmartBoardId;
-                        sbn.PropertyID = itm.PropertyID;
-                        sbn.DateCreated = itm.DateCreated;
-
-                        if (sbn.LeadID == null || sbn.apiKey == null || sbn.DateCreated == null)
-                        {
-                            continue;
-                        }
-
-                        if (sblist.Where(x => x.userId == sbn.userId && x.LeadID == sbn.LeadID && x.DateCreated.Date == sbn.DateCreated.Date).Count() > 0)
-                        {
-                            continue;
-                        }
-
-                        sbn.CustomerFirstName = itm.Property?.GetMainOccupant()?.FirstName;
-                        sbn.CustomerLastName = itm.Property?.GetMainOccupant()?.LastName;
-
-                        sblist.Add(sbn);
-                    }
-                    return sblist;
                 }
+
             }
             catch (Exception ex)
             {
