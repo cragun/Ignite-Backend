@@ -17,6 +17,8 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
         public SBUsageModel MonthlyUsage { get; set; }
 
+        [JsonProperty("user_id")]
+        public string UserId { get; set; }
         //public SBProposalDataModel ProjectDetails { get; set; }
         //[JsonProperty("HOA")]
         //public HOAModel HOA { get; set; }

@@ -421,6 +421,15 @@
             <param name="email"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.DataAboutNotesCreated(DataReef.TM.Models.DTOs.NoteCreateDTO,System.DateTime,System.DateTime)">
+            <summary>
+            returns data about notes created
+            </summary>
+            <param name="fromDate"></param>
+            <param name="toDate"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckCanTransferLead(System.Int64,System.String)">
             <summary>
             / Gets Territories where Lead can transfer using SB apikey

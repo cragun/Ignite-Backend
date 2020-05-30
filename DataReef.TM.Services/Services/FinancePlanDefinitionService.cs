@@ -13,6 +13,8 @@ using DataReef.Core.Infrastructure.Repository;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.Financing;
 using DataReef.Core.Infrastructure.Authorization;
+using System.Text;
+using DataReef.TM.Contracts.Services.FinanceAdapters;
 
 namespace DataReef.TM.Services
 {
@@ -20,7 +22,11 @@ namespace DataReef.TM.Services
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     public class FinancePlanDefinitionService : DataService<FinancePlanDefinition>, IFinancePlanDefinitionService
     {
-        public FinancePlanDefinitionService(ILogger logger, Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory) { }
+
+        private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
+
+        public FinancePlanDefinitionService(ILogger logger, Func<IUnitOfWork> unitOfWorkFactory, Lazy<ISunlightAdapter> sunlightAdapter
+            ) : base(logger, unitOfWorkFactory) { _sunlightAdapter = sunlightAdapter; }
 
         public override ICollection<FinancePlanDefinition> GetMany(IEnumerable<Guid> uniqueIds, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
@@ -125,7 +131,7 @@ namespace DataReef.TM.Services
         }
 
 
-        public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
+            public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())
             {
@@ -139,7 +145,7 @@ namespace DataReef.TM.Services
                         var metaData = financePlan.GetMetaData<FinancePlanDataModel>();
 
                         var creditCheckUrls = metaData?.SBMeta?.SmartBoardCreditCheckUrls ?? new List<SmartBOARDCreditCheck>();
-                        foreach(var url in creditCheckUrls)
+                        foreach (var url in creditCheckUrls)
                         {
                             if (url.UseSMARTBoardAuthentication && url.CreditCheckUrl.Contains("{smartBoardID}"))
                             {
@@ -154,11 +160,16 @@ namespace DataReef.TM.Services
                                 loanpalurl = loanpalurl.Replace(" ", "%20");
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{loanpaldata}", loanpalurl ?? string.Empty);
                             }
+
+                            if (url.CreditCheckUrl.Contains("{sunlightdata}"))
+                            {
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightApplicant(property.GetMainOccupant().FirstName, property.GetMainOccupant().LastName, property.GetMainEmailAddress(), property.GetMainPhoneNumber(), property.Address1, property.City, property.State, property.ZipCode);
+                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
+                            }
                         }
 
                         return creditCheckUrls;
-                    }
-                    
+                    }                   
                 }
             }
 

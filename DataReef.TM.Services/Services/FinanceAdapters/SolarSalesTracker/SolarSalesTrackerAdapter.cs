@@ -390,32 +390,117 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         .Where(o => !o.IsArchived)
                         .ToList();
 
-                // var ous = ret.Where(o => dc.OUSettings.Any(os => os.OUID == o.Guid && os.Name == SolarTrackerResources.SettingName)).FirstOrDefault();
-                //  var person = dc.People.FirstOrDefault(p => p.Guid == userId);
-
-                //    var headers = new Dictionary<string, string>
-                //{
-                //     {"x-sm-email", person.EmailAddressString},
-                //};
                 var ouid = ret.FirstOrDefault().Guid;
+               
+                EnsureInitialized(ouid);
 
+                var integrationSettings = new IntegrationOptionSettings
+                {
+                    Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                    SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+                };
+
+                var integrationData =
+                    integrationSettings
+                    ?.SelectedIntegrations
+                    ?.FirstOrDefault(x =>
+                    {
+                        var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                        return matchingOption?.Type == IntegrationType.SMARTBoard;
+                    })
+                    ?.Data
+                    ?.SMARTBoard;
+                if (integrationData == null)
+                {
+                    return ;
+                }
+
+                string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+                
                 var apiMethod = IsActive ? "deactivate_user" : "activate_user";
-                var url = $"/apis/{apiMethod}/{sbid}";
+            
+                var url = $"/apis/{apiMethod}/{encryptedAPIkey}";
 
-                var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+                var request = new SBLeadCreateRequest
+                {
+                    UserId = sbid,
+                };
+
+                var response = MakeRequest(ouid, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
 
                 try
                 {
-                    SaveRequest(null, response, url, null, null);
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, null);
                 }
                 catch (Exception)
                 {
                 }
             }
-            
+
         }
 
-        
+        public void SignAgreement(Proposal proposal, SignedDocumentDTO proposalDoc)
+        {
+            var ouid = proposal?.Property?.Territory?.OUID;
+            if (!ouid.HasValue || proposalDoc == null)
+            {
+                return;
+            }
+
+            EnsureInitialized(ouid.Value);
+
+            var integrationSettings = new IntegrationOptionSettings
+            {
+                Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+            };
+
+            var integrationData =
+                integrationSettings
+                ?.SelectedIntegrations
+                ?.FirstOrDefault(x =>
+                {
+                    var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                    return matchingOption?.Type == IntegrationType.SMARTBoard;
+                })
+                ?.Data
+                ?.SMARTBoard;
+            if (integrationData == null)
+            {
+                return;
+            }
+
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+            
+            var url = $"/apis/attach_contract/{encryptedAPIkey}";
+
+            var request = new SBProposalAttachRequest(proposal)
+            {
+                contract = new Contract
+                { 
+                        Name = proposalDoc.Name,
+                        Body = "",
+                        ExtraContent="",
+                        Type="pdf"
+                }
+            };
+            SubmitProposal(integrationData, request, ouid.Value);
+
+            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
+
+            try
+            {
+                SaveRequest(null, response, url, null, integrationData.ApiKey);
+            }
+            catch (Exception)
+            {
+            }
+
+        }
 
 
         public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)

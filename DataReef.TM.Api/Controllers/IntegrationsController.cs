@@ -44,6 +44,7 @@ namespace DataReef.TM.Api.Controllers
     public partial class IntegrationsController : ApiController
     {
         private readonly IDataService<User> _userService;
+        private readonly IDataService<ProposalRoofPlaneInfo> _proroofService;
         private readonly IPersonService _personService;
         private readonly IOUService _ouService;
         private readonly IBlobService _blobService;
@@ -62,6 +63,7 @@ namespace DataReef.TM.Api.Controllers
         private readonly string _spruceUrl = ConfigurationManager.AppSettings["SpruceUrl"];
 
         public IntegrationsController(IDataService<User> userService,
+                                      IDataService<ProposalRoofPlaneInfo> proroofService,
                                       IPersonService personService,
                                       IOUService ouService,
                                       IBlobService blobService,
@@ -79,6 +81,7 @@ namespace DataReef.TM.Api.Controllers
         {
             HttpContext.Current.Server.ScriptTimeout = 300;
             _userService = userService;
+            _proroofService = proroofService;
             _personService = personService;
             _ouService = ouService;
             _blobService = blobService;

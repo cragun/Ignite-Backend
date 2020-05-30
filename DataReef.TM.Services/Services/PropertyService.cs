@@ -193,7 +193,7 @@ namespace DataReef.TM.Services.Services
                         if (existingProp != null)
                         {
                             entity.Guid = existingProp.Guid;
-
+                            //_inquiryService.Value.UpdatePersonClockTime(entity.Guid);
                             return Update(entity);
                         }
                     }
@@ -201,6 +201,7 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
+            //_inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
             //send new lead to SMARTBOARD
@@ -287,6 +288,7 @@ namespace DataReef.TM.Services.Services
             {
                 _deviceService.Value.PushToSubscribers<Territory, Property>(prop.TerritoryID.ToString(), prop.Guid.ToString(), DataAction.Insert, alert: $"Property {prop.Name} has been created!");
             });
+           // _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             return prop;
         }
 
@@ -430,10 +432,10 @@ namespace DataReef.TM.Services.Services
                         //if (needToUpdateSB && !pushedToSB)
                         if (needToUpdateSB)
                         {
-                            bool IsdispositionChanged = true;
-                            if (entity.LatestDisposition == "AppointmentSet")
+                            bool IsdispositionChanged = false;
+                            if (oldProp.LatestDisposition != entity.LatestDisposition && entity.LatestDisposition != "AppointmentSet")
                             {
-                                IsdispositionChanged = false;
+                                IsdispositionChanged = true;
                             }
 
                             try

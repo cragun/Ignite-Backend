@@ -20,6 +20,7 @@ using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
 using DataReef.Core;
 using System.Data.SqlClient;
+using DataReef.TM.Models.Enums;
 
 namespace DataReef.TM.Services.Services
 {
@@ -34,6 +35,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
         private readonly IApiLoggingService _apiLoggingService;
+        private readonly Lazy<IRepository> _repository;
 
 
         public PropertyNoteService(
@@ -41,6 +43,7 @@ namespace DataReef.TM.Services.Services
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<IOUService> ouService,
+            Lazy<IRepository> repository,
             Lazy<IAssignmentService> assignmentService,
             Lazy<IUserInvitationService> userInvitationService,
             Lazy<IPersonService> personService,
@@ -53,6 +56,7 @@ namespace DataReef.TM.Services.Services
             _userInvitationService = userInvitationService;
             _personService = personService;
             _sbAdapter = sbAdapter;
+            _repository = repository;
             _apiLoggingService = apiLoggingService;
         }
 
@@ -61,8 +65,12 @@ namespace DataReef.TM.Services.Services
             using (var dc = new DataContext())
             {
                 //get property along with the notes
-                var notes = dc.PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted).ToList();
-                return notes ?? new List<PropertyNote>();
+                var notesList = dc
+                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted)
+                    .OrderByDescending(p => p.DateCreated)
+                    .ToList();
+
+                return notesList ?? new List<PropertyNote>();
             }
         }
 
@@ -469,7 +477,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
+        public SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
         {
             using (var dc = new DataContext())
             {
@@ -495,9 +503,55 @@ namespace DataReef.TM.Services.Services
                 note.Updated(user.Guid);
 
                 dc.SaveChanges();
+
+                return new SBNoteDTO
+                {
+                    Action = "Delete",
+                    Guid = note.Guid,
+                    PropertyID = property.Guid,
+                    LeadID = property.SmartBoardId,
+                    Email = user.EmailAddressString,
+                    Content = note.Content,
+                    DateCreated = note.DateCreated,
+                    DateLastModified = note.DateLastModified,
+                    UserID = user.SmartBoardID
+                };
+
             }
         }
 
+        public IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO noteRequest, DateTime fromDate, DateTime toDate)
+        {
+            try
+            {
+                string userID = string.Join(",", noteRequest.userId);
+                string apiKey = string.Join(",", noteRequest.apiKey);
+                
+                using (var dc = new DataContext())
+                {
+                    
+                        var NoteList = dc
+                            .Database
+                            .SqlQuery<SBNoteData>("exec usp_getnoteDatagroupbyProperty @fromdate, @todate, @apiKey, @userid",
+                            new SqlParameter("@fromdate", fromDate),
+                            new SqlParameter("@todate", toDate),
+                            new SqlParameter("@apiKey", apiKey),
+                            new SqlParameter("@userid", userID))
+                            .ToList();
+
+
+                        NoteList.RemoveAll(x => x.LeadID == null || x.apiKey == null || x.DateCreated == null);
+                    
+                        return NoteList;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
 
         public SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email)
@@ -673,7 +727,7 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("No lead found with the specified ID(s)");
                 }
-                property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
+                //property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
                 //validate the token
                 var sbSettings = _ouSettingService
                                     .Value

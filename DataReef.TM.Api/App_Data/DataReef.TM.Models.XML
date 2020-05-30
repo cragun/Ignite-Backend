@@ -869,10 +869,11 @@
             Optional image notes
             </summary>
         </member>
-        <member name="P:DataReef.TM.Models.DTOs.SBNoteDTO.IgniteID">
+        <member name="P:DataReef.TM.Models.DTOs.SBNoteDTO.APIKey">
             <summary>
             You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
             </summary>
+            
         </member>
         <member name="T:DataReef.TM.Models.DTOs.Signatures.DocumentSignRequest">
             <summary>
@@ -4004,6 +4005,16 @@
         <member name="P:DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo.Size">
             <summary>
             Size in Watts
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo.TargetOffset">
+            <summary>
+            TargetOffset in percentage
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo.ArrayOffset">
+            <summary>
+            ArrayOffset in percentage
             </summary>
         </member>
         <member name="P:DataReef.TM.Models.DTOs.Solar.Proposal.RoofPlaneInfo.ProfileName">

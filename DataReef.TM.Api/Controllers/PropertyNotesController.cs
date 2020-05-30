@@ -225,12 +225,32 @@ namespace DataReef.TM.Api.Controllers
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
-            _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, DecyptApiKey, email);
+            var result= _propertyNoteService.DeleteNoteFromSmartboard(noteId, userID, DecyptApiKey, email);
 
-            return Ok();
+            return Ok(result);
         }
 
+        /// <summary>
+        /// returns data about notes created
+        /// </summary>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("sb/aboutNoteCreated")]
+        [HttpPost]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public IHttpActionResult DataAboutNotesCreated([FromBody]NoteCreateDTO request,DateTime fromDate,DateTime toDate)
+        {
 
+            //bool checkTime = CryptographyHelper.checkTime(request.ApiKey); 
+          //  string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(request.apiKey);
+                    
+
+            var result = _propertyNoteService.NotesCreate(request,fromDate,toDate);
+
+            return Ok(result);
+        }
 
         /// <summary>
         /// / Gets Territories where Lead can transfer using SB apikey

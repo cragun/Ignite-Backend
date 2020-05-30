@@ -7,10 +7,39 @@ using System.Threading.Tasks;
 namespace DataReef.TM.Models.DTOs
 {
 
+
+    public class SBNoteData
+    {
+        public string apiKey { get; set; }
+
+        public long? LeadID { get; set; }
+
+        public Guid PropertyID { get; set; }
+
+        public string CustomerFirstName { get; set; }
+
+        public string CustomerLastName { get; set; }
+
+        public string userId { get; set; }
+
+        public string UserFirstName { get; set; }
+
+        public string UserLastName { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
+    }
+
     public class SBNoteDTO
 
-      
+
     {
+        public string userId { get; set; }
+
+        public string apiKey { get; set; }
+
+        public string Action { get; set; }
+
         public Guid? Guid { get; set; }
 
         public Guid PropertyID { get; set; }
@@ -18,11 +47,20 @@ namespace DataReef.TM.Models.DTOs
         /// <summary>
         /// You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
         /// </summary>
+        /// 
+
+
+        public string APIKey { get; set; }
+
         public long? IgniteID { get; set; }
 
         public long? LeadID { get; set; }
 
         public string Content { get; set; }
+
+        public string CustomerFirstName { get; set; }
+
+        public string CustomerLastName { get; set; }
 
         public string UserID { get; set; }
 
@@ -32,12 +70,16 @@ namespace DataReef.TM.Models.DTOs
 
         public DateTime? DateLastModified { get; set; }
 
+        public string UserFirstName { get; set; }
+
+        public string UserLastName { get; set; }
+
         public SBNoteDTO()
         {
 
         }
 
-       
+
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
             if (note != null)
@@ -90,7 +132,7 @@ namespace DataReef.TM.Models.DTOs
         public float? Latitude { get; set; }
         public float? Longitude { get; set; }
 
-        public IEnumerable<zapierOus> ouslist {get;set;}
+        public IEnumerable<zapierOus> ouslist { get; set; }
     }
 
     public class SBUpdateProperty

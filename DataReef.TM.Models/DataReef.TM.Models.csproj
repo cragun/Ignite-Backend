@@ -228,6 +228,7 @@
     <Compile Include="DTOs\Mortgage\EsResponse.cs" />
     <Compile Include="DTOs\Mortgage\MortgageRequest.cs" />
     <Compile Include="DTOs\Mortgage\MortgageSource.cs" />
+    <Compile Include="DTOs\NoteCreateDTO.cs" />
     <Compile Include="DTOs\OuShapeVersion.cs" />
     <Compile Include="DTOs\OUs\OrgIdSetting.cs" />
     <Compile Include="DTOs\OUs\OUChildrenAndTerritories.cs" />
@@ -310,11 +311,13 @@
     <Compile Include="DTOs\SmartBoard\SBCreateAppointmentRequest.cs" />
     <Compile Include="DTOs\SmartBoard\SBPropertyDTO.cs" />
     <Compile Include="DTOs\Solar\EnergyAveragesRequest.cs" />
+    <Compile Include="DTOs\Solar\Finance\Applicants.cs" />
     <Compile Include="DTOs\Solar\Finance\Incentive.cs" />
     <Compile Include="DTOs\Solar\Finance\ComparisonFinancePlanRequestData.cs" />
     <Compile Include="DTOs\Solar\Finance\DealerIncentive.cs" />
     <Compile Include="DTOs\Solar\Finance\LeaseParameters.cs" />
     <Compile Include="DTOs\Solar\Finance\ProductionPrice.cs" />
+    <Compile Include="DTOs\Solar\Finance\Projects.cs" />
     <Compile Include="DTOs\Solar\Genability\BaseResponse.cs" />
     <Compile Include="DTOs\Solar\Genability\UsageProfileRequest.cs" />
     <Compile Include="DTOs\Solar\Proposal\CloneSettings.cs" />
@@ -589,6 +592,7 @@
     <Compile Include="Enums\AdderItemRateType.cs" />
     <Compile Include="Solar\ProposalIntegrationAudit.cs" />
     <Compile Include="Solar\ProposalMediaItem.cs" />
+    <Compile Include="Solar\ProposalRoofPlaneInfo.cs" />
     <Compile Include="Solar\RoofPlane.cs" />
     <Compile Include="Solar\RoofPlaneDetail.cs" />
     <Compile Include="Solar\RoofPlaneEdge.cs" />

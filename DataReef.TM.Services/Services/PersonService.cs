@@ -212,14 +212,7 @@ namespace DataReef.TM.Services
             
             using (DataContext dc = new DataContext())
             {
-
-
-                var person = dc
-                .People
- .Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true)
- .FirstOrDefault();
-                
-
+                var person = dc.People.Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true).FirstOrDefault();
 
                 if (person == null)
                 {
@@ -727,13 +720,25 @@ namespace DataReef.TM.Services
             }
         }
 
-
+public class summarymodel
+        {
+            public string Label { get; set; }
+            public string Data { get; set; }
+        }
 
         public string SendEmailSummarytoCustomer(Guid ProposalID, string summary)
         {
             using (var dc = new DataContext())
             {
-                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID);
+
+                var Proposalsdata = dc.ProposalData.FirstOrDefault(x => x.Guid == ProposalID);
+                if (Proposalsdata == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+
+                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID || x.Guid == Proposalsdata.ProposalID);
                 if (Proposal == null)
                 {
                     throw new Exception("Proposal not found");
@@ -744,15 +749,27 @@ namespace DataReef.TM.Services
                 {
                     throw new Exception("Property not found");
                 }
-                var email = property.GetMainEmailAddress();
-                Task.Factory.StartNew(() =>
+
+                var ProposalSummaryData = JsonConvert.DeserializeObject<List<summarymodel>>(summary);
+
+                string mailbody = "<p>The following Data for the proposal : " + Proposal.Name + "</p>";
+
+                foreach (var item in ProposalSummaryData)
                 {
-                    var body = summary + " " + email;
+                    mailbody = mailbody + "<p><b> " + item.Label + ": </b> " + item.Data + "</p>";
+                }
 
-                    // Mail.Library.SendEmail(email, string.Empty, $"test proposal email", body, true);
-                    Mail.Library.SendEmail("ankita@hevintechnoweb.com", string.Empty, $"test proposal email", body, true);
-                });
+                var email = property.GetMainEmailAddress();
 
+                Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"Proposal Summary Data", mailbody + email, true);
+
+                if (email != null)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        Mail.Library.SendEmail(email, string.Empty, $"Proposal Summary Data", mailbody, true);                        
+                    });
+                }
                 return summary;
             }
         }
@@ -1059,9 +1076,9 @@ namespace DataReef.TM.Services
                     person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
                 }
             }
-
+            if(person == null) { person = new PersonClockTime(); };
             return person;
-        }
+        } 
 
 
         public IEnumerable<Person> personDetails(Guid ouid, DateTime date)

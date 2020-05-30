@@ -221,6 +221,7 @@
     <Compile Include="Services\FinanceAdapters\LoanPal\LoanPalAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\SolarSalesTracker\SolarSalesTrackerAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\SolarSalesTracker\SolarTrackerResources.cs" />
+    <Compile Include="Services\FinanceAdapters\Sunlight\SunlightAdapter.cs" />
     <Compile Include="Services\FinancialService.cs" />
     <Compile Include="Services\KeyValueService.cs" />
     <Compile Include="Services\ActionItemService.cs" />

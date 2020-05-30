@@ -330,6 +330,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid}/{date}")]
         [HttpGet]
         [ResponseType(typeof(Person))]
+        [AllowAnonymous]
         public IHttpActionResult personDetails(Guid ouid, DateTime date)
         {
 
