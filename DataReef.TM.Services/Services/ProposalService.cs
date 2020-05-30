@@ -39,6 +39,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace DataReef.TM.Services.Services
 {
@@ -639,6 +640,31 @@ namespace DataReef.TM.Services.Services
 
         public CreateProposalDataResponse CreateProposalData(DocumentSignRequest request)
         {
+            var json = new JavaScriptSerializer().Serialize(request);
+            if (json != null)
+            {
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = "/CreateProposalData/service";
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "";
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = "";
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = json;
+
+                using (var dc = new DataContext())
+                {
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+                }
+            }
+
             using (var dataContext = new DataContext())
             {
                 var financePlan = dataContext
@@ -1153,6 +1179,31 @@ namespace DataReef.TM.Services.Services
 
         public Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request)
         {
+            var json = new JavaScriptSerializer().Serialize(request);
+            if (json != null)
+            {
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = "/sign/proposal/service";
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "";
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = "";
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = json;
+
+                using (var dc = new DataContext())
+                {
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+                }
+            }
+
             using (var dataContext = new DataContext())
             {
                 var data = dataContext

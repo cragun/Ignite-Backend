@@ -9,7 +9,7 @@ namespace DataReef.TM.Models.DTOs
 
     public class SBNoteData
     {
-     
+
 
         public string apiKey { get; set; }
 
@@ -31,9 +31,9 @@ namespace DataReef.TM.Models.DTOs
 
     }
 
-        public class SBNoteDTO
+    public class SBNoteDTO
     {
-       
+
 
         public string Action { get; set; }
 
@@ -55,7 +55,7 @@ namespace DataReef.TM.Models.DTOs
 
         public string Content { get; set; }
 
-        
+
 
         public string UserID { get; set; }
 
@@ -65,14 +65,14 @@ namespace DataReef.TM.Models.DTOs
 
         public DateTime? DateLastModified { get; set; }
 
-      
+
 
         public SBNoteDTO()
         {
 
         }
 
-       
+
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
             if (note != null)
@@ -125,7 +125,7 @@ namespace DataReef.TM.Models.DTOs
         public float? Latitude { get; set; }
         public float? Longitude { get; set; }
 
-        public IEnumerable<zapierOus> ouslist {get;set;}
+        public IEnumerable<zapierOus> ouslist { get; set; }
     }
 
     public class SBUpdateProperty
