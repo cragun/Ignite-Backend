@@ -791,17 +791,20 @@ namespace DataReef.TM.Services.Services
                 var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date)
                     .FirstOrDefault();
 
-                if (personClockTime != null && PersonClockSetting.IsEnabled == true)
+                if (PersonClockSetting != null)
                 {
-                    if(personClockTime.ClockType == "ClockIn")
-                    {
+
+                    if (personClockTime != null && PersonClockSetting.IsEnabled == true)
+                     {
+                      if(personClockTime.ClockType == "ClockIn")
+                      {
                         TimeSpan timespan = DateTime.Now - personClockTime.StartDate.Value;
                         long diffMin = (long)Math.Floor(timespan.TotalMinutes);
                         personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
                         TimeSpan spWorkMin = TimeSpan.FromMinutes(personClockTime.ClockMin);
                         personClockTime.TagString = string.Format("{0:00}:{1:00}", (int)spWorkMin.TotalHours, spWorkMin.Minutes);
                         personClockTime.ClockHours = Convert.ToInt64(Math.Round(personClockTime.ClockMin / (double)60));
-                    }
+                      }
                     personClockTime.ClockDiff = 0;
                     personClockTime.StartDate = DateTime.Now;
                     personClockTime.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
@@ -813,6 +816,7 @@ namespace DataReef.TM.Services.Services
                 }
                 else
                 {
+
                     PersonClockTime personClock = new PersonClockTime();
                     personClock.Guid = Guid.NewGuid();
                     personClock.PersonID = SmartPrincipal.UserId;
@@ -827,6 +831,8 @@ namespace DataReef.TM.Services.Services
                     personClock.IsRemainFiveMin = false;
                     dc.PersonClockTime.Add(personClock);
                     dc.SaveChanges();
+
+                    }
                 }
             }
 
