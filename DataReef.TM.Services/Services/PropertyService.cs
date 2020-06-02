@@ -870,12 +870,13 @@ namespace DataReef.TM.Services.Services
                     Latitude = request.Latitude,
                     Longitude = request.Longitude,
                     Name = $"{request.FirstName} {request.MiddleNameInitial} {request.LastName}",
-                    TerritoryID = request.TerritoryID
+                    TerritoryID = request.TerritoryID,
+                    SmartBoardId = request.LeadID
                 };
 
-                Insert(property);
+                var propertyData = Insert(property);
 
-                return new SBPropertyDTO(property);
+                return new SBPropertyDTO(propertyData);
             }
         }
 

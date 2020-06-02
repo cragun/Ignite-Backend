@@ -191,9 +191,9 @@ namespace DataReef.Auth.Helpers
             if (time > 300)
             {
                 throw new Exception("Please send valid apikey.");
-                
+
             }
-            
+
             return true;
         }
 
