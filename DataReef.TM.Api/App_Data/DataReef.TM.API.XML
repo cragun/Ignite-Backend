@@ -395,7 +395,7 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckEncryptDecryptApikey(System.String,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckEncryptDecryptApikey(System.String)">
             <summary>
             Check Apikey Encryption and Decryption
             </summary>
