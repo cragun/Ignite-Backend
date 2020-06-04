@@ -143,6 +143,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
         public class SunlightProjects
         {
+            public string returnCode { get; set; }
             public List<Projects> Projects { get; set; }
         }
 
@@ -180,6 +181,61 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("SFAccessToken", "Bearer " + token);
                 
+                var response = client.Execute(request);
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
+                }
+
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+                string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + ret.Projects?.FirstOrDefault().hashId);
+
+                return frame;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+        }
+
+
+        public string CreateSunlightAccount(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode)
+        {
+            try
+            {
+
+                state = GetfullState(state);
+
+                SunlightProjects req = new SunlightProjects();
+                Projects project = new Projects();
+                Applicants applicnt = new Applicants();
+
+                applicnt.firstName = fname;
+                applicnt.lastName = lname;
+                applicnt.email = email;
+                applicnt.phone = phone;
+                applicnt.isPrimary = true;
+
+                project.applicants = new List<Applicants>();
+                project.applicants.Add(applicnt);
+                project.installStreet = street;
+                project.installCity = city;
+                project.installStateName = state;
+                project.installZipCode = zipcode;
+
+                req.Projects = new List<Projects>();
+                req.Projects.Add(project);
+
+                string token = GetSunlightToken();
+                string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+                var request = new RestRequest($"/applicant/create/", Method.POST);
+                request.AddJsonBody(req);
+                request.AddHeader("Authorization", "Basic " + svcCredentials);
+                request.AddHeader("SFAccessToken", "Bearer " + token);
+
                 var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
