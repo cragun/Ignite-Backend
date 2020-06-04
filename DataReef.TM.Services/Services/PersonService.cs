@@ -1145,5 +1145,21 @@ namespace DataReef.TM.Services
                 return OUAss;
             }
         }
+
+        public List<Guid> RemoveDeactivePeople(IEnumerable<Guid> uniqueIds)
+        {
+            using (DataContext dc = new DataContext())
+            {
+
+                var list = 
+                    dc.People.
+                    Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
+                    .Select(p=>p.Guid)
+                    .ToList();
+
+                return list;
+            }
+        }
+
     }
 }

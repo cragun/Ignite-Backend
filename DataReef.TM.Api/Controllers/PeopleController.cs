@@ -347,7 +347,31 @@ namespace DataReef.TM.Api.Controllers
             var persn = peopleService.OuassociationRoleName(personid);
             return Ok(persn);
         }
-        
+
+        public override IEnumerable<Person> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        {
+            var stringUniqueIds = delimitedStringOfGuids.Split(',', '|');
+            var uniqueIds = new List<Guid>();
+
+            foreach (var uniqueIdString in stringUniqueIds)
+            {
+                try
+                {
+                    uniqueIds.Add(Guid.Parse(uniqueIdString));
+                }
+                catch
+                {
+                    //ingore
+                }
+            }
+
+            List<Guid> person = peopleService.RemoveDeactivePeople(uniqueIds);
+
+            string IDs = string.Join(",", person);
+
+            return base.GetMany(IDs, include, exclude, fields, deletedItems);
+        }
+
         public override HttpResponseMessage DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();
@@ -390,12 +414,12 @@ namespace DataReef.TM.Api.Controllers
 
             return base.Put(item);
         }
-
-        /// <summary>
-        /// Invalidate cache for OUsController GET methods.
-        /// </summary>
-        public void OUsControllerCacheInvalidation()
-        {
+        
+            /// <summary>
+            /// Invalidate cache for OUsController GET methods.
+            /// </summary>
+            public void OUsControllerCacheInvalidation()
+            {
             var cache = Configuration.CacheOutputConfiguration().GetCacheOutputProvider(Request);
             string controllerName = typeof(OUsController).FullName;
 
