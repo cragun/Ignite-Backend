@@ -131,6 +131,11 @@ namespace DataReef.TM.Services
         }
 
 
+        public string sunlighttest()
+        {
+            string sunlighturl = _sunlightAdapter.Value.GetSunlightToken();
+            return sunlighturl;
+        }
             public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())

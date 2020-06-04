@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Contracts.Services;
+﻿using DataReef.Core.Infrastructure.Authorization;
+using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using System;
@@ -33,11 +34,11 @@ namespace DataReef.TM.Api
                 responseBody = await result.Content.ReadAsStringAsync();
             }
 
-            if (request.RequestUri.ToString().Contains("/sign/proposal"))
-            {
+            //if (request.RequestUri.ToString().Contains("/sign/proposal"))
+            //{
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
-                apilog.User = "/sign/proposal";
+                apilog.User = SmartPrincipal.UserId.ToString();
                 apilog.Machine = Environment.MachineName;
                 apilog.RequestContentType = "";
                 apilog.RequestRouteTemplate = "";
@@ -55,7 +56,7 @@ namespace DataReef.TM.Api
                         dc.ApiLogEntries.Add(apilog);
                         dc.SaveChanges();
                 }
-            }
+            //}
             return result;
         }
     }
