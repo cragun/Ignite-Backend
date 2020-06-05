@@ -20,24 +20,39 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public SBLeadModel Lead { get; set; }
         public SBLeadKwhModel LeadKwh { get; set; }
         public SBProposalModel Proposal { get; set; }
-        public Contract contract { get; set; }
+
+        [JsonProperty("Document")]
+        public Document document { get; set; }
+
         public SBProposalDataModel ProjectData { get; set; }
         public SBEnergyUtilityModel EnergyUsage { get; set; }
         public SBUsageModel MonthlyUsage { get; set; }
     }
-    public class Contract
+    public class Document
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("associated_id")]
+        public long? AssociatedId { get; set; }
 
-        [JsonProperty("body")]
-        public string Body { get; set; }
+        [JsonProperty("document_name")]
+        public string DocumentName { get; set; }
 
-        [JsonProperty("extra_content")]
-        public string ExtraContent { get; set; }
+        [JsonProperty("document_url")]
+        public string DocumentUrl { get; set; }
 
-        [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonProperty("document_type_id")]
+        public string DocumentTypeId { get; set; }
+
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("lon")]
+        public double? Lon { get; set; }
+
+        [JsonProperty("lat")]
+        public double? Lat { get; set; }
+
+        [JsonProperty("signed")]
+        public bool Signed { get; set; }
 
 
     }

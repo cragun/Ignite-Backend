@@ -473,19 +473,28 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 return;
             }
+            string email;
+            using (DataContext dc = new DataContext())
+            {
+                email = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId)?.EmailAddressString;
+            }
 
             string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
             
-            var url = $"/apis/attach_contract/{encryptedAPIkey}";
+            var url = $"/apis/add_document/{encryptedAPIkey}";
 
             var request = new SBProposalAttachRequest(proposal)
             {
-                contract = new Contract
+                document = new Document
                 { 
-                        Name = proposalDoc.Name,
-                        Body = "",
-                        ExtraContent="",
-                        Type="pdf"
+                        AssociatedId= proposal?.Property?.Id,
+                        DocumentName=proposalDoc.Name,
+                        DocumentUrl=proposalDoc.PDFUrl,
+                        DocumentTypeId="2",
+                        Email=email,
+                        Lon= proposal?.Lon,
+                        Lat= proposal?.Lat,
+                        Signed=true
                 }
             };
             SubmitProposal(integrationData, request, ouid.Value);
