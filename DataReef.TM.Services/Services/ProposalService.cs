@@ -152,27 +152,7 @@ namespace DataReef.TM.Services.Services
             });
 
             return proposal;
-        }
-
-
-        protected void SaveRequest(string request, string response, string url, string headers, string apikey)
-        {
-            var adapterRequest = new AdapterRequest
-            {
-                AdapterName = "test",
-                Request = request,
-                Response = response,
-                Url = url,
-                Headers = headers,
-                TagString = apikey
-            };
-
-            using (var context = new DataContext())
-            {
-                context.AdapterRequests.Add(adapterRequest);
-                context.SaveChanges();
-            }
-        }
+        }        
 
         public override Proposal Update(Proposal entity)
         {
@@ -183,9 +163,8 @@ namespace DataReef.TM.Services.Services
             }
 
             if (entity.SolarSystem != null)
-            {
-               
-                var totaPanelsCount = entity.SolarSystem.RoofPlanes.Sum(rp => rp.PanelsCount);
+            {               
+               // var totaPanelsCount = entity.SolarSystem.RoofPlanes.Sum(rp => rp.PanelsCount);
                 var req = JsonConvert.SerializeObject(entity);
                 try
                 {
@@ -193,7 +172,7 @@ namespace DataReef.TM.Services.Services
                 }
                 catch(Exception ex)
                 {                    
-                    SaveRequest(req,  ex.Message, totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(),  "proposalupdateEX");
+                   // SaveRequest(req,  ex.Message, totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(),  "proposalupdateEX");
                     throw new ApplicationException(ex.Message);
                 }
                 
@@ -640,30 +619,30 @@ namespace DataReef.TM.Services.Services
 
         public CreateProposalDataResponse CreateProposalData(DocumentSignRequest request)
         {
-            var json = new JavaScriptSerializer().Serialize(request);
-            if (json != null)
-            {
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = "/CreateProposalData/service";
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "";
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = "";
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = json;
+            //var json = new JavaScriptSerializer().Serialize(request);
+            //if (json != null)
+            //{
+            //    ApiLogEntry apilog = new ApiLogEntry();
+            //    apilog.Id = Guid.NewGuid();
+            //    apilog.User = "/CreateProposalData/service";
+            //    apilog.Machine = Environment.MachineName;
+            //    apilog.RequestContentType = "";
+            //    apilog.RequestRouteTemplate = "";
+            //    apilog.RequestRouteData = "";
+            //    apilog.RequestIpAddress = "";
+            //    apilog.RequestMethod = "";
+            //    apilog.RequestHeaders = "";
+            //    apilog.RequestTimestamp = DateTime.UtcNow;
+            //    apilog.RequestUri = "";
+            //    apilog.ResponseContentBody = "";
+            //    apilog.RequestContentBody = json;
 
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
-            }
+            //    using (var dc = new DataContext())
+            //    {
+            //        dc.ApiLogEntries.Add(apilog);
+            //        dc.SaveChanges();
+            //    }
+            //}
 
             using (var dataContext = new DataContext())
             {
@@ -1179,30 +1158,30 @@ namespace DataReef.TM.Services.Services
 
         public Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request)
         {
-            var json = new JavaScriptSerializer().Serialize(request);
-            if (json != null)
-            {
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = "/sign/proposal/service";
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "";
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = "";
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = json;
+            //var json = new JavaScriptSerializer().Serialize(request);
+            //if (json != null)
+            //{
+            //    ApiLogEntry apilog = new ApiLogEntry();
+            //    apilog.Id = Guid.NewGuid();
+            //    apilog.User = "/sign/proposal/service";
+            //    apilog.Machine = Environment.MachineName;
+            //    apilog.RequestContentType = "";
+            //    apilog.RequestRouteTemplate = "";
+            //    apilog.RequestRouteData = "";
+            //    apilog.RequestIpAddress = "";
+            //    apilog.RequestMethod = "";
+            //    apilog.RequestHeaders = "";
+            //    apilog.RequestTimestamp = DateTime.UtcNow;
+            //    apilog.RequestUri = "";
+            //    apilog.ResponseContentBody = "";
+            //    apilog.RequestContentBody = json;
 
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
-            }
+            //    using (var dc = new DataContext())
+            //    {
+            //        dc.ApiLogEntries.Add(apilog);
+            //        dc.SaveChanges();
+            //    }
+            //}
 
             using (var dataContext = new DataContext())
             {

@@ -35,7 +35,7 @@ namespace DataReef.TM.Api
 
             // Web API routes
             config.MapHttpAttributeRoutes(new GenericDirectRouteProvider());
-            config.MessageHandlers.Add(new LogRequestAndResponseHandler());
+           // config.MessageHandlers.Add(new LogRequestAndResponseHandler());
 
             // Authentication and Authorization
             var logger = ServiceLocator.Current.GetInstance<ILogger>();

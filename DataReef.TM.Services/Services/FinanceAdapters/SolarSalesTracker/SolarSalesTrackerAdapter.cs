@@ -494,7 +494,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             try
             {
-                SaveRequest(null, response, url, null, integrationData.ApiKey);
+                SaveRequest(request, response, url, null, integrationData.ApiKey);
             }
             catch (Exception)
             {
@@ -599,30 +599,30 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 };
 
 
-                var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(request);
-                if (json != null)
-                {
-                    ApiLogEntry apilog = new ApiLogEntry();
-                    apilog.Id = Guid.NewGuid();
-                    apilog.User = "/sign/proposal/SubmitProposal";
-                    apilog.Machine = Environment.MachineName;
-                    apilog.RequestContentType = "";
-                    apilog.RequestRouteTemplate = "";
-                    apilog.RequestRouteData = "";
-                    apilog.RequestIpAddress = "";
-                    apilog.RequestMethod = "";
-                    apilog.RequestHeaders = "";
-                    apilog.RequestTimestamp = DateTime.UtcNow;
-                    apilog.RequestUri = "";
-                    apilog.ResponseContentBody = "";
-                    apilog.RequestContentBody = json;
+                //var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(request);
+                //if (json != null)
+                //{
+                //    ApiLogEntry apilog = new ApiLogEntry();
+                //    apilog.Id = Guid.NewGuid();
+                //    apilog.User = "/sign/proposal/SubmitProposal";
+                //    apilog.Machine = Environment.MachineName;
+                //    apilog.RequestContentType = "";
+                //    apilog.RequestRouteTemplate = "";
+                //    apilog.RequestRouteData = "";
+                //    apilog.RequestIpAddress = "";
+                //    apilog.RequestMethod = "";
+                //    apilog.RequestHeaders = "";
+                //    apilog.RequestTimestamp = DateTime.UtcNow;
+                //    apilog.RequestUri = "";
+                //    apilog.ResponseContentBody = "";
+                //    apilog.RequestContentBody = json;
 
-                    using (var dc = new DataContext())
-                    {
-                        dc.ApiLogEntries.Add(apilog);
-                        dc.SaveChanges();
-                    }
-                }
+                //    using (var dc = new DataContext())
+                //    {
+                //        dc.ApiLogEntries.Add(apilog);
+                //        dc.SaveChanges();
+                //    }
+                //}
 
                 SubmitProposal(integrationData, request, ouid.Value);
             }

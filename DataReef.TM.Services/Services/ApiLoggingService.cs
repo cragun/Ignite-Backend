@@ -23,11 +23,11 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
-                if (apiLogEntry.RequestMethod == "CreateNoteFromSmartboardtocheck")
-                {
-                    dc.ApiLogEntries.Add(apiLogEntry);
-                    dc.SaveChanges();
-                }
+                //if (apiLogEntry.RequestMethod == "CreateNoteFromSmartboardtocheck")
+                //{
+                //    dc.ApiLogEntries.Add(apiLogEntry);
+                //    dc.SaveChanges();
+                //}
             }
 
         }
