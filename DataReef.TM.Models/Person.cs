@@ -92,6 +92,8 @@ namespace DataReef.TM.Models
         [StringLength(250)]
         public string ActivityName { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
+        public string BuildVersion { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public List<string> EmailAddresses
