@@ -7,6 +7,7 @@ using Property = DataReef.TM.Models.Property;
 using DataReef.TM.Models.Solar;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -66,5 +67,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request);
 
+
+        [OperationContract]
+        SBProposalResponse GetProposalDocuments(Guid ouid, int associated_id);
     }
 }

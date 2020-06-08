@@ -200,6 +200,7 @@
     <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBLeadCreate.cs" />
     <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBProposalAttachRequest.cs" />
     <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBProposalDataModel.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBProposalRequest.cs" />
     <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBUsageAttribute.cs" />
     <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBUserTokenResponse.cs" />
     <Compile Include="DTOs\FinanceAdapters\SST\SstRequest.cs" />
@@ -580,6 +581,7 @@
     <Compile Include="Reporting\Settings\OUReportingSettings.cs" />
     <Compile Include="Solar\AdderItem.cs" />
     <Compile Include="Solar\CustomUtilityRate.cs" />
+    <Compile Include="DTOs\FinanceAdapters\SMARTBoard\SBProposalResponse.cs" />
     <Compile Include="Solar\ObstructionPoint.cs" />
     <Compile Include="Solar\PropertyPowerConsumption.cs" />
     <Compile Include="Solar\ProposalData.cs" />

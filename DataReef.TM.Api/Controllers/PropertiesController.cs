@@ -233,5 +233,12 @@ namespace DataReef.TM.Api.Controllers
                 }
             }
         }
+
+        [Route("{ouid:guid}/{associated_id:int}/getproposaldocuments")]
+        public IHttpActionResult GetProposalDocuments(Guid ouid, int associated_id)
+        {
+            var response = propertyService.GetProposalDocuments(ouid, associated_id);
+            return Ok(response);
+        }
     }
 }

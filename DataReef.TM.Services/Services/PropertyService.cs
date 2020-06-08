@@ -11,6 +11,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
@@ -1427,6 +1428,10 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public SBProposalResponse GetProposalDocuments(Guid ouid, int associated_id)
+        {
+            return _sbAdapter.Value.GetProposalDocuments(ouid, associated_id);
 
+        }
     }
 }

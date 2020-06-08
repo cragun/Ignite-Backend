@@ -45,5 +45,6 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string DismissNotification(Guid ouid, string smartboardNotificationID);
+        SBProposalResponse GetProposalDocuments(Guid ouid, int associated_id);
     }
 }
