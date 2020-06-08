@@ -348,7 +348,32 @@ namespace DataReef.TM.Api.Controllers
             var persn = peopleService.OuassociationRoleName(personid);
             return Ok(persn);
         }
-        
+
+
+        public override IEnumerable<Person> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        {
+            var stringUniqueIds = delimitedStringOfGuids.Split(',', '|');
+            var uniqueIds = new List<Guid>();
+
+            foreach (var uniqueIdString in stringUniqueIds)
+            {
+                try
+                {
+                    uniqueIds.Add(Guid.Parse(uniqueIdString));
+                }
+                catch
+                {
+                    //ingore
+                }
+            }
+
+            List<Guid> person = peopleService.RemoveDeactivePeople(uniqueIds);
+
+            string IDs = string.Join(",", person);
+
+            return base.GetMany(IDs, include, exclude, fields, deletedItems);
+        }
+
         public override HttpResponseMessage DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();

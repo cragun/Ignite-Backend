@@ -72,6 +72,9 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<Person> personDetails(Guid ouid, DateTime date);
 
         [OperationContract]
+        List<Guid> RemoveDeactivePeople(IEnumerable<Guid> uniqueIds);
+
+        [OperationContract]
         IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid);
 
         [OperationContract]
