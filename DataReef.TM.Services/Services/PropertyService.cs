@@ -1302,12 +1302,12 @@ namespace DataReef.TM.Services.Services
 
 
 
-        public IEnumerable<Territories> GetTerritoriesList(Guid propertyid, string apiKey)
+        public async Task<IEnumerable<Territories>> GetTerritoriesList(Guid propertyid, string apiKey)
         {
             using (var dc = new DataContext())
             {
                 //first get the property
-                var property = dc.Properties.FirstOrDefault(x => x.Guid == propertyid);
+                var property = await dc.Properties.FirstOrDefaultAsync(x => x.Guid == propertyid);
 
                 if (property == null)
                 {

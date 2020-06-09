@@ -53,7 +53,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpGet]
-        [Route("csv")]
+        [Route("csv")]                                                      
         public IHttpActionResult GenerateCsvReport(CsvReportType reportType, Guid ouID, ReportingPeriod reportingPeriod, DateTime? specifiedDay = null)
         {
             byte[] fileBytes;

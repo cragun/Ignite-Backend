@@ -176,7 +176,7 @@ namespace DataReef.TM.Services
                 //we get the property
                 var property = dc
                     .Properties
-                    .FirstOrDefault(p => !p.IsDeleted && p.Id == request.LeadID);
+                    .FirstOrDefault(p => !p.IsDeleted && p.SmartBoardId == request.LeadID);
                 if (property == null)
                 {
                     throw new Exception("No lead found with the specified ID");

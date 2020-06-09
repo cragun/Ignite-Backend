@@ -413,6 +413,7 @@
     <Compile Include="Controllers\IntegrationsController.cs" />
     <Compile Include="Controllers\Web\HomeController.cs" />
     <Compile Include="CustomResponseTypes\TextResult.cs" />
+    <Compile Include="UserFriendlyExceptionFilterAttribute.cs" />
     <Compile Include="LogRequestAndResponseHandler.cs" />
     <Compile Include="Mappers\SpruceQuoteMapper.cs" />
     <Compile Include="Security\Certificates\Certificate.cs" />

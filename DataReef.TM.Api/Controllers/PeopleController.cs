@@ -350,26 +350,32 @@ namespace DataReef.TM.Api.Controllers
 
         public override IEnumerable<Person> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            var stringUniqueIds = delimitedStringOfGuids.Split(',', '|');
-            var uniqueIds = new List<Guid>();
-
-            foreach (var uniqueIdString in stringUniqueIds)
+            if(!string.IsNullOrEmpty(delimitedStringOfGuids))
             {
-                try
+                var stringUniqueIds = delimitedStringOfGuids.Split(',', '|');
+                var uniqueIds = new List<Guid>();
+
+                foreach (var uniqueIdString in stringUniqueIds)
                 {
-                    uniqueIds.Add(Guid.Parse(uniqueIdString));
+                    try
+                    {
+                        uniqueIds.Add(Guid.Parse(uniqueIdString));
+                    }
+                    catch
+                    {
+                        //ingore
+                    }
                 }
-                catch
-                {
-                    //ingore
-                }
+
+                List<Guid> person = peopleService.RemoveDeactivePeople(uniqueIds);
+
+                string IDs = string.Join(",", person);
+
+                return base.GetMany(IDs, include, exclude, fields, deletedItems);
             }
 
-            List<Guid> person = peopleService.RemoveDeactivePeople(uniqueIds);
+            return base.GetMany(delimitedStringOfGuids, include, exclude, fields, deletedItems);
 
-            string IDs = string.Join(",", person);
-
-            return base.GetMany(IDs, include, exclude, fields, deletedItems);
         }
 
         public override HttpResponseMessage DeleteByGuid(Guid guid)
