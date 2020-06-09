@@ -3,6 +3,7 @@ using DataReef.TM.Models.DTOs.Blobs;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -33,7 +34,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{propertyID:guid}")] // this will not work if the request is NOT authenticated
         [ResponseType(typeof(BlobModel))]
-        public IHttpActionResult GetExistingImage(Guid propertyID, float top = 0, float left = 0, float bottom = 0, float right = 0, string direction = "Down")
+        public async Task<IHttpActionResult> GetExistingImage(Guid propertyID, float top = 0, float left = 0, float bottom = 0, float right = 0, string direction = "Down")
         {
             try
             {

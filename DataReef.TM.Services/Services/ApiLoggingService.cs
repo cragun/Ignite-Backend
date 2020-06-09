@@ -11,25 +11,15 @@ namespace DataReef.TM.Services.Services
     public class ApiLoggingService : IApiLoggingService
     {
         public void LogToDatabase(ApiLogEntry apiLogEntry)
-        {/*
-            using(var dc = new DataContext())
-            {
-                if (dc.AppSettings.Any(s => s.Key == "LogApiCalls" && s.Value == "true"))
-                {
-                    dc.ApiLogEntries.Add(apiLogEntry);
-                }
-            }*/
-
+        {
 
             using (var dc = new DataContext())
             {
-                //if (apiLogEntry.RequestMethod == "CreateNoteFromSmartboardtocheck")
+                //if (dc.AppSettings.Any(s => s.Key == "LogApiCalls" && s.Value == "true"))
                 //{
                 //    dc.ApiLogEntries.Add(apiLogEntry);
-                //    dc.SaveChanges();
                 //}
             }
-
         }
     }
 }
