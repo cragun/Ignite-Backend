@@ -215,7 +215,7 @@
         </member>
         <member name="M:DataReef.TM.Api.Controllers.AppointmentsController.SetAppointmentStatusSmartBoard(DataReef.TM.Models.DTOs.SmartBoard.SBSetAppointmentStatusRequest,System.String)">
             <summary>
-            POST method used by SmartBoard to create a new appointment for a specified property
+            POST method used by SmartBoard to set appointment status for a specified property
             </summary>
             <param name="request"></param>
             <param name="apiKey"></param>
@@ -395,7 +395,7 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckEncryptDecryptApikey(System.String,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.CheckEncryptDecryptApikey(System.String)">
             <summary>
             Check Apikey Encryption and Decryption
             </summary>

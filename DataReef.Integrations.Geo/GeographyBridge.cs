@@ -71,7 +71,7 @@ namespace DataReef.Integrations
             var request = new RestRequest(resource, Method.POST);
 
             var body = JsonConvert.SerializeObject(propertiesRequests);
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
+            request.AddParameter("application/json", body, ParameterType.RequestBody); 
             request.AddDataReefAuthHeader();
 
             var response = client.Execute(request);
@@ -133,6 +133,28 @@ namespace DataReef.Integrations
             return null;
         }
 
+        public string SaveHiResImagetest(HighResImage image)
+        {
+
+            try
+            {
+                var request = new RestRequest($"api/v1/imagery", Method.POST);
+                request.AddJsonBody(image);
+                request.AddDataReefAuthHeader();
+
+                var response = client.Execute(request);
+
+                var requestString = request == null ? null : JsonConvert.SerializeObject(request);
+                var responseString = response == null ? null : JsonConvert.SerializeObject(response);
+
+                return requestString + "request:" + responseString;
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
+            
+        }
         public void SaveHiResImage(HighResImage image)
         {
             var request = new RestRequest($"api/v1/imagery", Method.POST);

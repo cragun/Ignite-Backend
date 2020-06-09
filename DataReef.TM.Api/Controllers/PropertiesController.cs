@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
@@ -46,11 +47,11 @@ namespace DataReef.TM.Api.Controllers
         [Route("{propertyID:guid}/territories/{apiKey}")]
         [ResponseType(typeof(IEnumerable<Territories>))]
         [HttpGet]
-        public IHttpActionResult GetTerritoriesForProperty(Guid propertyID, string apiKey)
+        public async Task<IHttpActionResult> GetTerritoriesForProperty(Guid propertyID, string apiKey)
         {
             try
             {
-                var result = propertyService.GetTerritoriesList(propertyID, apiKey);
+                var result = await propertyService.GetTerritoriesList(propertyID, apiKey);
                 return Ok(result);
             }
             catch (System.Exception)
@@ -70,7 +71,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{propertyID:guid}/inquiries")]
         [ResponseType(typeof(ICollection<Inquiry>))]
         [HttpGet]
-        public IHttpActionResult GetInquiriesForProperty(Guid propertyID)
+        public async Task<IHttpActionResult> GetInquiriesForProperty(Guid propertyID)
         {
             try
             {
@@ -92,7 +93,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{propertyID:guid}/inquiries/{personID:guid}")]
         [ResponseType(typeof(ICollection<Inquiry>))]
         [HttpGet]
-        public IHttpActionResult GetInquiriesForPropertyAndPerson(Guid propertyID, Guid personID)
+        public async Task<IHttpActionResult> GetInquiriesForPropertyAndPerson(Guid propertyID, Guid personID)
         {
             try
             {
@@ -116,7 +117,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{propertyID:guid}/powerconsumptions")]
         [ResponseType(typeof(ICollection<PropertyPowerConsumption>))]
         [HttpGet]
-        public IHttpActionResult GetPropertyPowerConsumptions(Guid propertyID)
+        public async Task<IHttpActionResult> GetPropertyPowerConsumptions(Guid propertyID)
         {
             var property = propertyService.Get(propertyID, "PowerConsumptions");
             if (property?.PowerConsumptions == null)
@@ -146,7 +147,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="apiKey"></param>
         [HttpGet, Route("attachments/{propertyID}/{apiKey}")]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IEnumerable<SBAttachmentDataDTO> GetPropertyAttachments(long propertyID, string apiKey)
+        public async Task<IEnumerable<SBAttachmentDataDTO>> GetPropertyAttachments(long propertyID, string apiKey)
         {
             return _propertyAttachmentServiceFactory().GetSBAttachmentData(propertyID, apiKey);
         }
@@ -158,19 +159,19 @@ namespace DataReef.TM.Api.Controllers
             return "Occupants,PropertyBag,Attributes";
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();
 
-            return base.DeleteByGuid(guid);
+            return await base.DeleteByGuid(guid);
         }
 
-        public override Property Post(Property item)
+        public override async Task<Property> Post(Property item)
         {
             OUsControllerCacheInvalidation();
             try
             {
-                return base.Post(item);
+                return await base.Post(item);
             }
             catch (HttpResponseException ex)
             {
@@ -189,32 +190,32 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        public override Property Patch(System.Web.Http.OData.Delta<Property> item)
+        public override async Task<Property> Patch(System.Web.Http.OData.Delta<Property> item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Patch(item);
+            return await base.Patch(item);
         }
 
-        public override HttpResponseMessage Delete(Property item)
+        public override async Task<HttpResponseMessage> Delete(Property item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Delete(item);
+            return await base.Delete(item);
         }
 
-        public override ICollection<Property> PostMany(List<Property> items)
+        public override async Task<ICollection<Property>> PostMany(List<Property> items)
         {
             OUsControllerCacheInvalidation();
 
-            return base.PostMany(items);
+            return await base.PostMany(items);
         }
 
-        public override Property Put(Property item)
+        public override async Task<Property> Put(Property item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Put(item);
+            return await base.Put(item);
         }
 
         /// <summary>

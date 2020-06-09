@@ -138,7 +138,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/account/{proposalID?}")]
         [HttpPost]
         [ResponseType(typeof(GenabilityAccount))]
-        public IHttpActionResult CreateAccount(Guid ouid, CreateAccountRequest request, Guid? proposalID = null)
+        public async Task<IHttpActionResult> CreateAccount(Guid ouid, CreateAccountRequest request, Guid? proposalID = null)
         {
             ResetRequestData();
 
@@ -155,7 +155,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/account/{accountId}/ppa/{proposalID?}")]
         [HttpPost]
         [ResponseType(typeof(GenericResponse<PowerPurchaseAgreementResponse>))]
-        public IHttpActionResult PowerPurchaseAgreement(Guid ouid, string accountId, GenericRequest<PowerPurchaseAgreementRequest> req, Guid? proposalID = null)
+        public async Task<IHttpActionResult> PowerPurchaseAgreement(Guid ouid, string accountId, GenericRequest<PowerPurchaseAgreementRequest> req, Guid? proposalID = null)
         {
             ResetRequestData();
             var request = req.Request;
@@ -215,7 +215,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/account/{accountId}/presolarconsumption/{proposalID?}")]
         [HttpPost]
         [ResponseType(typeof(EnergyMonthDetails))]
-        public IHttpActionResult PresolarConsumption(Guid ouid, string accountId, EnergyMonthDetails request, Guid? proposalID = null)
+        public async Task<IHttpActionResult> PresolarConsumption(Guid ouid, string accountId, EnergyMonthDetails request, Guid? proposalID = null)
         {
             string masterTarrifId = null;
             if (proposalID.HasValue)
@@ -251,7 +251,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/{accountId}/averages/{proposalID?}")]
         [HttpPost]
         [ResponseType(typeof(PresolarCostResponseModel))]
-        public IHttpActionResult Averages(Guid ouid, string accountId, [FromBody]EnergyAveragesRequest req, Guid? proposalID = null)
+        public async Task<IHttpActionResult> Averages(Guid ouid, string accountId, [FromBody]EnergyAveragesRequest req, Guid? proposalID = null)
         {
             ResetRequestData();
 
@@ -332,7 +332,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/account/{accountId}/utilitycost/{proposalID?}")]
         [HttpGet]
         [ResponseType(typeof(PriceResult))]
-        public IHttpActionResult GetAccountRecommendedPrice(Guid ouid, string accountId, Guid? proposalID = null)
+        public async Task<IHttpActionResult> GetAccountRecommendedPrice(Guid ouid, string accountId, Guid? proposalID = null)
         {
             ResetRequestData();
             var credentials = ResolveCredentials(ouid, ThirdPartyProviderType.Genability);
@@ -382,7 +382,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/account/{accountId}/profile/{profileId}/presolarcost/{proposalID?}")]
         [HttpPost]
         [ResponseType(typeof(PresolarCostResponseModel))]
-        public IHttpActionResult PresolarCost(Guid ouid, string accountId, string profileId, UpsertUsageProfileRequestModel request, Guid? proposalID = null)
+        public async Task<IHttpActionResult> PresolarCost(Guid ouid, string accountId, string profileId, UpsertUsageProfileRequestModel request, Guid? proposalID = null)
         {
             ResetRequestData();
 
@@ -456,7 +456,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/account/{accountId}/lseandtariff/{proposalID?}")]
         [HttpPost]
         [ResponseType(typeof(GenabilityAccount))]
-        public IHttpActionResult ChangeAccountLseAndTariff(Guid ouid, string accountId, ChangeAccountLseAndTariffRequestModel request, Guid? proposalID = null)
+        public async Task<IHttpActionResult> ChangeAccountLseAndTariff(Guid ouid, string accountId, ChangeAccountLseAndTariffRequestModel request, Guid? proposalID = null)
         {
             ResetRequestData();
 
@@ -474,7 +474,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/lses/{proposalID?}")]
         [HttpGet]
         [ResponseType(typeof(ICollection<LoadServingEntityResponseModel>))]
-        public IHttpActionResult GetLSEs(Guid ouid, string zipCode, Guid? proposalID = null)
+        public async Task<IHttpActionResult> GetLSEs(Guid ouid, string zipCode, Guid? proposalID = null)
         {
             ResetRequestData();
 
@@ -499,7 +499,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/Genability/lses/{lseID}/tariffs/{proposalID?}")]
         [HttpGet]
         [ResponseType(typeof(ICollection<TariffResponseModel>))]
-        public IHttpActionResult GetZipCodeTariffs(Guid ouid, string lseID, string zipCode, Guid? proposalID = null)
+        public async Task<IHttpActionResult> GetZipCodeTariffs(Guid ouid, string lseID, string zipCode, Guid? proposalID = null)
         {
             ResetRequestData();
 
@@ -545,10 +545,32 @@ namespace DataReef.TM.Api.Controllers
 
             var ouSettings = _ouSettingsService.Value.GetSettings(ouid, null);
 
+
+            //foreach(var itm in request.RoofPlanes)
+            //{
+            //    ProposalRoofPlaneInfo proroofplane = new ProposalRoofPlaneInfo();
+            //    proroofplane.ArrayName = itm.ProfileName;
+            //    proroofplane.ArrayOffset = itm.ArrayOffset;
+            //    proroofplane.Azimuth = itm.Azimuth;
+            //    proroofplane.InverterEfficiency = itm.InverterEfficiency;
+            //    proroofplane.Losses = itm.Losses;
+            //    proroofplane.Name  = itm.ProfileName;
+            //    proroofplane.PanelsEfficiency = itm.PanelsEfficiency;
+            //    proroofplane.ProfileName = itm.ProfileName;
+            //    proroofplane.ProposalId = Guid.Parse(proposalID.Value.ToString());
+            //    proroofplane.ProviderProfileId = itm.ProviderProfileId;
+            //    proroofplane.Shading = itm.Shading;
+            //    proroofplane.Size = itm.Size;
+            //    proroofplane.TargetOffset = itm.TargetOffset;
+            //    proroofplane.Tilt = itm.Tilt;
+            //    _proroofService.Insert(proroofplane);
+            //}
+            
+
+
+
             // call all these methods in parallel
-            var tasks = request
-                            .RoofPlanes
-                            .Select(p => CreatePVWatts5UsageProfileAsync(p, accountId, provider, credentials.AppID, credentials.AppKey, ouSettings));
+            var tasks = request.RoofPlanes.Select(p => CreatePVWatts5UsageProfileAsync(p, accountId, provider, credentials.AppID, credentials.AppKey, ouSettings));
 
             UpsertUsageProfileResponse[] pvWatts5Profiles = await Task.WhenAll(tasks);
 
@@ -660,7 +682,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{ouid:guid}/{financePlanDefinitionId:guid}/{financePlanType}/sign/agreements")]
         [ResponseType(typeof(List<SignDocumentResponse>))]
-        public IHttpActionResult SignAgreement(Guid ouid, Guid financePlanDefinitionId, FinancePlanType financePlanType, SignDocumentRequest request)
+        public async Task<IHttpActionResult> SignAgreement(Guid ouid, Guid financePlanDefinitionId, FinancePlanType financePlanType, SignDocumentRequest request)
         {
             try
             {
@@ -676,7 +698,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{ouid:guid}/{financePlanDefinitionId:guid}/{financePlanType}/sign/contracts")]
         [ResponseType(typeof(List<SignDocumentResponse>))]
-        public IHttpActionResult SignContract(Guid ouid, Guid financePlanDefinitionId, FinancePlanType financePlanType, SignDocumentRequest request)
+        public async Task<IHttpActionResult> SignContract(Guid ouid, Guid financePlanDefinitionId, FinancePlanType financePlanType, SignDocumentRequest request)
         {
             try
             {
@@ -692,7 +714,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/sign/proposals")]
         [HttpPost]
         [ResponseType(typeof(List<SignDocumentResponseHancock>))]
-        public IHttpActionResult SignProposals(Guid ouid, SignDocumentRequestHancock request)
+        public async Task<IHttpActionResult> SignProposals(Guid ouid, SignDocumentRequestHancock request)
         {
             try
             {
@@ -708,7 +730,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouid:guid}/{financePlanDefinitionId:guid}/hardcreditcheck")]
         [HttpPost]
         [ResponseType(typeof(Models.Spruce.QuoteResponse))]
-        public IHttpActionResult DoHardCreditCheck(Guid ouid, Guid financePlanDefinitionId, Models.Spruce.QuoteRequest request)
+        public async Task<IHttpActionResult> DoHardCreditCheck(Guid ouid, Guid financePlanDefinitionId, Models.Spruce.QuoteRequest request)
         {
             if (request == null || !request.IsModelValid())
             {
@@ -738,7 +760,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("{ouid:guid}/{financePlanDefinitionId:guid}/documents")]
         [HttpPost]
-        public IHttpActionResult GenerateDocuments(Guid ouid, Guid financePlanDefinitionId, Integrations.Spruce.DTOs.GenDocsRequest request)
+        public async Task<IHttpActionResult> GenerateDocuments(Guid ouid, Guid financePlanDefinitionId, Integrations.Spruce.DTOs.GenDocsRequest request)
         {
             if (request == null)
             {
@@ -787,7 +809,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [Route("{ouid:guid}/smartboard/usertoken"), HttpPost, ResponseType(typeof(SBIntegrationLoginModel))]
-        public IHttpActionResult GetSmartBoardToken(Guid ouid)
+        public async Task<IHttpActionResult> GetSmartBoardToken(Guid ouid)
         {
             var response = _smartBoardAdapter.Value.GetSBToken(ouid);
             return Ok(response);

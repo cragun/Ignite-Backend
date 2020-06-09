@@ -9,6 +9,7 @@ using DataReef.TM.Contracts.Services;
 using System.Net.Http;
 using System.Net;
 using DataReef.TM.Api.Classes.Requests;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -21,32 +22,32 @@ namespace DataReef.TM.Api.Controllers
 
         #region Forbidden methods
 
-        public override FinanceDetail Post(FinanceDetail item)
+        public override async Task<FinanceDetail> Post(FinanceDetail item)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override ICollection<FinanceDetail> PostMany(List<FinanceDetail> items)
+        public override async Task<ICollection<FinanceDetail>> PostMany(List<FinanceDetail> items)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override FinanceDetail Put(FinanceDetail item)
+        public override async Task<FinanceDetail> Put(FinanceDetail item)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override HttpResponseMessage Delete(FinanceDetail item)
+        public override async Task<HttpResponseMessage> Delete(FinanceDetail item)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override HttpResponseMessage DeleteMany([FromBody] IDsListWrapperRequest req)
+        public override async Task<HttpResponseMessage> DeleteMany([FromBody] IDsListWrapperRequest req)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }

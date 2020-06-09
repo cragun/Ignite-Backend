@@ -170,7 +170,7 @@ namespace DataReef.TM.Services
                     var peopleList = peopleQuery.ToList();
                     foreach (var person in peopleList)
                     {
-                        if(person.IsDeleted == true)
+                        if (person.IsDeleted == true)
                         {
                             continue;
                         }
@@ -207,9 +207,9 @@ namespace DataReef.TM.Services
         /// <param name="personId"></param>
         /// <param name="smartBoardId"></param>
         /// <param name="environment"></param>
-        public void Reactivate(Guid personId,string smartBoardId)
+        public void Reactivate(Guid personId, string smartBoardId)
         {
-            
+
             using (DataContext dc = new DataContext())
             {
                 var person = dc.People.Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true).FirstOrDefault();
@@ -246,7 +246,7 @@ namespace DataReef.TM.Services
 
                 dc.SaveChanges();
 
-                if(string.IsNullOrEmpty(smartBoardId))
+                if (string.IsNullOrEmpty(smartBoardId))
                 {
                     //the method also updates the Ignite user's SmartBoardId property
                     _sbAdapter.Value.SBActiveDeactiveUser(false, person.SmartBoardID);
@@ -307,7 +307,6 @@ namespace DataReef.TM.Services
 
 
 
-
         public override SaveResult Delete(Guid uniqueId)
         {
             List<Credential> credentials;
@@ -324,6 +323,8 @@ namespace DataReef.TM.Services
                         Success = false
                     };
 
+
+
                 // Get All UserInvitation ids that need to be deleted
                 var ids = person.ConnectionInvitationsReceived?.Select(ui => ui.Guid)
                     .ToList() ?? new List<Guid>();
@@ -338,7 +339,7 @@ namespace DataReef.TM.Services
 
                 uow.SaveChanges();
 
-                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();
+                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();                    
             }
 
             //  unregister user from MailChimp
@@ -353,8 +354,7 @@ namespace DataReef.TM.Services
             {
             }
 
-            var result = base.Delete(uniqueId);
-
+            var result = base.Delete(uniqueId);            
             return result;
         }
 
@@ -720,7 +720,7 @@ namespace DataReef.TM.Services
             }
         }
 
-public class summarymodel
+        public class summarymodel
         {
             public string Label { get; set; }
             public string Data { get; set; }
@@ -1068,7 +1068,7 @@ public class summarymodel
                         if (ReFiveMin == 5)
                         {
                             person.IsRemainFiveMin = true;
-                        }                        
+                        }
                         person.ClockDiff = diffMin;
                         person.DateLastModified = DateTime.Now;
                         dc.SaveChanges();
@@ -1085,18 +1085,25 @@ public class summarymodel
         {
             using (DataContext dc = new DataContext())
             {
-                var territory = dc.Territories.Where(t => t.OUID == ouid).Select(t => t.Guid);
-                var property = dc.Properties.Where(p => territory.Contains(p.TerritoryID)).Select(p => p.Guid);
-                var appointment = dc.Appointments.Where(a => property.Contains(a.PropertyID) && a.GoogleEventID != null).Select(i => new { StartDate = i.StartDate, AssigneeID = i.AssigneeID, Guid = i.Guid }).ToList();
-                var appointmentids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.Guid);
-                var appointmentassignids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.AssigneeID);
+                var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OUID == ouid).Select(y => y.PersonID);
+                var peoples = dc.People?.Include(p => p.AssignedAppointments).Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList();
 
-                var peopleList = dc.People?.Include(p => p.AssignedAppointments).Where(x => appointmentassignids.Contains(x.Guid) && x.IsDeleted == false).ToList();
+                //var territory = dc.Territories.Where(t => t.OUID == ouid).Select(t => t.Guid);
+                //var property = dc.Properties.Where(p => territory.Contains(p.TerritoryID)).Select(p => p.Guid);
+                //var appointment = dc.Appointments.Where(a => property.Contains(a.PropertyID) && a.GoogleEventID != null).Select(i => new { StartDate = i.StartDate, AssigneeID = i.AssigneeID, Guid = i.Guid }).ToList();
+                //var appointmentids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.Guid);
+                //var appointmentassignids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.AssigneeID);
+
+                //var peopleList = dc.People?.Include(p => p.AssignedAppointments).Where(x => appointmentassignids.Contains(x.Guid) && x.IsDeleted == false).ToList();
 
                 var result = new List<Person>();
-                foreach (var person in peopleList)
+                foreach (var person in peoples)
                 {
-                    person.AssignedAppointments = person.AssignedAppointments.Where(x => appointmentids.Contains(x.Guid)).ToList();
+                    if(person.AssignedAppointments != null)
+                    {
+                        person.AssignedAppointments = person.AssignedAppointments.Where(x => x.StartDate.Date == date.Date).ToList();
+                    }
+                    
                     if (result.Any(r => r.Guid == person.Guid))
                     {
                         continue;
@@ -1123,7 +1130,7 @@ public class summarymodel
 
             return dest;
         }
-        
+
         public IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid)
         {
             using (DataContext dc = new DataContext())
@@ -1138,18 +1145,38 @@ public class summarymodel
                 return OUAss;
             }
         }
+
         public List<Guid> RemoveDeactivePeople(IEnumerable<Guid> uniqueIds)
         {
+            List<Guid> filterList = new List<Guid>();
             using (DataContext dc = new DataContext())
             {
-                var list =
-                    dc.People.
-                    Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
-                    .Select(p => p.Guid)
+                var people = dc
+                    .People
+                    .Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
+                    .Include(p=>p.OUAssociations)
                     .ToList();
 
-                return list;
+                var personIDs = people.Select(p => p.Guid).ToList();
+
+                foreach (var personId in personIDs)
+                {
+                    var roleType = OURoleType.None;
+                    var person = people.FirstOrDefault(p => p.Guid == personId);
+
+                    if (person != null)
+                    {
+                        person.OUAssociations.ToList().ForEach(ouAssociation => { roleType = roleType | ouAssociation.RoleType; });
+                    }
+                    if (roleType.Equals(OURoleType.Member) || roleType.Equals(OURoleType.PhotosManager) || roleType.Equals(OURoleType.FranchiseManager))
+                    {
+                        filterList.Add(person.Guid);
+                    }
+                 }
             }
+            return filterList;
+
         }
+
     }
 }

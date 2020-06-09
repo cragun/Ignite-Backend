@@ -68,7 +68,7 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
             }
 
             Guid = prop.Guid;
-            LeadID = prop.Id;
+            LeadID = prop.SmartBoardId != null ? Convert.ToInt64(prop.SmartBoardId) : 0;
 
             var mainOccupant = prop.GetMainOccupant();
 

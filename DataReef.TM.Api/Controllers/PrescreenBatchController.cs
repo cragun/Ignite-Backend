@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -23,33 +24,33 @@ namespace DataReef.TM.Api.Controllers
             this.batchService = batchService;
         }
 
-        public override PrescreenBatch Patch(System.Web.Http.OData.Delta<PrescreenBatch> item)
+        public override async Task<PrescreenBatch> Patch(System.Web.Http.OData.Delta<PrescreenBatch> item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
     
         }
 
-        public override ICollection<PrescreenBatch> PostMany(List<PrescreenBatch> items)
+        public override async Task<ICollection<PrescreenBatch>> PostMany(List<PrescreenBatch> items)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override HttpResponseMessage Delete(PrescreenBatch item)
+        public override async Task<HttpResponseMessage> Delete(PrescreenBatch item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });   
         }
     
-        public override PrescreenBatch Put(PrescreenBatch item)
+        public override async Task<PrescreenBatch> Put(PrescreenBatch item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override PrescreenBatch Post(PrescreenBatch item)
+        public override async Task<PrescreenBatch> Post(PrescreenBatch item)
         {
             return batchService.Insert(item);         
         }

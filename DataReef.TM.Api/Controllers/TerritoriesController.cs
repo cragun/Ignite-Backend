@@ -15,6 +15,7 @@ using System.Web.Http.Description;
 using DataReef.TM.Contracts.Faults;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DataViews.Geo;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -42,7 +43,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Property>))]
         [Route("{territoryID:guid}/properties")]
-        public IHttpActionResult GetPropertiesByStatus(Guid territoryID, string disposition, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
+        public async Task<IHttpActionResult> GetPropertiesByStatus(Guid territoryID, string disposition, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
         {
             var ret = _propertyService.GetTerritoryPropertiesByStatusPaged(territoryID, disposition, propertyNameSearch, pageIndex, itemsPerPage, include, exclude);
             return Ok<ICollection<Property>>(ret);
@@ -51,7 +52,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Property>))]
         [Route("{territoryID:guid}/properties/withproposal")]
-        public IHttpActionResult GetPropertiesWithProposal(Guid territoryID, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
+        public async Task<IHttpActionResult> GetPropertiesWithProposal(Guid territoryID, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
         {
             var ret = _propertyService.GetTerritoryPropertiesWithProposal(territoryID, propertyNameSearch, pageIndex, itemsPerPage, include, exclude);
             return Ok(ret);
@@ -59,7 +60,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("{territoryID:guid}/propertycount")]
-        public IHttpActionResult GetPropertiesCount(Guid territoryID)
+        public async Task<IHttpActionResult> GetPropertiesCount(Guid territoryID)
         {
             var territory = _territoryService.Get(territoryID);
             if (territory == null)
@@ -73,7 +74,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("wkt/propertiescount")]
         [ResponseType(typeof(GenericResponse<long>))]
-        public IHttpActionResult GetPropertiesCountForShale([FromBody] GenericRequest<string> request)
+        public async Task<IHttpActionResult> GetPropertiesCountForShale([FromBody] GenericRequest<string> request)
         {
             var propertiesCount = _territoryService.GetPropertiesCountForWKT(request.Request);
             return Ok(new GenericResponse<long> { Response = propertiesCount });
@@ -82,7 +83,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{territoryID:Guid}/inquiryStats")]
         [ResponseType(typeof(ICollection<InquiryStatisticsForOrganization>))]
-        public IHttpActionResult GetTerritorySummaryForCustomStatuses(Guid territoryID, DateTime? specifiedDay = null)
+        public async Task<IHttpActionResult> GetTerritorySummaryForCustomStatuses(Guid territoryID, DateTime? specifiedDay = null)
         {
             var data = _territoryService.GetInquiryStatisticsForTerritory(territoryID, null, specifiedDay);
             return Ok(data);
@@ -91,7 +92,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("")]
         [ResponseType(typeof(ICollection<Territory>))]
-        public IHttpActionResult GetForCurrentUserAndOU([FromUri] Guid ouID, [FromUri] Guid personID, string include = "", string fields = "")
+        public async Task<IHttpActionResult> GetForCurrentUserAndOU([FromUri] Guid ouID, [FromUri] Guid personID, string include = "", string fields = "")
         {
             ICollection<Territory> ret = _territoryService.GetForCurrentUserAndOU(ouID, personID, include, fields);
             return Ok<ICollection<Territory>>(ret);
@@ -100,7 +101,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("validateName")]
         [ResponseType(typeof(SaveResult))]
-        public HttpResponseMessage IsNameAvailable([FromBody]GuidAndNameRequest req)
+        public async Task<HttpResponseMessage> IsNameAvailable([FromBody]GuidAndNameRequest req)
         {
             var result = _territoryService.IsNameAvailable(req.Guid, req.Name);
             return Request.CreateResponse(HttpStatusCode.OK, result);
@@ -109,7 +110,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("getbyshapesversion")]
         [ResponseType(typeof(ICollection<Territory>))]
-        public IHttpActionResult GetByShapesVersion([FromBody]ICollection<TerritoryShapeVersion> shapesVersion, Guid ouid, Guid? personID = null, bool deletedItems = false, string include = "")
+        public async Task<IHttpActionResult> GetByShapesVersion([FromBody]ICollection<TerritoryShapeVersion> shapesVersion, Guid ouid, Guid? personID = null, bool deletedItems = false, string include = "")
         {
             var territories = _territoryService.GetByShapesVersion(ouid, personID, shapesVersion, deletedItems, include).ToList();
 
@@ -119,7 +120,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{territoryID:Guid}/archive")]
         [ResponseType(typeof(Territory))]
-        public IHttpActionResult SetArchivedStatus(Guid territoryID, [FromBody]GenericRequest<bool> request)
+        public async Task<IHttpActionResult> SetArchivedStatus(Guid territoryID, [FromBody]GenericRequest<bool> request)
         {
             if(request == null)
             {
@@ -175,21 +176,21 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        public override Territory Post(Territory item)
+        public override async Task<Territory> Post(Territory item)
         {
             CheckTerritoryValidity(item);
 
-            return base.Post(item);
+            return await base.Post(item);
         }
 
-        public override Territory Patch(System.Web.Http.OData.Delta<Territory> item)
+        public override async Task<Territory> Patch(System.Web.Http.OData.Delta<Territory> item)
         {
             CheckTerritoryValidity(item.GetEntity());
 
-            return base.Patch(item);
+            return await base.Patch(item);
         }
 
-        public override ICollection<Territory> PostMany(List<Territory> items)
+        public override async Task<ICollection<Territory>> PostMany(List<Territory> items)
         {
             if (items == null || !items.Any())
             {
@@ -198,14 +199,14 @@ namespace DataReef.TM.Api.Controllers
 
             items.ForEach(i => CheckTerritoryValidity(i));
 
-            return base.PostMany(items);
+            return await base.PostMany(items);
         }
 
-        public override Territory Put(Territory item)
+        public override async Task<Territory> Put(Territory item)
         {
             CheckTerritoryValidity(item);
 
-            return base.Put(item);
+            return await base.Put(item);
         }
 
 

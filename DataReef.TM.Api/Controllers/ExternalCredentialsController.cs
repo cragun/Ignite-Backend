@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using DataReef.Core.Logging;
 using DataReef.TM.Contracts.Services;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -24,12 +25,12 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("set/{id}")]
-        public IHttpActionResult SetCredentials([FromBody]DataReef.Integrations.Core.Models.Credential req, Guid id)
+        public async Task<IHttpActionResult> SetCredentials([FromBody]DataReef.Integrations.Core.Models.Credential req, Guid id)
         {
-            var cred = Get(id);
+            var cred = await Get(id);
             cred.Username = req.username;
             cred.Password = req.password;
-            Put(cred);
+            await Put(cred);
             return Ok();
         }
 

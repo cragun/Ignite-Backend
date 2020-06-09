@@ -138,7 +138,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
         /// <summary>
-        /// POST method used by SmartBoard to create a new appointment for a specified property
+        /// POST method used by SmartBoard to set appointment status for a specified property
         /// </summary>
         /// <param name="request"></param>
         /// <param name="apiKey"></param>

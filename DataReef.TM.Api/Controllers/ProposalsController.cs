@@ -42,7 +42,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("data/{proposalDataId}/{utilityInflationRate=null}")]
         [HttpGet]
-        public Proposal2DataView GetProposalData(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
+        public async Task<Proposal2DataView> GetProposalData(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
         {
             return _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts); ;
         }
@@ -74,7 +74,7 @@ namespace DataReef.TM.Api.Controllers
 
 
         [HttpPost, Route("generate/proposal/dummy")]
-        public IHttpActionResult GenerateProposalDummy(DocumentSignRequest request)
+        public async Task<IHttpActionResult> GenerateProposalDummy(DocumentSignRequest request)
         {
             return Ok();
         }
@@ -110,6 +110,24 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
+        //[Route("{proposalId}/uploadDocument")]
+        //[HttpPost]
+        //[ResponseType(typeof(Proposal))]
+        //public async Task<IHttpActionResult> UploadDocument(Guid proposalId)
+        //{
+        //    var request = await GetProposalRequest();
+
+        //    _proposalService.UploadDocument(proposalId, request);
+        //    return Ok();
+        //}
+
+        //[Route("Documents/getType")]
+        //[HttpGet]
+        //[ResponseType(typeof(List<DocType>))]
+        //public IHttpActionResult GetDocumentType()
+        //{
+        //    return Ok(_proposalService.GetDocumentType());
+        //}
         /// <summary>
         /// Update ProposalData.ProposalDataJSON for given proposalDataId.
         /// The ProposalDataJSON will be read from the Body of the request.
@@ -207,11 +225,11 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("saveAndCloneMediaItems")]
         [HttpPost]
-        public Proposal CloneMediaItems([FromBody] Proposal item, [FromUri]Guid originalProposalID)
+        public async Task<Proposal> CloneMediaItems([FromBody] Proposal item, [FromUri]Guid originalProposalID)
         {
             var response = base.Post(item);
             _proposalService.CopyProposalMediaItems(originalProposalID, item.Guid);
-            return response;
+            return await response;
         }
 
         [Route("autosave")]

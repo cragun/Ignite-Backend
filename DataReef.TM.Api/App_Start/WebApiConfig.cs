@@ -37,9 +37,10 @@ namespace DataReef.TM.Api
             config.MapHttpAttributeRoutes(new GenericDirectRouteProvider());
             // config.MessageHandlers.Add(new LogRequestAndResponseHandler());
             config.Filters.Add(new UserFriendlyExceptionFilterAttribute());
+            
 
-            // Authentication and Authorization
-            var logger = ServiceLocator.Current.GetInstance<ILogger>();
+             // Authentication and Authorization
+             var logger = ServiceLocator.Current.GetInstance<ILogger>();
             var authenticationService = ServiceLocator.Current.GetInstance<IAuthenticationService>();
             var appSettingService = ServiceLocator.Current.GetInstance<IAppSettingService>();
             GlobalConfiguration.Configuration.MessageHandlers.Add(new CorsValidationHandler()); // consider replacing with CorsMessageHandler and use ICorsPolicyProviderFactory

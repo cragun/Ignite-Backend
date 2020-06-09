@@ -127,7 +127,7 @@ namespace DataReef.TM.Services.Services
                 catch (Exception)
                 {
                 }
-               
+
             }
 
             return ret;
@@ -145,12 +145,12 @@ namespace DataReef.TM.Services.Services
 
         public bool IsInquiryFirstForUser(Guid inquiryId, Guid userId)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var inquiry = dc
                     .Inquiries
                     .FirstOrDefault(i => i.Guid == inquiryId);
-                
+
 
                 if (inquiry != null && inquiry.OUID.HasValue)
                 {
@@ -162,10 +162,10 @@ namespace DataReef.TM.Services.Services
                         var excludedOUIds = exclusionSetting.GetValue<List<Guid>>();
                         var ancestors = _ouService.Value.GetAncestorsForOU(inquiry.OUID.Value);
 
-                        if(excludedOUIds?.Any() == true && ancestors?.Any() == true)
+                        if (excludedOUIds?.Any() == true && ancestors?.Any() == true)
                         {
-                            ancestors.Add(new GuidNamePair { Guid = inquiry.OUID.Value, Name = string.Empty});
-                            if(excludedOUIds.Intersect(ancestors.Select(x => x.Guid))?.Count() != 0)
+                            ancestors.Add(new GuidNamePair { Guid = inquiry.OUID.Value, Name = string.Empty });
+                            if (excludedOUIds.Intersect(ancestors.Select(x => x.Guid))?.Count() != 0)
                             {
                                 //at least one of the OU ancestors could be found in the exlusion list. return false
                                 return false;
@@ -175,7 +175,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //if the inquiry exists and is the only one attached to the person return true, otherwise return false
-                if(dc.Inquiries.Any(i => i.Guid == inquiryId && i.PersonID == userId))
+                if (dc.Inquiries.Any(i => i.Guid == inquiryId && i.PersonID == userId))
                 {
                     return dc.Inquiries.Count(i => i.Guid != inquiryId && i.PersonID == userId) == 0;
                 }
@@ -186,7 +186,7 @@ namespace DataReef.TM.Services.Services
 
         public InquiryStatisticsByDate GetWorkingRepsDisposition(IEnumerable<Guid> repIds, IEnumerable<string> dispositions, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay)
         {
-            if(repIds?.Any() != true || dispositions?.Any() != true)
+            if (repIds?.Any() != true || dispositions?.Any() != true)
             {
                 return new InquiryStatisticsByDate();
             }
@@ -199,7 +199,7 @@ namespace DataReef.TM.Services.Services
                                                 dispositions.Contains(i.Disposition))
                                     .Select(i => new { PersonID = i.PersonID, DateCreated = i.DateCreated, Disposition = i.Disposition }).ToList();
 
-                
+
                 return new InquiryStatisticsByDate
                 {
                     AllTime = repIds.Count(x => inquiryDates.Any(i => i.PersonID == x)),
@@ -207,11 +207,11 @@ namespace DataReef.TM.Services.Services
                     ThisMonth = repIds.Count(x => inquiryDates.Any(id => id.PersonID == x && id.DateCreated >= dates.MonthStart)),
                     ThisWeek = repIds.Count(x => inquiryDates.Any(id => id.PersonID == x && id.DateCreated >= dates.CurrentWeekStart)),
                     Today = repIds.Count(x => inquiryDates.Any(id => id.PersonID == x && id.DateCreated >= dates.TodayStart)),
-                    SpecifiedDay = specifiedDay.HasValue ? repIds.Count(x => inquiryDates.Any(id => id.PersonID == x && id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value)) : 0  
-                    
+                    SpecifiedDay = specifiedDay.HasValue ? repIds.Count(x => inquiryDates.Any(id => id.PersonID == x && id.DateCreated >= dates.SpecifiedStart.Value && id.DateCreated < dates.SpecifiedEnd.Value)) : 0
+
                 };
             }
-                
+
         }
 
         public ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganizationTerritories(ICollection<Guid> territoryIds, IEnumerable<OUReportingSettingsItem> reportItems, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
@@ -229,12 +229,12 @@ namespace DataReef.TM.Services.Services
                     var searchDispositions = new HashSet<string>();
                     foreach (var repItem in reportItems)
                     {
-                        if(repItem.IncludedDispositions?.Any() == true)
+                        if (repItem.IncludedDispositions?.Any() == true)
                         {
                             searchDispositions.UnionWith(repItem.IncludedDispositions);
                         }
 
-                        if(repItem.ConditionalIncludedDispositions?.Any() == true)
+                        if (repItem.ConditionalIncludedDispositions?.Any() == true)
                         {
                             searchDispositions.UnionWith(
                                 repItem
@@ -258,9 +258,9 @@ namespace DataReef.TM.Services.Services
                         var inquiryDatesForIncludedDispositions = inquiryDates.Where(id => col.IncludedDispositions.Contains(id.Disposition)).ToList();
 
                         //add conditional dispositions if they are configured
-                        if(col.ConditionalIncludedDispositions?.Any() == true)
+                        if (col.ConditionalIncludedDispositions?.Any() == true)
                         {
-                            foreach(var disp in col.ConditionalIncludedDispositions)
+                            foreach (var disp in col.ConditionalIncludedDispositions)
                             {
                                 var conditionalInquiryDates = inquiryDates.Where(x =>
                                 {
@@ -317,7 +317,7 @@ namespace DataReef.TM.Services.Services
                     var opprtunityDataList = dc.Appointments
                                     .Where(i => !excludedReps.Contains(i.AssigneeID.Value) &&
                                                 territoryIds.Contains(i.Property.TerritoryID) &&
-                                                i.IsDeleted == false && i.GoogleEventID != null && i.AssigneeID != null 
+                                                i.IsDeleted == false && i.GoogleEventID != null && i.AssigneeID != null
                                                 && !CappPropertyids.Contains(i.PropertyID))
                                     .Select(i => new { Guid = i.Guid, AssigneeID = i.AssigneeID, StartDate = i.StartDate }).ToList();
 
@@ -351,36 +351,36 @@ namespace DataReef.TM.Services.Services
                     var ApptsCAPP = inquiryStatistics.Where(x => x.Name == "Appts CAPP").FirstOrDefault();
                     var OPP = inquiryStatistics.Where(x => x.Name == "OPP").FirstOrDefault();
 
-                    if(ApptsCAPP != null && OPP != null)
+                    if (ApptsCAPP != null && OPP != null)
                     {
                         inquiryStatistics.Add(new InquiryStatisticsForOrganization
                         {
                             Name = "CAPP(%)",
                             Actions = new InquiryStatisticsByDate
                             {
-                                AllTime =  (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.Actions.AllTime * 100) / OPP.Actions.AllTime : 0 ,
-                                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.Actions.ThisYear * 100) / OPP.Actions.ThisYear : 0 ,
-                                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.Actions.ThisMonth * 100) / OPP.Actions.ThisMonth : 0 ,
-                                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.Actions.ThisWeek * 100) / OPP.Actions.ThisWeek : 0 ,
-                                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.Actions.Today * 100) / OPP.Actions.Today : 0 ,
-                                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.Actions.SpecifiedDay * 100) / OPP.Actions.SpecifiedDay : 0 ,
-                                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.Actions.ThisQuarter * 100) / OPP.Actions.ThisQuarter : 0 ,
-                                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.Actions.RangeDay * 100) / OPP.Actions.RangeDay : 0 
-                            } ,
+                                AllTime = (ApptsCAPP.Actions.AllTime > 0 && OPP.Actions.AllTime > 0) ? (ApptsCAPP.Actions.AllTime * 100) / OPP.Actions.AllTime : 0,
+                                ThisYear = (ApptsCAPP.Actions.ThisYear > 0 && OPP.Actions.ThisYear > 0) ? (ApptsCAPP.Actions.ThisYear * 100) / OPP.Actions.ThisYear : 0,
+                                ThisMonth = (ApptsCAPP.Actions.ThisMonth > 0 && OPP.Actions.ThisMonth > 0) ? (ApptsCAPP.Actions.ThisMonth * 100) / OPP.Actions.ThisMonth : 0,
+                                ThisWeek = (ApptsCAPP.Actions.ThisWeek > 0 && OPP.Actions.ThisWeek > 0) ? (ApptsCAPP.Actions.ThisWeek * 100) / OPP.Actions.ThisWeek : 0,
+                                Today = (ApptsCAPP.Actions.Today > 0 && OPP.Actions.Today > 0) ? (ApptsCAPP.Actions.Today * 100) / OPP.Actions.Today : 0,
+                                SpecifiedDay = (ApptsCAPP.Actions.SpecifiedDay > 0 && OPP.Actions.SpecifiedDay > 0) ? (ApptsCAPP.Actions.SpecifiedDay * 100) / OPP.Actions.SpecifiedDay : 0,
+                                ThisQuarter = (ApptsCAPP.Actions.ThisQuarter > 0 && OPP.Actions.ThisQuarter > 0) ? (ApptsCAPP.Actions.ThisQuarter * 100) / OPP.Actions.ThisQuarter : 0,
+                                RangeDay = (ApptsCAPP.Actions.RangeDay > 0 && OPP.Actions.RangeDay > 0) ? (ApptsCAPP.Actions.RangeDay * 100) / OPP.Actions.RangeDay : 0
+                            },
                             People = new InquiryStatisticsByDate
                             {
-                                AllTime = (ApptsCAPP.People.AllTime > 0 && OPP.People.AllTime > 0) ? (ApptsCAPP.People.AllTime * 100) / OPP.People.AllTime  : 0 ,
-                                ThisYear = (ApptsCAPP.People.ThisYear > 0 && OPP.People.ThisYear > 0) ? (ApptsCAPP.People.ThisYear * 100) / OPP.People.ThisYear : 0 ,
-                                ThisMonth = (ApptsCAPP.People.ThisMonth > 0 && OPP.People.ThisMonth > 0) ? (ApptsCAPP.People.ThisMonth * 100) / OPP.People.ThisMonth : 0 ,
-                                ThisWeek = (ApptsCAPP.People.ThisWeek > 0 && OPP.People.ThisWeek > 0) ? (ApptsCAPP.People.ThisWeek * 100) / OPP.People.ThisWeek : 0 ,
-                                Today = (ApptsCAPP.People.Today > 0 && OPP.People.Today > 0) ? (ApptsCAPP.People.Today * 100) / OPP.People.Today : 0 ,
-                                SpecifiedDay = (ApptsCAPP.People.SpecifiedDay > 0 && OPP.People.SpecifiedDay > 0) ? (ApptsCAPP.People.SpecifiedDay * 100) / OPP.People.SpecifiedDay : 0 ,
-                                ThisQuarter = (ApptsCAPP.People.ThisQuarter > 0 && OPP.People.ThisQuarter > 0) ? (ApptsCAPP.People.ThisQuarter * 100) / OPP.People.ThisQuarter : 0 ,
+                                AllTime = (ApptsCAPP.People.AllTime > 0 && OPP.People.AllTime > 0) ? (ApptsCAPP.People.AllTime * 100) / OPP.People.AllTime : 0,
+                                ThisYear = (ApptsCAPP.People.ThisYear > 0 && OPP.People.ThisYear > 0) ? (ApptsCAPP.People.ThisYear * 100) / OPP.People.ThisYear : 0,
+                                ThisMonth = (ApptsCAPP.People.ThisMonth > 0 && OPP.People.ThisMonth > 0) ? (ApptsCAPP.People.ThisMonth * 100) / OPP.People.ThisMonth : 0,
+                                ThisWeek = (ApptsCAPP.People.ThisWeek > 0 && OPP.People.ThisWeek > 0) ? (ApptsCAPP.People.ThisWeek * 100) / OPP.People.ThisWeek : 0,
+                                Today = (ApptsCAPP.People.Today > 0 && OPP.People.Today > 0) ? (ApptsCAPP.People.Today * 100) / OPP.People.Today : 0,
+                                SpecifiedDay = (ApptsCAPP.People.SpecifiedDay > 0 && OPP.People.SpecifiedDay > 0) ? (ApptsCAPP.People.SpecifiedDay * 100) / OPP.People.SpecifiedDay : 0,
+                                ThisQuarter = (ApptsCAPP.People.ThisQuarter > 0 && OPP.People.ThisQuarter > 0) ? (ApptsCAPP.People.ThisQuarter * 100) / OPP.People.ThisQuarter : 0,
                                 RangeDay = (ApptsCAPP.People.RangeDay > 0 && OPP.People.RangeDay > 0) ? (ApptsCAPP.People.RangeDay * 100) / OPP.People.RangeDay : 0
                             }
                         });
                     }
-                    
+
 
                 }
 
@@ -405,7 +405,7 @@ namespace DataReef.TM.Services.Services
                     var searchDispositions = new HashSet<string>();
                     foreach (var repItem in reportItems)
                     {
-                        if(repItem.IncludedDispositions?.Any() == true)
+                        if (repItem.IncludedDispositions?.Any() == true)
                         {
                             searchDispositions.UnionWith(repItem.IncludedDispositions);
                         }
@@ -430,15 +430,15 @@ namespace DataReef.TM.Services.Services
 
                     var peopleIds = inquiryDates.Select(p => p.PersonID).Distinct();
 
-                    
-                    foreach(var col in reportItems)
+
+                    foreach (var col in reportItems)
                     {
-                        if(col.IncludedDispositions?.Any() != true && col.ConditionalIncludedDispositions?.Any() != true)
+                        if (col.IncludedDispositions?.Any() != true && col.ConditionalIncludedDispositions?.Any() != true)
                         {
                             continue;
                         }
                         var inquiryDatesForDisposition = inquiryDates.Where(id => col.IncludedDispositions?.Contains(id.Disposition) == true)?.ToList();
-                        
+
                         //add conditional dispositions if they are configured
                         if (col.ConditionalIncludedDispositions?.Any() == true)
                         {
@@ -466,7 +466,6 @@ namespace DataReef.TM.Services.Services
 
                         foreach (var personId in peopleIds)
                         {
-                            
                             var personInquiryDates = inquiryDatesForDisposition.Where(id => id.PersonID == personId).ToList();
 
                             inquiryStatistics.Add(new InquiryStatisticsForPerson
@@ -492,7 +491,7 @@ namespace DataReef.TM.Services.Services
                                     ThisWeek = personInquiryDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).GroupBy(id => id.DateCreated.Date).Count(),
                                     Today = personInquiryDates.Where(id => id.DateCreated >= dates.TodayStart).GroupBy(id => id.DateCreated.Date).Count(),
                                     SpecifiedDay = specifiedDay.HasValue ? personInquiryDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0,
-                                   ThisQuarter = personInquiryDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                    ThisQuarter = personInquiryDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
                                     RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personInquiryDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
                                 }
                             });
@@ -604,9 +603,8 @@ namespace DataReef.TM.Services.Services
                             //    }
                             //}
                         }
+
                     }
-
-
                 }
 
                 return inquiryStatistics;
@@ -617,7 +615,7 @@ namespace DataReef.TM.Services.Services
         {
             var inquiryStatistics = new List<InquiryStatisticsForPerson>();
 
-            if(dispositions?.Any() != true)
+            if (dispositions?.Any() != true)
             {
                 var rootOU = _ouService
                                     .Value
@@ -632,7 +630,7 @@ namespace DataReef.TM.Services.Services
                             ?.FirstOrDefault(s => s.Name == OUSetting.OU_Reporting_Settings)
                             ?.GetValue<OUReportingSettings>();
 
-                    if(reportSettings != null && reportSettings.PersonReportItems?.Any() == true)
+                    if (reportSettings != null && reportSettings.PersonReportItems?.Any() == true)
                     {
                         var searchDispositions = new HashSet<string>();
                         foreach (var repItem in reportSettings.PersonReportItems)
@@ -726,16 +724,16 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
-            
+
 
             return inquiryStatistics;
         }
 
         public string GetLatestPropertyDisposition(Guid propertyID, Guid? skipInquiryId = null)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
-                var latestInquiry = 
+                var latestInquiry =
                     dc
                     .Inquiries
                     .Where(i => i.PropertyID == propertyID && i.Guid != skipInquiryId)
@@ -760,7 +758,7 @@ namespace DataReef.TM.Services.Services
 
                 if (property.LatestDisposition != newDisposition)
                 {
-                  //  UpdatePersonClockTime(property.Territory.OUID);
+                    UpdatePersonClockTime(property.Guid);
                     property.DispositionTypeId = newDispositionTypeId;
                     property.LatestDisposition = newDisposition;
                     territoryNeedsSave = true;
@@ -785,56 +783,67 @@ namespace DataReef.TM.Services.Services
 
         public void UpdatePersonClockTime(Guid propertyid)
         {
-
             var PersonClockSetting = _ouSettingService.Value.GetOUSettingForPropertyID<PersonClock>(propertyid, OUSetting.LegionOUPersonClockInfo);
 
             using (DataContext dc = new DataContext())
             {
-                var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date)
-                    .FirstOrDefault();
+                var person = dc.People.Where(x => x.IsDeleted == false && x.Guid == SmartPrincipal.UserId).ToList();
 
-                if (personClockTime != null && PersonClockSetting.IsEnabled == true)
+                if (person.Count > 0)
                 {
-                    if(personClockTime.ClockType == "ClockIn")
+
+
+                    var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date)
+                        .FirstOrDefault();
+
+                    if (PersonClockSetting != null)
                     {
-                        TimeSpan timespan = DateTime.Now - personClockTime.StartDate.Value;
-                        long diffMin = (long)Math.Floor(timespan.TotalMinutes);
-                        personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
-                        TimeSpan spWorkMin = TimeSpan.FromMinutes(personClockTime.ClockMin);
-                        personClockTime.TagString = string.Format("{0:00}:{1:00}", (int)spWorkMin.TotalHours, spWorkMin.Minutes);
-                        personClockTime.ClockHours = Convert.ToInt64(Math.Round(personClockTime.ClockMin / (double)60));
+
+                        if (personClockTime != null && PersonClockSetting.IsEnabled == true)
+                        {
+                            if (personClockTime.ClockType == "ClockIn")
+                            {
+                                TimeSpan timespan = DateTime.Now - personClockTime.StartDate.Value;
+                                long diffMin = (long)Math.Floor(timespan.TotalMinutes);
+                                personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
+                                TimeSpan spWorkMin = TimeSpan.FromMinutes(personClockTime.ClockMin);
+                                personClockTime.TagString = string.Format("{0:00}:{1:00}", (int)spWorkMin.TotalHours, spWorkMin.Minutes);
+                                personClockTime.ClockHours = Convert.ToInt64(Math.Round(personClockTime.ClockMin / (double)60));
+                            }
+                            personClockTime.ClockDiff = 0;
+                            personClockTime.StartDate = DateTime.Now;
+                            personClockTime.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
+                            personClockTime.ClockType = "ClockIn";
+                            personClockTime.Version += 1;
+                            personClockTime.DateLastModified = DateTime.Now;
+                            personClockTime.IsRemainFiveMin = false;
+                            dc.SaveChanges();
+                        }
+                        else
+                        {
+
+                            PersonClockTime personClock = new PersonClockTime();
+                            personClock.Guid = Guid.NewGuid();
+                            personClock.PersonID = SmartPrincipal.UserId;
+                            personClock.DateCreated = DateTime.Now;
+                            personClock.StartDate = DateTime.Now;
+                            personClock.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
+                            personClock.ClockDiff = 0;
+                            personClock.ClockMin = 0;
+                            personClock.ClockHours = 0;
+                            personClock.ClockType = "ClockIn";
+                            personClock.CreatedByID = SmartPrincipal.UserId;
+                            personClock.IsRemainFiveMin = false;
+                            dc.PersonClockTime.Add(personClock);
+                            dc.SaveChanges();
+
+                        }
                     }
-                    personClockTime.ClockDiff = 0;
-                    personClockTime.StartDate = DateTime.Now;
-                    personClockTime.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
-                    personClockTime.ClockType = "ClockIn";
-                    personClockTime.Version += 1;
-                    personClockTime.DateLastModified = DateTime.Now;
-                    personClockTime.IsRemainFiveMin = false;
-                    dc.SaveChanges();
-                }
-                else
-                {
-                    PersonClockTime personClock = new PersonClockTime();
-                    personClock.Guid = Guid.NewGuid();
-                    personClock.PersonID = SmartPrincipal.UserId;
-                    personClock.DateCreated = DateTime.Now;
-                    personClock.StartDate = DateTime.Now;
-                    personClock.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
-                    personClock.ClockDiff = 0;
-                    personClock.ClockMin = 0;
-                    personClock.ClockHours = 0;
-                    personClock.ClockType = "ClockIn";
-                    personClock.CreatedByID = SmartPrincipal.UserId;
-                    personClock.IsRemainFiveMin = false;
-                    dc.PersonClockTime.Add(personClock);
-                    dc.SaveChanges();
                 }
             }
-
         }
     }
-    
+
 
     internal class StatisticDates
     {
@@ -864,9 +873,9 @@ namespace DataReef.TM.Services.Services
             MonthStart = new DateTime(deviceDate.Year, deviceDate.Month, 1).Add(offset);
 
             TodayStart = deviceDate.Add(offset);
-           
+
             int quarterNumber = (deviceDate.Month - 1) / 3 + 1;
-            QuaterStart = new DateTime(deviceDate.Year, (quarterNumber - 1) * 3 + 1, 1).Add(offset); 
+            QuaterStart = new DateTime(deviceDate.Year, (quarterNumber - 1) * 3 + 1, 1).Add(offset);
             //DateTime lastDayOfQuarter = firstDayOfQuarter.AddMonths(3).AddDays(-1);
         }
     }

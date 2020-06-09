@@ -157,7 +157,7 @@ namespace DataReef.TM.Services.Services
         {
             var result = new List<InquiryStatisticsForOrganization>();
 
-            //if no settings are supplied, try to get them from the db for the ou
+            //if no settings are supplied, try to get them from the db for the ou 
             if(reportSettings == null)
             {
                 reportSettings =

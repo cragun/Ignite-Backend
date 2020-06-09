@@ -11,7 +11,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
 using DataReef.Core.Infrastructure.Authorization;
-
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -30,7 +30,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        public override ICollection<PersonalConnection> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        public override async Task<ICollection<PersonalConnection>> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
         {
             string filter = string.Format("FromPersonID={0}",SmartPrincipal.UserId);
             ICollection<PersonalConnection> ret = this.service.List(false, 1, 200, filter, include, exclude, fields);

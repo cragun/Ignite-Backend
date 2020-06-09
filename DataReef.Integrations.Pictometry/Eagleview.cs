@@ -175,7 +175,7 @@ namespace DataReef.Integrations.Pictometry
             using (WebClient wc = new WebClient())
             {
                 var json = wc.DownloadString(url);
-                JObject obj = JObject.Parse(json);
+                JObject obj = JObject.Parse(json);                
 
                 if (obj?["response"]?["statusCode"] != null)
                 {

@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
@@ -56,7 +57,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("{personID:guid}/locations/{date}")]
         [HttpGet]
-        public IHttpActionResult GetLocationsByDate(string personID, string date)
+        public async Task<IHttpActionResult> GetLocationsByDate(string personID, string date)
         {
             try
             {
@@ -73,7 +74,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("locations/latest")]
         [HttpPost]
         [ResponseType(typeof(ICollection<CurrentLocation>))]
-        public IHttpActionResult GetLatestLocationsForPeopleIds(GenericRequest<List<Guid>> request)
+        public async Task<IHttpActionResult> GetLatestLocationsForPeopleIds(GenericRequest<List<Guid>> request)
         {
             if (request == null || request.Request == null || request.Request.Count == 0)
             {
@@ -86,7 +87,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("{personID:guid}/image")]
         [HttpGet]
-        public HttpResponseMessage GetImage(string personID)
+        public async Task<HttpResponseMessage>  GetImage(string personID)
         {
             try
             {
@@ -114,7 +115,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("mine")]
         [HttpPost]
         [ResponseType(typeof(List<Person>))]
-        public IHttpActionResult GetMine(OUMembersRequest request)
+        public async Task<IHttpActionResult>  GetMine(OUMembersRequest request)
         {
             var ret = peopleService.GetMine(request);
             return Ok(ret);
@@ -123,7 +124,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("me")]
         [HttpGet]
         [ResponseType(typeof(PersonDTO))]
-        public IHttpActionResult GetMe(string include = "")
+        public async Task<IHttpActionResult> GetMe(string include = "")
         {
             var includeString = "PhoneNumbers";
             if (!string.IsNullOrEmpty(include))
@@ -138,7 +139,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{personID:Guid}/inquiryStats")]
         [ResponseType(typeof(ICollection<InquiryStatisticsForPerson>))]
-        public IHttpActionResult GetPersonSummaryForCustomStatuses(Guid personID, string dispositions = "", DateTime? specifiedDay = null)
+        public async Task<IHttpActionResult> GetPersonSummaryForCustomStatuses(Guid personID, string dispositions = "", DateTime? specifiedDay = null)
         {
             var inquiryStatuses = dispositions
                         .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
@@ -151,7 +152,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{guid:guid}/mayedit")]
         [HttpGet]
         [ResponseType(typeof(Person))]
-        public IHttpActionResult GetMayEdit(Guid guid, string include = "", string exclude = "", string fields = "")
+        public async Task<IHttpActionResult> GetMayEdit(Guid guid, string include = "", string exclude = "", string fields = "")
         {
             var ret = peopleService.GetMayEdit(guid, true, include, exclude, fields);
             ret.RemoveDefaultExcludedProperties("MayEdit");
@@ -166,7 +167,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("{personID:guid}/reactivate")]
         [HttpPost]
-        public IHttpActionResult Reactivate(Guid personID)
+        public async Task<IHttpActionResult> Reactivate(Guid personID)
         {
             peopleService.Reactivate(personID, null);
             return Ok();
@@ -177,7 +178,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("ActivateUser/{SmartBoardId}")]
         [HttpPost]
-        public IHttpActionResult ActivateUser(string SmartBoardId)
+        public async Task<IHttpActionResult> ActivateUser(string SmartBoardId)
         {
             peopleService.Reactivate(Guid.Empty, SmartBoardId);
             return Ok();
@@ -187,7 +188,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("DeactivateUser/{SmartBoardId}")]
         [HttpPost]
-        public IHttpActionResult DeactivateUser(string SmartBoardId)
+        public async Task<IHttpActionResult> DeactivateUser(string SmartBoardId)
         {
             peopleService.DeactivateUser(SmartBoardId);
             return Ok();
@@ -197,7 +198,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{personID:guid}/settings/{group?}")]
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
-        public IHttpActionResult GetAllSettings(Guid personID, PersonSettingGroupType? group = null)
+        public async Task<IHttpActionResult> GetAllSettings(Guid personID, PersonSettingGroupType? group = null)
         {
             var data = settingsService.GetSettings(personID, group);
             return Ok(data);
@@ -206,7 +207,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{personID:guid}/settings/{group?}")]
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
-        public IHttpActionResult SetAllSettings([FromUri]Guid personID, [FromBody]Dictionary<string, ValueTypePair<SettingValueType, string>> data, [FromUri]PersonSettingGroupType? group = null)
+        public async Task<IHttpActionResult> SetAllSettings([FromUri]Guid personID, [FromBody]Dictionary<string, ValueTypePair<SettingValueType, string>> data, [FromUri]PersonSettingGroupType? group = null)
         {
             settingsService.SetSettings(personID, group, data);
             return Ok();
@@ -215,7 +216,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("integration/token")]
         [ResponseType(typeof(Jwt))]
-        public IHttpActionResult GenerateIntegrationToken()
+        public async Task<IHttpActionResult> GenerateIntegrationToken()
         {
             var token = peopleService.GenerateIntegrationToken();
 
@@ -229,7 +230,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("integration/webview/parameters")]
         [ResponseType(typeof(GenericResponse<IntegrationParameters>))]
-        public IHttpActionResult GetWebViewParams()
+        public async Task<IHttpActionResult> GetWebViewParams()
         {
             var token = peopleService.GenerateIntegrationToken();
 
@@ -246,7 +247,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("crm/dispositions")]
         [ResponseType(typeof(GenericResponse<List<CRMDisposition>>))]
-        public IHttpActionResult GetCRMDispositions()
+        public async Task<IHttpActionResult> GetCRMDispositions()
         {
             return Ok(new GenericResponse<List<CRMDisposition>> { Response = peopleService.CRMGetAvailableNewDispositions() });
         }
@@ -254,7 +255,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("crm/dispositionfilters")]
         [ResponseType(typeof(List<CRMDisposition>))]
-        public IHttpActionResult GetNewCRMDispositions()
+        public async Task<IHttpActionResult> GetNewCRMDispositions()
         {
             return Ok(peopleService.CRMGetAvailableNewDispositions());
         }
@@ -262,7 +263,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("crm/data")]
         [ResponseType(typeof(PaginatedResult<Property>))]
-        public IHttpActionResult GetCRMData(CRMFilterRequest request)
+        public async Task<IHttpActionResult> GetCRMData(CRMFilterRequest request)
         {
             var result = peopleService.CRMGetProperties(request);
             SetupSerialization(result.Data, request.Include, request.Exclude, request.Fields);
@@ -272,7 +273,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("mysurvey")]
         [ResponseType(typeof(GenericResponse<string>))]
-        public IHttpActionResult GetMySurvey()
+        public async Task<IHttpActionResult> GetMySurvey()
         {
             var result = peopleService.GetUserSurvey(SmartPrincipal.UserId);
             return Ok(new GenericResponse<string> { Response = result });
@@ -281,7 +282,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("savemysurvey")]
         [ResponseType(typeof(GenericResponse<string>))]
-        public IHttpActionResult SaveMySurvey([FromBody] GenericRequest<string> request)
+        public async Task<IHttpActionResult> SaveMySurvey([FromBody] GenericRequest<string> request)
         {
             var result = peopleService.SaveUserSurvey(SmartPrincipal.UserId, request.Request);
             return Ok(new GenericResponse<string> { Response = result });
@@ -290,7 +291,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("surveyurl/{propertyID}")]
         [ResponseType(typeof(GenericResponse<string>))]
-        public IHttpActionResult GetSurveyUrl(Guid propertyID)
+        public async Task<IHttpActionResult> GetSurveyUrl(Guid propertyID)
         {
             var result = peopleService.GetSurveyUrl(SmartPrincipal.UserId, propertyID);
             return Ok(new GenericResponse<string> { Response = result });
@@ -299,7 +300,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("crm/LeadSources/{ouid}")]
         [ResponseType(typeof(GenericResponse<List<CRMLeadSource>>))]
-        public IHttpActionResult GetCRMLeadSources(Guid ouid)
+        public async Task<IHttpActionResult> GetCRMLeadSources(Guid ouid)
         {
             return Ok(new GenericResponse<List<CRMLeadSource>> { Response = peopleService.CRMGetAvailableLeadSources(ouid) });
         }
@@ -308,21 +309,20 @@ namespace DataReef.TM.Api.Controllers
         [Route("PersonClock/{min}")]
         [HttpGet]
         [ResponseType(typeof(PersonClockTime))]
-        public IHttpActionResult PersonClock(long min)
+        public async Task<IHttpActionResult> PersonClock(long min)
         {
             var person = peopleService.GetPersonClock(SmartPrincipal.UserId, min);
-
             return Ok(person);
         }
 
 
         [Route("deleteuser/{guid}")]
         [HttpPost]
-        public HttpResponseMessage DeleteUserByGuid(Guid guid)
+        public async Task<HttpResponseMessage>  DeleteUserByGuid(Guid guid)
         {
             var ret = base.DeleteByGuid(guid);
             peopleService.SBDeactivate(guid);
-            return ret;
+            return await ret;
         }
 
 
@@ -331,7 +331,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(Person))]
         [AllowAnonymous]
-        public IHttpActionResult personDetails(Guid ouid, DateTime date)
+        public async Task<IHttpActionResult>  personDetails(Guid ouid, DateTime date)
         {
 
             var person = peopleService.personDetails(ouid, date);
@@ -340,19 +340,18 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet] 
         [Route("ouassociation/{personid}")]
         [ResponseType(typeof(ICollection<PersonOffboard>))]
-        public IHttpActionResult GetOuassociationRoleName(Guid personid)
+        public async Task<IHttpActionResult> GetOuassociationRoleName(Guid personid)
         {
             var persn = peopleService.OuassociationRoleName(personid);
             return Ok(persn);
         }
 
-
-        public override IEnumerable<Person> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            if (!string.IsNullOrEmpty(delimitedStringOfGuids))
+            if(!string.IsNullOrEmpty(delimitedStringOfGuids))
             {
                 var stringUniqueIds = delimitedStringOfGuids.Split(',', '|');
                 var uniqueIds = new List<Guid>();
@@ -373,60 +372,61 @@ namespace DataReef.TM.Api.Controllers
 
                 string IDs = string.Join(",", person);
 
-                return base.GetMany(IDs, include, exclude, fields, deletedItems);
+                return await base.GetMany(IDs, include, exclude, fields, deletedItems);
             }
 
-            return base.GetMany(delimitedStringOfGuids, include, exclude, fields, deletedItems);
+            return await base.GetMany(delimitedStringOfGuids, include, exclude, fields, deletedItems);
+
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();
 
-            return base.DeleteByGuid(guid);
+            return await base.DeleteByGuid(guid);
         }
 
 
-        public override Person Post(Person item)
+        public override async Task<Person> Post(Person item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Post(item);
+            return await base.Post(item);
         }
 
-        public override Person Patch(System.Web.Http.OData.Delta<Person> item)
+        public override async Task<Person> Patch(System.Web.Http.OData.Delta<Person> item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Patch(item);
+            return await base.Patch(item);
         }
 
-        public override HttpResponseMessage Delete(Person item)
+        public override async Task<HttpResponseMessage> Delete(Person item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Delete(item);
+            return await base.Delete(item);
         }
 
-        public override ICollection<Person> PostMany(List<Person> items)
+        public override async Task<ICollection<Person>> PostMany(List<Person> items)
         {
             OUsControllerCacheInvalidation();
 
-            return base.PostMany(items);
+            return await base.PostMany(items);
         }
 
-        public override Person Put(Person item)
+        public override async Task<Person> Put(Person item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Put(item);
+            return await base.Put(item);
         }
-
-        /// <summary>
-        /// Invalidate cache for OUsController GET methods.
-        /// </summary>
-        public void OUsControllerCacheInvalidation()
-        {
+        
+            /// <summary>
+            /// Invalidate cache for OUsController GET methods.
+            /// </summary>
+            public void OUsControllerCacheInvalidation()
+            {
             var cache = Configuration.CacheOutputConfiguration().GetCacheOutputProvider(Request);
             string controllerName = typeof(OUsController).FullName;
 

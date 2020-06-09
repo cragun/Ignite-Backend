@@ -65,10 +65,10 @@ namespace DataReef.TM.Services
 
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinition(Guid financePlanDefinitionId)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
-                if(financePlan != null)
+                if (financePlan != null)
                 {
                     var metaData = financePlan.GetMetaData<FinancePlanDataModel>();
 
@@ -130,8 +130,7 @@ namespace DataReef.TM.Services
             return id;
         }
 
-
-            public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
+        public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())
             {
@@ -169,7 +168,7 @@ namespace DataReef.TM.Services
                         }
 
                         return creditCheckUrls;
-                    }                   
+                    }
                 }
             }
 

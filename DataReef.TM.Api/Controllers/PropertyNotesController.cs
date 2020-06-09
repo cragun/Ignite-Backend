@@ -164,9 +164,9 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="originalapikey"></param>
         /// <param name="Encryptedapikey"></param>
         /// <returns></returns>
-        [Route("EncryptApikey/{originalapikey}/{Encryptedapikey}")]
+        [Route("EncryptApikey/{originalapikey}")]
         [HttpGet]
-        public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey,string Encryptedapikey)
+        public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey)
         {
             string EncryptApiKey = CryptographyHelper.getEncryptAPIKey(originalapikey);
             
@@ -174,14 +174,14 @@ namespace DataReef.TM.Api.Controllers
             // string DecyptvalueofEncryptkey = CryptographyHelper.DecryptApiKey(EncryptApiKey);
 
             
-            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(Encryptedapikey);
+          //  string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(Encryptedapikey);
 
             var result = new testmodel
             {
                 OriginalApiKey = originalapikey,
-                EncryptedApiKey = Encryptedapikey,
+              //  EncryptedApiKey = Encryptedapikey,
                 EncryptTextOfOriginalApiKey = EncryptApiKey,
-                DecyptTextOfEncryptedApiKey = DecyptApiKey
+              //  DecyptTextOfEncryptedApiKey = DecyptApiKey
             };
 
             return Ok(result);
@@ -242,11 +242,7 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public IHttpActionResult DataAboutNotesCreated([FromBody]NoteCreateDTO request,DateTime fromDate,DateTime toDate)
         {
-
-            //bool checkTime = CryptographyHelper.checkTime(request.ApiKey); 
-          //  string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(request.apiKey);
-                    
-
+            
             var result = _propertyNoteService.NotesCreate(request,fromDate,toDate);
 
             return Ok(result);

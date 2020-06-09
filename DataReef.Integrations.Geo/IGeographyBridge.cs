@@ -34,5 +34,8 @@ namespace DataReef.Integrations
 
         [OperationContract]
         void InsertShapes(List<Shape> shapes);
+
+        [OperationContract]
+        string SaveHiResImagetest(HighResImage image);
     }
 }

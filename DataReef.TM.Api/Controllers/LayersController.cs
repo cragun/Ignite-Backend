@@ -12,7 +12,7 @@ using System.Net.Http.Headers;
 using System.Web.Http.Description;
 using DataReef.TM.Models.Layers;
 using DataReef.Core.Infrastructure.Authorization;
-
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -38,21 +38,21 @@ namespace DataReef.TM.Api.Controllers
         }
 
        
-        public override ICollection<Layer> PostMany(List<Layer> items)
+        public override async Task<ICollection<Layer>> PostMany(List<Layer> items)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
             {
                 Content = new StringContent("Method Not Available")
             });
         }
-        public override Layer Post(Layer item)
+        public override async Task<Layer> Post(Layer item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
             {
                 Content = new StringContent("Method Not Available")
             });
         }
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
             {
@@ -60,21 +60,21 @@ namespace DataReef.TM.Api.Controllers
             });
         }
 
-        public override Layer Put(Layer item)
+        public override async Task<Layer> Put(Layer item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
             {
                 Content = new StringContent("Method Not Available")
             });
         }
-        public override HttpResponseMessage Delete(Layer item)
+        public override async Task<HttpResponseMessage> Delete(Layer item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
             {
                 Content = new StringContent("Method Not Available")
             });
         }
-        public override Layer Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override async Task<Layer> Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
             {

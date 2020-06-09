@@ -50,5 +50,8 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
 
         [DataMember]
         public Guid TerritoryID { get; set; }
+
+        [DataMember]
+        public long LeadID { get; set; }
     }
 }

@@ -22,6 +22,8 @@ using System.ServiceModel.Activation;
 using System.Data.Entity;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using Newtonsoft.Json.Linq;
+using DataReef.TM.Models.FinancialIntegration;
 
 namespace DataReef.TM.Services.Services
 {
@@ -60,7 +62,8 @@ namespace DataReef.TM.Services.Services
             var results = _eagleViewService.GetLinksForLatLon(lat, lon);
             var ret = results.Select(r => r.OrientationString).ToList();
             return ret;
-        }
+        }        
+
 
         public BlobModel PurchaseHighResImageAtCoordinates(Guid propertyID, double top, double left, double bottom, double right, string direction)
         {
@@ -107,7 +110,6 @@ namespace DataReef.TM.Services.Services
 #if (DEBUG)
                 userID = new Guid("7D49D3AF-C08C-4AA9-AC76-A6652A8EE884"); //make sure there is an account.  this is Vlads test account
 #endif
-
                 if (!freeHiResImages)
                 {
                     ledger = _tokensProvider.GetDefaultLedgerForPerson(userID);
@@ -140,6 +142,7 @@ namespace DataReef.TM.Services.Services
                     {
                         // now get the binary
                         var bytes = _eagleViewService.GetImageBytesForSearchResult(result, result.Width, result.Height);
+
                         Image image = null;
 
                         if (bytes != null)
@@ -171,6 +174,8 @@ namespace DataReef.TM.Services.Services
                         };
 
                         _geoBridge.SaveHiResImage(hiResImg);
+
+
 
                         if (bytes != null)
                         {
