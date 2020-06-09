@@ -17,6 +17,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
 using DataReef.Auth.Helpers;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -47,7 +48,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("user/{personID}")]
         [ResponseType(typeof(IEnumerable<Notification>))]
         [HttpGet]
-        public IHttpActionResult GetAllForProperty(Guid personID, IgniteNotificationSeenStatus? status = null, int pageNumber = 0, int itemsPerPage = 20)
+        public async Task<IHttpActionResult> GetAllForProperty(Guid personID, IgniteNotificationSeenStatus? status = null, int pageNumber = 0, int itemsPerPage = 20)
         {
             var result = _notificationService.GetNotificationsForPerson(personID, status, pageNumber, itemsPerPage);
 
@@ -62,7 +63,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("user/{personID}/read")]
         [ResponseType(typeof(IEnumerable<Notification>))]
         [HttpPost]
-        public IHttpActionResult MarkAllUserNotificationsAsRead(Guid personID)
+        public async Task<IHttpActionResult> MarkAllUserNotificationsAsRead(Guid personID)
         {
             var result = _notificationService.MarkAllNotificationsAsRead(personID);
 
@@ -77,7 +78,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{notificationID}/read")]
         [ResponseType(typeof(Notification))]
         [HttpPost]
-        public IHttpActionResult MarkNotificationAsRead(Guid notificationID)
+        public async Task<IHttpActionResult> MarkNotificationAsRead(Guid notificationID)
         {
             var result = _notificationService.MarkAsRead(notificationID);
 
@@ -92,7 +93,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("user/{personID}/count")]
         [ResponseType(typeof(GenericResponse<int>))]
         [HttpGet]
-        public IHttpActionResult CountUnreadForPerson(Guid personID)
+        public async Task<IHttpActionResult> CountUnreadForPerson(Guid personID)
         {
             var result = _notificationService.CountUnreadNotifications(personID);
 
@@ -109,7 +110,7 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(bool))]
         [HttpPost]
-        public IHttpActionResult MarkNotificationAsReadFromSmartboard(string apiKey, string notificationID)
+        public async Task<IHttpActionResult> MarkNotificationAsReadFromSmartboard(string apiKey, string notificationID)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);
