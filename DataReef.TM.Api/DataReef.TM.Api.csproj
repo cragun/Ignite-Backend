@@ -417,6 +417,7 @@
     <Compile Include="Security\VersionValidationHandler.cs" />
     <Compile Include="SqlServertypesInitialization.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
+    <Compile Include="UserFriendlyExceptionFilterAttribute.cs" />
     <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\msvcr100.dll">
       <Link>SqlServerTypes\x64\msvcr100.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
