@@ -7,6 +7,7 @@ using Property = DataReef.TM.Models.Property;
 using DataReef.TM.Models.Solar;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -61,7 +62,7 @@ namespace DataReef.TM.Contracts.Services
         SBPropertyDTO CreatePropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey);
 
         [OperationContract]
-        IEnumerable<Territories> GetTerritoriesList(Guid propertyid, string apiKey);
+        Task<IEnumerable<Territories>> GetTerritoriesList(Guid propertyid, string apiKey);
 
         [OperationContract]
         SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request);

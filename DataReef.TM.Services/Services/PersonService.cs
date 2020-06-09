@@ -1150,7 +1150,6 @@ namespace DataReef.TM.Services
         {
             using (DataContext dc = new DataContext())
             {
-
                 var list = 
                     dc.People.
                     Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
