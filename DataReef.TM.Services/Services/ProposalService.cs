@@ -1084,7 +1084,7 @@ namespace DataReef.TM.Services.Services
 
                 proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
 
-                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal,"2", signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
                 
                 // update territory DateLastModified
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
@@ -1156,6 +1156,98 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
+    public void UploadDocument(Guid proposalId,DocumentSignRequest request)
+        {
+
+            //  UploadDataDocument(request.DocumentData);
+            using (var dataContext = new DataContext())
+            {
+                var data = dataContext
+                            .ProposalData
+                            .FirstOrDefault(pd => pd.ProposalID == proposalId);
+
+                if (data == null)
+                {
+                    throw new ApplicationException("Could not find Proposal Data!");
+                }
+
+                var financePlan = dataContext
+                                    .FinancePlans
+                                    .Include(fp => fp.SolarSystem.PowerConsumption)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
+                                    .Include(fp => fp.FinancePlanDefinition)
+                                    .FirstOrDefault(fp => fp.Guid == data.FinancePlanID);
+
+                if (financePlan == null)
+                {
+                    throw new ApplicationException("Could not find Proposal Data!");
+                }
+
+                var contractorID = request.ContractorID ?? data.ContractorID;
+
+                var proposal = financePlan.SolarSystem.Proposal;
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                List<SignedDocumentDTO> signedDocuments = null;
+                if (!string.IsNullOrWhiteSpace(request.ProposalDataJSON))
+                {
+                    try
+                    {
+                        var proposalCustomData = JObject.Parse(request.ProposalDataJSON);
+
+                        signedDocuments = proposalCustomData["SignedDocuments"].ToObject<List<SignedDocumentDTO>>();
+                    }
+                    catch (Exception) { }
+                }
+
+                var documentUrls = GetProposalURLs(contractorID, data.Guid, signedDocuments, ouSettings);
+                var planName = financePlan.Name;
+
+
+                float apr = financePlan.FinancePlanDefinition.Apr;
+                float year = financePlan.FinancePlanDefinition.TermInYears;
+                var FinanceProvider = dataContext
+                            .FinanceProviders
+                            .FirstOrDefault(fd => fd.Guid == financePlan.FinancePlanDefinition.ProviderID);
+
+
+                var attachmentPDFs = new List<Tuple<byte[], string>>();
+                documentUrls?
+                        .ForEach(d =>
+                        {
+
+
+                            d.ProviderName = FinanceProvider?.Name;
+                            d.Apr = apr;
+                            d.Year = year;
+
+
+                            d.Description = $"{d.Name} [{planName.AsFileName()}]";
+                            d.ProposalDataID = proposalId;
+
+                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
+
+                            d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
+                                 new BlobModel
+                                 {
+                                     Content = pdfContent,
+                                     ContentType = "application/pdf"
+                                 }, BlobAccessRights.PublicRead);
+
+                            attachmentPDFs.Add(new Tuple<byte[], string>(pdfContent, $"{d.Description}.pdf"));
+                        });
+
+
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, request.DocumentTypeId,documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+
+
+            }
+
+        }
+        
         public Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request)
         {
             //var json = new JavaScriptSerializer().Serialize(request);
@@ -2080,6 +2172,26 @@ namespace DataReef.TM.Services.Services
                 uow.SaveChanges();
                 uow.Dispose();
             }
+
+
+
         }
+
+
+        public List<DocType> GetDocumentType()
+        {
+           
+            List<DocType> typeList = new List<DocType>();
+
+            typeList.Add(new DocType() { Id = 1, Name = "Proposal" });
+            typeList.Add(new DocType() { Id = 2, Name = "Contract" });
+            typeList.Add(new DocType() { Id = 3, Name = "Reference" });
+            typeList.Add(new DocType() { Id = 4, Name = "Design" });
+
+            return typeList;
+        }
+
+
+
     }
 }

@@ -110,6 +110,24 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
+        [Route("{proposalId}/uploadDocument")]
+        [HttpPost]
+        [ResponseType(typeof(Proposal))]
+        public async Task<IHttpActionResult> UploadDocument(Guid proposalId)
+        {
+            var request = await GetProposalRequest();
+
+            _proposalService.UploadDocument(proposalId, request);
+            return Ok();
+        }
+
+        [Route("Documents/getType")]
+        [HttpGet]
+        [ResponseType(typeof(List<DocType>))]
+        public IHttpActionResult GetDocumentType()
+        {
+            return Ok(_proposalService.GetDocumentType());
+        }
         /// <summary>
         /// Update ProposalData.ProposalDataJSON for given proposalDataId.
         /// The ProposalDataJSON will be read from the Body of the request.

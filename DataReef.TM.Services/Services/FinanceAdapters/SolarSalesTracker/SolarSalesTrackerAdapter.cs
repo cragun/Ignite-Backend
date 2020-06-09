@@ -441,7 +441,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-        public void SignAgreement(Proposal proposal, SignedDocumentDTO proposalDoc)
+        public void SignAgreement(Proposal proposal,string documentTypeId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;
             if (!ouid.HasValue || proposalDoc == null)
@@ -490,7 +490,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         AssociatedId= proposal?.Property?.Id,
                         DocumentName=proposalDoc.Name,
                         DocumentUrl=proposalDoc.PDFUrl,
-                        DocumentTypeId="2",
+                        DocumentTypeId= documentTypeId,
                         Email=email,
                         Lon= proposal?.Lon,
                         Lat= proposal?.Lat,
