@@ -159,19 +159,19 @@ namespace DataReef.TM.Api.Controllers
             return "Occupants,PropertyBag,Attributes";
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();
 
-            return base.DeleteByGuid(guid);
+            return await base.DeleteByGuid(guid);
         }
 
-        public override Property Post(Property item)
+        public override async Task<Property> Post(Property item)
         {
             OUsControllerCacheInvalidation();
             try
             {
-                return base.Post(item);
+                return await base.Post(item);
             }
             catch (HttpResponseException ex)
             {
@@ -190,32 +190,32 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        public override Property Patch(System.Web.Http.OData.Delta<Property> item)
+        public override async Task<Property> Patch(System.Web.Http.OData.Delta<Property> item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Patch(item);
+            return await base.Patch(item);
         }
 
-        public override HttpResponseMessage Delete(Property item)
+        public override async Task<HttpResponseMessage> Delete(Property item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Delete(item);
+            return await base.Delete(item);
         }
 
-        public override ICollection<Property> PostMany(List<Property> items)
+        public override async Task<ICollection<Property>> PostMany(List<Property> items)
         {
             OUsControllerCacheInvalidation();
 
-            return base.PostMany(items);
+            return await base.PostMany(items);
         }
 
-        public override Property Put(Property item)
+        public override async Task<Property> Put(Property item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Put(item);
+            return await base.Put(item);
         }
 
         /// <summary>

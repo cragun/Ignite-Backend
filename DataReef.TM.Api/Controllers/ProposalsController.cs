@@ -42,7 +42,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("data/{proposalDataId}/{utilityInflationRate=null}")]
         [HttpGet]
-        public Proposal2DataView GetProposalData(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
+        public async Task<Proposal2DataView> GetProposalData(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
         {
             return _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts); ;
         }
@@ -74,7 +74,7 @@ namespace DataReef.TM.Api.Controllers
 
 
         [HttpPost, Route("generate/proposal/dummy")]
-        public IHttpActionResult GenerateProposalDummy(DocumentSignRequest request)
+        public async Task<IHttpActionResult> GenerateProposalDummy(DocumentSignRequest request)
         {
             return Ok();
         }
@@ -207,11 +207,11 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("saveAndCloneMediaItems")]
         [HttpPost]
-        public Proposal CloneMediaItems([FromBody] Proposal item, [FromUri]Guid originalProposalID)
+        public async Task<Proposal> CloneMediaItems([FromBody] Proposal item, [FromUri]Guid originalProposalID)
         {
             var response = base.Post(item);
             _proposalService.CopyProposalMediaItems(originalProposalID, item.Guid);
-            return response;
+            return await response;
         }
 
         [Route("autosave")]

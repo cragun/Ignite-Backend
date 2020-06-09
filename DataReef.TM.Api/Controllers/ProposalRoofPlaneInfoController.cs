@@ -5,6 +5,7 @@ using DataReef.TM.Models.Solar;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -23,17 +24,17 @@ namespace DataReef.TM.Api.Controllers
 
         #region Forbidden methods
 
-        public override HttpResponseMessage Delete(ProposalRoofPlaneInfo item)
+        public override async Task<HttpResponseMessage> Delete(ProposalRoofPlaneInfo item)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override HttpResponseMessage DeleteMany([FromBody] IDsListWrapperRequest req)
+        public override async Task<HttpResponseMessage> DeleteMany([FromBody] IDsListWrapperRequest req)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }

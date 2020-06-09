@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.OData;
@@ -59,11 +60,11 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [GenericRoute("")]
         [CrudApiAction]
-        public virtual ICollection<T> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        public virtual async Task<ICollection<T>> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
         {
             try
             {
-                return GetEntitiesFiltered(null, deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
+                return await GetEntitiesFiltered(null, deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
             }
             catch (Exception ex)
             {
@@ -83,7 +84,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [CrudApiAction]
         [GenericRoute("{guid:guid}")]
-        public virtual T Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public virtual async Task<T> Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             var entity = this._dataService.Get(guid, include, exclude, fields, deletedItems);
 
@@ -107,7 +108,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [CrudApiAction]
         [GenericRoute("")]
-        public virtual IEnumerable<T> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public virtual async Task<IEnumerable<T>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             var stringUniqueIds = delimitedStringOfGuids.Split(',', '|');
             var uniqueIds = new List<Guid>();
@@ -147,7 +148,7 @@ namespace DataReef.TM.Api.Controllers
         [CrudApiAction]
         [GenericRoute("{guid:guid}/{collectionName}", Order = 1000)]
         [ResponseType(typeof(object))] // unable to be determined at compile time
-        public virtual IHttpActionResult GetCollection(Guid guid, string collectionName, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public virtual async Task<IHttpActionResult> GetCollection(Guid guid, string collectionName, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             var collectionPropertyInfo = typeof(T).GetProperties().FirstOrDefault(ppi => String.Equals(ppi.Name, collectionName, StringComparison.CurrentCultureIgnoreCase));
 
@@ -208,7 +209,7 @@ namespace DataReef.TM.Api.Controllers
         [CrudApiAction]
         [GenericRoute("~/api/v1/deleted/{controller}")]
         [ResponseType(typeof(IDsListWrapperRequest))]
-        public virtual IDsListWrapperRequest GetDeletedIDs(IDsListWrapperRequest request)
+        public virtual async Task<IDsListWrapperRequest> GetDeletedIDs(IDsListWrapperRequest request)
         {
             request.IDs = this._dataService.GetDeletedIDs(request.IDs).ToList();
             return request;
@@ -222,7 +223,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [CrudApiAction]
         [GenericRoute("")]
-        public virtual T Post(T item)
+        public virtual async Task<T> Post(T item)
         {
             if (item == null)
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -268,7 +269,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [CrudApiAction]
         [GenericRoute("bulk", Order = 10)]
-        public virtual ICollection<T> PostMany(List<T> items)
+        public virtual async Task<ICollection<T>> PostMany(List<T> items)
         {
             if (items == null || !items.Any())
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -333,9 +334,9 @@ namespace DataReef.TM.Api.Controllers
         [HttpDelete]
         [CrudApiAction]
         [GenericRoute("")]
-        public virtual HttpResponseMessage Delete(T item)
+        public virtual async Task<HttpResponseMessage> Delete(T item)
         {
-            return DeleteByGuid(item.Guid);
+            return await DeleteByGuid(item.Guid);
         }
 
         /// <summary>
@@ -346,7 +347,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpDelete]
         [CrudApiAction]
         [GenericRoute("delete/{guid:guid}")]
-        public virtual HttpResponseMessage DeleteByGuid(Guid guid)
+        public virtual async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             try
             {
@@ -382,7 +383,7 @@ namespace DataReef.TM.Api.Controllers
         [CrudApiAction]
         [GenericRoute("deletemany")]
         [ResponseType(typeof(ICollection<SaveResult>))]
-        public virtual HttpResponseMessage DeleteMany([FromBody]IDsListWrapperRequest req)
+        public virtual async Task<HttpResponseMessage> DeleteMany([FromBody]IDsListWrapperRequest req)
         {
             if (req == null || req.IDs == null)
             {
@@ -428,7 +429,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPut]
         [CrudApiAction]
         [GenericRoute("")]
-        public virtual T Put(T item)
+        public virtual async Task<T> Put(T item)
         {
             if (item == null)
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -473,7 +474,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPatch]
         [CrudApiAction]
         [GenericRoute("")]
-        public virtual T Patch(Delta<T> item)
+        public virtual async Task<T> Patch(Delta<T> item)
         {
             try
             {
@@ -485,7 +486,7 @@ namespace DataReef.TM.Api.Controllers
 
                 if (entity == null)
                 {
-                    return Post(itemEntity);
+                    return await Post(itemEntity);
                 }
 
                 item.Patch(entity);
@@ -514,7 +515,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPatch]
         [CrudApiAction]
         [GenericRoute("bulk")]
-        public virtual ICollection<T> PatchMany(List<Delta<T>> items)
+        public virtual async Task<ICollection<T>> PatchMany(List<Delta<T>> items)
         {
             try
             {
@@ -644,7 +645,7 @@ namespace DataReef.TM.Api.Controllers
             return sb.ToString();
         }
 
-        protected ICollection<T> GetEntitiesFiltered(string filters, bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        protected async Task<ICollection<T>> GetEntitiesFiltered(string filters, bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
         {
             try
             {

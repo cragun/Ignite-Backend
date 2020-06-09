@@ -11,6 +11,7 @@ using System.Net;
 using DataReef.TM.Api.Classes.Requests;
 using System.Web.Http.Description;
 using DataReef.TM.Models.DataViews.Financing;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -58,17 +59,17 @@ namespace DataReef.TM.Api.Controllers
         //    throw new HttpResponseException(HttpStatusCode.Forbidden);
         //}
 
-        public override HttpResponseMessage Delete(FinancePlanDefinition item)
+        public override async Task<HttpResponseMessage> Delete(FinancePlanDefinition item)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override HttpResponseMessage DeleteMany([FromBody] IDsListWrapperRequest req)
+        public override async Task<HttpResponseMessage> DeleteMany([FromBody] IDsListWrapperRequest req)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }

@@ -15,6 +15,7 @@ using System.Web.Http.Description;
 using DataReef.TM.Contracts.Faults;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DataViews.Geo;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -175,21 +176,21 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        public override Territory Post(Territory item)
+        public override async Task<Territory> Post(Territory item)
         {
             CheckTerritoryValidity(item);
 
-            return base.Post(item);
+            return await base.Post(item);
         }
 
-        public override Territory Patch(System.Web.Http.OData.Delta<Territory> item)
+        public override async Task<Territory> Patch(System.Web.Http.OData.Delta<Territory> item)
         {
             CheckTerritoryValidity(item.GetEntity());
 
-            return base.Patch(item);
+            return await base.Patch(item);
         }
 
-        public override ICollection<Territory> PostMany(List<Territory> items)
+        public override async Task<ICollection<Territory>> PostMany(List<Territory> items)
         {
             if (items == null || !items.Any())
             {
@@ -198,14 +199,14 @@ namespace DataReef.TM.Api.Controllers
 
             items.ForEach(i => CheckTerritoryValidity(i));
 
-            return base.PostMany(items);
+            return await base.PostMany(items);
         }
 
-        public override Territory Put(Territory item)
+        public override async Task<Territory> Put(Territory item)
         {
             CheckTerritoryValidity(item);
 
-            return base.Put(item);
+            return await base.Put(item);
         }
 
 

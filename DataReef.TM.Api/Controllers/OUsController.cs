@@ -19,6 +19,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
 using GoogleMaps.LocationServices;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -54,7 +55,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<OU>))]
         [Route("roots")]
-        public IHttpActionResult GetRootOUs(string include = "", string exclude = "", string fields = "", string query = "")
+        public async Task<IHttpActionResult> GetRootOUs(string include = "", string exclude = "", string fields = "", string query = "")
         {
             Guid personID = SmartPrincipal.UserId;
             ICollection<OU> ret = ouService.ListRootsForPerson(personID, include, exclude, fields, query);
@@ -65,7 +66,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Person>))]
         [Route("{ouID:guid}/people")]
-        public IHttpActionResult GetPeople(Guid ouID, string include = "", string fields = "", bool deepSearch = true)
+        public async Task<IHttpActionResult> GetPeople(Guid ouID, string include = "", string fields = "", bool deepSearch = true)
         {
             var personIds = this.ouService.ConditionalGetActivePeopleIDsForCurrentAndSubOUs(ouID, deepSearch);
             var ret = personService.GetMany(personIds, include, fields);
@@ -76,7 +77,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<User>))]
         [Route("{ouID:guid}/users")]
-        public IHttpActionResult GetAllUsersForCurrentAndSubOUs(Guid ouID, string include = "", string fields = "", bool deepSearch = true)
+        public async Task<IHttpActionResult> GetAllUsersForCurrentAndSubOUs(Guid ouID, string include = "", string fields = "", bool deepSearch = true)
         {
             var userIds = this.ouService.ConditionalGetActiveUserIDsForCurrentAndSubOUs(ouID, deepSearch);
             var ret = userService.GetMany(userIds, include, fields);
@@ -86,7 +87,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet, AllowAnonymous, InjectAuthPrincipal]
         [Route("{ouID:guid}/users/active")]
-        public HttpResponseMessage GetActiveUsers(Guid ouID)
+        public async Task<HttpResponseMessage> GetActiveUsers(Guid ouID)
         {
             var data = ouService.GetActiveUsersCSV(ouID);
 
@@ -101,7 +102,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<OUAssociation>))]
         [Route("{ouID:guid}/ouassociations")]
-        public IHttpActionResult GetOUAssociations(Guid ouID, string include = "", string exclude = "", string fields = "", bool deepSearch = true)
+        public async Task<IHttpActionResult> GetOUAssociations(Guid ouID, string include = "", string exclude = "", string fields = "", bool deepSearch = true)
         {
             var ouAssociationIds = this.ouService.ConditionalGetActiveOUAssociationIDsForCurrentAndSubOUs(ouID, deepSearch);
             var ret = associationService.GetMany(ouAssociationIds, include, exclude, fields);
@@ -112,7 +113,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<FinancePlanDefinition>))]
         [Route("{ouID:guid}/financeplandefinitions")]
-        public IHttpActionResult GetFinancePlanDefinitions(Guid ouID, string include = "", string exclude = "", string fields = "")
+        public async Task<IHttpActionResult> GetFinancePlanDefinitions(Guid ouID, string include = "", string exclude = "", string fields = "")
         {
             var result = ouService.GetFinancePlanDefinitions(ouID, include, exclude, fields);
             return Ok(result);
@@ -121,7 +122,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Territory>))]
         [Route("{ouID:guid}/territories/{territoryName}")]
-        public IHttpActionResult GetFilteredByNameTerritoriesForCurrentAndSubOUs(Guid ouID, string territoryName, string include = "", string fields = "", bool deletedItems = false)
+        public async Task<IHttpActionResult> GetFilteredByNameTerritoriesForCurrentAndSubOUs(Guid ouID, string territoryName, string include = "", string fields = "", bool deletedItems = false)
         {
             ICollection<Territory> ret = this.ouService.GetOUTreeTerritories(ouID, territoryName, deletedItems);
             SetupSerialization(ret, include, string.Empty, fields);
@@ -131,7 +132,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(List<GuidNamePair>))]
         [Route("~/api/v1/subous")] // overwritten route prefix to change "api/v1/ous/subous" to "api/v1/subous" because of a mapping issue in the client app 
-        public IHttpActionResult GetAllSubOUsOfSpecifiedOus(string ouIDs)
+        public async Task<IHttpActionResult> GetAllSubOUsOfSpecifiedOus(string ouIDs)
         {
             if (String.IsNullOrWhiteSpace(ouIDs)) return BadRequest();
             return Ok(ouService.GetAllSubOUIdsAndNamesOfSpecifiedOus(ouIDs));
@@ -140,7 +141,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(List<OUWithAncestors>))]
         [Route("{ouID:guid}/subous/setting")]
-        public IHttpActionResult GetSubOUsOfSpecifiedOuWithSetting(Guid ouID, string settingName)
+        public async Task<IHttpActionResult> GetSubOUsOfSpecifiedOuWithSetting(Guid ouID, string settingName)
         {
             if (string.IsNullOrEmpty(settingName))
             {
@@ -156,7 +157,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<OU>))]
         [Route("mine")]
-        public IHttpActionResult GetAllOUsForUser()
+        public async Task<IHttpActionResult> GetAllOUsForUser()
         {
             Guid userID = SmartPrincipal.UserId;
             List<OU> ret = ouService.ListAllForPerson(userID).ToList();
@@ -171,7 +172,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<OU>))]
         [Route("mine/setting")]
-        public IHttpActionResult GetAllOUsForUserBySetting(string settingName)
+        public async Task<IHttpActionResult> GetAllOUsForUserBySetting(string settingName)
         {
             Guid userID = SmartPrincipal.UserId;
             List<OU> ret = ouService.ListAllForPersonAndSetting(userID, settingName).ToList();
@@ -181,7 +182,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Property>))]
         [Route("{ouID:guid}/properties")]
-        public IHttpActionResult GetPropertiesByStatus(Guid ouID, string disposition, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
+        public async Task<IHttpActionResult> GetPropertiesByStatus(Guid ouID, string disposition, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
         {
             var ret = propertyService.GetOUPropertiesByStatusPaged(ouID, disposition, propertyNameSearch, pageIndex, itemsPerPage, include, exclude);
             return Ok<ICollection<Property>>(ret);
@@ -190,7 +191,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Property>))]
         [Route("{ouID:guid}/properties/withproposal")]
-        public IHttpActionResult GetPropertiesWithProposal(Guid ouID, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
+        public async Task<IHttpActionResult> GetPropertiesWithProposal(Guid ouID, string propertyNameSearch = null, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
         {
             var ret = propertyService.GetOUPropertiesWithProposal(ouID, propertyNameSearch, pageIndex, itemsPerPage, include, exclude);
             SetupSerialization(ret, include, exclude, null);
@@ -200,7 +201,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{ouID:guid}/settings/{group?}")]
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
-        public IHttpActionResult GetAllSettings(Guid ouID, OUSettingGroupType? group = null)
+        public async Task<IHttpActionResult> GetAllSettings(Guid ouID, OUSettingGroupType? group = null)
         {
             var data = settingsService.GetSettings(ouID, group);
             return Ok(data);
@@ -209,7 +210,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{ouID:guid}/settings/{group?}")]
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
-        public IHttpActionResult SetAllSettings([FromUri]Guid ouID, [FromBody]Dictionary<string, ValueTypePair<SettingValueType, string>> data, [FromUri]OUSettingGroupType? group = null)
+        public async Task<IHttpActionResult> SetAllSettings([FromUri]Guid ouID, [FromBody]Dictionary<string, ValueTypePair<SettingValueType, string>> data, [FromUri]OUSettingGroupType? group = null)
         {
             settingsService.SetSettings(ouID, group, data);
             return Ok();
@@ -217,7 +218,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("people")]
-        public IHttpActionResult GetMembers([FromBody]OUMembersRequest request)
+        public async Task<IHttpActionResult> GetMembers([FromBody]OUMembersRequest request)
         {
             var data = ouService.GetMembers(request);
             return Ok(data);
@@ -225,7 +226,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("{ouID:guid}/move")]
-        public IHttpActionResult MoveOU(Guid ouID, Guid newParentOUID)
+        public async Task<IHttpActionResult> MoveOU(Guid ouID, Guid newParentOUID)
         {
             ouService.MoveOU(ouID, newParentOUID);
             return Ok();
@@ -235,7 +236,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID:Guid}/inquiryStats")]
         [ResponseType(typeof(ICollection<InquiryStatisticsForOrganization>))]
         [IgnoreCacheOutput]
-        public IHttpActionResult GetOUSummaryForCustomStatuses(Guid ouID, DateTime? specifiedDay = null)
+        public async Task<IHttpActionResult> GetOUSummaryForCustomStatuses(Guid ouID, DateTime? specifiedDay = null)
         {
             var data = ouService.GetInquiryStatisticsForOrganization(ouID, null, specifiedDay);
             return Ok(data);
@@ -243,7 +244,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("{ouID:guid}/tokenPrice")]
-        public IHttpActionResult GetTokenPriceInDollars(Guid ouID)
+        public async Task<IHttpActionResult> GetTokenPriceInDollars(Guid ouID)
         {
             var tokenPriceInDollars = this.ouService.GetTokenPriceInDollars(ouID);
             return Ok(new { PricePerToken = tokenPriceInDollars });
@@ -252,7 +253,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{ouid:guid}/getbyshapesversion")]
         [ResponseType(typeof(OU))]
-        public IHttpActionResult GetByShapesVersion([FromBody] ICollection<OuShapeVersion> shapesVersion, Guid ouid, bool deletedItems = false, string include = "")
+        public async Task<IHttpActionResult> GetByShapesVersion([FromBody] ICollection<OuShapeVersion> shapesVersion, Guid ouid, bool deletedItems = false, string include = "")
         {
             var ou = ouService.GetByShapesVersion(ouid, shapesVersion, deletedItems, include);
 
@@ -262,7 +263,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{ouid:guid}/withancestors")]
         [ResponseType(typeof(OU))]
-        public OU GetWithAncestors(Guid ouid, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "")
+        public async Task<OU> GetWithAncestors(Guid ouid, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "")
         {
             var entity = ouService.GetWithAncestors(ouid, include, exclude, fields, summary, query);
             entity.SetupSerialization(include, exclude, fields);
@@ -272,7 +273,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{ouid:guid}/childrenandterritories")]
         [ResponseType(typeof(OUChildrenAndTerritories))]
-        public OUChildrenAndTerritories GetWithChildrenAndTerritories(Guid ouid)
+        public async Task<OUChildrenAndTerritories> GetWithChildrenAndTerritories(Guid ouid)
         {
             return ouService.GetOUWithChildrenAnTerritories(ouid);
         }
@@ -282,7 +283,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [AllowAnonymous]
         [Route("tree/{personID}")]
-        public IHttpActionResult TestOUTree(Guid personID)
+        public async Task<IHttpActionResult> TestOUTree(Guid personID)
         {
             var result = ouService.GetOUsRoleTree(personID);
             //var result = personService.CRMGetProperties(new Models.DTOs.Inquiries.CRMFilterRequest());
@@ -296,7 +297,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet, Route("sb/roles/{apiKey}")]
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(IEnumerable<SBOURoleDTO>))]
-        public IEnumerable<SBOURoleDTO> GetRoles(string apiKey)
+        public async Task<IEnumerable<SBOURoleDTO>> GetRoles(string apiKey)
         {
             return ouService.GetAllRoles(apiKey);
         }
@@ -309,7 +310,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet, Route("sb/{ouID}/{apiKey}")]
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(SBOUDTO))]
-        public SBOUDTO GetOus(Guid ouID, string apiKey)
+        public async Task<SBOUDTO> GetOus(Guid ouID, string apiKey)
         {
             return ouService.GetSmartboardOus(ouID, apiKey);
         }
@@ -321,7 +322,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet, Route("sb/{apiKey}")]
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(IEnumerable<SBOUDTO>))]
-        public IEnumerable<SBOUDTO> GetAllAccessibleOus(string apiKey)
+        public async Task<IEnumerable<SBOUDTO>> GetAllAccessibleOus(string apiKey)
         {
             return ouService.GetSmartboardAllOus(apiKey);
         }
@@ -341,7 +342,7 @@ namespace DataReef.TM.Api.Controllers
 
         // api/v1/ous/sbzapierOus?Address=&City=&State=&Country=&Zip=
         // api/v1/ous/sbzapierOus?Address=Rue du Cornet 6&City=VERVIERS&State=null&Country=Belgium&Zip=B-4800
-        public IHttpActionResult GetzapierOus(string Address, string City, string State, string Country, string Zip)
+        public async Task<IHttpActionResult> GetzapierOus(string Address, string City, string State, string Country, string Zip)
         {
             try
             {
@@ -376,7 +377,7 @@ namespace DataReef.TM.Api.Controllers
 
 
         // api/v1/ous/TerritoriesByOu?latitude=&longitude=&ouid=
-        public IHttpActionResult GetTerritoriesByOu(float? latitude, float? longitude, Guid ouid)
+        public async Task<IHttpActionResult> GetTerritoriesByOu(float? latitude, float? longitude, Guid ouid)
         {
             try
             {
@@ -437,52 +438,52 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        public override OU Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override async Task<OU> Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            return base.Get(guid, include, exclude, fields, deletedItems);
+            return await base.Get(guid, include, exclude, fields, deletedItems);
         }
 
-        public override ICollection<OU> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        public override async Task<ICollection<OU>> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
         {
-            return base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
+            return await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
         }
 
-        public override IEnumerable<OU> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override async Task<IEnumerable<OU>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            return base.GetMany(delimitedStringOfGuids, include, exclude, fields, deletedItems);
+            return await base.GetMany(delimitedStringOfGuids, include, exclude, fields, deletedItems);
         }
 
-        public override IHttpActionResult GetCollection(Guid guid, string collectionName, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override async Task<IHttpActionResult> GetCollection(Guid guid, string collectionName, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            return base.GetCollection(guid, collectionName, pageNumber, itemsPerPage, include, exclude, fields, deletedItems);
+            return await base.GetCollection(guid, collectionName, pageNumber, itemsPerPage, include, exclude, fields, deletedItems);
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
-            return base.DeleteByGuid(guid);
+            return await base.DeleteByGuid(guid);
         }
 
 
-        public override OU Post(OU item)
+        public override async Task<OU> Post(OU item)
         {
             CheckOUValidity(item);
 
-            return base.Post(item);
+            return await base.Post(item);
         }
 
-        public override OU Patch(System.Web.Http.OData.Delta<OU> item)
+        public override async Task<OU> Patch(System.Web.Http.OData.Delta<OU> item)
         {
             CheckOUValidity(item.GetEntity());
 
-            return base.Patch(item);
+            return await base.Patch(item);
         }
 
-        public override HttpResponseMessage Delete(OU item)
+        public override async Task<HttpResponseMessage> Delete(OU item)
         {
-            return base.Delete(item);
+            return await base.Delete(item);
         }
 
-        public override ICollection<OU> PostMany(List<OU> items)
+        public override async Task<ICollection<OU>> PostMany(List<OU> items)
         {
             if (items == null || !items.Any())
             {
@@ -491,14 +492,14 @@ namespace DataReef.TM.Api.Controllers
 
             items.ForEach(i => CheckOUValidity(i));
 
-            return base.PostMany(items);
+            return await base.PostMany(items);
         }
 
-        public override OU Put(OU item)
+        public override async Task<OU> Put(OU item)
         {
             CheckOUValidity(item);
 
-            return base.Put(item);
+            return await base.Put(item);
         }
     }
 }

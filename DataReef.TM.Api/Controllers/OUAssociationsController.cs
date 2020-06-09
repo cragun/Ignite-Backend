@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using WebApi.OutputCache.V2;
 
@@ -31,9 +32,9 @@ namespace DataReef.TM.Api.Controllers
             _ouService          = ouService;
         }
 
-        public override ICollection<OUAssociation> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        public override async Task<ICollection<OUAssociation>> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
         {
-            var results = base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
+            var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
             if (include.Contains("OU"))
             {
                 results = _ouService.PopulateAssociationsOUs(results);
@@ -52,7 +53,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("smart")]
-        public ICollection<OUAssociation> SmartList(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        public async Task<ICollection<OUAssociation>> SmartList(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
         {
             string filters = FilterStringFromQueryStrings(Request.GetQueryNameValuePairs());
 
@@ -70,46 +71,46 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             OUsControllerCacheInvalidation();
 
-            return base.DeleteByGuid(guid);
+            return await base.DeleteByGuid(guid);
         }
 
-        public override OUAssociation Post(OUAssociation item)
+        public override async Task<OUAssociation> Post(OUAssociation item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Post(item);
+            return await base.Post(item);
         }
 
-        public override OUAssociation Patch(System.Web.Http.OData.Delta<OUAssociation> item)
+        public override async Task<OUAssociation> Patch(System.Web.Http.OData.Delta<OUAssociation> item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Patch(item);
+            return await base.Patch(item);
         }
 
-        public override HttpResponseMessage Delete(OUAssociation item)
+        public override async Task<HttpResponseMessage> Delete(OUAssociation item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Delete(item);
+            return await base.Delete(item);
         }
 
-        public override ICollection<OUAssociation> PostMany(List<OUAssociation> items)
+        public override async Task<ICollection<OUAssociation>> PostMany(List<OUAssociation> items)
         {
             OUsControllerCacheInvalidation();
 
-            return base.PostMany(items);
+            return await base.PostMany(items);
         }
 
-        public override OUAssociation Put(OUAssociation item)
+        public override async Task<OUAssociation> Put(OUAssociation item)
         {
             OUsControllerCacheInvalidation();
 
-            return base.Put(item);
+            return await base.Put(item);
         }
 
         /// <summary>

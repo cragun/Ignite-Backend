@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -23,32 +24,32 @@ namespace DataReef.TM.Api.Controllers
             this.instantprescreenService = instantprescreenService;
         }
 
-        public override PrescreenInstant Patch(System.Web.Http.OData.Delta<PrescreenInstant> item)
+        public override async Task<PrescreenInstant> Patch(System.Web.Http.OData.Delta<PrescreenInstant> item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override ICollection<PrescreenInstant> PostMany(List<PrescreenInstant> items)
+        public override async Task<ICollection<PrescreenInstant>> PostMany(List<PrescreenInstant> items)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override HttpResponseMessage DeleteByGuid(Guid guid)
+        public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override HttpResponseMessage Delete(PrescreenInstant item)
+        public override async Task<HttpResponseMessage> Delete(PrescreenInstant item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });   
         }
 
-        public override PrescreenInstant Put(PrescreenInstant item)
+        public override async Task<PrescreenInstant> Put(PrescreenInstant item)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override PrescreenInstant Post(PrescreenInstant item)
+        public override async Task<PrescreenInstant> Post(PrescreenInstant item)
         {
             return instantprescreenService.Insert(item);         
         }
