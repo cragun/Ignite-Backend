@@ -33,6 +33,9 @@ namespace DataReef.TM.Contracts.Services
         Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request);
 
         [OperationContract]
+        void UploadDocument(Guid proposalId,DocumentSignRequest request);
+
+        [OperationContract]
         void UpdateProposalDataJSON(Guid proposalDataId, string proposalDataJSON);
 
         [OperationContract]
@@ -69,7 +72,11 @@ namespace DataReef.TM.Contracts.Services
         string GetAgreementForProposal(Guid proposalID);
 
         [OperationContract]
+        List<DocType> GetDocumentType();
+        
+        [OperationContract]
         Proposal SignAgreement(Guid proposalDataId, DocumentSignRequest request);
+
 
 
     }

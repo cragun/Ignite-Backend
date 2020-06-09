@@ -1148,16 +1148,34 @@ namespace DataReef.TM.Services
 
         public List<Guid> RemoveDeactivePeople(IEnumerable<Guid> uniqueIds)
         {
+            List<Guid> filterList = new List<Guid>();
             using (DataContext dc = new DataContext())
             {
-                var list = 
-                    dc.People.
-                    Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
-                    .Select(p=>p.Guid)
+                var people = dc
+                    .People
+                    .Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
+                    .Include(p=>p.OUAssociations)
                     .ToList();
 
-                return list;
+                var personIDs = people.Select(p => p.Guid).ToList();
+
+                foreach (var personId in personIDs)
+                {
+                    var roleType = OURoleType.None;
+                    var person = people.FirstOrDefault(p => p.Guid == personId);
+
+                    if (person != null)
+                    {
+                        person.OUAssociations.ToList().ForEach(ouAssociation => { roleType = roleType | ouAssociation.RoleType; });
+                    }
+                    if (roleType.Equals(OURoleType.Member) || roleType.Equals(OURoleType.PhotosManager) || roleType.Equals(OURoleType.FranchiseManager))
+                    {
+                        filterList.Add(person.Guid);
+                    }
+                 }
             }
+            return filterList;
+
         }
 
     }
