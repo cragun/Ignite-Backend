@@ -1088,14 +1088,6 @@ namespace DataReef.TM.Services
                 var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OUID == ouid).Select(y => y.PersonID);
                 var peoples = dc.People?.Include(p => p.AssignedAppointments).Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList();
 
-                //var territory = dc.Territories.Where(t => t.OUID == ouid).Select(t => t.Guid);
-                //var property = dc.Properties.Where(p => territory.Contains(p.TerritoryID)).Select(p => p.Guid);
-                //var appointment = dc.Appointments.Where(a => property.Contains(a.PropertyID) && a.GoogleEventID != null).Select(i => new { StartDate = i.StartDate, AssigneeID = i.AssigneeID, Guid = i.Guid }).ToList();
-                //var appointmentids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.Guid);
-                //var appointmentassignids = appointment.Where(x => x.StartDate.Date == date.Date).Select(a => a.AssigneeID);
-
-                //var peopleList = dc.People?.Include(p => p.AssignedAppointments).Where(x => appointmentassignids.Contains(x.Guid) && x.IsDeleted == false).ToList();
-
                 var result = new List<Person>();
                 foreach (var person in peoples)
                 {
