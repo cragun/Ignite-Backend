@@ -25,7 +25,7 @@ namespace DataReef.TM.Api
                 apilog.Id = Guid.NewGuid();
                 apilog.User = SmartPrincipal.UserId.ToString();
                 apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "ErrorTest";
+                apilog.RequestContentType = "ErrorRec";
                 apilog.RequestRouteTemplate = "";
                 apilog.RequestRouteData = "";
                 apilog.RequestIpAddress = context.Exception?.Message?.ToString();
