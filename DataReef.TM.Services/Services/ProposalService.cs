@@ -1157,15 +1157,20 @@ namespace DataReef.TM.Services.Services
         }
 
 
-    public void UploadDocument(Guid proposalId,DocumentSignRequest request)
+    public void UploadDocument(Guid propertyID, DocumentSignRequest request)
         {
 
-            //  UploadDataDocument(request.DocumentData);
+         //  UploadDataDocument(request.DocumentData);
             using (var dataContext = new DataContext())
             {
                 var data = dataContext
+                            .Proposal
+                            .FirstOrDefault(pd => pd.PropertyID == propertyID);
+                
+                var proposalData= dataContext
                             .ProposalData
-                            .FirstOrDefault(pd => pd.ProposalID == proposalId);
+                            .FirstOrDefault(pd => pd.ProposalID == data.Guid);
+
 
                 if (data == null)
                 {
@@ -1179,15 +1184,14 @@ namespace DataReef.TM.Services.Services
                                     .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
                                     .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
                                     .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
-                                    .Include(fp => fp.FinancePlanDefinition)
-                                    .FirstOrDefault(fp => fp.Guid == data.FinancePlanID);
+                                    .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
 
                 if (financePlan == null)
                 {
                     throw new ApplicationException("Could not find Proposal Data!");
                 }
 
-                var contractorID = request.ContractorID ?? data.ContractorID;
+                var contractorID = proposalData.ContractorID;
 
                 var proposal = financePlan.SolarSystem.Proposal;
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
@@ -1202,6 +1206,7 @@ namespace DataReef.TM.Services.Services
                     }
                     catch (Exception) { }
                 }
+                
 
                 var documentUrls = GetProposalURLs(contractorID, data.Guid, signedDocuments, ouSettings);
                 var planName = financePlan.Name;
@@ -1218,16 +1223,12 @@ namespace DataReef.TM.Services.Services
                 documentUrls?
                         .ForEach(d =>
                         {
-
-
                             d.ProviderName = FinanceProvider?.Name;
                             d.Apr = apr;
                             d.Year = year;
 
 
                             d.Description = $"{d.Name} [{planName.AsFileName()}]";
-                            d.ProposalDataID = proposalId;
-
                             var pdfContent = _utilServices.Value.GetPDF(d.Url);
 
                             d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",

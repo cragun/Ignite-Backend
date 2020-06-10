@@ -110,14 +110,13 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
-        [Route("{proposalId}/uploadDocument")]
+        [Route("{propertyID}/uploadDocument")]
         [HttpPost]
-        [ResponseType(typeof(Proposal))]
-        public async Task<IHttpActionResult> UploadDocument(Guid proposalId)
+        public async Task<IHttpActionResult> UploadDocument(Guid propertyID)
         {
             var request = await GetProposalRequest();
 
-            _proposalService.UploadDocument(proposalId, request);
+            _proposalService.UploadDocument(propertyID, request);
             return Ok();
         }
 
