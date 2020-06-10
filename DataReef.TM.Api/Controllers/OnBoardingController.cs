@@ -7,6 +7,7 @@ using DataReef.TM.Models.DataViews.OnBoarding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -30,7 +31,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("parsesheet")]
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult ImportData(SheetOptions options)
+        public async Task<IHttpActionResult> ImportData(SheetOptions options)
         {
             var processor = new SheetProcessor();
             var data = processor.Process(options);
@@ -40,7 +41,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("ous/create")]
-        public IHttpActionResult SaveOnboardingSettings(OnboardingOUDataView req)
+        public async Task<IHttpActionResult> SaveOnboardingSettings(OnboardingOUDataView req)
         {
             if (req == null)
             {
@@ -54,7 +55,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPatch]
         [Route("ous/edit/{ouid}")]
-        public IHttpActionResult EditOU([FromUri]Guid ouid, [FromBody] OnboardingOUDataView req)
+        public async Task<IHttpActionResult> EditOU([FromUri]Guid ouid, [FromBody] OnboardingOUDataView req)
         {
             if (req == null)
             {
@@ -68,7 +69,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPatch]
         [Route("ous/editsettings/{ouid}")]
-        public IHttpActionResult EditOUSettings([FromUri]Guid ouid, [FromBody] OnboardingOUSettingsDataView req)
+        public async Task<IHttpActionResult> EditOUSettings([FromUri]Guid ouid, [FromBody] OnboardingOUSettingsDataView req)
         {
             if (req == null)
             {
@@ -81,7 +82,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("lookup/{parentID?}")]
-        public IHttpActionResult GetOnboardingLookupData(Guid? parentID)
+        public async Task<IHttpActionResult> GetOnboardingLookupData(Guid? parentID)
         {
             return Ok(ouService.GetOnboardingLookupData(parentID));
         }

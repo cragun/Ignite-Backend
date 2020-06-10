@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
@@ -42,7 +43,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("user/{userID}")]
         [ResponseType(typeof(ICollection<PropertySurveyDTO>))]
         [HttpGet]
-        public IHttpActionResult GetAllForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20)
+        public async Task<IHttpActionResult> GetAllForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20)
         {
             var result = _propertySurveyService.GetPropertySurveysForUser(userID, pageIndex, itemsPerPage);
 
@@ -59,7 +60,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("user")]
         [ResponseType(typeof(ICollection<PropertySurveyDTO>))]
         [HttpGet]
-        public IHttpActionResult GetAllForCurrentUser(int pageIndex = 0, int itemsPerPage = 20)
+        public async Task<IHttpActionResult> GetAllForCurrentUser(int pageIndex = 0, int itemsPerPage = 20)
         {
             var result = _propertySurveyService.GetPropertySurveysForUser(SmartPrincipal.UserId, pageIndex, itemsPerPage);
 
@@ -73,7 +74,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("single/{propertySurveyID}")]
         [ResponseType(typeof(ICollection<PropertySurveyDTO>))]
         [HttpGet]
-        public IHttpActionResult GetSingle(Guid propertySurveyID)
+        public async Task<IHttpActionResult> GetSingle(Guid propertySurveyID)
         {
             var result = _propertySurveyService.GetPropertySurveyDTO(propertySurveyID);
 

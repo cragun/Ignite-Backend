@@ -9,6 +9,7 @@ using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -41,7 +42,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("mine/{date?}")]
         [ResponseType(typeof(ICollection<PersonKPI>))]
-        public IHttpActionResult GetMyKPIsForToday(DateTime? date = null)
+        public async Task<IHttpActionResult> GetMyKPIsForToday(DateTime? date = null)
         {
             DateTime computedDate = AdjustDateBasedOnClientOffsetOrNow(date);
 
@@ -57,7 +58,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("mine/screenshot/{date?}")]
-        public IHttpActionResult SaveScreenshot([FromBody]PersonKPIScreenshotRequest request, DateTime? date = null)
+        public async Task<IHttpActionResult> SaveScreenshot([FromBody]PersonKPIScreenshotRequest request, DateTime? date = null)
         {
             DateTime computedDate = AdjustDateBasedOnClientOffsetOrNow(date);
 
@@ -69,7 +70,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("mine/reset")]
         [ResponseType(typeof(ICollection<PersonKPI>))]
-        public IHttpActionResult ResetKPIs(DateTime? date = null)
+        public async Task<IHttpActionResult> ResetKPIs(DateTime? date = null)
         {
             var resetDate = date ?? DateTime.UtcNow;
             personKPIsService.ResetKPIs(resetDate);
@@ -82,7 +83,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [InjectAuthPrincipal]
         [AllowAnonymous]
-        public IHttpActionResult GenerateGoogleSheet(List<Guid> OUIDs)
+        public async Task<IHttpActionResult> GenerateGoogleSheet(List<Guid> OUIDs)
         {
             return Ok(new { });
         }

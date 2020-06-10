@@ -3,6 +3,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DTOs.Reports;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -23,7 +24,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<User>))]
         [Route("finduser/{userNamePart}")]
-        public IHttpActionResult FindUser(string userNamePart, string include = "", string exclude = "", string fields = "", bool deletedItems = true)
+        public async Task<IHttpActionResult> FindUser(string userNamePart, string include = "", string exclude = "", string fields = "", bool deletedItems = true)
         {
             var resultGuids = _adminService.FindUser(userNamePart);
             var results = _userService.GetMany(resultGuids, include, exclude, fields, deletedItems);
@@ -33,7 +34,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<AuthenticationSummary>))]
         [Route("reports/authentications")]
-        public IHttpActionResult GetAuthenticationsReport(DateTime? fromDate = null, DateTime? toDate = null)
+        public async Task<IHttpActionResult> GetAuthenticationsReport(DateTime? fromDate = null, DateTime? toDate = null)
         {
             if (!fromDate.HasValue) fromDate = DateTime.UtcNow.AddMonths(-1).Date;
             if (!toDate.HasValue) toDate = DateTime.UtcNow.Date;

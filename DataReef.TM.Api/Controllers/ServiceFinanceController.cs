@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models.DTOs.FinanceAdapters;
@@ -19,7 +20,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("submitapplication")]
         [HttpPost]
-        public HttpResponseMessage SubmitApplication([FromBody]SubmitApplicationRequest request)
+        public async Task<HttpResponseMessage> SubmitApplication([FromBody]SubmitApplicationRequest request)
         {
             if (request.DownPayment > request.TotalCost)
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Down payment greater than Total Cost");

@@ -1,6 +1,7 @@
 ﻿using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -17,7 +18,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("{financePlanID:guid}")]
         [HttpPost]
-        public IHttpActionResult SubmitSolarData(Guid financePlanID)
+        public async Task<IHttpActionResult> SubmitSolarData(Guid financePlanID)
         {
             var response = _solarSalesTrackerAdapterFactory().SubmitSolarData(financePlanID);
 
@@ -25,13 +26,13 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpPost, AllowAnonymous, Route("proposal/attach/echo")]
-        public SBProposalAttachRequest AttachProposalEcho(SBProposalAttachRequest req)
+        public async Task<SBProposalAttachRequest>  AttachProposalEcho(SBProposalAttachRequest req)
         {
             return req;
         }
 
         [HttpPost, AllowAnonymous, Route("lead/submit/echo")]
-        public SBLeadCreateRequest SubmitLeadEcho(SBLeadCreateRequest req)
+        public async Task<SBLeadCreateRequest>  SubmitLeadEcho(SBLeadCreateRequest req)
         {
             return req;
         }

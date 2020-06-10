@@ -5,6 +5,7 @@ using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -30,7 +31,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{financePlanId:guid}/calculate")]
         [HttpPost]
         [ResponseType(typeof(LoanResponse))]
-        public IHttpActionResult CalculateLoan(Guid financePlanId, LoanRequest request)
+        public async Task<IHttpActionResult> CalculateLoan(Guid financePlanId, LoanRequest request)
         {
             var data = financePlanDefinitionService.Get(financePlanId, "Details");
             LoanResponse response = null;
@@ -51,7 +52,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("compare")]
         [HttpPost]
         [ResponseType(typeof(List<FinanceEstimate>))]
-        public IHttpActionResult CompareFinanceOptions(FinanceEstimateComparisonRequest request)
+        public async Task<IHttpActionResult> CompareFinanceOptions(FinanceEstimateComparisonRequest request)
         {
             // load Plan Definitions data from database
             //var plans = financePlanDefinitionService
@@ -79,7 +80,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("mortgage/termsAndRates")]
         [HttpGet]
-        public IHttpActionResult GetMortgageMetaData()
+        public async Task<IHttpActionResult> GetMortgageMetaData()
         {
             return Ok(MortgageTermsAndRates.Select(t => new { Term = t.Key, Rate = t.Value }));
         }

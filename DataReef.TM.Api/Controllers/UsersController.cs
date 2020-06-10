@@ -7,6 +7,7 @@ using System;
 using System.Web.Http.Description;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -33,7 +34,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Territory>))]
         [Route("{userID:guid}/territories")]
-        public IHttpActionResult GetTerritories(Guid userID)
+        public async Task<IHttpActionResult> GetTerritories(Guid userID)
         {
 
             List<Territory> ret = new List<Territory>();
@@ -59,7 +60,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(Territory))]
         [Route("{userID:guid}/territories/{territoryID:guid}")]
-        public IHttpActionResult GetTerritoriesForUser(Guid userID,Guid territoryID)
+        public async Task<IHttpActionResult> GetTerritoriesForUser(Guid userID,Guid territoryID)
         {
 
             Territory ret = null;
@@ -86,7 +87,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(bool))]
         [Route("{userID:guid}/territories/access/{territoryID:guid}")]
-        public IHttpActionResult GetUserHasTerritoryAccess(Guid userID, Guid territoryID)
+        public async Task<IHttpActionResult> GetUserHasTerritoryAccess(Guid userID, Guid territoryID)
         {
             Person person               = personService.Get(userID, "Assignments.Territory, OUAssociations.OURole");
             Territory territory         = territoryService.Get(territoryID, "OU");
@@ -125,7 +126,7 @@ namespace DataReef.TM.Api.Controllers
 
         [System.Web.Http.HttpGet]
         [Route("")]
-        public User Get()
+        public async Task<User> Get()
         {
             var user = userDataService.Get(SmartPrincipal.UserId, "Person");
             if (user == null)

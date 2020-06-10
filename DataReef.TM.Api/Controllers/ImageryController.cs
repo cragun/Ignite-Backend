@@ -71,7 +71,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{propertyID:guid}/purchase")] // this will not work if the request is NOT authenticated
         [ResponseType(typeof(BlobModel))]
-        public IHttpActionResult PurchaseImage(Guid propertyID, float top = 0, float left = 0, float bottom = 0, float right = 0, string direction = "Down")
+        public async Task<IHttpActionResult> PurchaseImage(Guid propertyID, float top = 0, float left = 0, float bottom = 0, float right = 0, string direction = "Down")
         {
             try
             {
@@ -102,7 +102,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="lon"></param>
         [HttpGet]
         [Route("available")] // this will not work if the request is NOT authenticated
-        public IHttpActionResult GetAvailableOrientations(float lat, float lon)
+        public async Task<IHttpActionResult> GetAvailableOrientations(float lat, float lon)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("migrate")]
-        public IHttpActionResult MigrateHiResImagesToGeo()
+        public async Task<IHttpActionResult> MigrateHiResImagesToGeo()
         {
             _imageryService.MigrateHiResImages();
             return Ok();

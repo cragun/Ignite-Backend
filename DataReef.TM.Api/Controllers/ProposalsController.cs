@@ -158,7 +158,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{proposalID:guid}/media/all")]
         [ResponseType(typeof(List<ProposalMediaItem>))]
         [HttpGet]
-        public IHttpActionResult GetAllMediaItems(Guid proposalID)
+        public async Task<IHttpActionResult> GetAllMediaItems(Guid proposalID)
         {
             return Ok(_proposalService.GetProposalMediaItems(proposalID));
         }
@@ -166,7 +166,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{proposalID:guid}/media/shareablelinks")]
         [ResponseType(typeof(List<KeyValue>))]
         [HttpGet]
-        public IHttpActionResult GetMediaItemsAsShareableLinks(Guid proposalID)
+        public async Task<IHttpActionResult> GetMediaItemsAsShareableLinks(Guid proposalID)
         {
             return Ok(_proposalService.GetProposalMediaItemsAsShareableLinks(proposalID));
         }
@@ -175,7 +175,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("media/{proposalMediaId:guid}/{thumb}")]
         [ResponseType(typeof(byte[]))]
         [HttpGet]
-        public HttpResponseMessage GetMediaItem(Guid proposalMediaID, bool thumb = false)
+        public async Task<HttpResponseMessage> GetMediaItem(Guid proposalMediaID, bool thumb = false)
         {
             var blob = _proposalService.GetProposalMediaItemContent(proposalMediaID, thumb);
             var ms = new MemoryStream(blob.Content);
@@ -250,7 +250,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("survey/{personID}/{propertyID}")]
         [HttpGet]
-        public IHttpActionResult GetSurvey(Guid personID, Guid propertyID)
+        public async Task<IHttpActionResult> GetSurvey(Guid personID, Guid propertyID)
         {
             var result = _personService.Value.GetUserSurvey(personID, propertyID);
             return Ok(new GenericResponse<string> { Response = result });
@@ -260,7 +260,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("survey/{personID}/{propertyID}")]
         [HttpPost]
-        public IHttpActionResult SaveSurvey(Guid personID, Guid propertyID, [FromBody] GenericRequest<string> request)
+        public async Task<IHttpActionResult> SaveSurvey(Guid personID, Guid propertyID, [FromBody] GenericRequest<string> request)
         {
             var result = _personService.Value.SavePropertySurvey(personID, propertyID, request?.Request);
             return Ok(new GenericResponse<string> { Response = result });
@@ -270,7 +270,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("EmailSummarytoCustomer/{ProposalID}")]
         [HttpPost]
-        public IHttpActionResult SendEmailSummarytoCust(Guid ProposalID, [FromBody] GenericRequest<string> request)
+        public async Task<IHttpActionResult> SendEmailSummarytoCust(Guid ProposalID, [FromBody] GenericRequest<string> request)
         {
 
             //var result = peopleService.SaveUserSurvey(SmartPrincipal.UserId, request?.Request);

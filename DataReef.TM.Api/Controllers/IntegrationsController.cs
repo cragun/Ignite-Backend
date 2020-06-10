@@ -749,7 +749,7 @@ namespace DataReef.TM.Api.Controllers
             var response = provider.HardCreditCheck(SpruceQuoteMapper.MapRequestToDTO(request), ConfigurationKeys.SpruceUsername, ConfigurationKeys.SprucePassword);
             if (!String.IsNullOrWhiteSpace(provider.ErrorMessage))
             {
-                return GetErrors(provider.ErrorMessage);
+                return await GetErrors(provider.ErrorMessage);
             }
             request.QuoteResponse = SpruceQuoteMapper.MapDTOToResponse(response, request.Guid);
 
@@ -802,7 +802,7 @@ namespace DataReef.TM.Api.Controllers
             provider.GenerateDocuments(request, ConfigurationKeys.SpruceUsername, ConfigurationKeys.SprucePassword);
             if (!string.IsNullOrWhiteSpace(provider.ErrorMessage))
             {
-                return GetErrors(provider.ErrorMessage);
+                return await GetErrors(provider.ErrorMessage);
             }
 
             return Ok(new { });

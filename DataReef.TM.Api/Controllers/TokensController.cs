@@ -10,6 +10,7 @@ using DataReef.TM.Contracts.Services;
 using DataReef.TM.Contracts.DataViews.Ledgers;
 using DataReef.Core.Infrastructure.Authorization;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.API.Controllers
 {
@@ -26,7 +27,7 @@ namespace DataReef.TM.API.Controllers
 
         [Route("")]
         [HttpGet]
-        public IHttpActionResult Get()
+        public async Task<IHttpActionResult> Get()
         {
             Guid userID = SmartPrincipal.UserId;
             LedgerDataView ret = this.tokensProvider.GetLedgerDataViewForPerson(userID);
@@ -35,7 +36,7 @@ namespace DataReef.TM.API.Controllers
 
         [Route("forPerson/{personId:guid}")]
         [HttpGet]
-        public IHttpActionResult GetForPerson(Guid personId)
+        public async Task<IHttpActionResult> GetForPerson(Guid personId)
         {
             LedgerDataView ret = this.tokensProvider.GetLedgerDataViewForPerson(personId);
             return Ok<LedgerDataView>(ret);
@@ -43,7 +44,7 @@ namespace DataReef.TM.API.Controllers
 
         [Route("transfer")]
         [HttpPost]
-        public IHttpActionResult Transfer(TransferDataCommand transfer)
+        public async Task<IHttpActionResult> Transfer(TransferDataCommand transfer)
         {
             this.tokensProvider.PerformTransfers(new List<TransferDataCommand>() { transfer });
             return Ok();

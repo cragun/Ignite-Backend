@@ -16,6 +16,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
 using DataReef.Auth.Helpers;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -43,7 +44,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("property/{propertyID}")]
         [ResponseType(typeof(IEnumerable<PropertyNote>))]
         [HttpGet]
-        public IHttpActionResult GetAllForProperty(Guid propertyID)
+        public async Task<IHttpActionResult> GetAllForProperty(Guid propertyID)
         {
             var result = _propertyNoteService.GetNotesByPropertyID(propertyID);
 
@@ -59,7 +60,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("property/{propertyID}/users/query")]
         [ResponseType(typeof(IEnumerable<PropertyNote>))]
         [HttpPost]
-        public IHttpActionResult QueryUsersForProperty(Guid propertyID, [FromBody]PropertyNoteUserQueryRequest request)
+        public async Task<IHttpActionResult> QueryUsersForProperty(Guid propertyID, [FromBody]PropertyNoteUserQueryRequest request)
         {
             var result = _propertyNoteService.QueryForPerson(propertyID, request?.Email, request?.Name);
 
@@ -77,7 +78,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(ICollection<SBNoteDTO>))]
         [HttpGet]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult GetAllForSmartboard(long leadId, string apiKey, long? igniteId)
+        public async Task<IHttpActionResult> GetAllForSmartboard(long leadId, string apiKey, long? igniteId)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);
@@ -106,7 +107,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(ICollection<SBNoteDTO>))]
         [HttpGet]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult GetApikey(long leadId, string apiKey, long igniteId)
+        public async Task<IHttpActionResult> GetApikey(long leadId, string apiKey, long igniteId)
         {
 
             string apikey = _propertyNoteService.getApiKey(leadId, igniteId, apiKey);
@@ -134,7 +135,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(SBNoteDTO))]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult CreateNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
+        public async Task<IHttpActionResult> CreateNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
         {
 
             
@@ -166,7 +167,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("EncryptApikey/{originalapikey}")]
         [HttpGet]
-        public IHttpActionResult CheckEncryptDecryptApikey(string originalapikey)
+        public async Task<IHttpActionResult> CheckEncryptDecryptApikey(string originalapikey)
         {
             string EncryptApiKey = CryptographyHelper.getEncryptAPIKey(originalapikey);
             
@@ -197,7 +198,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(SBNoteDTO))]
         [HttpPatch]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult EditNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
+        public async Task<IHttpActionResult> EditNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);
@@ -219,7 +220,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("sb/{leadId}/{userID}/{apiKey}")]
         [HttpDelete]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult DeleteNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
+        public async Task<IHttpActionResult> DeleteNoteFromSmartboard(Guid noteId, string userID, string apiKey, string email)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);
@@ -240,7 +241,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("sb/aboutNoteCreated")]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult DataAboutNotesCreated([FromBody]NoteCreateDTO request,DateTime fromDate,DateTime toDate)
+        public async Task<IHttpActionResult> DataAboutNotesCreated([FromBody]NoteCreateDTO request,DateTime fromDate,DateTime toDate)
         {
             
             var result = _propertyNoteService.NotesCreate(request,fromDate,toDate);
@@ -257,7 +258,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("sb/Territories/{leadId}/{apiKey}")]
         [HttpGet]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult CheckCanTransferLead(long leadId, string apiKey)
+        public async Task<IHttpActionResult> CheckCanTransferLead(long leadId, string apiKey)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);
@@ -278,7 +279,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("sb/Transfer/{apiKey}")]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult UpdateTerritoryIdInProperty([FromBody]SBNoteDTO request , string apiKey)
+        public async Task<IHttpActionResult> UpdateTerritoryIdInProperty([FromBody]SBNoteDTO request , string apiKey)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);

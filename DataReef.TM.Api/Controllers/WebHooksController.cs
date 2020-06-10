@@ -48,7 +48,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("territoryworkflowcompleted/{prescreenBatchId}")]
         [HttpPost]
-        public IHttpActionResult TerritoryWorkflowCompleted([FromBody] dynamic body, Guid prescreenBatchId)
+        public async Task<IHttpActionResult> TerritoryWorkflowCompleted([FromBody] dynamic body, Guid prescreenBatchId)
         {
             string json = Convert.ToString(body);
             var jo = JObject.Parse(json);
@@ -75,7 +75,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("propertyworkflowcompleted/{prescreenInstantId}")]
         [HttpPost]
-        public IHttpActionResult PropertyWorkflowCompleted([FromBody]dynamic body, [FromUri]Guid prescreenInstantId)
+        public async Task<IHttpActionResult> PropertyWorkflowCompleted([FromBody]dynamic body, [FromUri]Guid prescreenInstantId)
         {
             string json = Convert.ToString(body);
             var jo = JObject.Parse(json);
@@ -106,7 +106,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("orderworkflowcompleted")]
         [HttpPost]
-        public IHttpActionResult OrderWorkflowCompleted([FromBody] dynamic body)
+        public async Task<IHttpActionResult> OrderWorkflowCompleted([FromBody] dynamic body)
         {
 
             Task.Factory.StartNew(() =>

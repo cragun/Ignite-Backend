@@ -166,7 +166,7 @@ namespace DataReef.TM.Services.Services
 
                         if (sbSettings?.ApiKey != apiKey)
                         {
-                            throw new Exception("ApiKey is not found");
+                            throw new Exception("Please send Valid Apikey base on LeadId.");
                         }
 
 

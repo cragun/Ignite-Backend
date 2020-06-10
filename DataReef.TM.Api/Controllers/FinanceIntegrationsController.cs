@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -23,7 +24,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("loanpal/submitapplication")]
         [ResponseType(typeof(LoanPalApplicationResponse))]
         [HttpPost]
-        public HttpResponseMessage SubmitLoanPalApplication([FromBody]LoanPalApplicationRequest request)
+        public async Task<HttpResponseMessage> SubmitLoanPalApplication([FromBody]LoanPalApplicationRequest request)
         {
             if (!ModelState.IsValid)
                 return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState.Select(m => m.Value.Errors.Select(e => e.ErrorMessage)));

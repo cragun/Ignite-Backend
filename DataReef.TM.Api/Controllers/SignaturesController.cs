@@ -3,6 +3,7 @@ using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models.DTOs.Signatures;
 using System.Net.Http;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -24,14 +25,14 @@ namespace DataReef.TM.Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("completed")]
-        public IHttpActionResult SignCompleted()
+        public async Task<IHttpActionResult> SignCompleted()
         {
             return Ok(new { });
         }
 
         [HttpPost]
         [Route("emailreminder")]
-        public IHttpActionResult SendEmailReminder(string contractID)
+        public async Task<IHttpActionResult> SendEmailReminder(string contractID)
         {
             _signatureService.SendEmailReminder(contractID);
             return Ok(new { });
@@ -40,7 +41,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("RightSignatureContractCallback")]
         [AllowAnonymous]
-        public IHttpActionResult RightSignatureLoanContractCallback(HttpRequestMessage request)
+        public async Task<IHttpActionResult> RightSignatureLoanContractCallback(HttpRequestMessage request)
         {
             var xmlSerializer = new DataContractSerializer(typeof(Callback));
             using (var stream = request.Content.ReadAsStreamAsync().Result)

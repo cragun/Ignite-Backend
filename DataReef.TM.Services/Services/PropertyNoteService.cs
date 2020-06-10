@@ -682,7 +682,7 @@ namespace DataReef.TM.Services.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                    throw new Exception("No lead found with the specified ID");
+                    throw new Exception("Please send Valid Apikey base on LeadId.");
                 }
 
                 return property;

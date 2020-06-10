@@ -278,7 +278,7 @@ namespace DataReef.TM.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                    throw new Exception("No lead found with the specified ID");
+                    throw new Exception("Please send Valid Apikey base on LeadId.");
                 }
 
 
@@ -324,7 +324,7 @@ namespace DataReef.TM.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                    throw new Exception("You don't have permissions to update this appointment");
+                    throw new Exception("Please send Valid Apikey base on LeadId.");
                 }
 
                 SetAppointmentStatus(request.AppointmentID, request.Status);
@@ -358,7 +358,7 @@ namespace DataReef.TM.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                    throw new Exception("ApiKey invalid");
+                    throw new Exception("Please send Valid Apikey base on LeadId.");
                 }
 
                 appointment.IsDeleted = true;
@@ -472,7 +472,7 @@ namespace DataReef.TM.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                    throw new Exception("ApiKey invalid");
+                    throw new Exception("Please send Valid Apikey base on LeadId.");
                 }
             }
 

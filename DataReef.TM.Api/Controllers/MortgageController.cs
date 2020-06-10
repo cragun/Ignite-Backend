@@ -9,6 +9,7 @@ using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models.DTOs.Mortgage;
 using Newtonsoft.Json;
 using DataReef.TM.Api.Classes.Requests;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -25,7 +26,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{propertyId:guid}")]
         [ResponseType(typeof(MortgageSource))]
-        public IHttpActionResult GetMortgageDetails(Guid propertyId)
+        public async Task<IHttpActionResult> GetMortgageDetails(Guid propertyId)
         {
             if (propertyId == Guid.Empty)
                 return Content(HttpStatusCode.PreconditionFailed, nameof(propertyId));
@@ -50,7 +51,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(ICollection<MortgageSource>))]
-        public IHttpActionResult GetMortgageDetails([FromBody] MortgageRequest request)
+        public async Task<IHttpActionResult> GetMortgageDetails([FromBody] MortgageRequest request)
         {
             if (request == null)
                 return Content(HttpStatusCode.PreconditionFailed, nameof(request));

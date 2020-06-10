@@ -1,6 +1,7 @@
 ﻿using DataReef.Core.Infrastructure.Authorization;
 using DataReef.TM.Contracts.Services;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -25,7 +26,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [InjectAuthPrincipal]
-        public IHttpActionResult UpdateEquipment()
+        public async Task<IHttpActionResult> UpdateEquipment()
         {
             _ouSettingService.Value.UpdateEquipment();
             return Ok();
@@ -36,7 +37,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [InjectAuthPrincipal]
-        public IHttpActionResult UpdateSBSettings()
+        public async Task<IHttpActionResult> UpdateSBSettings()
         {
             _ouSettingService.Value.UpdateSBSettings();
             return Ok();
@@ -46,7 +47,7 @@ namespace DataReef.TM.Api.Controllers
         //[HttpGet]
         //[AllowAnonymous]
         //[InjectAuthPrincipal]
-        //public IHttpActionResult GetSB(Guid proposalDataID)
+        //public async Task<IHttpActionResult> GetSB(Guid proposalDataID)
         //{
         //    var data = _sstAdapter.Value.BuildProposalDataModel(proposalDataID);
         //    return Ok(data);

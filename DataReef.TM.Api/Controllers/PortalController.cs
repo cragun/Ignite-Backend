@@ -21,6 +21,7 @@ using DataReef.TM.Models.DTOs.Common;
 using OfficeOpenXml;
 using System.Reflection;
 using System.Configuration;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -40,7 +41,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("orders/{pageIndex?}/{pageSize?}/{sortColummn?}/{sortOrder?}")]
         [ResponseType(typeof(PaginatedResult<Order>))]
         [HttpGet]
-        public IHttpActionResult GetOrders(int pageIndex = 0, int pageSize = 20, string sortColumn = "DateCreated", int sortOrder = 1)
+        public async Task<IHttpActionResult> GetOrders(int pageIndex = 0, int pageSize = 20, string sortColumn = "DateCreated", int sortOrder = 1)
         {
             return Ok(_service.GetOrders(SmartPrincipal.UserId, pageIndex, pageSize, sortColumn, sortOrder));
         }
@@ -49,7 +50,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("tokens/balance")]
         [ResponseType(typeof(double))]
         [HttpGet]
-        public IHttpActionResult GetTokensBalance()
+        public async Task<IHttpActionResult> GetTokensBalance()
         {
             return Ok(_service.GetTokensBalance(SmartPrincipal.UserId));
         }
@@ -57,7 +58,7 @@ namespace DataReef.TM.Api.Controllers
         // Potential Results - Mapful + max cost
         [Route("leads/count/potential")]
         [HttpPost]
-        public IHttpActionResult CountPotentialLeads(CreateLeadsDto request)
+        public async Task<IHttpActionResult> CountPotentialLeads(CreateLeadsDto request)
         {
             var potentialLeadsCount = _service.CountPotentialLeads(request);
 
@@ -70,7 +71,7 @@ namespace DataReef.TM.Api.Controllers
         // Create order - new leads        
         [Route("orders/create")]
         [HttpPost]
-        public IHttpActionResult CreateOrder(CreateLeadsDto request)
+        public async Task<IHttpActionResult> CreateOrder(CreateLeadsDto request)
         {
             if (string.IsNullOrWhiteSpace(request.ZipCode))
             {
@@ -96,7 +97,7 @@ namespace DataReef.TM.Api.Controllers
         // Create order - Upload CSV
         [Route("orders/create/upload")]
         [HttpPost]
-        public IHttpActionResult UploadCSV()
+        public async Task<IHttpActionResult> UploadCSV()
         {
             var httpRequest = HttpContext.Current?.Request;
             if (httpRequest?.Files?.Count != 1)
@@ -237,7 +238,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("orders/details/{orderID}/{pageIndex?}/{pageSize?}/{sortColummn?}/{sortOrder?}")]
         [ResponseType(typeof(PaginatedResult<LeadOrderDetailDto>))]
         [HttpGet]
-        public IHttpActionResult GetOrderDetails(string orderID, int pageIndex = 0, int pageSize = 20, string sortColumn = "DateCreated", int sortOrder = 1)
+        public async Task<IHttpActionResult> GetOrderDetails(string orderID, int pageIndex = 0, int pageSize = 20, string sortColumn = "DateCreated", int sortOrder = 1)
         {
             var orderDetails = _service.GetOrderDetails(new Guid(orderID), SmartPrincipal.UserId, pageIndex, pageSize, sortColumn, sortOrder);
 
@@ -261,7 +262,7 @@ namespace DataReef.TM.Api.Controllers
         // download order CSV
         [Route("orders/{orderID}/csv")]
         [HttpGet]
-        public IHttpActionResult GetOrderDetailsCSV(Guid orderID)
+        public async Task<IHttpActionResult> GetOrderDetailsCSV(Guid orderID)
         {
             var data = _service.GetOrderDetails(orderID, SmartPrincipal.UserId, 0, 100000);
 
@@ -288,7 +289,7 @@ namespace DataReef.TM.Api.Controllers
             return ResponseMessage(result);
         }
 
-        private List<LeadOrderDetail> ConvertOrderDetailsToDataViews(List<OrderDetail> orderDetails)
+        private async Task<List<LeadOrderDetail>> ConvertOrderDetailsToDataViews(List<OrderDetail> orderDetails)
         {
             var leadOrderDetails = new List<LeadOrderDetail>();
             orderDetails.ForEach(od =>
