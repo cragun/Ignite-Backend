@@ -160,13 +160,13 @@ namespace DataReef.TM.Services
                         (x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase) 
                             || x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase)));
 
-                var creator = people.FirstOrDefault(x => x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase));
+                var creator = dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase));
                 
                 if (creator == null)
                 {
                     throw new Exception("No account linked to the specified CreatedByID");
                 }
-                var assignee = people.FirstOrDefault(x => x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase));
+                var assignee =dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase));
                 
                 if (assignee == null)
                 {
