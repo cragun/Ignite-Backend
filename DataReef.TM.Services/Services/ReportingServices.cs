@@ -140,27 +140,21 @@ namespace DataReef.TM.Services
 
             var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct().ToList();
-            var DeactivepeopleIds = _personService.Value.GetMany(peopleIds).Where(p => p.IsDeleted == true).Select(i => i.Guid).Distinct().ToList();
+
+            var peopleIdsWithOuAss = _personService.Value.GetMany(peopleIds, "OUAssociations", "", "", true).Where(p => !repExclusionList.Contains(p.Guid)).ToList();
+
+           // var DeactivepeopleIds = peopleIdsWithOuAss.Select(i => i.Guid).Distinct().ToList();
             
-            var people = _personService.Value.GetMany(peopleIds, "OUAssociations").Where(p => !repExclusionList.Contains(p.Guid));
+            var people = peopleIdsWithOuAss.Where(x => x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).ToList();
 
             foreach (var personId in peopleIds)
-            {
-               
-                var person = people.SingleOrDefault(p => p.Guid == personId);
-
-                var roleType = OURoleType.None;
-                if (person != null)
-                {
-                    person.OUAssociations.ToList().ForEach(ouAssociation => { roleType = roleType | ouAssociation.RoleType; });
-                }
-                if (roleType.Equals(OURoleType.Member) || roleType.Equals(OURoleType.PhotosManager) || roleType.Equals(OURoleType.FranchiseManager))
-                {
-
+            {               
+                var person = peopleIdsWithOuAss.Where(x => x.Guid == personId && x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).FirstOrDefault();
+                
                     var reportRow = NormalizeSalesRepresentativeReportRow(
                         personId,
                         person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???",
-                        DeactivepeopleIds.Contains(personId) ? true : false,
+                        person != null ? person.IsDeleted : false,
                         inquiryStatistics.Where(i => i.PersonId == personId).ToList(),
                         reportSettings,
                         proptype);
@@ -169,7 +163,6 @@ namespace DataReef.TM.Services
                     {
                         results.Add(reportRow);
                     }
-                }
                 
             }
             return results;

@@ -351,32 +351,12 @@ namespace DataReef.TM.Api.Controllers
 
         public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            if(!string.IsNullOrEmpty(delimitedStringOfGuids))
-            {
-                var stringUniqueIds = delimitedStringOfGuids.Split(',', '|');
-                var uniqueIds = new List<Guid>();
-
-                foreach (var uniqueIdString in stringUniqueIds)
-                {
-                    try
-                    {
-                        uniqueIds.Add(Guid.Parse(uniqueIdString));
-                    }
-                    catch
-                    {
-                        //ingore
-                    }
-                }
-
-                List<Guid> person = peopleService.RemoveDeactivePeople(uniqueIds);
-
-                string IDs = string.Join(",", person);
-
-                return await base.GetMany(IDs, include, exclude, fields, deletedItems);
-            }
-
-            return await base.GetMany(delimitedStringOfGuids, include, exclude, fields, deletedItems);
-
+            include = include + ",OUAssociations";
+            var personuser =  await base.GetMany(delimitedStringOfGuids, include, exclude, fields, true);
+            var list = personuser.Where(x => x.IsDeleted == false).ToList();
+             list = list.Where(x => x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).ToList();
+            list = list.Where(x => x.AssignedAppointments.Count > 0).ToList();
+            return list;
         }
 
         public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)

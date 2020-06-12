@@ -15,7 +15,7 @@ namespace DataReef.TM.Models.Enums
         Owner = 1 << 0,
 
         [EnumMember]
-        Admin = 1 << 1,
+        Manager = 1 << 1,
 
         [EnumMember]
         Member = 1 << 2,

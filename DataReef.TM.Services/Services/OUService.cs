@@ -1211,7 +1211,7 @@ namespace DataReef.TM.Services.Services
                     if (childrenGuids?.Any(x => x == ouID) == true)
                     {
                         found = true;
-                        if (ua.OURole.RoleType == OURoleType.Admin || ua.OURole.RoleType == OURoleType.SuperAdmin || ua.OURole.RoleType == OURoleType.Owner)
+                        if (ua.OURole.RoleType == OURoleType.Manager || ua.OURole.RoleType == OURoleType.SuperAdmin || ua.OURole.RoleType == OURoleType.Owner)
                         {
                             canViewAll = true;
                         }

@@ -1135,7 +1135,7 @@ namespace DataReef.TM.Services
         {
             using (DataContext dc = new DataContext())
             {
-                var OUAssociation = dc.OUAssociations?.Include(p => p.OU).Include(p => p.OURole).Where(x => x.PersonID == personid).ToList();
+                var OUAssociation = dc.OUAssociations?.Include(p => p.OU).Include(p => p.OURole).Where(x => x.PersonID == personid && x.IsDeleted == false).ToList();
                 var OUAss = OUAssociation?.Select(x => new PersonOffboard
                 {
                     AssociateOuName = x.OU?.Name,
@@ -1145,38 +1145,5 @@ namespace DataReef.TM.Services
                 return OUAss;
             }
         }
-
-        public List<Guid> RemoveDeactivePeople(IEnumerable<Guid> uniqueIds)
-        {
-            List<Guid> filterList = new List<Guid>();
-            using (DataContext dc = new DataContext())
-            {
-                var people = dc
-                    .People
-                    .Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
-                    .Include(p=>p.OUAssociations)
-                    .ToList();
-
-                var personIDs = people.Select(p => p.Guid).ToList();
-
-                foreach (var personId in personIDs)
-                {
-                    var roleType = OURoleType.None;
-                    var person = people.FirstOrDefault(p => p.Guid == personId);
-
-                    if (person != null)
-                    {
-                        person.OUAssociations.ToList().ForEach(ouAssociation => { roleType = roleType | ouAssociation.RoleType; });
-                    }
-                    if (roleType.Equals(OURoleType.Member) || roleType.Equals(OURoleType.PhotosManager) || roleType.Equals(OURoleType.FranchiseManager))
-                    {
-                        filterList.Add(person.Guid);
-                    }
-                 }
-            }
-            return filterList;
-
-        }
-
     }
 }
