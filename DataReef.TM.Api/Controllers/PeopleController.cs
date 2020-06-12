@@ -355,7 +355,7 @@ namespace DataReef.TM.Api.Controllers
             var personuser =  await base.GetMany(delimitedStringOfGuids, include, exclude, fields, true);
             var list = personuser.Where(x => x.IsDeleted == false).ToList();
              list = list.Where(x => x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).ToList();
-            list = list.Where(x => x.AssignedAppointments.Count > 0).ToList();
+          //  list = list.Where(x => x.AssignedAppointments.Count > 0).ToList();
             return list;
         }
 
