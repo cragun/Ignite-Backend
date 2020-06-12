@@ -19,7 +19,7 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
         public string CreatedByID { get; set; }
 
         [DataMember]
-        public string AssignedToID { get; set; }
+        public int AssignedToID { get; set; }
 
         [DataMember]
         public string AppointmentDescription { get; set; }
