@@ -158,7 +158,7 @@ namespace DataReef.TM.Services
                     .Where(x => 
                         !x.IsDeleted && 
                         (x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase) 
-                            || x.Id.Equals(request.AssignedToID)));
+                            || x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase)));
 
                 var creator = dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase));
                 
@@ -166,7 +166,7 @@ namespace DataReef.TM.Services
                 {
                     throw new Exception("No account linked to the specified CreatedByID");
                 }
-                var assignee =dc.People.FirstOrDefault(x => x.Id.Equals(request.AssignedToID));
+                var assignee =dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase));
                 
                 if (assignee == null)
                 {
