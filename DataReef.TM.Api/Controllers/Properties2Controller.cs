@@ -267,7 +267,7 @@ namespace DataReef.TM.Api.Controllers
         public SBPropertyDTO CreateNewPropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
         {
 
-           // bool checkTime = CryptographyHelper.checkTime(apiKey);
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
             return _propertyServiceFactory().CreatePropertyFromSmartBoard(request, DecyptApiKey);
