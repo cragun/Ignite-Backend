@@ -1170,5 +1170,17 @@ namespace DataReef.TM.Services
 
         }
 
+        public IEnumerable<Person> CalendarPageAppointMentsByOuid(Guid ouid)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted && !oua.Person.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
+
+                var people = dc.People.Include(y => y.AssignedAppointments).Include(y => y.PhoneNumbers).Include(y => y.PersonSettings).Where(peo => OUAssociationIds.Contains(peo.Guid)).ToList();
+
+                return people;
+            }
+        }
+
     }
 }
