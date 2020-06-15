@@ -61,11 +61,11 @@ namespace DataReef.TM.Services.Services
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IDeviceService> deviceService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            Lazy<ISunlightAdapter> sunlightAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
-            Lazy<IAppointmentService> appointmentService,
-            Lazy<ISunlightAdapter> sunlightAdapter,
+            Lazy<IAppointmentService> appointmentService,            
             Lazy<IInquiryService> inquiryService)
             : base(logger, unitOfWorkFactory)
         {
@@ -73,12 +73,12 @@ namespace DataReef.TM.Services.Services
             _geographyBridgeFactory = geographyBridgeFactory;
             _deviceService = deviceService;
             _sbAdapter = sbAdapter;
+            _sunlightAdapter = sunlightAdapter;
             _ouService = ouService;
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
             _appointmentService = appointmentService;
-            _inquiryService = inquiryService;
-            _sunlightAdapter = sunlightAdapter;
+            _inquiryService = inquiryService;            
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
