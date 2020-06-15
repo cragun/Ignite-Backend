@@ -16,5 +16,8 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
 
         [OperationContract]
         string GetSunlightToken();
+
+        [OperationContract]
+        string GetState(string shortState, string type);
     }
 }

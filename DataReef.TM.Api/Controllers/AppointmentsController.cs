@@ -103,7 +103,7 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public SBAppointmentDTO CreateNewAppointmentFromSmartBoard(SBCreateAppointmentRequest request, string apiKey)
         {
-            bool checkTime = CryptographyHelper.checkTime(apiKey);
+           // bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
             return _appointmentService.InsertNewAppointment(request, DecyptApiKey);

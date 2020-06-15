@@ -6,6 +6,7 @@ using DataReef.Core.Logging;
 using DataReef.Integrations;
 using DataReef.Integrations.Common.Geo;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.Contracts.Services.FinanceAdapters;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
@@ -51,8 +52,9 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
-
-
+        private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
+    
+        
         public PropertyService(ILogger logger,
             IGeoProvider geoProvider,
             Func<IGeographyBridge> geographyBridgeFactory,
@@ -63,6 +65,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
             Lazy<IAppointmentService> appointmentService,
+            Lazy<ISunlightAdapter> sunlightAdapter,
             Lazy<IInquiryService> inquiryService)
             : base(logger, unitOfWorkFactory)
         {
@@ -75,6 +78,7 @@ namespace DataReef.TM.Services.Services
             _territoryService = territoryService;
             _appointmentService = appointmentService;
             _inquiryService = inquiryService;
+            _sunlightAdapter = sunlightAdapter;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -865,7 +869,7 @@ namespace DataReef.TM.Services.Services
                     Address1 = request.AddressLine1,
                     Address2 = request.AddressLine2,
                     City = request.City,
-                    State = request.State,
+                    State =  _sunlightAdapter.Value.GetState(request.State, "fullState"),
                     ZipCode = request.ZipCode,
                     Latitude = request.Latitude,
                     Longitude = request.Longitude,

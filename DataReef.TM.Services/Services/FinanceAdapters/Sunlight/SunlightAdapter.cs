@@ -48,8 +48,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         }
 
 
-        public string GetfullState(string shortState)
+        public string GetState(string shortState,string type)
         {
+            string stateName="";
+
             var list = new List<KeyValuePair<string, string>>();
             list.Add(new KeyValuePair<string, string>("AL", "Alabama"));
             list.Add(new KeyValuePair<string, string>("AK", "Alaska"));
@@ -102,10 +104,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             list.Add(new KeyValuePair<string, string>("WI", "Wisconsin"));
             list.Add(new KeyValuePair<string, string>("WY", "Wyoming"));
 
+            
 
-            string fullState = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
-
-            return fullState;
+            if (type.Equals("shortState"))
+            {
+                 stateName = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
+            }else if (type.Equals("fullState"))
+            {
+                 stateName = list.Where(x => x.Value.ToLower() == shortState.ToLower()).FirstOrDefault().Key;
+            }
+            
+            return stateName;
         }
 
         public string GetSunlightToken()
@@ -152,7 +161,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             try
             {
 
-                state = GetfullState(state);
+                state = GetState(state, "shortState");
 
                 SunlightProjects req = new SunlightProjects();
                 Projects project = new Projects();
@@ -207,7 +216,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             try
             {
 
-                state = GetfullState(state);
+                state = GetState(state, "shortState");
 
                 SunlightProjects req = new SunlightProjects();
                 Projects project = new Projects();
