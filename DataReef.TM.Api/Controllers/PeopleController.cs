@@ -349,8 +349,17 @@ namespace DataReef.TM.Api.Controllers
             return Ok(persn);
         }
 
-        public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        [HttpGet]
+        [Route("CalenderApp/{ouid}")]
+        [ResponseType(typeof(IEnumerable<Person>))]
+        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid)
         {
+            var persn = peopleService.CalendarPageAppointMentsByOuid(ouid);
+            return persn;
+        }
+
+        public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        {            
             include = include + ",OUAssociations";
             var personuser =  await base.GetMany(delimitedStringOfGuids, include, exclude, fields, true);
             var list = personuser.Where(x => x.IsDeleted == false).ToList();
