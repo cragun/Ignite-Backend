@@ -2,6 +2,7 @@
 using DataReef.Integrations.Geo.DataViews;
 using DataReef.Integrations.Microsoft.PowerBI.Models;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DataViews.Inquiries;
 using DataReef.TM.Models.DataViews.SelfTrackedKPIs;
 using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Models.DTOs.Reports;
@@ -158,6 +159,63 @@ public static class ModelExtensions
         return 0;
     }
 
+    //internal static InquiryStatistics ToStatisticRowForInquiry(this IGrouping<string, SimplePersonKPI> rows, StatisticDates dates)
+    //{
+    //    return new InquiryStatistics
+    //    {
+    //        KPIName = rows.Key,
+    //        Actions = new SelfTrackedKPIByDate
+    //        {
+    //            AllTime = rows.Sum(c => c.Value),
+    //            ThisYear = rows
+    //                    .Where(c => c.DateCreated >= dates.YearStart)
+    //                    .Sum(c => c.Value),
+    //            ThisMonth = rows
+    //                    .Where(c => c.DateCreated >= dates.MonthStart)
+    //                    .Sum(c => c.Value),
+    //            ThisWeek = rows
+    //                    .Where(c => c.DateCreated >= dates.CurrentWeekStart)
+    //                    .Sum(c => c.Value),
+    //            Today = rows
+    //                    .Where(c => c.DateCreated >= dates.TodayStart)
+    //                    .Sum(c => c.Value),
+    //            SpecifiedDay = dates.HasSpecifiedDay ? rows
+    //                                                .Where(c => c.DateCreated >= dates.SpecifiedStart.Value
+    //                                                         && c.DateCreated < dates.SpecifiedEnd.Value)
+    //                                                .Sum(c => c.Value)
+    //                                            : 0
+    //        }
+    //    };
+    //}
+    //internal static List<InquiryStatistics> ToStatisticRowsForInquiry(this IGrouping<Guid, PersonKPI> rows, StatisticDates dates)
+    //{
+    //    return rows.Select(p => new SimplePersonKPI(p))
+    //                    .GroupBy(p => p.Name)
+    //                    .Select(g => g.ToStatisticRowForInquiry(dates))
+    //                    .ToList();
+    //}
+
+    internal static long GetStatisticForInquiryReportingPeriod(this InquiryStatisticsForOrganization stat, ReportingPeriod reportingPeriod)
+    {
+        switch (reportingPeriod)
+        {
+            case ReportingPeriod.AllTime:
+                return stat.Actions.AllTime;
+            case ReportingPeriod.ThisYear:
+                return stat.Actions.ThisYear;
+            case ReportingPeriod.ThisMonth:
+                return stat.Actions.ThisMonth;
+            case ReportingPeriod.ThisWeek:
+                return stat.Actions.ThisWeek;
+            case ReportingPeriod.Today:
+                return stat.Actions.Today;
+            case ReportingPeriod.SpecifiedDay:
+                return stat.Actions.SpecifiedDay;
+        }
+
+        return 0;
+    }
+
     internal static List<T> Find<T>(this List<KeyValuePair<Guid, List<T>>> data, Guid key) where T : class
     {
         if (data?.Any(d => d.Key == key) != true)
@@ -168,7 +226,7 @@ public static class ModelExtensions
         return data
                 .FirstOrDefault(d => d.Key == key)
                 .Value;
-    }    
+    }
 
     internal static ActiveUserDTO HighestRole(this IGrouping<Guid, ActiveUserDTO> data)
     {

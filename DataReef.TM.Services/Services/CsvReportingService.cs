@@ -43,7 +43,11 @@ namespace DataReef.TM.Services
 
         public byte[] GenerateOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay, ReportingPeriod reportingPeriod)
         {
-            var reportRows = _reportingServices.Value.GetOrganizationSelfTrackedReport(startOUID, specifiedDay).ToList();
+            //var reportRows = _reportingServices.Value.GetOrganizationSelfTrackedReport(startOUID, specifiedDay).ToList();
+
+            var reportRows = _reportingServices.Value.GetOrganizationReport(startOUID, specifiedDay, null, null).ToList();
+
+
             if (reportRows?.Any() == true)
             {
                 //initialize with known commmon columns
@@ -51,10 +55,28 @@ namespace DataReef.TM.Services
 
                 //add dynamic columns
                 var dynamicHeaders = new List<string>();
-                dynamicHeaders.AddRange(reportRows.SelectMany(x => x.SelfTrackedStatistics?.Select(s => s.KPIName)).Distinct().ToList());
+
+                dynamicHeaders.AddRange(reportRows.SelectMany(x => x.InquiryStatistics?.Select(s => s.Name)).Distinct().ToList());
+                // dynamicHeaders.AddRange(reportRows.SelectMany(x => x.SelfTrackedStatistics?.Select(s => s.KPIName)).Distinct().ToList());
+
                 knownHeaders.AddRange(dynamicHeaders);
 
                 var fileContent = new List<List<string>>();
+
+                //reportRows.ForEach(x =>
+                //{
+                //    var kpiForOrgList = new List<string> { x.OfficeName };
+                //    kpiForOrgList
+                //    .AddRange(
+                //        dynamicHeaders.Select(
+                //            kpi =>
+                //                x.SelfTrackedStatistics
+                //                ?.FirstOrDefault(s => s.KPIName.Equals(kpi))
+                //                ?.GetStatisticForReportingPeriod(reportingPeriod)
+                //                 .ToString() ?? string.Empty));
+
+                //    fileContent.Add(kpiForOrgList);
+                //});
 
                 reportRows.ForEach(x =>
                 {
@@ -63,13 +85,15 @@ namespace DataReef.TM.Services
                     .AddRange(
                         dynamicHeaders.Select(
                             kpi =>
-                                x.SelfTrackedStatistics
-                                ?.FirstOrDefault(s => s.KPIName.Equals(kpi))
-                                ?.GetStatisticForReportingPeriod(reportingPeriod)
-                                 .ToString() ?? string.Empty));
+                                x.InquiryStatistics
+                                ?.FirstOrDefault(s => s.Name.Equals(kpi))
+                                ?.GetStatisticForInquiryReportingPeriod(reportingPeriod)
+                                //?.Actions.ThisYear
+                                .ToString() ?? string.Empty));
 
                     fileContent.Add(kpiForOrgList);
                 });
+
 
                 return GenerateFileBytes(knownHeaders, fileContent);
             }
