@@ -777,9 +777,7 @@ namespace DataReef.TM.Services
 
         public PaginatedResult<Property> CRMGetProperties(CRMFilterRequest request)
         {
-            var rootGuids = _ouService
-                                .Value
-                                .ListRootGuidsForPerson(SmartPrincipal.UserId);
+            var rootGuids = _ouService.Value.ListRootGuidsForPerson(SmartPrincipal.UserId);
 
             var ouIds = new List<Guid>();
 
@@ -839,8 +837,7 @@ namespace DataReef.TM.Services
 
                     using (var dataContext = new DataContext())
                     {
-                        var propIds = dataContext
-                                .Properties
+                        var propIds = dataContext.Properties
                                 .SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query OR Name like @query", paramValue.ToArray())
                                 .Select(p => p.Guid)
                                 .ToList();
@@ -956,37 +953,36 @@ namespace DataReef.TM.Services
                     propertiesQuery = propertiesQuery.OrderByDescending(p => p.DateCreated);
                 }
 
-                var result = propertiesQuery
-                                    .Skip(request.PageIndex * request.PageSize)
+                var result = propertiesQuery.Skip(request.PageIndex * request.PageSize)
                                     .Take(request.PageSize)
                                     .ToList();
 
-                if (result?.Any() == true)
-                {
-                    foreach (var prop in result)
-                    {
-                        prop.PropertyNotesCount = prop.PropertyNotes?.Where(x => !x.IsDeleted)?.Count();
+                //if (result?.Any() == true)
+                //{
+                //    foreach (var prop in result)
+                //    {
+                //        prop.PropertyNotesCount = prop.PropertyNotes?.Where(x => !x.IsDeleted)?.Count();
 
-                        if (!request.Include.Contains("PropertyNotes"))
-                        {
-                            prop.PropertyNotes = new List<PropertyNote>();
-                        }
-                    }
-                }
+                //        if (!request.Include.Contains("PropertyNotes"))
+                //        {
+                //            prop.PropertyNotes = new List<PropertyNote>();
+                //        }
+                //    }
+                //}
 
-                if (request.Include?.Split(",".ToCharArray())?.Contains("territory.ou.settings", StringComparer.InvariantCultureIgnoreCase) == true)
-                {
-                    var ous = result
-                                .Where(p => p.Territory?.OU != null)
-                                .Select(p => p.Territory.OU)
-                                .Distinct()
-                                .ToList();
+                //if (request.Include?.Split(",".ToCharArray())?.Contains("territory.ou.settings", StringComparer.InvariantCultureIgnoreCase) == true)
+                //{
+                //    var ous = result
+                //                .Where(p => p.Territory?.OU != null)
+                //                .Select(p => p.Territory.OU)
+                //                .Distinct()
+                //                .ToList();
 
-                    foreach (var ou in ous)
-                    {
-                        ou.Settings = OUSettingService.GetOuSettings(ou.Guid);
-                    }
-                }
+                //    foreach (var ou in ous)
+                //    {
+                //        ou.Settings = OUSettingService.GetOuSettings(ou.Guid);
+                //    }
+                //}
 
                 return new PaginatedResult<Property>
                 {

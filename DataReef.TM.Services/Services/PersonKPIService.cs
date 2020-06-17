@@ -29,7 +29,7 @@ namespace DataReef.TM.Services
         private readonly Lazy<IBlobService> _blobService;
         private readonly Lazy<IPersonSettingService> _personSettingService;
 
-        public PersonKPIService(ILogger logger, 
+        public PersonKPIService(ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IBlobService> blobService,
             Lazy<IPersonSettingService> personSettingService) : base(logger, unitOfWorkFactory)
@@ -57,7 +57,7 @@ namespace DataReef.TM.Services
         {
             var uniqueImgIdentifier = Guid.NewGuid();
             var originalImageBytes = Convert.FromBase64String(screenshotBase64);
-            
+
             using (var ms = new MemoryStream(originalImageBytes))
             {
                 var img = System.Drawing.Image.FromStream(ms);
@@ -177,9 +177,10 @@ namespace DataReef.TM.Services
                 {
                     //self tracked kpis to include when making the call to the db
                     var searchKpis = new HashSet<string>();
+                    reportItems = reportItems.Where(x => x.IncludedPersonKpis != null).ToList();
                     foreach (var repItem in reportItems)
                     {
-                        if(repItem.IncludedPersonKpis?.Any() == true)
+                        if (repItem.IncludedPersonKpis?.Any() == true)
                         {
                             searchKpis.UnionWith(repItem.IncludedPersonKpis);
                         }
@@ -195,45 +196,51 @@ namespace DataReef.TM.Services
 
                     foreach (var col in reportItems)
                     {
-                        if(col.IncludedPersonKpis?.Any() != true)
+                        if (col.IncludedPersonKpis?.Any() != true)
                         {
                             continue;
                         }
-                        var kpiDatesForKpi = kpiDates.Where(kd => col.IncludedPersonKpis.Contains(kd.Kpi));
+                        var personIdsd = kpiDates.ToList().DistinctBy(d => d.PersonID);
+                       // var kpiDatesForKpi = kpiDates.Where(kd => col.IncludedPersonKpis.Contains(kd.Kpi));
                         foreach (var personId in personIds)
                         {
 
-                            var personKpiDates = kpiDatesForKpi.Where(id => id.PersonID == personId).ToList();
+                            //var personKpiDates = kpiDatesForKpi.Where(id => id.PersonID == personId).ToList();
+                            var personKpiDates = kpiDates.Where(id => id.PersonID == personId  && col.IncludedPersonKpis.Contains(id.Kpi)).ToList();
 
-                            kpiStatistics.Add(new InquiryStatisticsForPerson
+                            if(personKpiDates.Count > 0)
                             {
-                                PersonId = personId,
-                                Name = col.ColumnName,
-                                Actions = new InquiryStatisticsByDate
+                                kpiStatistics.Add(new InquiryStatisticsForPerson
                                 {
-                                    AllTime = personKpiDates.Sum(x => x.Value),
-                                    ThisYear = personKpiDates.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.Value),
-                                    ThisMonth = personKpiDates.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.Value),
-                                    ThisWeek = personKpiDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.Value),
-                                    Today = personKpiDates.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.Value),
-                                    ThisQuarter = personKpiDates.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.Value),
-                                    SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Sum(x => x.Value) : 0,
-                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personKpiDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.Value) : 0
-                                },
-                                DaysActive = new InquiryStatisticsByDate
-                                {
-                                    AllTime = personKpiDates.GroupBy(id => id.DateCreated.Date).Count(),
-                                    ThisYear = personKpiDates.Where(id => id.DateCreated >= dates.YearStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    ThisMonth = personKpiDates.Where(id => id.DateCreated >= dates.MonthStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    ThisWeek = personKpiDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    Today = personKpiDates.Where(id => id.DateCreated >= dates.TodayStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    ThisQuarter = personKpiDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
-                                    SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0,
-                                    RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personKpiDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
-                                }
-                            });
+                                    PersonId = personId,
+                                    Name = col.ColumnName,
+                                    Actions = new InquiryStatisticsByDate
+                                    {
+                                        AllTime = personKpiDates.Sum(x => x.Value),
+                                        ThisYear = personKpiDates.Where(id => id.DateCreated >= dates.YearStart).Sum(x => x.Value),
+                                        ThisMonth = personKpiDates.Where(id => id.DateCreated >= dates.MonthStart).Sum(x => x.Value),
+                                        ThisWeek = personKpiDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).Sum(x => x.Value),
+                                        Today = personKpiDates.Where(id => id.DateCreated >= dates.TodayStart).Sum(x => x.Value),
+                                        ThisQuarter = personKpiDates.Where(id => id.DateCreated >= dates.QuaterStart).Sum(x => x.Value),
+                                        SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).Sum(x => x.Value) : 0,
+                                        RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personKpiDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated <= EndRangeDay).Sum(x => x.Value) : 0
+                                    },
+                                    DaysActive = new InquiryStatisticsByDate
+                                    {
+                                        AllTime = personKpiDates.GroupBy(id => id.DateCreated.Date).Count(),
+                                        ThisYear = personKpiDates.Where(id => id.DateCreated >= dates.YearStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        ThisMonth = personKpiDates.Where(id => id.DateCreated >= dates.MonthStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        ThisWeek = personKpiDates.Where(id => id.DateCreated.Date >= dates.CurrentWeekStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        Today = personKpiDates.Where(id => id.DateCreated >= dates.TodayStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        ThisQuarter = personKpiDates.Where(id => id.DateCreated >= dates.QuaterStart).GroupBy(id => id.DateCreated.Date).Count(),
+                                        SpecifiedDay = specifiedDay.HasValue ? personKpiDates.Where(id => id.DateCreated >= dates.SpecifiedStart && id.DateCreated < dates.SpecifiedEnd).GroupBy(id => id.DateCreated.Date).Count() : 0,
+                                        RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? personKpiDates.Where(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay).GroupBy(id => id.DateCreated.Date).Count() : 0
+                                    }
+                                });
+                            }
+                            
 
-                            if(col.ColumnName == "ClockHours")
+                            if (col.ColumnName == "ClockHours")
                             {
                                 var PersonClockTime = dc.PersonClockTime.Where(id => id.PersonID == personId).Select(i => new { PersonID = i.PersonID, DateCreated = i.DateCreated, ClockMin = i.ClockMin }).ToList();
 

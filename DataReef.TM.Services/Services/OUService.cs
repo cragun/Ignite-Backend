@@ -185,8 +185,8 @@ namespace DataReef.TM.Services.Services
                                     && !t.IsArchived)
                             .Select(t => t.Guid)
                             .ToList();
-                var children = string.Join(",", ouIds);
-                var terrIds = string.Join(",", territoryIds);
+                //var children = string.Join(",", ouIds);
+                //var terrIds = string.Join(",", territoryIds);
             }
             if (!territoryIds.Any())
             {
