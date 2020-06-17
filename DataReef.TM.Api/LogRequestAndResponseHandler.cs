@@ -34,8 +34,8 @@ namespace DataReef.TM.Api
                 responseBody = await result.Content.ReadAsStringAsync();
             }
 
-            //if (request.RequestUri.ToString().Contains("/sign/proposal"))
-            //{
+            if (request.RequestUri.ToString().Contains("/uploadDocument/")  || request.RequestUri.ToString().Contains("/media/upload"))
+            {
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
                 apilog.User = SmartPrincipal.UserId.ToString();
@@ -56,7 +56,7 @@ namespace DataReef.TM.Api
                         dc.ApiLogEntries.Add(apilog);
                         dc.SaveChanges();
                 }
-            //}
+            }
             return result;
         }
     }

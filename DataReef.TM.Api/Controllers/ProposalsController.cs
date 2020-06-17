@@ -109,16 +109,7 @@ namespace DataReef.TM.Api.Controllers
             var response = _proposalService.SignProposal(proposalDataId, request);
             return Ok(response);
         }
-
-        [Route("{propertyID}/uploadDocument")]
-        [HttpPost]
-        public async Task<IHttpActionResult> UploadDocument(Guid propertyID)
-        {
-            var request = await GetProposalRequest();
-
-            _proposalService.UploadDocument(propertyID, request);
-            return Ok();
-        }
+        
 
         [Route("Documents/getType")]
         [HttpGet]
@@ -186,6 +177,35 @@ namespace DataReef.TM.Api.Controllers
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(blob.ContentType);
             response.Content.Headers.ContentLength = blob.Content.Length;
             return response;
+        }
+
+        [Route("{propertyID}/uploadDocument/{DocId}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UploadDocument(Guid propertyID,string DocId)
+        {
+            var data = await GetMultiPartData<List<MediaItemData>>("MediaItemInfo");
+            if (data.Item1 == null ||
+                (data.Item2?.Count ?? 0) == 0 ||
+                data.Item1.Count != data.Item2.Count)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            var request = data
+                            .Item2
+                            .Select(async (f, idx) => new ProposalMediaUploadRequest
+                            {
+                                Content = await f.Content.ReadAsByteArrayAsync(),
+                                ContentType = data.Item1[idx].ContentType,
+                                Notes = data.Item1[idx]?.Notes,
+                                MediaItemType = data.Item1[idx].MediaItemType,
+                                Name = f.Name
+                            })
+                            .Select(t => t.Result)
+                            .ToList();
+
+            _proposalService.UploadProposalDocumentItem(propertyID, DocId, request);
+            return Ok();
         }
 
         /// <summary>
