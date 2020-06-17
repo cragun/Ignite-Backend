@@ -13,3 +13,4 @@ namespace DataReef.TM.Models.DTOs.Reports
         public ICollection<InquiryStatisticsForOrganization> InquiryStatistics { get; set; }
     }
 }
+

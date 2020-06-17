@@ -511,7 +511,75 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
+        public void UploadDocumentItem(Proposal proposal, string documentTypeId, ProposalMediaItem proposalDoc)
+        {
+            var ouid = proposal?.Property?.Territory?.OUID;
+            if (!ouid.HasValue || proposalDoc == null)
+            {
+                return;
+            }
 
+            EnsureInitialized(ouid.Value);
+
+            var integrationSettings = new IntegrationOptionSettings
+            {
+                Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+            };
+
+            var integrationData =
+                integrationSettings
+                ?.SelectedIntegrations
+                ?.FirstOrDefault(x =>
+                {
+                    var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                    return matchingOption?.Type == IntegrationType.SMARTBoard;
+                })
+                ?.Data
+                ?.SMARTBoard;
+            if (integrationData == null)
+            {
+                return;
+            }
+            string email;
+            using (DataContext dc = new DataContext())
+            {
+                email = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId)?.EmailAddressString;
+            }
+
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+            var url = $"/apis/add_document/{encryptedAPIkey}";
+
+            var request = new SBProposalAttachRequest(proposal)
+            {
+                document = new Document
+                {
+                    AssociatedId = proposal?.Property?.Id,
+                    DocumentName = proposalDoc.Name,
+                    DocumentUrl = proposalDoc.Url,
+                    DocumentTypeId = documentTypeId,
+                    Email = email,
+                    Lon = proposal?.Lon,
+                    Lat = proposal?.Lat,
+                    Signed = true
+                }
+            };
+            SubmitProposal(integrationData, request, ouid.Value);
+
+            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
+
+            try
+            {
+                SaveRequest(request, response, url, null, integrationData.ApiKey);
+            }
+            catch (Exception)
+            {
+            }
+
+        }
         public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataReef.TM.Models.DataViews.Inquiries;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,6 +15,17 @@ namespace DataReef.TM.Models.DataViews.SelfTrackedKPIs
     {
         [DataMember]
         public string KPIName { get; set; }
+
+        [DataMember]
+        public SelfTrackedKPIByDate Actions { get; set; }
+    }
+
+    [DataContract]
+    [NotMapped]
+    public class InquiryStatistics
+    {
+        [DataMember]
+        public string Name { get; set; }
 
         [DataMember]
         public SelfTrackedKPIByDate Actions { get; set; }

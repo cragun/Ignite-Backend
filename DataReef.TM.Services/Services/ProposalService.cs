@@ -1157,17 +1157,17 @@ namespace DataReef.TM.Services.Services
         }
 
 
-    public void UploadDocument(Guid propertyID, DocumentSignRequest request)
+    public void UploadDocument(Guid propertyID,string DocId, DocumentSignRequest request)
         {
 
-         //  UploadDataDocument(request.DocumentData);
+            //  UploadDataDocument(request.DocumentData);
             using (var dataContext = new DataContext())
             {
                 var data = dataContext
                             .Proposal
                             .FirstOrDefault(pd => pd.PropertyID == propertyID);
-                
-                var proposalData= dataContext
+
+                var proposalData = dataContext
                             .ProposalData
                             .FirstOrDefault(pd => pd.ProposalID == data.Guid);
 
@@ -1206,7 +1206,7 @@ namespace DataReef.TM.Services.Services
                     }
                     catch (Exception) { }
                 }
-                
+
 
                 var documentUrls = GetProposalURLs(contractorID, data.Guid, signedDocuments, ouSettings);
                 var planName = financePlan.Name;
@@ -1242,7 +1242,7 @@ namespace DataReef.TM.Services.Services
                         });
 
 
-                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, request.DocumentTypeId,documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, request.DocumentTypeId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
 
 
             }
@@ -1871,8 +1871,136 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
+        public void UploadProposalDocumentItem(Guid propertyID,string DocId, List<ProposalMediaUploadRequest> request)
+        {
+
+            var json = JsonConvert.SerializeObject(request);
+
+            if (json != null)
+            {
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = SmartPrincipal.UserId.ToString();
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = propertyID.ToString();
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "UploadProposalMediaItem";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = json.ToString();
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = "";
+
+                using (var dc = new DataContext())
+                {
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+                }
+            }
+
+            using (var dataContext = new DataContext())
+            {
+                var data = dataContext
+                            .Proposal
+                            .FirstOrDefault(pd => pd.PropertyID == propertyID);
+                
+
+                if (data == null)
+                {
+                    throw new ApplicationException("Could not find Proposal Data!");
+                }
+                var proposalData = dataContext
+                               .ProposalData
+                               .FirstOrDefault(pd => pd.ProposalID == data.Guid);
+
+                var financePlan = dataContext
+                                    .FinancePlans
+                                    .Include(fp => fp.SolarSystem.PowerConsumption)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
+                                    .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
+
+                if (financePlan == null)
+                {
+                    throw new ApplicationException("Could not find Proposal Data!");
+                }
+
+                var proposal = financePlan.SolarSystem.Proposal;
+                
+                foreach (var item in request)
+                    {
+                        var proposalMediaItem = new ProposalMediaItem
+                        {
+                            ProposalID = data.Guid,
+                            Notes = item.Notes,
+                            MimeType = item.ContentType,
+                            MediaItemType = item.MediaItemType,
+                            Name = item.Name
+                        };
+
+
+                        var mediaItemUrl = proposalMediaItem.BuildUrl();
+                        string thumbUrl = null;
+                        if (proposalMediaItem.MediaItemType == ProposalMediaItemType.Document)
+                        {
+                            thumbUrl = proposalMediaItem.BuildThumbUrl();
+                            var img = item.Content.ToImage();
+                            var thumbnail = img.GetResizedImageContent(Math.Min(img.Width, ProposalMediaItemMaxResolution), Math.Min(img.Height, ProposalMediaItemMaxResolution));
+
+
+                         proposalMediaItem.Url = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
+                                        new BlobModel
+                                        {
+                                            Content = thumbnail,
+                                            ContentType = item.ContentType,
+                                        }, BlobAccessRights.Private);
+                           
+                        }
+
+
+                        proposalMediaItem.Url = mediaItemUrl;
+
+                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
+
+
+                }
+
+            }
+        }
+
+
         public List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request)
         {
+            var json = JsonConvert.SerializeObject(request);
+
+            if (json != null)
+            {
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = SmartPrincipal.UserId.ToString();
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = proposalID.ToString();
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "UploadProposalMediaItem";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = json.ToString();
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = "";
+
+                using (var dc = new DataContext())
+                {
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+                }
+            }
             var result = new List<ProposalMediaItem>();
 
             using (var uow = UnitOfWorkFactory())
