@@ -15,12 +15,24 @@ namespace DataReef.TM.Api.Controllers
     {
         private readonly IReportingServices _reportingService;
         private readonly ICsvReportingService _csvReportingService;
+        private readonly IOUService _ouservice;
 
-        public ReportsController(IReportingServices reportingService, ICsvReportingService csvReportingService)
+        public ReportsController(IReportingServices reportingService, ICsvReportingService csvReportingService, IOUService ouservice)
         {
             _reportingService = reportingService;
             _csvReportingService = csvReportingService;
+            _ouservice = ouservice;
         }
+
+        [HttpGet]
+        [Route("test")]
+        public IHttpActionResult test(Guid prid)
+        {
+            var ou = _ouservice.ListRootGuidsForPerson(prid);
+            return Ok(ou);
+
+        }
+
 
         /// <summary>
         /// Gets the data needed for the specified report

@@ -783,10 +783,7 @@ namespace DataReef.TM.Services
 
             foreach (var guid in rootGuids)
             {
-                ouIds.AddRange(_ouService
-                                .Value
-                                .GetOUAndChildrenGuids(guid)
-                                .ToList());
+                ouIds.AddRange(_ouService.Value.GetOUAndChildrenGuids(guid).ToList());
             }
 
             //ou filter
@@ -800,22 +797,15 @@ namespace DataReef.TM.Services
                 {
                     return PaginatedResult<Property>.GetDefault(request.PageIndex, request.PageSize);
                 }
-
             }
             else
             {
-                ouIds = ouIds
-                        .Distinct()
-                        .ToList();
+                ouIds = ouIds.Distinct().ToList();
             }
-
-
 
             using (var uow = UnitOfWorkFactory())
             {
-                var propertiesQuery = uow
-                            .Get<Property>()
-                            .Where(p => ouIds.Contains(p.Territory.OUID));
+                var propertiesQuery = uow.Get<Property>().Where(p => ouIds.Contains(p.Territory.OUID));
 
                 if (request.TerritoryIds?.Any() == true)
                 {
@@ -837,8 +827,7 @@ namespace DataReef.TM.Services
 
                     using (var dataContext = new DataContext())
                     {
-                        var propIds = dataContext.Properties
-                                .SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query OR Name like @query", paramValue.ToArray())
+                        var propIds = dataContext.Properties.SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query OR Name like @query", paramValue.ToArray())
                                 .Select(p => p.Guid)
                                 .ToList();
 
@@ -857,13 +846,11 @@ namespace DataReef.TM.Services
                         case "Appointments":
                             if (request.HasInclude(nameof(Property.Appointments)))
                             {
-                                propertiesQuery = propertiesQuery
-                                            .Where(p => p.Appointments.Any(app => app.CreatedByID == SmartPrincipal.UserId && !app.IsDeleted));
+                                propertiesQuery = propertiesQuery.Where(p => p.Appointments.Any(app => app.CreatedByID == SmartPrincipal.UserId && !app.IsDeleted));
                             }
                             break;
                         default:
-                            propertiesQuery = propertiesQuery
-                                            .Where(p => p.LatestDisposition == request.Disposition);
+                            propertiesQuery = propertiesQuery.Where(p => p.LatestDisposition == request.Disposition);
                             break;
                     }
                 }
@@ -1144,13 +1131,13 @@ namespace DataReef.TM.Services
         }
 
 
-        public IEnumerable<Person> CalendarPageAppointMentsByOuid(Guid ouid)
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid)
         {
             using (DataContext dc = new DataContext())
             {
-                var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted && !oua.Person.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
+                var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted ).Select(oua => oua.PersonID).Distinct().ToList();
 
-                var people = dc.People.Include(y => y.AssignedAppointments).Include(y => y.PhoneNumbers).Include(y => y.PersonSettings).Where(peo => OUAssociationIds.Contains(peo.Guid)).ToList();
+                var people = dc.People.Include(y => y.AssignedAppointments).Include(y => y.PhoneNumbers).Include(y => y.PersonSettings).Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).ToList();
 
                 return people;
             }

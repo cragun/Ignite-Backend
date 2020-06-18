@@ -354,7 +354,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(IEnumerable<Person>))]
         public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid)
         {
-            var persn = peopleService.CalendarPageAppointMentsByOuid(ouid);
+            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid);
             return persn;
         }
 

@@ -300,6 +300,16 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("GetAddersIncentives/{ProposalID}")]
+        [HttpPost]
+        public IHttpActionResult GetAddersIncentives(Guid ProposalID)
+        {
+            var result = _proposalService.GetAddersIncentives(ProposalID);
+            return Ok(result);
+        }
+
 
         private async Task<DocumentSignRequest> GetProposalRequest()
         {

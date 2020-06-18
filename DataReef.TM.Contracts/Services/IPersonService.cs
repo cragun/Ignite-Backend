@@ -8,6 +8,7 @@ using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -77,8 +78,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         void SBDeactivate(Guid personid);
 
-        [OperationContract]
-        IEnumerable<Person> CalendarPageAppointMentsByOuid(Guid ouid);
+        [OperationContract]        
+        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid);
 
     }
 }

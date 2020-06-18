@@ -77,6 +77,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Proposal SignAgreement(Guid proposalDataId, DocumentSignRequest request);
 
+        [OperationContract]
+        List<KeyValue> GetAddersIncentives(Guid ProposalID);
 
 
     }
