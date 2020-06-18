@@ -567,8 +567,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     Signed = true
                 }
             };
-            SubmitProposal(integrationData, request, ouid.Value);
-
+            
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
 
             try
