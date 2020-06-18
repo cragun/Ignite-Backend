@@ -1155,99 +1155,7 @@ namespace DataReef.TM.Services.Services
                 return proposal;
             }
         }
-
-
-        public void UploadDocument(Guid propertyID, string DocId, DocumentSignRequest request)
-        {
-
-            //  UploadDataDocument(request.DocumentData);
-            using (var dataContext = new DataContext())
-            {
-                var data = dataContext
-                            .Proposal
-                            .FirstOrDefault(pd => pd.PropertyID == propertyID);
-
-                var proposalData = dataContext
-                            .ProposalData
-                            .FirstOrDefault(pd => pd.ProposalID == data.Guid);
-
-
-                if (data == null)
-                {
-                    throw new ApplicationException("Could not find Proposal Data!");
-                }
-
-                var financePlan = dataContext
-                                    .FinancePlans
-                                    .Include(fp => fp.SolarSystem.PowerConsumption)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
-                                    .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
-
-                if (financePlan == null)
-                {
-                    throw new ApplicationException("Could not find Proposal Data!");
-                }
-
-                var contractorID = proposalData.ContractorID;
-
-                var proposal = financePlan.SolarSystem.Proposal;
-                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
-                List<SignedDocumentDTO> signedDocuments = null;
-                if (!string.IsNullOrWhiteSpace(request.ProposalDataJSON))
-                {
-                    try
-                    {
-                        var proposalCustomData = JObject.Parse(request.ProposalDataJSON);
-
-                        signedDocuments = proposalCustomData["SignedDocuments"].ToObject<List<SignedDocumentDTO>>();
-                    }
-                    catch (Exception) { }
-                }
-
-
-                var documentUrls = GetProposalURLs(contractorID, data.Guid, signedDocuments, ouSettings);
-                var planName = financePlan.Name;
-
-
-                float apr = financePlan.FinancePlanDefinition.Apr;
-                float year = financePlan.FinancePlanDefinition.TermInYears;
-                var FinanceProvider = dataContext
-                            .FinanceProviders
-                            .FirstOrDefault(fd => fd.Guid == financePlan.FinancePlanDefinition.ProviderID);
-
-
-                var attachmentPDFs = new List<Tuple<byte[], string>>();
-                documentUrls?
-                        .ForEach(d =>
-                        {
-                            d.ProviderName = FinanceProvider?.Name;
-                            d.Apr = apr;
-                            d.Year = year;
-
-
-                            d.Description = $"{d.Name} [{planName.AsFileName()}]";
-                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
-
-                            d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
-                                 new BlobModel
-                                 {
-                                     Content = pdfContent,
-                                     ContentType = "application/pdf"
-                                 }, BlobAccessRights.PublicRead);
-
-                            attachmentPDFs.Add(new Tuple<byte[], string>(pdfContent, $"{d.Description}.pdf"));
-                        });
-
-
-                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, request.DocumentTypeId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
-
-
-            }
-
-        }
+        
 
         public Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request)
         {
@@ -1876,9 +1784,10 @@ namespace DataReef.TM.Services.Services
         {
             var json = JsonConvert.SerializeObject(request);
 
+            ApiLogEntry apilog = new ApiLogEntry();
+
             if (json != null)
             {
-                ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
                 apilog.User = SmartPrincipal.UserId.ToString();
                 apilog.Machine = Environment.MachineName;
@@ -1928,15 +1837,16 @@ namespace DataReef.TM.Services.Services
                             Name = item.Name
                         };
 
+                        string thumbUrl = proposalMediaItem.BuildUrl();
 
-                        var imageUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
+                        var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
                                 new BlobModel
                                 {
                                     Content = item.Content,
                                     ContentType = item.ContentType,
                                 }, BlobAccessRights.Private);
 
-                        proposalMediaItem.Url = imageUrl;
+                        proposalMediaItem.Url = docUrl;
 
                         uow.Add(proposalMediaItem);
 
