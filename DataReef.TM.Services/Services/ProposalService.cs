@@ -2229,7 +2229,44 @@ namespace DataReef.TM.Services.Services
             return typeList;
         }
 
+        public List<Models.DataViews.KeyValue> GetAddersIncentives(Guid ProposalID)
+        {
+            using (var dc = new DataContext())
+            {
 
+                var Proposalsdata = dc.ProposalData.FirstOrDefault(x => x.Guid == ProposalID);
+                if (Proposalsdata == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+
+                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID || x.Guid == Proposalsdata.ProposalID);
+                if (Proposal == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                var property = dc.Properties.FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == Proposal.PropertyID);
+                if (property == null)
+                {
+                    throw new Exception("Property not found");
+                }
+
+                var Territory = dc.Territories.FirstOrDefault(x => x.Guid == property.TerritoryID);
+                if (Territory == null)
+                {
+                    throw new Exception("Territory not found");
+                }
+
+
+                return dc.OUSettings.Where(x => x.OUID == Territory.OUID && (x.Name == "Adders" || x.Name == "Incentives")).Select(mi => new Models.DataViews.KeyValue
+                {
+                    Key = mi.Name,
+                    Value = mi.Value
+                }).ToList();
+            }
+        }
 
     }
 }
