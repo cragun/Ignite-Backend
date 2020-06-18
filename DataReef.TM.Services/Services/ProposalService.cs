@@ -152,30 +152,30 @@ namespace DataReef.TM.Services.Services
             });
 
             return proposal;
-        }        
+        }
 
         public override Proposal Update(Proposal entity)
         {
-            
+
             if (entity == null)
             {
                 return null;
             }
 
             if (entity.SolarSystem != null)
-            {               
-               // var totaPanelsCount = entity.SolarSystem.RoofPlanes.Sum(rp => rp.PanelsCount);
+            {
+                // var totaPanelsCount = entity.SolarSystem.RoofPlanes.Sum(rp => rp.PanelsCount);
                 var req = JsonConvert.SerializeObject(entity);
                 try
                 {
-                    entity.SolarSystem.ValidateSystemValid();                    
+                    entity.SolarSystem.ValidateSystemValid();
                 }
-                catch(Exception ex)
-                {                    
-                   // SaveRequest(req,  ex.Message, totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(),  "proposalupdateEX");
+                catch (Exception ex)
+                {
+                    // SaveRequest(req,  ex.Message, totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(),  "proposalupdateEX");
                     throw new ApplicationException(ex.Message);
                 }
-                
+
             }
 
             var newRoofPlanes = (entity
@@ -1036,7 +1036,7 @@ namespace DataReef.TM.Services.Services
                 //add the agreement
                 var contractorID = request.ContractorID ?? data.ContractorID;
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
-                if(signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
+                if (signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
                 {
                     var agreementSignedDocument = GetSignedAgreementUrl(contractorID, data.Guid, ouSettings);
                     signedDocuments.Add(agreementSignedDocument);
@@ -1084,8 +1084,8 @@ namespace DataReef.TM.Services.Services
 
                 proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
 
-                _solarSalesTrackerAdapter.Value.SignAgreement(proposal,"2", signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
-                
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
+
                 // update territory DateLastModified
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
 
@@ -1157,7 +1157,7 @@ namespace DataReef.TM.Services.Services
         }
 
 
-    public void UploadDocument(Guid propertyID,string DocId, DocumentSignRequest request)
+        public void UploadDocument(Guid propertyID, string DocId, DocumentSignRequest request)
         {
 
             //  UploadDataDocument(request.DocumentData);
@@ -1248,7 +1248,7 @@ namespace DataReef.TM.Services.Services
             }
 
         }
-        
+
         public Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request)
         {
             //var json = new JavaScriptSerializer().Serialize(request);
@@ -1872,9 +1872,8 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public void UploadProposalDocumentItem(Guid propertyID,string DocId, List<ProposalMediaUploadRequest> request)
+        public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
         {
-
             var json = JsonConvert.SerializeObject(request);
 
             if (json != null)
@@ -1901,20 +1900,55 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
+            var result = new List<ProposalMediaItem>();
+
             using (var dataContext = new DataContext())
             {
                 var data = dataContext
                             .Proposal
                             .FirstOrDefault(pd => pd.PropertyID == propertyID);
-                
+
 
                 if (data == null)
                 {
                     throw new ApplicationException("Could not find Proposal Data!");
                 }
+
+                ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
+                using (var uow = UnitOfWorkFactory())
+                {
+                    foreach (var item in request)
+                    {
+                        proposalMediaItem = new ProposalMediaItem
+                        {
+                            ProposalID = data.Guid,
+                            Notes = item.Notes,
+                            MimeType = item.ContentType,
+                            MediaItemType = item.MediaItemType,
+                            Name = item.Name
+                        };
+
+
+                        var imageUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
+                                new BlobModel
+                                {
+                                    Content = item.Content,
+                                    ContentType = item.ContentType,
+                                }, BlobAccessRights.Private);
+
+                        proposalMediaItem.Url = imageUrl;
+
+                        uow.Add(proposalMediaItem);
+
+                        result.Add(proposalMediaItem);
+                    }
+                    uow.SaveChanges();
+
+                }
+
                 var proposalData = dataContext
-                               .ProposalData
-                               .FirstOrDefault(pd => pd.ProposalID == data.Guid);
+                           .ProposalData
+                           .FirstOrDefault(pd => pd.ProposalID == data.Guid);
 
                 var financePlan = dataContext
                                     .FinancePlans
@@ -1931,45 +1965,10 @@ namespace DataReef.TM.Services.Services
                 }
 
                 var proposal = financePlan.SolarSystem.Proposal;
-                
-                foreach (var item in request)
-                    {
-                        var proposalMediaItem = new ProposalMediaItem
-                        {
-                            ProposalID = data.Guid,
-                            Notes = item.Notes,
-                            MimeType = item.ContentType,
-                            MediaItemType = item.MediaItemType,
-                            Name = item.Name
-                        };
 
+                _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
 
-                        var mediaItemUrl = proposalMediaItem.BuildUrl();
-                        string thumbUrl = null;
-                        if (proposalMediaItem.MediaItemType == ProposalMediaItemType.Document)
-                        {
-                            thumbUrl = proposalMediaItem.BuildThumbUrl();
-                            var img = item.Content.ToImage();
-                            var thumbnail = img.GetResizedImageContent(Math.Min(img.Width, ProposalMediaItemMaxResolution), Math.Min(img.Height, ProposalMediaItemMaxResolution));
-
-
-                         proposalMediaItem.Url = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
-                                        new BlobModel
-                                        {
-                                            Content = thumbnail,
-                                            ContentType = item.ContentType,
-                                        }, BlobAccessRights.Private);
-                           
-                        }
-
-
-                        proposalMediaItem.Url = mediaItemUrl;
-
-                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
-
-
-                }
-
+                return result;
             }
         }
 
@@ -2309,7 +2308,7 @@ namespace DataReef.TM.Services.Services
 
         public List<DocType> GetDocumentType()
         {
-           
+
             List<DocType> typeList = new List<DocType>();
 
             typeList.Add(new DocType() { Id = 1, Name = "Proposal" });

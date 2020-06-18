@@ -204,8 +204,7 @@ namespace DataReef.TM.Api.Controllers
                             .Select(t => t.Result)
                             .ToList();
 
-            _proposalService.UploadProposalDocumentItem(propertyID, DocId, request);
-            return Ok();
+            return Ok(_proposalService.UploadProposalDocumentItem(propertyID, DocId, request));
         }
 
         /// <summary>
