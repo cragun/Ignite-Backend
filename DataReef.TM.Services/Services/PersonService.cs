@@ -1170,7 +1170,7 @@ namespace DataReef.TM.Services
 
         }
 
-        public IEnumerable<Person> CalendarPageAppointMentsByOuid(Guid ouid)
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid)
         {
             using (DataContext dc = new DataContext())
             {

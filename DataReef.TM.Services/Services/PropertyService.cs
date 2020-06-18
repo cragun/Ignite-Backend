@@ -193,7 +193,7 @@ namespace DataReef.TM.Services.Services
                         if (existingProp != null)
                         {
                             entity.Guid = existingProp.Guid;
-                            //_inquiryService.Value.UpdatePersonClockTime(entity.Guid);
+                            _inquiryService.Value.UpdatePersonClockTime(entity.Guid);
                             return Update(entity);
                         }
                     }
@@ -201,7 +201,7 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
-            //_inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+            _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
             //send new lead to SMARTBOARD
@@ -263,7 +263,7 @@ namespace DataReef.TM.Services.Services
             if (entity.Inquiries?.Any() == true)
             {
                 //person clocktime 
-               // _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+                _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
 
                 using (var uow = UnitOfWorkFactory())
                 {
@@ -288,7 +288,7 @@ namespace DataReef.TM.Services.Services
             {
                 _deviceService.Value.PushToSubscribers<Territory, Property>(prop.TerritoryID.ToString(), prop.Guid.ToString(), DataAction.Insert, alert: $"Property {prop.Name} has been created!");
             });
-           // _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+            _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             return prop;
         }
 
@@ -368,11 +368,11 @@ namespace DataReef.TM.Services.Services
 
                         ret = base.Update(entity, dataContext);
 
-                        //if(oldProp.LatestDisposition != entity.LatestDisposition)
-                        //{
-                        //    //person clocktime 
-                        //    _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
-                        //}
+                        if (oldProp.LatestDisposition != entity.LatestDisposition)
+                        {
+                            //person clocktime 
+                            _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
+                        }
                         if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
                         ret.SBLeadError = "";
                         UpdateNavigationProperties(entity, dataContext: dataContext);
