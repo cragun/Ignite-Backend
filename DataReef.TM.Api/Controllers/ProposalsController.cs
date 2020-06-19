@@ -179,9 +179,17 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
-        [Route("{propertyID}/uploadDocument/{DocId}")]
+        /// <summary>
+        /// Upload multiple documents using a multi-part body
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <param name="DocId"></param>
+        /// <returns></returns>
+        /// 
+        [Route("{propertyID:guid}/uploadDocument/{DocId}")]
         [HttpPost]
-        public async Task<IHttpActionResult> UploadDocument(Guid propertyID,string DocId)
+        [ResponseType(typeof(List<ProposalMediaItem>))]
+        public async Task<IHttpActionResult> UploadDocument([FromUri]Guid propertyID, [FromUri]string DocId)
         {
             var data = await GetMultiPartData<List<MediaItemData>>("MediaItemInfo");
             if (data.Item1 == null ||
