@@ -483,9 +483,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             
             var url = $"/apis/add_document/{encryptedAPIkey}";
 
-            var request = new SBProposalAttachRequest(proposal)
+            var request = new SBAddDocument(proposal)
             {
-                document = new Document
+                Document = new DocumentModel
                 { 
                         AssociatedId= proposal?.Property?.Id,
                         DocumentName=proposalDoc.Name,
@@ -497,7 +497,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         Signed=true
                 }
             };
-            SubmitProposal(integrationData, request, ouid.Value);
 
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
 
@@ -553,9 +552,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var url = $"/apis/add_document/{encryptedAPIkey}";
 
-            var request = new SBProposalAttachRequest(proposal)
+            var request = new SBAddDocument(proposal)
             {
-                document = new Document
+                Document = new DocumentModel
                 {
                     AssociatedId = proposal?.Property?.Id,
                     DocumentName = proposalDoc.Name,

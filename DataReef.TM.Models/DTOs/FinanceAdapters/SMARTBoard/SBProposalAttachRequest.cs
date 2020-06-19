@@ -20,15 +20,22 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public SBLeadModel Lead { get; set; }
         public SBLeadKwhModel LeadKwh { get; set; }
         public SBProposalModel Proposal { get; set; }
-
-        [JsonProperty("Document")]
-        public Document document { get; set; }
-
         public SBProposalDataModel ProjectData { get; set; }
         public SBEnergyUtilityModel EnergyUsage { get; set; }
         public SBUsageModel MonthlyUsage { get; set; }
     }
-    public class Document
+
+    public class SBAddDocument
+    {
+        public SBAddDocument(Proposal proposal)
+        {
+           Document = new DocumentModel();
+        }
+        
+        public DocumentModel Document { get; set; }
+    }
+
+    public class DocumentModel
     {
         [JsonProperty("associated_id")]
         public long? AssociatedId { get; set; }
