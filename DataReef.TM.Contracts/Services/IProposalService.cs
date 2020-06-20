@@ -11,6 +11,7 @@ using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Blobs;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.ClientAPI;
+using System.IO;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -79,6 +80,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<KeyValue> GetAddersIncentives(Guid ProposalID);
+
+        [OperationContract]
+        string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request);
 
 
     }

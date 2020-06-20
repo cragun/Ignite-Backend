@@ -1780,6 +1780,71 @@ namespace DataReef.TM.Services.Services
         }
 
 
+        public string UploadProposalDoc(Guid propertyID, string DocId , ProposalMediaUploadRequest request)
+        {
+            string resp = "";
+            using (var dataContext = new DataContext())
+            {
+                var data = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
+
+                if (data == null)
+                {
+                    resp = "Could not find Proposal Data!";
+                }
+
+                ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
+                using (var uow = UnitOfWorkFactory())
+                {
+                        proposalMediaItem = new ProposalMediaItem
+                        {
+                            ProposalID = data.Guid,
+                            MimeType = request.ContentType,
+                            MediaItemType = request.MediaItemType,
+                            Name = request.Name
+                        };
+
+                        string thumbUrl = proposalMediaItem.BuildUrl();
+
+                        var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
+                                new BlobModel
+                                {
+                                    Content = request.Content,
+                                    ContentType = request.ContentType,
+                                }, BlobAccessRights.Private);
+
+                        proposalMediaItem.Url = docUrl;
+                        uow.Add(proposalMediaItem); 
+                        uow.SaveChanges();
+
+                    resp = docUrl;
+                }
+
+                var proposalData = dataContext
+                           .ProposalData
+                           .FirstOrDefault(pd => pd.ProposalID == data.Guid);
+
+                var financePlan = dataContext
+                                    .FinancePlans
+                                    .Include(fp => fp.SolarSystem.PowerConsumption)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
+                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
+                                    .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
+
+                if (financePlan == null)
+                {
+                    resp = "Could not find Proposal Data!";
+                }
+
+                var proposal = financePlan.SolarSystem.Proposal;
+
+                _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
+
+                return resp;
+            }
+        }
+
         public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
         {
             var json = JsonConvert.SerializeObject(request);

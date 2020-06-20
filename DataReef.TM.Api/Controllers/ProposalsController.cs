@@ -192,14 +192,32 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> UploadDocument([FromUri]Guid propertyID, [FromUri]string DocId)
         {
+            string str = "";
             try
             {
                 var PicFile = HttpContext.Current.Request.Files["file"];
 
+                byte[] fileData = null;
+                using (var binaryReader = new BinaryReader(PicFile.InputStream))
+                {
+                    fileData = binaryReader.ReadBytes(PicFile.ContentLength);
+                }
+
+
                 if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
                 {
-                    string picname = System.IO.Path.GetFileNameWithoutExtension(PicFile.FileName);
-                    return Ok(picname);
+                    var request = new ProposalMediaUploadRequest
+                    {
+                        // Content = PicFile.Content.ReadAsByteArrayAsync(),
+                        Content = fileData,
+                        ContentType = PicFile.ContentType,
+                        Name = PicFile.FileName
+                    };
+
+                    str = _proposalService.UploadProposalDoc(propertyID, DocId, request);
+
+                    //string picname = System.IO.Path.GetFileNameWithoutExtension(PicFile.FileName);
+                    // return Ok(picname);
                 }
 
             }
@@ -208,7 +226,7 @@ namespace DataReef.TM.Api.Controllers
                 return Ok(ex.Message);
             }
 
-            return Ok(DocId);
+            return Ok(str);
 
         }
 
