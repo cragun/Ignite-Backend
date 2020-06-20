@@ -1790,6 +1790,7 @@ namespace DataReef.TM.Services.Services
                 if (data == null)
                 {
                     resp = "Could not find Proposal Data!";
+                    return resp;
                 }
 
                 ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
@@ -1835,6 +1836,7 @@ namespace DataReef.TM.Services.Services
                 if (financePlan == null)
                 {
                     resp = "Could not find Proposal Data!";
+                    return resp;
                 }
 
                 var proposal = financePlan.SolarSystem.Proposal;
