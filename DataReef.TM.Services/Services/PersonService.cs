@@ -1131,16 +1131,64 @@ namespace DataReef.TM.Services
         }
 
 
-        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid)
-        {
-            using (DataContext dc = new DataContext())
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string date)
+         {
+            try
             {
-                var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted ).Select(oua => oua.PersonID).Distinct().ToList();
+                using (DataContext dc = new DataContext())
+                {
+                    DateTime dt = Convert.ToDateTime(date);
+                    var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
 
-                var people = dc.People.Include(y => y.AssignedAppointments).Include(y => y.PhoneNumbers).Include(y => y.PersonSettings).Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).ToList();
+                    var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
+                    //var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Select(i => new 
+                    //{
+                    //    Id = i.Id,
+                    //    ActivityName = i.ActivityName,
+                    //    Addresses = i.Addresses,
+                    //    BuildVersion = i.BuildVersion,
+                    //    CreatedByID = i.CreatedByID,
+                    //    CreatedByName = i.CreatedByName,
+                    //    DateCreated = i.DateCreated,
+                    //    DateLastModified = i.DateLastModified,
+                    //    DefaultExcludedProperties = i.DefaultExcludedProperties,
+                    //    EmailAddresses = i.EmailAddresses,
+                    //    EmailAddressString = i.EmailAddressString,
+                    //    ExternalID = i.ExternalID,
+                    //    AccountAssociations = i.AccountAssociations,
+                    //    FirstName = i.FirstName,
+                    //    IsDeleted = i.IsDeleted,
+                    //    Flags = i.Flags,
+                    //    Guid = i.Guid,
+                    //    IsNew = i.IsNew,
+                    //    LastActivityDate = i.LastActivityDate,
+                    //    LastLoginDate = i.LastLoginDate,
 
-                return people;
+                    //    LastModifiedBy = i.LastModifiedBy,
+                    //    LastModifiedByName = i.LastModifiedByName,
+                    //    LastName = i.LastName,
+                    //    MayEdit = i.MayEdit,
+                    //    MiddleName = i.MiddleName,
+                    //    Name = i.Name, 
+                    //    OnlineAppointmentPara  = i.OnlineAppointmentPara,
+                    //    PersonType = i.PersonType,
+                    //    Version = i.Version,
+
+
+
+                    //    AssignedAppointments = dc.Appointments.Where(c => c.AssigneeID == i.Guid && !c.IsDeleted).ToList().Where(y => y.StartDate.Date == dt.Date ).ToList(),
+                    //    PhoneNumbers = dc.PhoneNumbers.Where(c => c.PersonID == i.Guid  && !c.IsDeleted).ToList(),
+                    //    PersonSettings = dc.PersonSettings.Where(c => c.PersonID == i.Guid && !c.IsDeleted).ToList()
+                    //}).ToList();
+
+                    return peoples;
+                }
             }
+            catch(Exception ex)
+            {
+                return null;
+            }
+            
         }
 
         

@@ -20,6 +20,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -179,6 +180,7 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
+
         /// <summary>
         /// Upload multiple documents using a multi-part body
         /// </summary>
@@ -188,8 +190,39 @@ namespace DataReef.TM.Api.Controllers
         /// 
         [Route("{propertyID:guid}/uploadDocument/{DocId}")]
         [HttpPost]
-        [ResponseType(typeof(List<ProposalMediaItem>))]
         public async Task<IHttpActionResult> UploadDocument([FromUri]Guid propertyID, [FromUri]string DocId)
+        {
+            try
+            {
+                var PicFile = HttpContext.Current.Request.Files["file"];
+
+                if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
+                {
+                    string picname = System.IO.Path.GetFileNameWithoutExtension(PicFile.FileName);
+                    return Ok(picname);
+                }
+
+            }
+            catch(Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+
+            return Ok(DocId);
+
+        }
+
+        /// <summary>
+        /// Upload multiple documents using a multi-part body
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <param name="DocId"></param>
+        /// <returns></returns>
+        /// 
+        [Route("{propertyID:guid}/uploadDocuments/{DocId}")]
+        [HttpPost]
+        [ResponseType(typeof(List<ProposalMediaItem>))]
+        public async Task<IHttpActionResult> UploadDocuments([FromUri]Guid propertyID, [FromUri]string DocId)
         {
             var data = await GetMultiPartData<List<MediaItemData>>("MediaItemInfo");
             if (data.Item1 == null ||
