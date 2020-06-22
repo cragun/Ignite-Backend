@@ -1782,20 +1782,22 @@ namespace DataReef.TM.Services.Services
 
         public string UploadProposalDoc(Guid propertyID, string DocId , ProposalMediaUploadRequest request)
         {
-            string resp = "";
-            using (var dataContext = new DataContext())
+            try
             {
-                var data = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
-
-                if (data == null)
+                string resp = "";
+                using (var dataContext = new DataContext())
                 {
-                    resp = "Could not find Proposal Data!";
-                    return resp;
-                }
+                    var data = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
 
-                ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
-                using (var uow = UnitOfWorkFactory())
-                {
+                    if (data == null)
+                    {
+                        resp = "Could not find Proposal Data!" + "2";
+                        return resp;
+                    }
+
+                    ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
+                    using (var uow = UnitOfWorkFactory())
+                    {
                         proposalMediaItem = new ProposalMediaItem
                         {
                             ProposalID = data.Guid,
@@ -1814,36 +1816,41 @@ namespace DataReef.TM.Services.Services
                                 }, BlobAccessRights.Private);
 
                         proposalMediaItem.Url = docUrl;
-                        uow.Add(proposalMediaItem); 
+                        uow.Add(proposalMediaItem);
                         uow.SaveChanges();
 
-                    resp = docUrl;
-                }
+                        resp = docUrl;
+                    }
 
-                var proposalData = dataContext
-                           .ProposalData
-                           .FirstOrDefault(pd => pd.ProposalID == data.Guid);
+                    var proposalData = dataContext
+                               .ProposalData
+                               .FirstOrDefault(pd => pd.ProposalID == data.Guid);
 
-                var financePlan = dataContext
-                                    .FinancePlans
-                                    .Include(fp => fp.SolarSystem.PowerConsumption)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
-                                    .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
+                    var financePlan = dataContext
+                                        .FinancePlans
+                                        .Include(fp => fp.SolarSystem.PowerConsumption)
+                                        .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
+                                        .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
+                                        .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
+                                        .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
+                                        .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
 
-                if (financePlan == null)
-                {
-                    resp = "Could not find Proposal Data!";
+                    if (financePlan == null)
+                    {
+                        resp = "Could not find Finance Plan!" + "1";
+                        return resp;
+                    }
+
+                    var proposal = financePlan.SolarSystem.Proposal;
+
+                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
+
                     return resp;
                 }
-
-                var proposal = financePlan.SolarSystem.Proposal;
-
-                _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
-
-                return resp;
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
             }
         }
 
