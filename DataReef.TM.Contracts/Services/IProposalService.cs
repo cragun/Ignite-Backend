@@ -84,6 +84,14 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request);
 
+        [OperationContract]
+        Guid AddAddersIncentives(AdderItem adderItem, Guid ProposalID);
+
+        [OperationContract]
+        Guid UpdateQuantityAddersIncentives(AdderItem adderItem);
+
+        [OperationContract]
+        void DeleteAddersIncentives(Guid adderID);
 
     }
 }

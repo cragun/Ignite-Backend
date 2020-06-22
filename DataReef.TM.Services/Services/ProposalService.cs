@@ -1819,27 +1819,12 @@ namespace DataReef.TM.Services.Services
                         uow.Add(proposalMediaItem);
                         uow.SaveChanges();
 
-                        resp = docUrl;
+                       // resp = docUrl;
                     }
-
-                    //var financePlan = dataContext.FinancePlans
-                    //                    .Include(fp => fp.SolarSystem.PowerConsumption)
-                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
-                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
-                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
-                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
-                    //                    .FirstOrDefault(fp => fp.SolarSystemID == proposals.Guid);
-
-                    //if (financePlan == null)
-                    //{
-                    //    resp = "Could not find Finance Plan!" + "1";
-                    //    return resp;
-                    //}
-
-                  //  var proposal = financePlan.SolarSystem.Proposal;
 
                     _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposals, DocId, proposalMediaItem);
 
+                    resp = "success";
                     return resp;
                 }
             }
@@ -2337,5 +2322,50 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
+        public Guid AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        {
+            using (var uow = UnitOfWorkFactory())
+            {
+                adderItem.SolarSystemID = ProposalID;
+                adderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                uow.Add(adderItem);
+                uow.SaveChanges();
+            }
+
+            return adderItem.Guid;
+        }
+
+        public Guid UpdateQuantityAddersIncentives(AdderItem adderItem)
+        {
+            using (var uow = UnitOfWorkFactory())
+            {
+                var existingadderItem = uow.Get<AdderItem>().FirstOrDefault(i => i.Guid == adderItem.Guid);
+
+                if (existingadderItem == null)
+                {
+                    throw new Exception("Data not found");
+                }
+
+                existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                uow.Update(existingadderItem);
+                uow.SaveChanges();
+            }
+
+            return adderItem.Guid;
+        }
+
+        public void DeleteAddersIncentives(Guid adderID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                dataContext
+               .AdderItems
+               .Where(pc => pc.Guid == adderID)
+               .Delete();
+
+                dataContext.SaveChanges();
+            }
+        }
     }
 }
