@@ -1787,7 +1787,7 @@ namespace DataReef.TM.Services.Services
                 string resp = "";
                 using (var dataContext = new DataContext())
                 {
-                    var proposals = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
+                    var proposals = dataContext.Proposal.Include(p => p.Property.Territory).FirstOrDefault(pd => pd.PropertyID == propertyID);
 
                     if (proposals == null)
                     {
@@ -1836,40 +1836,11 @@ namespace DataReef.TM.Services.Services
 
         public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
         {
-            var json = JsonConvert.SerializeObject(request);
-
-            ApiLogEntry apilog = new ApiLogEntry();
-
-            if (json != null)
-            {
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = propertyID.ToString();
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "UploadProposalMediaItem";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = json.ToString();
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = "";
-
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
-            }
-
             var result = new List<ProposalMediaItem>();
 
             using (var dataContext = new DataContext())
             {
-                var data = dataContext
-                            .Proposal
-                            .FirstOrDefault(pd => pd.PropertyID == propertyID);
+                var data = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
 
 
                 if (data == null)
@@ -1939,31 +1910,6 @@ namespace DataReef.TM.Services.Services
 
         public List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request)
         {
-            var json = JsonConvert.SerializeObject(request);
-
-            if (json != null)
-            {
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = proposalID.ToString();
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "UploadProposalMediaItem";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = json.ToString();
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = "";
-
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
-            }
             var result = new List<ProposalMediaItem>();
 
             using (var uow = UnitOfWorkFactory())
@@ -2010,7 +1956,7 @@ namespace DataReef.TM.Services.Services
 
                     uow.Add(proposalMediaItem);
 
-                    result.Add(proposalMediaItem);
+                    result.Add(proposalMediaItem); 
                 }
                 uow.SaveChanges();
 
