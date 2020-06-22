@@ -1787,11 +1787,11 @@ namespace DataReef.TM.Services.Services
                 string resp = "";
                 using (var dataContext = new DataContext())
                 {
-                    var data = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
+                    var proposals = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
 
-                    if (data == null)
+                    if (proposals == null)
                     {
-                        resp = "Could not find Proposal Data!" + "2";
+                        resp = "Could not find Proposal Data!";
                         return resp;
                     }
 
@@ -1800,7 +1800,7 @@ namespace DataReef.TM.Services.Services
                     {
                         proposalMediaItem = new ProposalMediaItem
                         {
-                            ProposalID = data.Guid,
+                            ProposalID = proposals.Guid,
                             MimeType = request.ContentType,
                             MediaItemType = request.MediaItemType,
                             Name = request.Name
@@ -1822,28 +1822,23 @@ namespace DataReef.TM.Services.Services
                         resp = docUrl;
                     }
 
-                    var proposalData = dataContext
-                               .ProposalData
-                               .FirstOrDefault(pd => pd.ProposalID == data.Guid);
+                    //var financePlan = dataContext.FinancePlans
+                    //                    .Include(fp => fp.SolarSystem.PowerConsumption)
+                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
+                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
+                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
+                    //                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
+                    //                    .FirstOrDefault(fp => fp.SolarSystemID == proposals.Guid);
 
-                    var financePlan = dataContext
-                                        .FinancePlans
-                                        .Include(fp => fp.SolarSystem.PowerConsumption)
-                                        .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
-                                        .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
-                                        .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
-                                        .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
-                                        .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
+                    //if (financePlan == null)
+                    //{
+                    //    resp = "Could not find Finance Plan!" + "1";
+                    //    return resp;
+                    //}
 
-                    if (financePlan == null)
-                    {
-                        resp = "Could not find Finance Plan!" + "1";
-                        return resp;
-                    }
+                  //  var proposal = financePlan.SolarSystem.Proposal;
 
-                    var proposal = financePlan.SolarSystem.Proposal;
-
-                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
+                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposals, DocId, proposalMediaItem);
 
                     return resp;
                 }
