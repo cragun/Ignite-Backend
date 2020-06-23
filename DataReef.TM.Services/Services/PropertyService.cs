@@ -267,7 +267,7 @@ namespace DataReef.TM.Services.Services
             if (entity.Inquiries?.Any() == true)
             {
                 //person clocktime 
-                _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+               // _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
 
                 using (var uow = UnitOfWorkFactory())
                 {
@@ -293,7 +293,7 @@ namespace DataReef.TM.Services.Services
                 _deviceService.Value.PushToSubscribers<Territory, Property>(prop.TerritoryID.ToString(), prop.Guid.ToString(), DataAction.Insert, alert: $"Property {prop.Name} has been created!");
             });
 
-            _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+            //_inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             return prop;
         }
 

@@ -459,37 +459,5 @@ namespace DataReef.TM.Api.Controllers
 
             return JsonConvert.DeserializeObject<T>(value);
         }
-
-        [AllowAnonymous]
-        [InjectAuthPrincipal]
-        [Route("AddAddersIncentives/{ProposalID}")]
-        [HttpPost]
-        public IHttpActionResult AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
-        {
-            var result = _proposalService.AddAddersIncentives(adderItem, ProposalID);
-            return Ok(result);
-        }
-
-        [AllowAnonymous]
-        [InjectAuthPrincipal]
-        [Route("UpdateQuantityAddersIncentives/{ProposalID}")]
-        [HttpPost]
-        public IHttpActionResult UpdateQuantityAddersIncentives(AdderItem adderItem)
-        {
-            var result = _proposalService.UpdateQuantityAddersIncentives(adderItem);
-            return Ok(result);
-        }
-
-        [AllowAnonymous]
-        [InjectAuthPrincipal]
-        [Route("DeleteAddersIncentives/{adderID}")]
-        [HttpPost]
-        public IHttpActionResult DeleteAddersIncentives(Guid adderID)
-        {
-            _proposalService.DeleteAddersIncentives(adderID);
-            return Ok();
-        }
-
-
     }
 }
