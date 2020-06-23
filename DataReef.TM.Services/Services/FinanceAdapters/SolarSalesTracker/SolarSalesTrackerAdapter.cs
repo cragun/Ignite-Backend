@@ -483,7 +483,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             
             var url = $"/apis/add_document/{encryptedAPIkey}";
 
-            var request = new SBAddDocument(proposal)
+            //var request = new SBAddDocument(proposal)
+            var request = new SBAddDocument
             {
                 Document = new DocumentModel
                 { 
@@ -510,9 +511,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-        public void UploadDocumentItem(Proposal proposal, string documentTypeId, ProposalMediaItem proposalDoc)
+        public void UploadDocumentItem(Property property, string documentTypeId, ProposalMediaItem proposalDoc)
         {
-            var ouid = proposal?.Property?.Territory?.OUID;
+            var ouid = property?.Territory?.OUID;
             if (!ouid.HasValue || proposalDoc == null)
             {
                 return;
@@ -552,17 +553,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var url = $"/apis/add_document/{encryptedAPIkey}";
 
-            var request = new SBAddDocument(proposal)
+            var request = new SBAddDocument
             {
                 Document = new DocumentModel
                 {
-                    AssociatedId = proposal?.Property?.Id,
+                    AssociatedId = property?.Id,
                     DocumentName = proposalDoc.Name,
                     DocumentUrl = proposalDoc.Url,
                     DocumentTypeId = documentTypeId,
                     Email = email,
-                    Lon = proposal?.Lon,
-                    Lat = proposal?.Lat,
+                    Lon = property?.Longitude,
+                    Lat = property?.Latitude,
                     Signed = true
                 }
             };

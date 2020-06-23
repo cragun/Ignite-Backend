@@ -1787,7 +1787,7 @@ namespace DataReef.TM.Services.Services
                 string resp = "";
                 using (var dataContext = new DataContext())
                 {
-                    var proposals = dataContext.Proposal.Include(p => p.Property.Territory).FirstOrDefault(pd => pd.PropertyID == propertyID);
+                    var proposals = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
 
                     if (proposals == null)
                     {
@@ -1834,78 +1834,78 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
-        {
-            var result = new List<ProposalMediaItem>();
+        //public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
+        //{
+        //    var result = new List<ProposalMediaItem>();
 
-            using (var dataContext = new DataContext())
-            {
-                var data = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
+        //    using (var dataContext = new DataContext())
+        //    {
+        //        var data = dataContext.Proposal.FirstOrDefault(pd => pd.PropertyID == propertyID);
 
 
-                if (data == null)
-                {
-                    throw new ApplicationException("Could not find Proposal Data!");
-                }
+        //        if (data == null)
+        //        {
+        //            throw new ApplicationException("Could not find Proposal Data!");
+        //        }
 
-                ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
-                using (var uow = UnitOfWorkFactory())
-                {
-                    foreach (var item in request)
-                    {
-                        proposalMediaItem = new ProposalMediaItem
-                        {
-                            ProposalID = data.Guid,
-                            Notes = item.Notes,
-                            MimeType = item.ContentType,
-                            MediaItemType = item.MediaItemType,
-                            Name = item.Name
-                        };
+        //        ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
+        //        using (var uow = UnitOfWorkFactory())
+        //        {
+        //            foreach (var item in request)
+        //            {
+        //                proposalMediaItem = new ProposalMediaItem
+        //                {
+        //                    ProposalID = data.Guid,
+        //                    Notes = item.Notes,
+        //                    MimeType = item.ContentType,
+        //                    MediaItemType = item.MediaItemType,
+        //                    Name = item.Name
+        //                };
 
-                        string thumbUrl = proposalMediaItem.BuildUrl();
+        //                string thumbUrl = proposalMediaItem.BuildUrl();
 
-                        var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
-                                new BlobModel
-                                {
-                                    Content = item.Content,
-                                    ContentType = item.ContentType,
-                                }, BlobAccessRights.Private);
+        //                var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
+        //                        new BlobModel
+        //                        {
+        //                            Content = item.Content,
+        //                            ContentType = item.ContentType,
+        //                        }, BlobAccessRights.Private);
 
-                        proposalMediaItem.Url = docUrl;
+        //                proposalMediaItem.Url = docUrl;
 
-                        uow.Add(proposalMediaItem);
+        //                uow.Add(proposalMediaItem);
 
-                        result.Add(proposalMediaItem);
-                    }
-                    uow.SaveChanges();
+        //                result.Add(proposalMediaItem);
+        //            }
+        //            uow.SaveChanges();
 
-                }
+        //        }
 
-                var proposalData = dataContext
-                           .ProposalData
-                           .FirstOrDefault(pd => pd.ProposalID == data.Guid);
+        //        var proposalData = dataContext
+        //                   .ProposalData
+        //                   .FirstOrDefault(pd => pd.ProposalID == data.Guid);
 
-                var financePlan = dataContext
-                                    .FinancePlans
-                                    .Include(fp => fp.SolarSystem.PowerConsumption)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
-                                    .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
-                                    .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
+        //        var financePlan = dataContext
+        //                            .FinancePlans
+        //                            .Include(fp => fp.SolarSystem.PowerConsumption)
+        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
+        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
+        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
+        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
+        //                            .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
 
-                if (financePlan == null)
-                {
-                    throw new ApplicationException("Could not find Proposal Data!");
-                }
+        //        if (financePlan == null)
+        //        {
+        //            throw new ApplicationException("Could not find Proposal Data!");
+        //        }
 
-                var proposal = financePlan.SolarSystem.Proposal;
+        //        var proposal = financePlan.SolarSystem.Proposal;
 
-                _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
+        //        _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
 
-                return result;
-            }
-        }
+        //        return result;
+        //    }
+        //}
 
 
         public List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request)

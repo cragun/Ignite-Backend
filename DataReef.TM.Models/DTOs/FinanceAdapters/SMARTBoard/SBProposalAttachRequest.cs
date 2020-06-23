@@ -27,10 +27,10 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
     public class SBAddDocument
     {
-        public SBAddDocument(Proposal proposal)
-        {
-           Document = new DocumentModel();
-        }
+        //public SBAddDocument(Proposal proposal)
+        //{
+        //   Document = new DocumentModel();
+        //}
         
         public DocumentModel Document { get; set; }
     }
