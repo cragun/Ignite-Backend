@@ -11,6 +11,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.Inquiries;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Reporting.Settings;
 using DataReef.TM.Services.InternalServices.Geo;
 using DataReef.TM.Services.Services;
@@ -120,7 +121,7 @@ namespace DataReef.TM.Services
             var result = new List<InquiryStatisticsForOrganization>();
 
             var territory = Get(territoryId);
-            if(territory != null)
+            if (territory != null)
             {
                 //if no settings are supplied, try to get them from the db for the ou
                 if (reportSettings == null)
@@ -136,7 +137,7 @@ namespace DataReef.TM.Services
 
                 result = _inquiryService.Value.GetInquiryStatisticsForOrganizationTerritories(new List<Guid> { territoryId }, reportSettings.ReportItems, specifiedDay).ToList();
             }
-            
+
             return result;
         }
 
@@ -208,7 +209,11 @@ namespace DataReef.TM.Services
 
                 if (personID.HasValue)
                 {
-                    ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
+                    if (!context.OUAssociations.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
+                    {
+                        ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
+                    }
+
                 }
 
                 AssignIncludes(include, ref ouTerritoriesQuery);

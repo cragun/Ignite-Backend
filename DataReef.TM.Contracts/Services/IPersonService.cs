@@ -7,6 +7,7 @@ using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
@@ -79,7 +80,7 @@ namespace DataReef.TM.Contracts.Services
         void SBDeactivate(Guid personid);
 
         [OperationContract]        
-        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid);
+        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string date);
 
     }
 }

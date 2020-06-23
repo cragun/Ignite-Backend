@@ -791,14 +791,10 @@ namespace DataReef.TM.Services.Services
 
                 if (person.Count > 0)
                 {
-
-
-                    var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date)
-                        .FirstOrDefault();
+                    var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
 
                     if (PersonClockSetting != null)
                     {
-
                         if (personClockTime != null && PersonClockSetting.IsEnabled == true)
                         {
                             if (personClockTime.ClockType == "ClockIn")
