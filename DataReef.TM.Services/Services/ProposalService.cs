@@ -1155,7 +1155,7 @@ namespace DataReef.TM.Services.Services
                 return proposal;
             }
         }
-        
+
 
         public Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request)
         {
@@ -2240,7 +2240,6 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Proposal not found");
                 }
 
-
                 var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID || x.Guid == Proposalsdata.ProposalID);
                 if (Proposal == null)
                 {
@@ -2268,5 +2267,48 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public Guid AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        {
+            using (var uow = UnitOfWorkFactory())
+            {
+                adderItem = AdderItem.ToDbModel(adderItem , ProposalID);
+                uow.Add(adderItem);
+                uow.SaveChanges();
+            }
+
+            return adderItem.Guid;
+        }
+
+        public Guid UpdateQuantityAddersIncentives(AdderItem adderItem)
+        {
+            using (var uow = UnitOfWorkFactory())
+            {
+                var existingadderItem = uow.Get<AdderItem>().FirstOrDefault(i => i.Guid == adderItem.Guid);
+
+                if (existingadderItem == null)
+                {
+                    throw new Exception("Data not found");
+                }
+
+                existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                uow.Update(existingadderItem);
+                uow.SaveChanges();
+            }
+
+            return adderItem.Guid;
+        }
+
+        public void DeleteAddersIncentives(Guid adderID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                dataContext
+               .AdderItems
+               .Where(pc => pc.Guid == adderID)
+               .Delete();
+
+                dataContext.SaveChanges();
+            }
+        }
     }
 }

@@ -80,6 +80,13 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         List<KeyValue> GetAddersIncentives(Guid ProposalID);
 
+        [OperationContract]
+        Guid AddAddersIncentives(AdderItem adderItem,Guid ProposalID);
 
+        [OperationContract]
+        Guid UpdateQuantityAddersIncentives(AdderItem adderItem);
+
+        [OperationContract]
+        void DeleteAddersIncentives(Guid adderID);
     }
 }
