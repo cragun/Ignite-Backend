@@ -1243,85 +1243,9 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201912171144064_DealerFee Flag to AdderItem.cs" />
-    <Compile Include="Migrations\201912171144064_DealerFee Flag to AdderItem.Designer.cs">
-      <DependentUpon>201912171144064_DealerFee Flag to AdderItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201912201303253_LeadSource on Property.cs" />
-    <Compile Include="Migrations\201912201303253_LeadSource on Property.Designer.cs">
-      <DependentUpon>201912201303253_LeadSource on Property.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202001060853541_added DispositionTypeId field to properties.cs" />
-    <Compile Include="Migrations\202001060853541_added DispositionTypeId field to properties.Designer.cs">
-      <DependentUpon>202001060853541_added DispositionTypeId field to properties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs" />
-    <Compile Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.Designer.cs">
-      <DependentUpon>202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202001100718480_Add LeadSourceId .cs" />
-    <Compile Include="Migrations\202001100718480_Add LeadSourceId .Designer.cs">
-      <DependentUpon>202001100718480_Add LeadSourceId .cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202001171123102_Added DispositionTypeId in Inquiry.cs" />
-    <Compile Include="Migrations\202001171123102_Added DispositionTypeId in Inquiry.Designer.cs">
-      <DependentUpon>202001171123102_Added DispositionTypeId in Inquiry.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.cs" />
-    <Compile Include="Migrations\202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.Designer.cs">
-      <DependentUpon>202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202003060631268_Add usagecollected.cs" />
-    <Compile Include="Migrations\202003060631268_Add usagecollected.designer.cs">
-      <DependentUpon>202003060631268_Add usagecollected.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202003171057175_Added OnlineAppointment Field.cs" />
-    <Compile Include="Migrations\202003171057175_Added OnlineAppointment Field.Designer.cs">
-      <DependentUpon>202003171057175_Added OnlineAppointment Field.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202003180730121_Remove OnlineAppointment Param.cs" />
-    <Compile Include="Migrations\202003180730121_Remove OnlineAppointment Param.Designer.cs">
-      <DependentUpon>202003180730121_Remove OnlineAppointment Param.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs" />
-    <Compile Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.Designer.cs">
-      <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202004161013136_Add field in inquiries.cs" />
-    <Compile Include="Migrations\202004161013136_Add field in inquiries.Designer.cs">
-      <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202004171154569_Remove Extra Field from inquiries.cs" />
-    <Compile Include="Migrations\202004171154569_Remove Extra Field from inquiries.Designer.cs">
-      <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202004211035099_Add PersonClockTime.cs" />
-    <Compile Include="Migrations\202004211035099_Add PersonClockTime.Designer.cs">
-      <DependentUpon>202004211035099_Add PersonClockTime.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202004221019382_Add new field in personclocktime.cs" />
-    <Compile Include="Migrations\202004221019382_Add new field in personclocktime.Designer.cs">
-      <DependentUpon>202004221019382_Add new field in personclocktime.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202005070958127_Added New Column in People.cs" />
-    <Compile Include="Migrations\202005070958127_Added New Column in People.Designer.cs">
-      <DependentUpon>202005070958127_Added New Column in People.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202005071311480_Set NULL in Logindate.cs" />
-    <Compile Include="Migrations\202005071311480_Set NULL in Logindate.Designer.cs">
-      <DependentUpon>202005071311480_Set NULL in Logindate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202005081147569_Add IsRemainFiveMin PersonClockTime.cs" />
-    <Compile Include="Migrations\202005081147569_Add IsRemainFiveMin PersonClockTime.Designer.cs">
-      <DependentUpon>202005081147569_Add IsRemainFiveMin PersonClockTime.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202005220353164_migration.cs" />
-    <Compile Include="Migrations\202005220353164_migration.Designer.cs">
-      <DependentUpon>202005220353164_migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202006040413309_Add BuildVersion in people table.cs" />
-    <Compile Include="Migrations\202006040413309_Add BuildVersion in people table.Designer.cs">
-      <DependentUpon>202006040413309_Add BuildVersion in people table.cs</DependentUpon>
+    <Compile Include="Migrations\202006231323586_migration.cs" />
+    <Compile Include="Migrations\202006231323586_migration.Designer.cs">
+      <DependentUpon>202006231323586_migration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2215,65 +2139,8 @@
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201912171144064_DealerFee Flag to AdderItem.resx">
-      <DependentUpon>201912171144064_DealerFee Flag to AdderItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201912201303253_LeadSource on Property.resx">
-      <DependentUpon>201912201303253_LeadSource on Property.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202001060853541_added DispositionTypeId field to properties.resx">
-      <DependentUpon>202001060853541_added DispositionTypeId field to properties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202001080839405_Add usp_GetTerritoryIdsNameByapiKey.resx">
-      <DependentUpon>202001080839405_Add usp_GetTerritoryIdsNameByapiKey.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202001100718480_Add LeadSourceId .resx">
-      <DependentUpon>202001100718480_Add LeadSourceId .cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202001171123102_Added DispositionTypeId in Inquiry.resx">
-      <DependentUpon>202001171123102_Added DispositionTypeId in Inquiry.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.resx">
-      <DependentUpon>202001211051541_Add usp_GetOUIdsNameForGeoCoordinates.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202003060631268_Add usagecollected.resx">
-      <DependentUpon>202003060631268_Add usagecollected.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202003171057175_Added OnlineAppointment Field.resx">
-      <DependentUpon>202003171057175_Added OnlineAppointment Field.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202003180730121_Remove OnlineAppointment Param.resx">
-      <DependentUpon>202003180730121_Remove OnlineAppointment Param.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202003231025067_Added usp_GetOUPropertiesIdwithProposal.resx">
-      <DependentUpon>202003231025067_Added usp_GetOUPropertiesIdwithProposal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004161013136_Add field in inquiries.resx">
-      <DependentUpon>202004161013136_Add field in inquiries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004171154569_Remove Extra Field from inquiries.resx">
-      <DependentUpon>202004171154569_Remove Extra Field from inquiries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004211035099_Add PersonClockTime.resx">
-      <DependentUpon>202004211035099_Add PersonClockTime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202004221019382_Add new field in personclocktime.resx">
-      <DependentUpon>202004221019382_Add new field in personclocktime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202005070958127_Added New Column in People.resx">
-      <DependentUpon>202005070958127_Added New Column in People.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202005071311480_Set NULL in Logindate.resx">
-      <DependentUpon>202005071311480_Set NULL in Logindate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202005081147569_Add IsRemainFiveMin PersonClockTime.resx">
-      <DependentUpon>202005081147569_Add IsRemainFiveMin PersonClockTime.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202005220353164_migration.resx">
-      <DependentUpon>202005220353164_migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006040413309_Add BuildVersion in people table.resx">
-      <DependentUpon>202006040413309_Add BuildVersion in people table.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006231323586_migration.resx">
+      <DependentUpon>202006231323586_migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

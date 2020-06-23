@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddIsRemainFiveMinPersonClockTime : IMigrationMetadata
+    public sealed partial class migration : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddIsRemainFiveMinPersonClockTime));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(migration));
         
         string IMigrationMetadata.Id
         {
-            get { return "202005081147569_Add IsRemainFiveMin PersonClockTime"; }
+            get { return "202006231323586_migration"; }
         }
         
         string IMigrationMetadata.Source
