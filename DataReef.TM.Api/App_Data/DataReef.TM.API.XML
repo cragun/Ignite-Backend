@@ -644,7 +644,7 @@
             Get method used by SmartBoard to retrieve all OUs which have no apikey
             </summary>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.OUsController.InsertApikeyForOU(System.Guid,System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.InsertApikeyForOU(DataReef.TM.Models.DTOs.OUs.SBOUID,System.String)">
             <summary>
             get method used by SmartBoard to add apikey for Ou
             </summary>

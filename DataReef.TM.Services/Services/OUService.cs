@@ -816,7 +816,7 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public void InsertApikeyForOU(Guid ouID, string apikey)
+        public void InsertApikeyForOU(SBOUID request, string apikey)
         {
             using (var uow = UnitOfWorkFactory())
             {
@@ -829,7 +829,7 @@ namespace DataReef.TM.Services.Services
                             SMARTBoard = new SMARTBoardIntegrationOptionData
                             {
                                 BaseUrl =ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"],
-                                ApiKey = apikey,
+                                ApiKey = request.Apikey,
                                 HomeUrl = "/leads/view/{0}",
                                 CreditApplicationUrl = "SB_CreditApplicationUrl"
                             }
@@ -837,7 +837,7 @@ namespace DataReef.TM.Services.Services
                     };
                     var newSetting = new OUSetting
                     {
-                        OUID = ouID,
+                        OUID = request.OUID,
                         Value = JsonConvert.SerializeObject(valueObj),
                         CreatedByID = SmartPrincipal.UserId,
                         Name = "Integrations.Options.Selected",

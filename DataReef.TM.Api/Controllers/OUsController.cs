@@ -251,11 +251,14 @@ namespace DataReef.TM.Api.Controllers
         /// <summary>
         /// get method used by SmartBoard to add apikey for Ou
         /// </summary>
-        [HttpGet, Route("addApikey/{ouID:Guid}/{apikey}")]
+        [HttpPost, Route("addApikey/{apikey}")]
         [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IHttpActionResult> InsertApikeyForOU(Guid ouID, string apikey)
+        public async Task<IHttpActionResult> InsertApikeyForOU([FromBody]SBOUID request, string apikey)
         {
-            ouService.InsertApikeyForOU(ouID, apikey);
+            bool checkTime = CryptographyHelper.checkTime(apikey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
+
+            ouService.InsertApikeyForOU(request, DecyptApiKey);
             return Ok(); 
         }
 
