@@ -104,16 +104,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             list.Add(new KeyValuePair<string, string>("WI", "Wisconsin"));
             list.Add(new KeyValuePair<string, string>("WY", "Wyoming"));
 
-            
+
 
             if (type.Equals("shortState"))
             {
-                 stateName = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
+                stateName = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
             }else if (type.Equals("fullState"))
             {
-                 stateName = list.Where(x => x.Value.ToLower() == shortState.ToLower()).FirstOrDefault().Key;
+                stateName = list.Where(x => x.Value.ToLower() == shortState.ToLower()).FirstOrDefault().Key;
             }
-            
+
             return stateName;
         }
 
@@ -181,7 +181,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 project.installZipCode = zipcode;
 
                 req.Projects = new List<Projects>();
-                req.Projects.Add(project);                
+                req.Projects.Add(project);
 
                 string token = GetSunlightToken();
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
@@ -189,7 +189,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("SFAccessToken", "Bearer " + token);
-                
+
                 var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)

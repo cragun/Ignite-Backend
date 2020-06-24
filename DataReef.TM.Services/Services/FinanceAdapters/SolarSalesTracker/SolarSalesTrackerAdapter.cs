@@ -250,7 +250,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             //var mainOccupant = property.GetMainOccupant();
             var appointment = property.GetLatestAppointment();
-            if(IsdispositionChanged)
+            if (IsdispositionChanged)
             {
                 appointment = null;
             }
@@ -351,10 +351,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 try
                 {
                     //update the user's SmartBoard ID
-                    using(var dc = new DataContext())
+                    using (var dc = new DataContext())
                     {
                         var currentPerson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
-                        if(currentPerson != null)
+                        if (currentPerson != null)
                         {
                             currentPerson.SmartBoardID = response?.User?.Id ?? currentPerson.SmartBoardID;
                             currentPerson.Updated();
@@ -377,11 +377,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
         }
 
-        
 
-        public void SBActiveDeactiveUser(bool IsActive,string sbid)
+
+        public void SBActiveDeactiveUser(bool IsActive, string sbid)
         {
-           
+
             using (DataContext dc = new DataContext())
             {
                 var ret = dc
@@ -391,7 +391,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         .ToList();
 
                 var ouid = ret.FirstOrDefault().Guid;
-               
+
                 EnsureInitialized(ouid);
 
                 var integrationSettings = new IntegrationOptionSettings
@@ -414,13 +414,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     ?.SMARTBoard;
                 if (integrationData == null)
                 {
-                    return ;
+                    return;
                 }
 
                 string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
-                
+
                 var apiMethod = IsActive ? "deactivate_user" : "activate_user";
-            
+
                 var url = $"/apis/{apiMethod}/{encryptedAPIkey}";
 
                 var request = new SBLeadCreateRequest
@@ -441,7 +441,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-        public void SignAgreement(Proposal proposal,string documentTypeId, SignedDocumentDTO proposalDoc)
+        public void SignAgreement(Proposal proposal, string documentTypeId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;
             if (!ouid.HasValue || proposalDoc == null)
@@ -480,22 +480,22 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
             string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
-            
+
             var url = $"/apis/add_document/{encryptedAPIkey}";
 
             //var request = new SBAddDocument(proposal)
             var request = new SBAddDocument
             {
                 Document = new DocumentModel
-                { 
-                        AssociatedId= proposal?.Property?.Id,
-                        DocumentName=proposalDoc.Name,
-                        DocumentUrl=proposalDoc.PDFUrl,
-                        DocumentTypeId= documentTypeId,
-                        Email=email,
-                        Lon= proposal?.Lon,
-                        Lat= proposal?.Lat,
-                        Signed=true
+                {
+                    AssociatedId = proposal?.Property?.Id,
+                    DocumentName = proposalDoc.Name,
+                    DocumentUrl = proposalDoc.PDFUrl,
+                    DocumentTypeId = documentTypeId,
+                    Email = email,
+                    Lon = proposal?.Lon,
+                    Lat = proposal?.Lat,
+                    Signed = true
                 }
             };
 
@@ -567,7 +567,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     Signed = true
                 }
             };
-            
+
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
 
             try
@@ -637,7 +637,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                     Lead = new SBLeadModel(proposal?.Property, dealer),
                     Proposal = new SBProposalModel
-                    { 
+                    {
 
                         //CustomerName =(proposal?.Property.Name).Replace(" ", ""),
                         //ModuleQty= ProjectData?.ModuleCount.ToString(),
@@ -791,14 +791,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return null;
             }
 
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var people = dc.People.Where(x => x.Guid == createdByID || x.Guid == taggedID).ToList();
 
                 var createdBySmartboardID = people.FirstOrDefault(x => x.Guid == createdByID)?.SmartBoardID;
                 var taggedSmartboardID = people.FirstOrDefault(x => x.Guid == taggedID)?.SmartBoardID;
 
-                if(!string.IsNullOrEmpty(createdBySmartboardID) && !string.IsNullOrEmpty(taggedSmartboardID))
+                if (!string.IsNullOrEmpty(createdBySmartboardID) && !string.IsNullOrEmpty(taggedSmartboardID))
                 {
                     SetSSTSettings(integrationData);
 

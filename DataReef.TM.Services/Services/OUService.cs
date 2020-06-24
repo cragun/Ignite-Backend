@@ -777,6 +777,42 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
+        public IEnumerable<SBOU> GetOusList()
+        {
+            using (var dc = new DataContext())
+            {
+                List<OU> result = new List<OU>();
+
+                var OUList = dc
+                    .OUs?
+                    .Where(o => o.IsDeleted == false)
+                    .ToList();
+
+                var selectedList = dc
+                       .OUSettings
+                       .Where(os => os.Name == SolarTrackerResources.SelectedSettingName)
+                       .Select(os => os.OUID)
+                       .ToList();
+
+
+                foreach (var ou in OUList)
+                {
+                    var finalList = selectedList.Contains(ou.Guid).ToString();
+                    if (finalList.Equals("False"))
+                    {
+                        result.Add(ou);
+                    }
+                }
+
+                return result.Select(x => new SBOU
+                {
+                    OUID = x.Guid,
+                    Name = x.Name
+                });
+
+            }
+        }
+
         public ICollection<OU> ListAllForPersonAndSetting(Guid personID, string settingName)
         {
             List<OU> ret = new List<OU>();
