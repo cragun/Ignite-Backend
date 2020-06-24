@@ -255,11 +255,7 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public async Task<IHttpActionResult> InsertApikeyForOU(Guid ouID, string apikey)
         {
-
-            bool checkTime = CryptographyHelper.checkTime(apikey);
-            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
-
-            ouService.InsertApikeyForOU(ouID, DecyptApiKey);
+            ouService.InsertApikeyForOU(ouID, apikey);
             return Ok(); 
         }
 
