@@ -2300,7 +2300,7 @@ namespace DataReef.TM.Services.Services
         {
             using (var dataContext = new DataContext())
             {
-                var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Type == adderItem.Type && i.Name == adderItem.Name && i.Cost == adderItem.Cost && i.Guid == ProposalID);
+                var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Type == adderItem.Type && i.Name == adderItem.Name && i.Cost == adderItem.Cost && i.SolarSystemID == ProposalID);
 
                 if (existingadderItem != null)
                 {
