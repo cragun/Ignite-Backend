@@ -2300,6 +2300,13 @@ namespace DataReef.TM.Services.Services
         {
             using (var dataContext = new DataContext())
             {
+                var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Type == adderItem.Type && i.Name == adderItem.Name && i.Cost == adderItem.Cost && i.Guid == ProposalID);
+
+                if (existingadderItem != null)
+                {
+                    throw new Exception("Already added");
+                }
+
                 adderItem = AdderItem.ToDbModel(adderItem, ProposalID);
                 dataContext.AdderItems.Add(adderItem);
                 dataContext.SaveChanges();
