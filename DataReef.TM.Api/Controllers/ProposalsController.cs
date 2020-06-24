@@ -122,13 +122,13 @@ namespace DataReef.TM.Api.Controllers
         //    return Ok();
         //}
 
-        //[Route("Documents/getType")]
-        //[HttpGet]
-        //[ResponseType(typeof(List<DocType>))]
-        //public IHttpActionResult GetDocumentType()
-        //{
-        //    return Ok(_proposalService.GetDocumentType());
-        //}
+        [Route("Documents/getType")]
+        [HttpGet]
+        [ResponseType(typeof(List<DocType>))]
+        public IHttpActionResult GetDocumentType()
+        {
+            return Ok(_proposalService.GetDocumentType());
+        }
         /// <summary>
         /// Update ProposalData.ProposalDataJSON for given proposalDataId.
         /// The ProposalDataJSON will be read from the Body of the request.

@@ -148,7 +148,12 @@ namespace DataReef.TM.Services
 
             foreach (var personId in peopleIds)
             {
-                var person = peopleIdsWithOuAss.Where(x => x.Guid == personId && x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).FirstOrDefault();
+                var person = peopleIdsWithOuAss.Where(x => x.Guid == personId && x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager))).FirstOrDefault();
+
+                if(person == null)
+                {
+                    continue;
+                }
 
                 var reportRow = NormalizeSalesRepresentativeReportRow(
                     personId,

@@ -72,6 +72,9 @@ namespace DataReef.TM.Contracts.Services
         string GetAgreementForProposal(Guid proposalID);
 
         [OperationContract]
+        List<DocType> GetDocumentType();
+
+        [OperationContract]
         Proposal SignAgreement(Guid proposalDataId, DocumentSignRequest request);
 
         [OperationContract]
