@@ -2336,7 +2336,7 @@ namespace DataReef.TM.Services.Services
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
                 dataContext.SaveChanges();
 
-                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == adderItem.SolarSystemID);
+                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == existingadderItem.SolarSystemID);
                 if (solarSystem == null)
                 {
                     throw new Exception("Solar System not found");
