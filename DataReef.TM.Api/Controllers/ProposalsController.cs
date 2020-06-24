@@ -231,41 +231,41 @@ namespace DataReef.TM.Api.Controllers
 
         }
 
-        /// <summary>
-        /// Upload multiple documents using a multi-part body
-        /// </summary>
-        /// <param name="propertyID"></param>
-        /// <param name="DocId"></param>
-        /// <returns></returns>
-        /// 
-        [Route("{propertyID:guid}/uploadDocuments/{DocId}")]
-        [HttpPost]
-        [ResponseType(typeof(List<ProposalMediaItem>))]
-        public async Task<IHttpActionResult> UploadDocuments([FromUri]Guid propertyID, [FromUri]string DocId)
-        {
-            var data = await GetMultiPartData<List<MediaItemData>>("MediaItemInfo");
-            if (data.Item1 == null ||
-                (data.Item2?.Count ?? 0) == 0 ||
-                data.Item1.Count != data.Item2.Count)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
+        ///// <summary>
+        ///// Upload multiple documents using a multi-part body
+        ///// </summary>
+        ///// <param name="propertyID"></param>
+        ///// <param name="DocId"></param>
+        ///// <returns></returns>
+        ///// 
+        //[Route("{propertyID:guid}/uploadDocuments/{DocId}")]
+        //[HttpPost]
+        //[ResponseType(typeof(List<ProposalMediaItem>))]
+        //public async Task<IHttpActionResult> UploadDocuments([FromUri]Guid propertyID, [FromUri]string DocId)
+        //{
+        //    var data = await GetMultiPartData<List<MediaItemData>>("MediaItemInfo");
+        //    if (data.Item1 == null ||
+        //        (data.Item2?.Count ?? 0) == 0 ||
+        //        data.Item1.Count != data.Item2.Count)
+        //    {
+        //        throw new HttpResponseException(HttpStatusCode.BadRequest);
+        //    }
 
-            var request = data
-                            .Item2
-                            .Select(async (f, idx) => new ProposalMediaUploadRequest
-                            {
-                                Content = await f.Content.ReadAsByteArrayAsync(),
-                                ContentType = data.Item1[idx].ContentType,
-                                Notes = data.Item1[idx]?.Notes,
-                                MediaItemType = data.Item1[idx].MediaItemType,
-                                Name = f.Name
-                            })
-                            .Select(t => t.Result)
-                            .ToList();
+        //    var request = data
+        //                    .Item2
+        //                    .Select(async (f, idx) => new ProposalMediaUploadRequest
+        //                    {
+        //                        Content = await f.Content.ReadAsByteArrayAsync(),
+        //                        ContentType = data.Item1[idx].ContentType,
+        //                        Notes = data.Item1[idx]?.Notes,
+        //                        MediaItemType = data.Item1[idx].MediaItemType,
+        //                        Name = f.Name
+        //                    })
+        //                    .Select(t => t.Result)
+        //                    .ToList();
 
-            return Ok(_proposalService.UploadProposalDocumentItem(propertyID, DocId, request));
-        }
+        //    return Ok(_proposalService.UploadProposalDocumentItem(propertyID, DocId, request));
+        //}
 
         /// <summary>
         /// Upload multiple images using a multi-part body
@@ -369,6 +369,35 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("AddAddersIncentives/{ProposalID}")]
+        [HttpPost]
+        public IHttpActionResult AddAddersIncentives(AdderItem adderItem,Guid ProposalID)
+        {
+            var result = _proposalService.AddAddersIncentives(adderItem, ProposalID);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("UpdateQuantityAddersIncentives")]
+        [HttpPost]
+        public IHttpActionResult UpdateQuantityAddersIncentives(AdderItem adderItem)
+        {
+            var result = _proposalService.UpdateQuantityAddersIncentives(adderItem);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("DeleteAddersIncentives/{adderID}")]
+        [HttpPost]
+        public IHttpActionResult DeleteAddersIncentives(Guid adderID)
+        {
+            _proposalService.DeleteAddersIncentives(adderID);
+            return Ok();
+        }
 
         private async Task<DocumentSignRequest> GetProposalRequest()
         {
@@ -430,37 +459,5 @@ namespace DataReef.TM.Api.Controllers
 
             return JsonConvert.DeserializeObject<T>(value);
         }
-
-        [AllowAnonymous]
-        [InjectAuthPrincipal]
-        [Route("AddAddersIncentives/{ProposalID}")]
-        [HttpPost]
-        public IHttpActionResult AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
-        {
-            var result = _proposalService.AddAddersIncentives(adderItem, ProposalID);
-            return Ok(result);
-        }
-
-        [AllowAnonymous]
-        [InjectAuthPrincipal]
-        [Route("UpdateQuantityAddersIncentives/{ProposalID}")]
-        [HttpPost]
-        public IHttpActionResult UpdateQuantityAddersIncentives(AdderItem adderItem)
-        {
-            var result = _proposalService.UpdateQuantityAddersIncentives(adderItem);
-            return Ok(result);
-        }
-
-        [AllowAnonymous]
-        [InjectAuthPrincipal]
-        [Route("DeleteAddersIncentives/{adderID}")]
-        [HttpPost]
-        public IHttpActionResult DeleteAddersIncentives(Guid adderID)
-        {
-            _proposalService.DeleteAddersIncentives(adderID);
-            return Ok();
-        }
-
-
     }
 }

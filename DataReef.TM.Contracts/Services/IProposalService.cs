@@ -11,7 +11,6 @@ using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Blobs;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.ClientAPI;
-using System.IO;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -33,8 +32,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request);
 
-        [OperationContract]
-        List<ProposalMediaItem> UploadProposalDocumentItem(Guid proposalId,string DocId, List<ProposalMediaUploadRequest> request);
+        //[OperationContract]
+        //List<ProposalMediaItem> UploadProposalDocumentItem(Guid proposalId,string DocId, List<ProposalMediaUploadRequest> request);
 
         [OperationContract]
         void UpdateProposalDataJSON(Guid proposalDataId, string proposalDataJSON);
@@ -53,6 +52,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         BlobModel GetProposalMediaItemContent(Guid proposalMediaID, bool thumb = false);
+
+        [OperationContract]
+        string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request);
 
         [OperationContract]
         List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request);
@@ -82,16 +84,12 @@ namespace DataReef.TM.Contracts.Services
         List<KeyValue> GetAddersIncentives(Guid ProposalID);
 
         [OperationContract]
-        string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request);
+        AdderItem AddAddersIncentives(AdderItem adderItem,Guid ProposalID);
 
         [OperationContract]
-        Guid AddAddersIncentives(AdderItem adderItem, Guid ProposalID);
-
-        [OperationContract]
-        Guid UpdateQuantityAddersIncentives(AdderItem adderItem);
+        AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem);
 
         [OperationContract]
         void DeleteAddersIncentives(Guid adderID);
-
     }
 }

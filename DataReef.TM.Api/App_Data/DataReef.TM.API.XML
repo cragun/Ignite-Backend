@@ -761,15 +761,6 @@
             <returns></returns>
             
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.ProposalsController.UploadDocuments(System.Guid,System.String)">
-            <summary>
-            Upload multiple documents using a multi-part body
-            </summary>
-            <param name="propertyID"></param>
-            <param name="DocId"></param>
-            <returns></returns>
-            
-        </member>
         <member name="M:DataReef.TM.Api.Controllers.ProposalsController.UploadProposalMedia(System.Guid)">
             <summary>
             Upload multiple images using a multi-part body

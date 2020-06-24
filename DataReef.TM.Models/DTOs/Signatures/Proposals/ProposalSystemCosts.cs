@@ -104,6 +104,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
     public class SystemCostItem
     {
         public string Name { get; set; }
+        public Guid Guid { get; set; }
         public string Description { get; set; }
         public double Quantity { get; set; }
         public string UnitPriceDescription => RecurrenceType == AdderItemRecurrenceType.OneTime ? Label : $"{Label} x {RecurrencePeriod} {RecurrenceTypeLabel}";
@@ -154,6 +155,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         public SystemCostItem(AdderItem adder, int systemSize, bool roundAmounts = false)
         {
             Name = adder.Name;
+            Guid = adder.Guid;
             Description = adder.ReductionDescription();
             Quantity = adder.Quantity;
             UnitPriceValue = roundAmounts ? Math.Round((double)adder.Cost) : (double)adder.Cost;

@@ -785,17 +785,24 @@ namespace DataReef.TM.Services.Services
         {
             var PersonClockSetting = _ouSettingService.Value.GetOUSettingForPropertyID<PersonClock>(propertyid, OUSetting.LegionOUPersonClockInfo);
 
-            using (DataContext dc = new DataContext())
+            if (PersonClockSetting != null && PersonClockSetting.IsEnabled == true)
+            {
+                using (DataContext dc = new DataContext())
             {
                 var person = dc.People.Where(x => x.IsDeleted == false && x.Guid == SmartPrincipal.UserId).ToList();
 
                 if (person.Count > 0)
                 {
-                    var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                    //var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
 
-                    if (PersonClockSetting != null)
-                    {
-                        if (personClockTime != null && PersonClockSetting.IsEnabled == true)
+                    
+                        var personClockTime = new PersonClockTime();
+                        using (DataContext dh = new DataContext())
+                        {
+                            personClockTime = dh.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                        }
+
+                        if (personClockTime != null && personClockTime.Id > 0)
                         {
                             if (personClockTime.ClockType == "ClockIn")
                             {
@@ -813,26 +820,36 @@ namespace DataReef.TM.Services.Services
                             personClockTime.Version += 1;
                             personClockTime.DateLastModified = DateTime.Now;
                             personClockTime.IsRemainFiveMin = false;
-                            dc.SaveChanges();
+                            using (DataContext ds = new DataContext())
+                            {
+                                ds.Entry(personClockTime).State = EntityState.Modified;
+                                ds.SaveChanges();
+                            }
                         }
                         else
                         {
+                            using (DataContext db = new DataContext())
+                            {
+                                var personclk = db.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
 
-                            PersonClockTime personClock = new PersonClockTime();
-                            personClock.Guid = Guid.NewGuid();
-                            personClock.PersonID = SmartPrincipal.UserId;
-                            personClock.DateCreated = DateTime.Now;
-                            personClock.StartDate = DateTime.Now;
-                            personClock.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
-                            personClock.ClockDiff = 0;
-                            personClock.ClockMin = 0;
-                            personClock.ClockHours = 0;
-                            personClock.ClockType = "ClockIn";
-                            personClock.CreatedByID = SmartPrincipal.UserId;
-                            personClock.IsRemainFiveMin = false;
-                            dc.PersonClockTime.Add(personClock);
-                            dc.SaveChanges();
-
+                                if (personclk == null)
+                                {
+                                    PersonClockTime personClock = new PersonClockTime();
+                                    personClock.Guid = Guid.NewGuid();
+                                    personClock.PersonID = SmartPrincipal.UserId;
+                                    personClock.DateCreated = DateTime.Now;
+                                    personClock.StartDate = DateTime.Now;
+                                    personClock.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
+                                    personClock.ClockDiff = 0;
+                                    personClock.ClockMin = 0;
+                                    personClock.ClockHours = 0;
+                                    personClock.ClockType = "ClockIn";
+                                    personClock.CreatedByID = SmartPrincipal.UserId;
+                                    personClock.IsRemainFiveMin = false;
+                                    db.PersonClockTime.Add(personClock);
+                                    db.SaveChanges();
+                                }
+                            }
                         }
                     }
                 }
