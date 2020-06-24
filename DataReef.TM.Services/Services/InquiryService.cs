@@ -791,11 +791,17 @@ namespace DataReef.TM.Services.Services
 
                 if (person.Count > 0)
                 {
-                    var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                    //var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
 
-                    if (PersonClockSetting != null)
+                    if (PersonClockSetting != null && PersonClockSetting.IsEnabled == true)
                     {
-                        if (personClockTime != null && PersonClockSetting.IsEnabled == true)
+                        var personClockTime = new PersonClockTime();
+                        using (DataContext dh = new DataContext())
+                        {
+                            personClockTime = dh.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                        }
+
+                        if (personClockTime != null && personClockTime.Id > 0)
                         {
                             if (personClockTime.ClockType == "ClockIn")
                             {
@@ -813,7 +819,11 @@ namespace DataReef.TM.Services.Services
                             personClockTime.Version += 1;
                             personClockTime.DateLastModified = DateTime.Now;
                             personClockTime.IsRemainFiveMin = false;
-                            dc.SaveChanges();
+                            using (DataContext ds = new DataContext())
+                            {
+                                ds.Entry(personClockTime).State = EntityState.Modified;
+                                ds.SaveChanges();
+                            }
                         }
                         else
                         {
