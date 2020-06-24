@@ -20,6 +20,7 @@ using System.Web.Http.Description;
 using WebApi.OutputCache.V2;
 using GoogleMaps.LocationServices;
 using System.Threading.Tasks;
+using DataReef.Auth.Helpers;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -235,12 +236,27 @@ namespace DataReef.TM.Api.Controllers
         /// <summary>
         /// Get method used by SmartBoard to retrieve all OUs which have no apikey
         /// </summary>
-        [HttpGet, Route("getOusList")]
+        [HttpGet, Route("getOusList/{apikey}")]
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(IEnumerable<SBOU>))]
-        public async Task<IEnumerable<SBOU>> GetOusList()
+        public async Task<IEnumerable<SBOU>> GetOusList(string apikey)
         {
-            return ouService.GetOusList();
+
+            bool checkTime = CryptographyHelper.checkTime(apikey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
+
+            return ouService.GetOusList(DecyptApiKey);
+        }
+
+        /// <summary>
+        /// get method used by SmartBoard to add apikey for Ou
+        /// </summary>
+        [HttpGet, Route("{ouID:Guid}/{apikey}/addApikey")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<IHttpActionResult> InsertApikeyForOU(Guid ouID, string apikey)
+        {
+            ouService.InsertApikeyForOU(ouID, apikey);
+            return Ok(); 
         }
 
 
