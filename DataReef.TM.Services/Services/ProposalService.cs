@@ -2296,7 +2296,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public AdderItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        public SystemCostItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2310,12 +2310,19 @@ namespace DataReef.TM.Services.Services
                 adderItem = AdderItem.ToDbModel(adderItem, ProposalID);
                 dataContext.AdderItems.Add(adderItem);
                 dataContext.SaveChanges();
-            }
 
-            return adderItem;
+                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == ProposalID);
+                if (solarSystem == null)
+                {
+                    throw new Exception("Solar System not found");
+                }
+
+                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                return data;
+            }
         }
 
-        public AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem)
+        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem)
         {
             using (var dataContext = new DataContext())
             {
@@ -2328,9 +2335,16 @@ namespace DataReef.TM.Services.Services
 
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
                 dataContext.SaveChanges();
-            }
 
-            return adderItem;
+                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == adderItem.SolarSystemID);
+                if (solarSystem == null)
+                {
+                    throw new Exception("Solar System not found");
+                }
+
+                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                return data;
+            }
         }
 
         public void DeleteAddersIncentives(Guid adderID)

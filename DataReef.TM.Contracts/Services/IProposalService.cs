@@ -84,10 +84,10 @@ namespace DataReef.TM.Contracts.Services
         List<KeyValue> GetAddersIncentives(Guid ProposalID);
 
         [OperationContract]
-        AdderItem AddAddersIncentives(AdderItem adderItem,Guid ProposalID);
+        SystemCostItem AddAddersIncentives(AdderItem adderItem,Guid ProposalID);
 
         [OperationContract]
-        AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem);
+        SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem);
 
         [OperationContract]
         void DeleteAddersIncentives(Guid adderID);
