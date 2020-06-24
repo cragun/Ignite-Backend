@@ -785,7 +785,9 @@ namespace DataReef.TM.Services.Services
         {
             var PersonClockSetting = _ouSettingService.Value.GetOUSettingForPropertyID<PersonClock>(propertyid, OUSetting.LegionOUPersonClockInfo);
 
-            using (DataContext dc = new DataContext())
+            if (PersonClockSetting != null && PersonClockSetting.IsEnabled == true)
+            {
+                using (DataContext dc = new DataContext())
             {
                 var person = dc.People.Where(x => x.IsDeleted == false && x.Guid == SmartPrincipal.UserId).ToList();
 
@@ -793,8 +795,7 @@ namespace DataReef.TM.Services.Services
                 {
                     //var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
 
-                    if (PersonClockSetting != null && PersonClockSetting.IsEnabled == true)
-                    {
+                    
                         var personClockTime = new PersonClockTime();
                         using (DataContext dh = new DataContext())
                         {
