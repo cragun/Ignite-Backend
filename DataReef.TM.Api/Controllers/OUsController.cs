@@ -232,6 +232,18 @@ namespace DataReef.TM.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Get method used by SmartBoard to retrieve all OUs which have no apikey
+        /// </summary>
+        [HttpGet, Route("getOusList")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<SBOU>))]
+        public async Task<IEnumerable<SBOU>> GetOusList()
+        {
+            return ouService.GetOusList();
+        }
+
+
         [HttpGet]
         [Route("{ouID:Guid}/inquiryStats")]
         [ResponseType(typeof(ICollection<InquiryStatisticsForOrganization>))]
