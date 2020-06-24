@@ -821,7 +821,7 @@ namespace DataReef.TM.Services.Services
                             {
                                 var personclk = db.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
 
-                                if (personclk != null)
+                                if (personclk == null)
                                 {
                                     PersonClockTime personClock = new PersonClockTime();
                                     personClock.Guid = Guid.NewGuid();
