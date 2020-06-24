@@ -2298,11 +2298,11 @@ namespace DataReef.TM.Services.Services
 
         public AdderItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
-            using (var uow = UnitOfWorkFactory())
+            using (var dataContext = new DataContext())
             {
                 adderItem = AdderItem.ToDbModel(adderItem, ProposalID);
-                uow.Add(adderItem);
-                uow.SaveChanges();
+                dataContext.AdderItems.Add(adderItem);
+                dataContext.SaveChanges();
             }
 
             return adderItem;
@@ -2310,9 +2310,9 @@ namespace DataReef.TM.Services.Services
 
         public AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem)
         {
-            using (var uow = UnitOfWorkFactory())
+            using (var dataContext = new DataContext())
             {
-                var existingadderItem = uow.Get<AdderItem>().FirstOrDefault(i => i.Guid == adderItem.Guid);
+                var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Guid == adderItem.Guid);
 
                 if (existingadderItem == null)
                 {
@@ -2320,8 +2320,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
-                uow.Update(existingadderItem);
-                uow.SaveChanges();
+                dataContext.SaveChanges();
             }
 
             return adderItem;
