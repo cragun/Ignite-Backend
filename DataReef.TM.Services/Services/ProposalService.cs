@@ -2296,7 +2296,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public Guid AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        public AdderItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var uow = UnitOfWorkFactory())
             {
@@ -2305,10 +2305,10 @@ namespace DataReef.TM.Services.Services
                 uow.SaveChanges();
             }
 
-            return adderItem.Guid;
+            return adderItem;
         }
 
-        public Guid UpdateQuantityAddersIncentives(AdderItem adderItem)
+        public AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem)
         {
             using (var uow = UnitOfWorkFactory())
             {
@@ -2324,7 +2324,7 @@ namespace DataReef.TM.Services.Services
                 uow.SaveChanges();
             }
 
-            return adderItem.Guid;
+            return adderItem;
         }
 
         public void DeleteAddersIncentives(Guid adderID)
