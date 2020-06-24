@@ -441,9 +441,109 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-        public void SignAgreement(Proposal proposal, SignedDocumentDTO proposalDoc)
+        public void SignAgreement(Proposal proposal, string documentTypeId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;
+            if (!ouid.HasValue || proposalDoc == null)
+            {
+                return;
+            }
+
+            EnsureInitialized(ouid.Value);
+
+            var integrationSettings = new IntegrationOptionSettings
+            {
+                Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+            };
+
+            var integrationData =
+                integrationSettings
+                ?.SelectedIntegrations
+                ?.FirstOrDefault(x =>
+                {
+                    var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                    return matchingOption?.Type == IntegrationType.SMARTBoard;
+                })
+                ?.Data
+                ?.SMARTBoard;
+            //    if (integrationData == null)
+            //    {
+            //        return;
+            //    }
+
+            //    string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+            //    var url = $"/apis/attach_contract/{encryptedAPIkey}";
+
+            //    var request = new SBProposalAttachRequest(proposal)
+            //    {
+            //        contract = new Contract
+            //        { 
+            //                Name = proposalDoc.Name,
+            //                Body = "",
+            //                ExtraContent="",
+            //                Type="pdf"
+            //        }
+            //    };
+            //    SubmitProposal(integrationData, request, ouid.Value);
+
+            //    var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
+
+            //    try
+            //    {
+            //        SaveRequest(null, response, url, null, integrationData.ApiKey);
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+
+            //}
+
+            if (integrationData == null)
+            {
+                return;
+            }
+            string email;
+            using (DataContext dc = new DataContext())
+            {
+                email = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId)?.EmailAddressString;
+            }
+
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+            var url = $"/apis/add_document/{encryptedAPIkey}";
+            var request = new SBAddDocument
+            {
+                Document = new DocumentModel
+                {
+                    AssociatedId = proposal?.Property?.Id,
+                    DocumentName = proposalDoc.Name,
+                    DocumentUrl = proposalDoc.PDFUrl,
+                    DocumentTypeId = documentTypeId,
+                    Email = email,
+                    Lon = proposal?.Lon,
+                    Lat = proposal?.Lat,
+                    Signed = true
+                }
+            };
+
+            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
+
+            try
+            {
+                SaveRequest(request, response, url, null, integrationData.ApiKey);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void UploadDocumentItem(Property property, string documentTypeId, ProposalMediaItem proposalDoc)
+        {
+            var ouid = property?.Territory?.OUID;
             if (!ouid.HasValue || proposalDoc == null)
             {
                 return;
@@ -473,34 +573,43 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 return;
             }
+            string email;
+            using (DataContext dc = new DataContext())
+            {
+                email = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId)?.EmailAddressString;
+            }
 
             string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
-            
-            var url = $"/apis/attach_contract/{encryptedAPIkey}";
 
-            var request = new SBProposalAttachRequest(proposal)
+            var url = $"/apis/add_document/{encryptedAPIkey}";
+
+            var request = new SBAddDocument
             {
-                contract = new Contract
-                { 
-                        Name = proposalDoc.Name,
-                        Body = "",
-                        ExtraContent="",
-                        Type="pdf"
+                Document = new DocumentModel
+                {
+                    AssociatedId = property?.Id,
+                    DocumentName = proposalDoc.Name,
+                    DocumentUrl = proposalDoc.Url,
+                    DocumentTypeId = documentTypeId,
+                    Email = email,
+                    Lon = property?.Longitude,
+                    Lat = property?.Latitude,
+                    Signed = true
                 }
             };
-            SubmitProposal(integrationData, request, ouid.Value);
 
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
 
             try
             {
-                SaveRequest(null, response, url, null, integrationData.ApiKey);
+                SaveRequest(request, response, url, null, integrationData.ApiKey);
             }
             catch (Exception)
             {
             }
 
         }
+
 
 
         public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)

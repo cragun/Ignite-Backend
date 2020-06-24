@@ -51,6 +51,9 @@ namespace DataReef.TM.Contracts.Services
         BlobModel GetProposalMediaItemContent(Guid proposalMediaID, bool thumb = false);
 
         [OperationContract]
+        string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request);
+
+        [OperationContract]
         List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request);
 
         [OperationContract]
@@ -71,6 +74,17 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Proposal SignAgreement(Guid proposalDataId, DocumentSignRequest request);
 
+        [OperationContract]
+        List<KeyValue> GetAddersIncentives(Guid ProposalID);
+
+        [OperationContract]
+        AdderItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID);
+
+        [OperationContract]
+        AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem);
+
+        [OperationContract]
+        void DeleteAddersIncentives(Guid adderID);
 
     }
 }

@@ -26,7 +26,10 @@ namespace DataReef.TM.Contracts.Services
         void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc);
 
         [OperationContract]
-        void SignAgreement(Proposal proposal, SignedDocumentDTO proposalDoc);
+        void SignAgreement(Proposal proposal, string documentTypeId, SignedDocumentDTO proposalDoc);
+
+        [OperationContract]
+        void UploadDocumentItem(Property property, string documentTypeId, ProposalMediaItem proposalDoc);
 
         [OperationContract]
         void SBActiveDeactiveUser(bool IsActive, string sbid);

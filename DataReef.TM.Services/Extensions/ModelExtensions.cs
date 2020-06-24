@@ -2,6 +2,7 @@
 using DataReef.Integrations.Geo.DataViews;
 using DataReef.Integrations.Microsoft.PowerBI.Models;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DataViews.Inquiries;
 using DataReef.TM.Models.DataViews.SelfTrackedKPIs;
 using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Models.DTOs.Reports;
@@ -138,6 +139,27 @@ public static class ModelExtensions
     }
 
     internal static int GetStatisticForReportingPeriod(this SelfTrackedStatistics stat, ReportingPeriod reportingPeriod)
+    {
+        switch (reportingPeriod)
+        {
+            case ReportingPeriod.AllTime:
+                return stat.Actions.AllTime;
+            case ReportingPeriod.ThisYear:
+                return stat.Actions.ThisYear;
+            case ReportingPeriod.ThisMonth:
+                return stat.Actions.ThisMonth;
+            case ReportingPeriod.ThisWeek:
+                return stat.Actions.ThisWeek;
+            case ReportingPeriod.Today:
+                return stat.Actions.Today;
+            case ReportingPeriod.SpecifiedDay:
+                return stat.Actions.SpecifiedDay;
+        }
+
+        return 0;
+    }
+
+    internal static long GetStatisticForInquiryReportingPeriod(this InquiryStatisticsForOrganization stat, ReportingPeriod reportingPeriod)
     {
         switch (reportingPeriod)
         {

@@ -20,6 +20,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -189,6 +190,57 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
+
+        /// <summary>
+        /// Upload multiple documents using a multi-part body
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <param name="DocId"></param>
+        /// <returns></returns>
+        /// 
+        [Route("{propertyID:guid}/uploadDocument/{DocId}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UploadDocument([FromUri]Guid propertyID, [FromUri]string DocId)
+        {
+
+            string str = "";
+            try
+            {
+                var PicFile = HttpContext.Current.Request.Files["file"];
+
+                byte[] fileData = null;
+                using (var binaryReader = new BinaryReader(PicFile.InputStream))
+                {
+                    fileData = binaryReader.ReadBytes(PicFile.ContentLength);
+                }
+
+
+                if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
+                {
+                    var request = new ProposalMediaUploadRequest
+                    {
+                        // Content = PicFile.Content.ReadAsByteArrayAsync(),
+                        Content = fileData,
+                        ContentType = PicFile.ContentType,
+                        Name = PicFile.FileName
+                    };
+
+                    str = _proposalService.UploadProposalDoc(propertyID, DocId, request);
+
+                    //string picname = System.IO.Path.GetFileNameWithoutExtension(PicFile.FileName);
+                    // return Ok(picname);
+                }
+
+            }
+            catch(Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+
+            return Ok(str);
+
+        }
+
         /// <summary>
         /// Upload multiple images using a multi-part body
         /// </summary>
@@ -280,6 +332,46 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = request?.Request });
         }
 
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("GetAddersIncentives/{ProposalID}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> GetAddersIncentives(Guid ProposalID)
+        {
+            var result = _proposalService.GetAddersIncentives(ProposalID);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("AddAddersIncentives/{ProposalID}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddAddersIncentives(AdderItem adderItem,Guid ProposalID)
+        {
+            var result = _proposalService.AddAddersIncentives(adderItem, ProposalID);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("UpdateQuantityAddersIncentives")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateQuantityAddersIncentives(AdderItem adderItem)
+        {
+            var result = _proposalService.UpdateQuantityAddersIncentives(adderItem);
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("DeleteAddersIncentives/{adderID}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> DeleteAddersIncentives(Guid adderID)
+        {
+            _proposalService.DeleteAddersIncentives(adderID);
+            return Ok();
+        }
 
 
         private async Task<DocumentSignRequest> GetProposalRequest()

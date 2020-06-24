@@ -6,6 +6,7 @@ using DataReef.Core.Logging;
 using DataReef.Integrations;
 using DataReef.Integrations.Common.Geo;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.Contracts.Services.FinanceAdapters;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
@@ -51,7 +52,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
-
+        private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
 
         public PropertyService(ILogger logger,
             IGeoProvider geoProvider,
@@ -59,6 +60,7 @@ namespace DataReef.TM.Services.Services
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IDeviceService> deviceService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            Lazy<ISunlightAdapter> sunlightAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
@@ -864,7 +866,7 @@ namespace DataReef.TM.Services.Services
                     Address1 = request.AddressLine1,
                     Address2 = request.AddressLine2,
                     City = request.City,
-                    State = request.State,
+                    State = _sunlightAdapter.Value.GetState(request.State, "fullState"),
                     ZipCode = request.ZipCode,
                     Latitude = request.Latitude,
                     Longitude = request.Longitude,

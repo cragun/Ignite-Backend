@@ -19,6 +19,7 @@ using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DTOs.Solar.Proposal;
 using DataReef.TM.Models.Enums;
+using DataReef.TM.Models.FinancialIntegration;
 using DataReef.TM.Models.Solar;
 using DataReef.TM.Services.Extensions;
 using DataReef.TM.Services.InternalServices;
@@ -1045,7 +1046,7 @@ namespace DataReef.TM.Services.Services
 
                 proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
 
-                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
                 
                 // update territory DateLastModified
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
@@ -1714,6 +1715,59 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request)
+        {
+            try
+            {
+                string resp = "";
+                using (var dataContext = new DataContext())
+                {
+                    var proposals = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
+
+                    if (proposals == null)
+                    {
+                        resp = "Could not find Proposal Data!";
+                        return resp;
+
+                    }
+                    ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
+
+                    using (var uow = UnitOfWorkFactory())
+                    {
+
+                        proposalMediaItem = new ProposalMediaItem
+                        {
+
+                            ProposalID = proposals.Guid,
+                            MimeType = request.ContentType,
+                            MediaItemType = request.MediaItemType,
+                            Name = request.Name
+                        };
+                        string thumbUrl = proposalMediaItem.BuildUrl();
+                        var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
+
+                                new BlobModel
+                                {
+
+                                    Content = request.Content,
+                                    ContentType = request.ContentType,
+                                }, BlobAccessRights.Private);
+                        proposalMediaItem.Url = docUrl;
+                        uow.Add(proposalMediaItem);
+                        uow.SaveChanges();
+                    }
+                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposals, DocId, proposalMediaItem);
+                    resp = "success";
+                    return resp;
+                }
+            }
+
+            catch (Exception ex)
+
+            {
+                return ex.Message;
+            }
+        }
         public List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request)
         {
             var result = new List<ProposalMediaItem>();
@@ -2015,6 +2069,99 @@ namespace DataReef.TM.Services.Services
             {
                 uow.SaveChanges();
                 uow.Dispose();
+            }
+        }
+        public List<DocType> GetDocumentType()
+        {
+
+            List<DocType> typeList = new List<DocType>();
+
+            typeList.Add(new DocType() { Id = 1, Name = "Proposal" });
+            typeList.Add(new DocType() { Id = 2, Name = "Contract" });
+            typeList.Add(new DocType() { Id = 3, Name = "Reference" });
+            typeList.Add(new DocType() { Id = 4, Name = "Design" });
+
+            return typeList;
+        }
+
+        public List<Models.DataViews.KeyValue> GetAddersIncentives(Guid ProposalID)
+        {
+            using (var dc = new DataContext())
+            {
+
+                var Proposalsdata = dc.ProposalData.FirstOrDefault(x => x.Guid == ProposalID);
+                if (Proposalsdata == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                var Proposal = dc.Proposal.FirstOrDefault(x => x.Guid == ProposalID || x.Guid == Proposalsdata.ProposalID);
+                if (Proposal == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                var property = dc.Properties.FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == Proposal.PropertyID);
+                if (property == null)
+                {
+                    throw new Exception("Property not found");
+                }
+
+                var Territory = dc.Territories.FirstOrDefault(x => x.Guid == property.TerritoryID);
+                if (Territory == null)
+                {
+                    throw new Exception("Territory not found");
+                }
+
+
+                return dc.OUSettings.Where(x => x.OUID == Territory.OUID && (x.Name == "Adders" || x.Name == "Incentives")).Select(mi => new Models.DataViews.KeyValue
+                {
+                    Key = mi.Name,
+                    Value = mi.Value
+                }).ToList();
+            }
+        }
+
+        public AdderItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                adderItem = AdderItem.ToDbModel(adderItem, ProposalID);
+                dataContext.AdderItems.Add(adderItem);
+                dataContext.SaveChanges();
+            }
+
+            return adderItem;
+        }
+
+        public AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Guid == adderItem.Guid);
+
+                if (existingadderItem == null)
+                {
+                    throw new Exception("Data not found");
+                }
+
+                existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                dataContext.SaveChanges();
+            }
+
+            return adderItem;
+        }
+
+        public void DeleteAddersIncentives(Guid adderID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                dataContext
+               .AdderItems
+               .Where(pc => pc.Guid == adderID)
+               .Delete();
+
+                dataContext.SaveChanges();
             }
         }
     }

@@ -10,6 +10,18 @@ namespace DataReef.TM.Models.DTOs.OUs
 {
     [DataContract]
     [NotMapped]
+    public class SBOU
+    {
+        [DataMember]
+        public Guid OUID { get; set; }
+
+        [DataMember]
+        public string Name { get; set; }
+
+    }
+
+    [DataContract]
+    [NotMapped]
     public class SBOUDTO
     {
         [DataMember]

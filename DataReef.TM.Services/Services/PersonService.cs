@@ -961,33 +961,32 @@ namespace DataReef.TM.Services
                                     .Take(request.PageSize)
                                     .ToList();
 
-                if (result?.Any() == true)
-                {
-                    foreach (var prop in result)
-                    {
-                        prop.PropertyNotesCount = prop.PropertyNotes?.Where(x => !x.IsDeleted)?.Count();
+              //if (result?.Any() == true)
+                //{
+                //    foreach (var prop in result)
+                //    {
+                //        prop.PropertyNotesCount = prop.PropertyNotes?.Where(x => !x.IsDeleted)?.Count();
 
-                        if (!request.Include.Contains("PropertyNotes"))
-                        {
-                            prop.PropertyNotes = new List<PropertyNote>();
-                        }
-                    }
-                }
+                //        if (!request.Include.Contains("PropertyNotes"))
+                //        {
+                //            prop.PropertyNotes = new List<PropertyNote>();
+                //        }
+                //    }
+                //}
 
-                if (request.Include?.Split(",".ToCharArray())?.Contains("territory.ou.settings", StringComparer.InvariantCultureIgnoreCase) == true)
-                {
-                    var ous = result
-                                .Where(p => p.Territory?.OU != null)
-                                .Select(p => p.Territory.OU)
-                                .Distinct()
-                                .ToList();
+                //if (request.Include?.Split(",".ToCharArray())?.Contains("territory.ou.settings", StringComparer.InvariantCultureIgnoreCase) == true)
+                //{
+                //    var ous = result
+                //                .Where(p => p.Territory?.OU != null)
+                //                .Select(p => p.Territory.OU)
+                //                .Distinct()
+                //                .ToList();
 
-                    foreach (var ou in ous)
-                    {
-                        ou.Settings = OUSettingService.GetOuSettings(ou.Guid);
-                    }
-                }
-
+                //    foreach (var ou in ous)
+                //    {
+                //        ou.Settings = OUSettingService.GetOuSettings(ou.Guid);
+                //    }
+                //}
                 return new PaginatedResult<Property>
                 {
                     Data = result,
