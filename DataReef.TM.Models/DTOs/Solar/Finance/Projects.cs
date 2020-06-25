@@ -8,11 +8,16 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 {
     public class Projects
     {
+
+        public int term { get; set; }
+        public double apr { get; set; }
         public string installStreet { get; set; }
         public string installCity { get; set; }
         public string installStateName { get; set; }
         public string installZipCode { get; set; }
+        public bool sendLinkEmail { get; set; }
         public List<Applicants> applicants { get; set; }
+        public List<Quotes> quotes { get; set; }
 
         public string id { get; set; }
         public string hashId { get; set; }
