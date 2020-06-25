@@ -238,6 +238,7 @@ namespace DataReef.TM.Models.Solar
         {
             AdderItem ret = new AdderItem();
             ret = item;
+            ret.Guid = Guid.NewGuid();
             ret.Description = item.Description ?? "";
             ret.Quantity = item.Quantity == 0 ? 1 : item.Quantity;
             ret.Version = 1;
