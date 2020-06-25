@@ -1,6 +1,7 @@
 ﻿using DataReef.Core.Attributes;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
+using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using Newtonsoft.Json;
 using RestSharp;
@@ -27,6 +28,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
         private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
         private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
+        private static readonly string FrameUrl_New = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url.New"];
 
         private RestClient client
         {
@@ -46,8 +48,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         {
             public string access_token { get; set; }
         }
-
-
+ 
         public string GetState(string shortState,string type)
         {
             string stateName="";
@@ -211,7 +212,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         }
 
 
-        public string CreateSunlightAccount(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode)
+        public string CreateSunlightAccount(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode,int term,double apr)
         {
             try
             {
@@ -221,6 +222,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 SunlightProjects req = new SunlightProjects();
                 Projects project = new Projects();
                 Applicants applicnt = new Applicants();
+                Quotes quote = new Quotes();
 
                 applicnt.firstName = fname;
                 applicnt.lastName = lname;
@@ -228,19 +230,28 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 applicnt.phone = phone;
                 applicnt.isPrimary = true;
 
+                quote.loanAmount = 28000;
+
                 project.applicants = new List<Applicants>();
+                project.quotes = new List<Quotes>();
                 project.applicants.Add(applicnt);
+                project.quotes.Add(quote);
+
+                project.term = term*12;
+                project.apr= double.Parse(String.Format("{0:0.##}", apr));
+                project.isACH =true;
                 project.installStreet = street;
                 project.installCity = city;
                 project.installStateName = state;
                 project.installZipCode = zipcode;
+                project.sendLinkEmail = false;
 
                 req.Projects = new List<Projects>();
                 req.Projects.Add(project);
 
                 string token = GetSunlightToken();
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
-                var request = new RestRequest($"/applicant/create/", Method.POST);
+                var request = new RestRequest($"/pricing/createaccount/", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("SFAccessToken", "Bearer " + token);
@@ -254,7 +265,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-                string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + ret.Projects?.FirstOrDefault().hashId);
+                string frame = FrameUrl.Replace("{tokenid}", token)
+                                       .Replace("{hashid}", "&cid=" + ret.Projects?.FirstOrDefault().hashId)
+                                       +"____"+
+                                       FrameUrl_New.Replace("{tokenid}", token)
+                                       .Replace("{hashid}", "&cid=" + ret.Projects?.FirstOrDefault().hashId);
 
                 return frame;
             }
