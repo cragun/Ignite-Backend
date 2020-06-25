@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -26,7 +27,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("test")]
-        public IHttpActionResult test(Guid prid)
+        public async Task<IHttpActionResult> test(Guid prid)
         {
             var ou = _ouservice.ListRootGuidsForPerson(prid);
             return Ok(ou);
@@ -46,7 +47,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{reportName}")]
-        public IHttpActionResult GenerateReport(string reportName, Guid ouID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, string proptype = null)
+        public async Task<IHttpActionResult> GenerateReport(string reportName, Guid ouID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, string proptype = null)
         {
             try
             {
@@ -66,7 +67,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("csv")]                                                      
-        public IHttpActionResult GenerateCsvReport(CsvReportType reportType, Guid ouID, ReportingPeriod reportingPeriod, DateTime? specifiedDay = null)
+        public async Task<IHttpActionResult> GenerateCsvReport(CsvReportType reportType, Guid ouID, ReportingPeriod reportingPeriod, DateTime? specifiedDay = null)
         {
             byte[] fileBytes;
             try

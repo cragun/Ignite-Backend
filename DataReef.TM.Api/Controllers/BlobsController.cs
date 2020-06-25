@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.API.Controllers
@@ -23,7 +24,7 @@ namespace DataReef.TM.API.Controllers
 
         [HttpPost]
         [Route("{guid:guid}")]
-        public string Download(Guid guid)
+        public async Task<string> Download(Guid guid)
         {
             var blob = blobService.Download(guid);
             return Convert.ToBase64String(blob.Content);
@@ -36,7 +37,7 @@ namespace DataReef.TM.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public IHttpActionResult SaveBytes(BlobPost post)
+        public async Task<IHttpActionResult> SaveBytes(BlobPost post)
         {
             try
             {
@@ -71,7 +72,7 @@ namespace DataReef.TM.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("{guid:guid}")]
-        public HttpResponseMessage GetBytes(Guid guid)
+        public async Task<HttpResponseMessage> GetBytes(Guid guid)
         {
             try
             {

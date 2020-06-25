@@ -29,7 +29,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{financePlanDefinitionId:guid}/creditcheckurls")]
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
-        public IHttpActionResult GetCreditCheckUrl(Guid financePlanDefinitionId)
+        public async Task<IHttpActionResult> GetCreditCheckUrl(Guid financePlanDefinitionId)
         {
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinition(financePlanDefinitionId));
         }
@@ -37,7 +37,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{financePlanDefinitionId:guid}/{propertyId:guid}/creditcheckurls")]
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
-        public IHttpActionResult GetPropertyCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID)
+        public async Task<IHttpActionResult> GetPropertyCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID)
         {
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }

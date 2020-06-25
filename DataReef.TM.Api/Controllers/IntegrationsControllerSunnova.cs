@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
@@ -14,7 +15,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [AllowAnonymous]
 
-        public IHttpActionResult LoginCallback()
+        public async Task<IHttpActionResult> LoginCallback()
         {
             return Ok();
         }

@@ -6,6 +6,7 @@ using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
 using DataReef.TM.Models.PushNotifications;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -29,7 +30,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("validate")]
         [ResponseType(typeof(bool))]
-        public IHttpActionResult Validate()
+        public async Task<IHttpActionResult> Validate()
         {
             var valid = _service.Validate();
 
@@ -48,7 +49,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("APNtoken/register")]
-        public IHttpActionResult RegisterAPNToken(GenericRequest<string> request)
+        public async Task<IHttpActionResult> RegisterAPNToken(GenericRequest<string> request)
         {
             _service.RegisterAPNDeviceToken(request.Request);
             return Ok();
@@ -60,7 +61,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("APNtoken/unregister")]
-        public IHttpActionResult UnregisterAPNToken()
+        public async Task<IHttpActionResult> UnregisterAPNToken()
         {
             _service.UnRegisterAPNDeviceToken();
             return Ok();
@@ -76,7 +77,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("push/subscribe/{entity}/{entityID}/{notificationType}")]
         [ResponseType(typeof(PushSubscription))]
-        public IHttpActionResult SubscribeToPushNotification(string entity, Guid entityID, NotificationType notificationType = NotificationType.Silent)
+        public async Task<IHttpActionResult> SubscribeToPushNotification(string entity, Guid entityID, NotificationType notificationType = NotificationType.Silent)
         {
             var subscription = new PushSubscription
             {
@@ -92,7 +93,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("push/unsubscribe/{subscriptionID:guid}")]
         [ResponseType(typeof(SaveResult))]
-        public IHttpActionResult UnsubscribeToPushNotification(Guid subscriptionID)
+        public async Task<IHttpActionResult> UnsubscribeToPushNotification(Guid subscriptionID)
         {
             var result = _pushSubscriptionService.Value.Delete(subscriptionID);
             return Ok(result);

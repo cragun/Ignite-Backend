@@ -15,6 +15,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataReef.Auth.Helpers;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -36,7 +37,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("getproperties")]
-        public IHttpActionResult GetProperties([FromBody]GetPropertiesRequest propertiesRequest)
+        public async Task<IHttpActionResult> GetProperties([FromBody]GetPropertiesRequest propertiesRequest)
         {
             if (propertiesRequest == null ||
                 (propertiesRequest.GeoPropertiesRequest == null && propertiesRequest.PropertiesRequest == null) ||
@@ -50,7 +51,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("getpropertiesSearch/{territoryid}")]
-        public IHttpActionResult GetPropertiesSearch(Guid territoryid, string searchvalue)
+        public async Task<IHttpActionResult> GetPropertiesSearch(Guid territoryid, string searchvalue)
         {
             if (string.IsNullOrEmpty(searchvalue))
                 return BadRequest($"Invalid searchvalue.");
@@ -63,7 +64,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("sync/{propertyID:guid}")]
-        public IHttpActionResult SyncProperty(Guid propertyID, string include = "")
+        public async Task<IHttpActionResult> SyncProperty(Guid propertyID, string include = "")
         {
             if (propertyID == Guid.Empty)
                 return BadRequest($"Invalid {nameof(propertyID)}");
@@ -76,7 +77,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [ResponseType(typeof(ICollection<Property>))]
         [Route("wkt")]
-        public IHttpActionResult GetPropertiesByShape([FromBody] GenericRequest<string> request)
+        public async Task<IHttpActionResult> GetPropertiesByShape([FromBody] GenericRequest<string> request)
         {
             var fileBytes = _csvReportingService.GeneratePropertyCsvReport(request.Request);
 
@@ -104,7 +105,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/image/upload")]
         [Route("attachments/uploadimage")]
-        public IHttpActionResult UploadImage([FromBody]UploadImageToPropertyAttachmentRequest uploadImageRequest)
+        public async Task<IHttpActionResult> UploadImage([FromBody]UploadImageToPropertyAttachmentRequest uploadImageRequest)
         {
             if (uploadImageRequest == null ||
                 string.IsNullOrEmpty(uploadImageRequest.ItemID) ||
@@ -127,7 +128,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, HttpDelete]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/image/delete")]
-        public IHttpActionResult DeleteAttachmentImage([FromBody]DeleteImageFromPropertyAttachmentRequest request)
+        public async Task<IHttpActionResult> DeleteAttachmentImage([FromBody]DeleteImageFromPropertyAttachmentRequest request)
         {
             if (request == null)
             {
@@ -142,7 +143,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPatch]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/image/editnotes")]
-        public IHttpActionResult EditNotesForImage([FromBody]EditPropertyAttachmentImageNotesRequest request)
+        public async Task<IHttpActionResult> EditNotesForImage([FromBody]EditPropertyAttachmentImageNotesRequest request)
         {
             if (request == null)
             {
@@ -158,7 +159,7 @@ namespace DataReef.TM.Api.Controllers
         [Obsolete("Will be removed. Replaced by the DELETE method")]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/deleteImage")]
-        public IHttpActionResult DeleteImage([FromBody]DeleteImageFromPropertyAttachmentRequest request)
+        public async Task<IHttpActionResult> DeleteImage([FromBody]DeleteImageFromPropertyAttachmentRequest request)
         {
             if (request == null)
             {
@@ -172,7 +173,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPatch]
         [Route("attachments/{guid}/edit")]
-        public IHttpActionResult EditAttachment(Guid guid, [FromBody]EditPropertyAttachmentRequest request)
+        public async Task<IHttpActionResult> EditAttachment(Guid guid, [FromBody]EditPropertyAttachmentRequest request)
         {
             _propertyAttachmentServiceFactory().UpdatePropertyAttachment(guid, request);
             return Ok();
@@ -181,7 +182,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("attachments/{guid}/submit")]
         [ResponseType(typeof(GenericResponse<bool>))]
-        public IHttpActionResult SubmitAttachment(Guid guid)
+        public async Task<IHttpActionResult> SubmitAttachment(Guid guid)
         {
             var response = _propertyAttachmentServiceFactory().SubmitPropertyAttachment(guid);
             return Ok(new GenericResponse<bool> { Response = response });
@@ -190,7 +191,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("attachments/{guid}/section/{sectionID}/submit")]
         [ResponseType(typeof(GenericResponse<bool>))]
-        public IHttpActionResult SubmitSectionIDAttachment(Guid guid, string sectionID)
+        public async Task<IHttpActionResult> SubmitSectionIDAttachment(Guid guid, string sectionID)
         {
             var response = _propertyAttachmentServiceFactory().SubmitPropertyAttachmentSection(guid, sectionID);
             return Ok(new GenericResponse<bool> { Response = response });
@@ -199,7 +200,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("attachments/{guid}/section/{sectionID}/task/{taskID}/submit")]
         [ResponseType(typeof(GenericResponse<bool>))]
-        public IHttpActionResult SubmitTaskIDAttachment(Guid guid, string sectionID, string taskID)
+        public async Task<IHttpActionResult> SubmitTaskIDAttachment(Guid guid, string sectionID, string taskID)
         {
             var response = _propertyAttachmentServiceFactory().SubmitPropertyAttachmentTask(guid, sectionID, taskID);
             return Ok(new GenericResponse<bool> { Response = response });
@@ -209,7 +210,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ExtendedPropertyAttachmentDTO))]
         [Route("attachments/details/{propertyAttachmentID:guid}")]
-        public IHttpActionResult GetPropertyAttachment(Guid propertyAttachmentID)
+        public async Task<IHttpActionResult> GetPropertyAttachment(Guid propertyAttachmentID)
         {
             var response = _propertyAttachmentServiceFactory().GetPropertyAttachmentData(propertyAttachmentID);
 
@@ -219,7 +220,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(IEnumerable<ExtendedPropertyAttachmentDTO>))]
         [Route("attachments/{propertyID:guid}")]
-        public IHttpActionResult GetPropertyAttachmentForProperty(Guid propertyID)
+        public async Task<IHttpActionResult> GetPropertyAttachmentForProperty(Guid propertyID)
         {
             var response = _propertyAttachmentServiceFactory().GetPropertyAttachmentsForProperty(propertyID);
 
@@ -229,7 +230,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("attachments/{propertyAttachmentID:guid}/review")]
         [ResponseType(typeof(GenericResponse<bool>))]
-        public IHttpActionResult ReviewPropertyAttachmentReview(Guid propertyAttachmentID, PropertyAttachmentSubmitReviewRequest request)
+        public async Task<IHttpActionResult> ReviewPropertyAttachmentReview(Guid propertyAttachmentID, PropertyAttachmentSubmitReviewRequest request)
         {
             var response = _propertyAttachmentServiceFactory().ReviewPropertyAttachment(propertyAttachmentID, request);
             return Ok(new GenericResponse<bool> { Response = response });
@@ -239,7 +240,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(IEnumerable<ExtendedPropertyAttachmentDTO>))]
         [Route("attachments")]
-        public IHttpActionResult GetAllPropertyAttachments(int pageIndex = 0, int itemsPerPage = 20, string query = "")
+        public async Task<IHttpActionResult> GetAllPropertyAttachments(int pageIndex = 0, int itemsPerPage = 20, string query = "")
         {
             var response = _propertyAttachmentServiceFactory().GetPagedPropertyAttachments(pageIndex, itemsPerPage, query);
 
@@ -249,7 +250,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [ResponseType(typeof(CanCreateAppointmentResponse))]
         [Route("cancreateappointment")]
-        public IHttpActionResult CanCreateAppointment(CanCreateAppointmentRequest request)
+        public async Task<IHttpActionResult> CanCreateAppointment(CanCreateAppointmentRequest request)
         {
             var response = _propertyServiceFactory().CanAddAppointmentOnProperty(request);
 
@@ -264,7 +265,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, Route("sb/{apiKey}")]
         [ResponseType(typeof(SBAppointmentDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public SBPropertyDTO CreateNewPropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
+        public async Task<SBPropertyDTO> CreateNewPropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);
@@ -282,7 +283,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, Route("sb/leadname/{leadId}")]
         [ResponseType(typeof(SBPropertyDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IHttpActionResult ChangePropertyNameFromSB(long leadId, [FromBody]SBPropertyNameDTO request)
+        public async Task<IHttpActionResult> ChangePropertyNameFromSB(long leadId, [FromBody]SBPropertyNameDTO request)
         {
             var result = _propertyServiceFactory().EditPropertyNameFromSB(leadId,request);
 

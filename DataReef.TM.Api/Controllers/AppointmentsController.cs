@@ -12,6 +12,7 @@ using DataReef.Core.Infrastructure.Authorization;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using DataReef.Auth.Helpers;
 using DataReef.TM.Models.DataViews;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -28,7 +29,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{appointmentID:guid}/status")]
         [ResponseType(typeof(Appointment))]
-        public IHttpActionResult ChangeAppointmentStatus(Guid appointmentID, [FromBody] GenericRequest<AppointmentStatus> request)
+        public async Task<IHttpActionResult> ChangeAppointmentStatus(Guid appointmentID, [FromBody] GenericRequest<AppointmentStatus> request)
         {
             var response = _appointmentService.SetAppointmentStatus(appointmentID, request.Request);
             return Ok(response);
@@ -42,7 +43,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet, Route("sb/lead/{propertyID}/{apiKey}")]
         [ResponseType(typeof(IEnumerable<SBAppointmentDTO>))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IEnumerable<SBAppointmentDTO> GetAppointmentsForProperty(long propertyID, string apiKey)
+        public async Task<IEnumerable<SBAppointmentDTO>> GetAppointmentsForProperty(long propertyID, string apiKey)
         {
             return _appointmentService.GetSmartboardAppointmentsForPropertyID(propertyID, apiKey);
         }
@@ -57,7 +58,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet, Route("sb/ou/{ouID}/{apiKey}")]
         [ResponseType(typeof(IEnumerable<SBAppointmentDTO>))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IEnumerable<SBAppointmentDTO> GetAppointmentsForOU(Guid ouID, string apiKey, int pageNumber = 1, int itemsPerPage = 20)
+        public async Task<IEnumerable<SBAppointmentDTO>> GetAppointmentsForOU(Guid ouID, string apiKey, int pageNumber = 1, int itemsPerPage = 20)
         {
             return _appointmentService.GetSmartboardAppointmentsForOUID(ouID, pageNumber, itemsPerPage, apiKey);
         }
@@ -72,7 +73,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="date"></param>
         [HttpPost]
         [Route("sb/ouAppointment/{ouID}/{apiKey}/{date}")]
-        public IHttpActionResult GetMembers([FromBody]OUMembersRequest request, Guid ouID, string apiKey, string date)
+        public async Task<IHttpActionResult> GetMembers([FromBody]OUMembersRequest request, Guid ouID, string apiKey, string date)
         {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
@@ -88,7 +89,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet, Route("sb/user/{smartboardUserId}/{apiKey}")]
         [ResponseType(typeof(IEnumerable<SBAppointmentDTO>))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public IEnumerable<SBAppointmentDTO> GetAppointmentsAssignedToSmartboardUser(string smartboardUserId, string apiKey)
+        public async Task<IEnumerable<SBAppointmentDTO>> GetAppointmentsAssignedToSmartboardUser(string smartboardUserId, string apiKey)
         {
             return _appointmentService.GetSmartboardAppointmentsAssignedToUserId(smartboardUserId, apiKey);
         }
@@ -101,7 +102,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, Route("sb/{apiKey}")]
         [ResponseType(typeof(SBAppointmentDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public SBAppointmentDTO CreateNewAppointmentFromSmartBoard(SBCreateAppointmentRequest request, string apiKey)
+        public async Task<SBAppointmentDTO> CreateNewAppointmentFromSmartBoard(SBCreateAppointmentRequest request, string apiKey)
         {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
@@ -118,7 +119,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPatch, Route("sb/{appointmentID}/{apiKey}")]
         [ResponseType(typeof(SBAppointmentDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public SBAppointmentDTO EditAppointmentFromSmartBoard(SBEditAppointmentRequest request, Guid appointmentID, string apiKey)
+        public async Task<SBAppointmentDTO> EditAppointmentFromSmartBoard(SBEditAppointmentRequest request, Guid appointmentID, string apiKey)
         {
             return _appointmentService.EditSBAppointment(request, appointmentID, apiKey);
         }
@@ -132,7 +133,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpDelete, Route("sb/{appointmentID}/{apiKey}")]
         [ResponseType(typeof(bool))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public bool RemoveAppointmentSmartBoard(Guid appointmentID, string apiKey)
+        public async Task<bool> RemoveAppointmentSmartBoard(Guid appointmentID, string apiKey)
         {
             return _appointmentService.DeleteSBAppointment(appointmentID, apiKey);
         }
@@ -145,7 +146,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, Route("sb/status/{apiKey}")]
         [ResponseType(typeof(SBAppointmentDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public SBAppointmentDTO SetAppointmentStatusSmartBoard(SBSetAppointmentStatusRequest request, string apiKey)
+        public async Task<SBAppointmentDTO> SetAppointmentStatusSmartBoard(SBSetAppointmentStatusRequest request, string apiKey)
         {
             return _appointmentService.SetAppointmentStatusFromSmartboard(request, apiKey);
         }

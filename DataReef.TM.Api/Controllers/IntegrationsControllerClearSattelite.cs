@@ -3,6 +3,7 @@ using DataReef.TM.Api.Classes;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -11,7 +12,7 @@ namespace DataReef.TM.Api.Controllers
 	{
 		[HttpGet]
         [Route("ClearSatellite/Agemni/lookupdata")]
-		public AgemniLookupData GetAgemniLookupData()
+		public async Task<AgemniLookupData> GetAgemniLookupData()
 		{
 			DataReef.Integrations.Agemni.AgemniLookupData lookupData = new AgemniLookupData();
 			return lookupData;
@@ -19,7 +20,7 @@ namespace DataReef.TM.Api.Controllers
 
 		[HttpPost]
         [Route("ClearSatellite/Agemni/account")]
-		public HttpResponseMessage PerformAgemniIntegration(DataReef.Integrations.Agemni.IntegrationRequest request)
+		public async Task<HttpResponseMessage> PerformAgemniIntegration(DataReef.Integrations.Agemni.IntegrationRequest request)
 		{
 			try
 			{

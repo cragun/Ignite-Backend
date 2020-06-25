@@ -1,5 +1,6 @@
 ﻿using DataReef.TM.Contracts.Services;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -22,7 +23,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("")]
         [HttpGet]
-        public IHttpActionResult GetHealth()
+        public async Task<IHttpActionResult> GetHealth()
         {
             try
             {
@@ -46,7 +47,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("check")]
         [HttpGet]
-        public IHttpActionResult CheckHealth()
+        public async Task<IHttpActionResult> CheckHealth()
         {
             return Ok();
         }

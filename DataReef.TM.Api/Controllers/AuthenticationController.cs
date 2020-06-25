@@ -12,6 +12,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
@@ -43,7 +44,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("")]
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult Authenticate(AuthenticationPost post)
+        public async Task<IHttpActionResult> Authenticate(AuthenticationPost post)
         {
             try
             {
@@ -71,7 +72,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("SuperAdm/{personid}")]
         [HttpPost]
        // [AllowAnonymous]
-        public IHttpActionResult AuthUserBySuperAdmin(Guid personid)
+        public async Task<IHttpActionResult> AuthUserBySuperAdmin(Guid personid)
         {
             try
             {
@@ -95,7 +96,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("UserStatus/{userId}/{value}")]
         [HttpGet]
         // [AllowAnonymous]
-        public IHttpActionResult UpdateUserStatus(bool value, Guid userId)
+        public async Task<IHttpActionResult> UpdateUserStatus(bool value, Guid userId)
         {
 
 
@@ -119,7 +120,7 @@ namespace DataReef.TM.Api.Controllers
         [GenericRoute("acceptinvitation")]
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult AcceptInvitation(NewUser user)
+        public async Task<IHttpActionResult> AcceptInvitation(NewUser user)
         {
             try
             {
@@ -157,7 +158,7 @@ namespace DataReef.TM.Api.Controllers
         [GenericRoute("createuser/{apiKey}")]
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult CreateUserFromSmartBoard([FromBody]CreateUserDTO user, string apiKey)
+        public async Task<IHttpActionResult> CreateUserFromSmartBoard([FromBody]CreateUserDTO user, string apiKey)
         {
             try
             {
@@ -207,7 +208,7 @@ namespace DataReef.TM.Api.Controllers
         [GenericRoute("reset/complete")]
           [HttpPost]
           [AllowAnonymous]
-          public IHttpActionResult CompleteResetPassword(PasswordResetCompletion completionObject)
+          public async Task<IHttpActionResult> CompleteResetPassword(PasswordResetCompletion completionObject)
           {
               try
               {
@@ -236,7 +237,7 @@ namespace DataReef.TM.Api.Controllers
           [GenericRoute("changepassword")]
           [HttpPut]
           [AllowAnonymous]
-          public IHttpActionResult ChangePassword(PasswordChange change)
+          public async Task<IHttpActionResult> ChangePassword(PasswordChange change)
           {
               try
               {
@@ -271,7 +272,7 @@ namespace DataReef.TM.Api.Controllers
           [GenericRoute("reset/initiate")]
           [HttpPost]
           [AllowAnonymous]
-          public IHttpActionResult ResetPassword(PasswordReset resetObject)
+          public async Task<IHttpActionResult> ResetPassword(PasswordReset resetObject)
           {
               try
               {
@@ -302,7 +303,7 @@ namespace DataReef.TM.Api.Controllers
           [GenericRoute("token/extend")]
           [HttpPost]
           [AllowAnonymous]
-          public IHttpActionResult ExtendTokenValidity([FromBody]string token)
+          public async Task<IHttpActionResult> ExtendTokenValidity([FromBody]string token)
           {
               var certificate = DataReef.TM.Api.Security.Certificates.Certificate.Get();
               var authToken = AuthenticationToken.FromEncryptedString(token, certificate);

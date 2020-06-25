@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataReef.TM.Contracts.Services;
@@ -22,7 +23,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(VelocifyResponse))]
-        public IHttpActionResult SendProposal([FromBody]VelocifyRequest request)
+        public async Task<IHttpActionResult> SendProposal([FromBody]VelocifyRequest request)
         {
             if (request == null)
                 return BadRequest("Invalid request");
@@ -37,7 +38,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID}")]
         [HttpPost]
         [ResponseType(typeof(VelocifyResponse))]
-        public IHttpActionResult SendProposal([FromUri] Guid? ouID, [FromBody]VelocifyRequest request)
+        public async Task<IHttpActionResult> SendProposal([FromUri] Guid? ouID, [FromBody]VelocifyRequest request)
         {
             if (request == null)
                 return BadRequest("Invalid request");

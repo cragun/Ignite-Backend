@@ -3,6 +3,7 @@ using DataReef.Core.Logging;
 using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Contracts.Services;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.API.Controllers
@@ -26,7 +27,7 @@ namespace DataReef.TM.API.Controllers
         /// <returns></returns>
         [Route("versions/ipad")]
         [HttpGet]
-        public string GetIpadApplicationBuild()
+        public async Task<string> GetIpadApplicationBuild()
         {
             try
             {
@@ -47,7 +48,7 @@ namespace DataReef.TM.API.Controllers
         /// <returns></returns>
         [HttpPatch]
         [Route("versions/ipad/set/{value}")]
-        public bool SetIpadApplicationBuild(string value)
+        public async Task<bool> SetIpadApplicationBuild(string value)
         {
             try
             {
@@ -69,7 +70,7 @@ namespace DataReef.TM.API.Controllers
         /// <returns></returns>
         [Route("loginDays")]
         [HttpGet]
-        public string GetloginDays()
+        public async Task<string> GetloginDays()
         {
             try
             {
@@ -90,7 +91,7 @@ namespace DataReef.TM.API.Controllers
         /// <returns></returns>
         [HttpPatch]
         [Route("loginDays/{value}")]
-        public bool SetLoginDays(string value)
+        public async Task<bool> SetLoginDays(string value)
         {
             try
             {
@@ -108,7 +109,7 @@ namespace DataReef.TM.API.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("push/test")]
-        public bool TestPushNotifications(TestAPNPushRequest request)
+        public async Task<bool> TestPushNotifications(TestAPNPushRequest request)
         {
             _settingsService.TestPushNotifications(request.DeviceToken, request.Payload);
             return true;

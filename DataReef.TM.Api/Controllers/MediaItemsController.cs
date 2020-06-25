@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.IO;
 using System.Net.Http.Headers;
-
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -30,7 +30,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("ou/{ouid:guid}")]
-        public IHttpActionResult GetForOU(Guid ouid, bool deletedItems = false, MediaType? mediaType = null)
+        public async Task<IHttpActionResult> GetForOU(Guid ouid, bool deletedItems = false, MediaType? mediaType = null)
         {
             var mType = mediaType.HasValue ? (int)mediaType.Value : -1;
 

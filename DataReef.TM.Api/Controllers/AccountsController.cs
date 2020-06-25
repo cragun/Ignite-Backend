@@ -10,6 +10,7 @@ using System.Linq;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
+using System.Threading.Tasks;
 
 
 namespace DataReef.TM.Api.Controllers
@@ -31,7 +32,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(ICollection<Person>))]
         [Route("{accountID:guid}/people")]
-        public IHttpActionResult GetPeople(Guid accountID)
+        public async Task<IHttpActionResult> GetPeople(Guid accountID)
         {
 
             List<Person> ret = new List<Person>();

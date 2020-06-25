@@ -48,7 +48,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("territoryworkflowcompleted/{prescreenBatchId}")]
         [HttpPost]
-        public IHttpActionResult TerritoryWorkflowCompleted([FromBody] dynamic body, Guid prescreenBatchId)
+        public async Task<IHttpActionResult> TerritoryWorkflowCompleted([FromBody] dynamic body, Guid prescreenBatchId)
         {
             string json = Convert.ToString(body);
             var jo = JObject.Parse(json);
@@ -62,7 +62,7 @@ namespace DataReef.TM.Api.Controllers
             //  sync property attributes from Geo with TM
             try
             {
-                Task.Factory.StartNew(() => _propertyServiceFactory().SyncPrescreenBatchPropertiesAttributes(prescreenBatchId));
+              await Task.Factory.StartNew(() => _propertyServiceFactory().SyncPrescreenBatchPropertiesAttributes(prescreenBatchId));
             }
             catch (Exception)
             {
@@ -75,7 +75,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("propertyworkflowcompleted/{prescreenInstantId}")]
         [HttpPost]
-        public IHttpActionResult PropertyWorkflowCompleted([FromBody]dynamic body, [FromUri]Guid prescreenInstantId)
+        public async Task<IHttpActionResult> PropertyWorkflowCompleted([FromBody]dynamic body, [FromUri]Guid prescreenInstantId)
         {
             string json = Convert.ToString(body);
             var jo = JObject.Parse(json);
@@ -89,7 +89,7 @@ namespace DataReef.TM.Api.Controllers
             //  sync property attributes from Geo with TM
             try
             {
-                Task.Factory.StartNew(() =>
+              await  Task.Factory.StartNew(() =>
                 {
                     _propertyServiceFactory().SyncInstantPrescreenPropertyAttributes(prescreenInstantId);
                     // TODO: send a push notification once the service is in place
@@ -106,10 +106,10 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("orderworkflowcompleted")]
         [HttpPost]
-        public IHttpActionResult OrderWorkflowCompleted([FromBody] dynamic body)
+        public async Task<IHttpActionResult> OrderWorkflowCompleted([FromBody] dynamic body)
         {
 
-            Task.Factory.StartNew(() =>
+          await  Task.Factory.StartNew(() =>
             {
 
                 string json = Convert.ToString(body);

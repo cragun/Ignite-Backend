@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
@@ -25,7 +26,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [InjectAuthPrincipal]
         [AllowAnonymous]
-        public IHttpActionResult SpruceHardCreditCheckCallback(SpruceCallbackRequestModel request)
+        public async Task<IHttpActionResult> SpruceHardCreditCheckCallback(SpruceCallbackRequestModel request)
         {
             try
             {
@@ -155,7 +156,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [InjectAuthPrincipal]
         [AllowAnonymous]
-        public IHttpActionResult GenerateDocumentsCallback(SpruceCallbackRequestModel request)
+        public async Task<IHttpActionResult> GenerateDocumentsCallback(SpruceCallbackRequestModel request)
         {
             try
             {
@@ -189,13 +190,13 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new { });
         }
 
-        private decimal GetAmountFinanced(LoanRequestSpruce loanRequest)
+        private async Task<decimal> GetAmountFinanced(LoanRequestSpruce loanRequest)
         {
             decimal purchasePrice = (loanRequest.PricePerWattASP * loanRequest.SystemSize) * (1 + loanRequest.TaxRate);
             return purchasePrice - loanRequest.DownPayment;
         }
 
-        private IHttpActionResult GetErrors(string providerErrorMessage)
+        private async Task<IHttpActionResult> GetErrors(string providerErrorMessage)
         {
             var errorMessage = providerErrorMessage;
             var matches = Regex.Matches(providerErrorMessage, @":\[\""(.*?)\""\]");
