@@ -26,8 +26,5 @@ namespace DataReef.TM.Models.FinancialIntegration
 
         [DataMember]
         public string Headers { get; set; }
-
-        [DataMember]
-        public string Prefix { get; set; }
     }
 }
