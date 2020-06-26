@@ -22,7 +22,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     [Service(typeof(ISunlightAdapter))]
-    public class SunlightAdapter: ISunlightAdapter
+    public class SunlightAdapter : ISunlightAdapter
     {
         private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
         private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Username"];
@@ -50,10 +50,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         {
             public string access_token { get; set; }
         }
- 
-        public string GetState(string shortState,string type)
+
+        public string GetState(string shortState, string type)
         {
-            string stateName="";
+            string stateName = "";
 
             var list = new List<KeyValuePair<string, string>>();
             list.Add(new KeyValuePair<string, string>("AL", "Alabama"));
@@ -112,7 +112,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             if (type.Equals("shortState"))
             {
                 stateName = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
-            }else if (type.Equals("fullState"))
+            }
+            else if (type.Equals("fullState"))
             {
                 stateName = list.Where(x => x.Value.ToLower() == shortState.ToLower()).FirstOrDefault().Key;
             }
@@ -166,17 +167,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
 
 
-        public void fetchProducts(Projects data,string token)
+        public IRestResponse fetchProducts()
         {
             SunlightProducts req = new SunlightProducts();
             Products product = new Products();
 
             product.loanType = "Single";
-            product.term = data.term;
-            product.apr = data.apr;
+            product.term = 300;
+            product.apr = 3.99;
             product.isACH = true;
-            product.stateName = data.installStateName;
-            
+            product.stateName = "Texas";
 
             req.products = new List<Products>();
             req.products.Add(product);
@@ -185,18 +185,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             var request = new RestRequest($"/product/fetchproducts/", Method.POST);
             request.AddJsonBody(req);
             request.AddHeader("Authorization", "Basic " + svcCredentials);
+            string token = GetSunlightToken();
             request.AddHeader("SFAccessToken", "Bearer " + token);
 
             var response = client.Execute(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
-            }
-
+            return response;
         }
-
-
 
         public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         {
@@ -235,12 +229,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 req.projects = new List<Projects>();
                 req.projects.Add(project);
 
-                string token = GetSunlightToken();
+                // string token = GetSunlightToken();
+                string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
 
-                fetchProducts(project,token);
+                //fetchProducts(project, token);
 
-                
+
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                 var request = new RestRequest($"/pricing/createaccount/", Method.POST);
                 request.AddJsonBody(req);
@@ -258,7 +253,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
                 string frame = FrameUrl.Replace("{tokenid}", token)
                                        .Replace("{hashid}", "&cid=" + ret.projects?.FirstOrDefault().hashId)
-                                       +"____"+
+                                       + "____" +
                                        FrameUrl_New.Replace("{tokenid}", token)
                                        .Replace("{hashid}", "&cid=" + ret.projects?.FirstOrDefault().hashId);
 
@@ -268,7 +263,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             {
                 return ex.Message;
             }
-
         }
 
 
