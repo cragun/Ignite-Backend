@@ -63,7 +63,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public double monthlyPayment { get; set; }
         public double escalatedMonthlyPayment { get; set; }
         public string productType { get; set; }
-        public int term { get; set; }
+        public double term { get; set; }
         public double apr { get; set; }
         public bool isACH { get; set; }
 
