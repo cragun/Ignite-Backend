@@ -38,4 +38,15 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string statusText { get; set; }
         public bool? drawAutoApproved { get; set; }
     }
+
+    public class Products
+    {
+        public string loanType { get; set; }
+        public int term { get; set; }
+        public double apr { get; set; }
+        public bool? isACH { get; set; }
+        public string stateName { get; set; }
+    }
+
+
 }
