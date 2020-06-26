@@ -1141,6 +1141,24 @@ namespace DataReef.TM.Services
                     var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
 
                     var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
+
+
+                    //dc.Configuration.LazyLoadingEnabled = false;
+                    //dc.Configuration.AutoDetectChangesEnabled = false;
+
+                    //IQueryable<Person> customObjectQueryable = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted);
+
+                    //    var selectQuery = customObjectQueryable.Include(c => c.AssignedAppointments)
+                    //                                                     .Include(c => c.PersonSettings)
+                    //                                                     .Include(c => c.PhoneNumbers);
+
+                        
+
+                    //    return selectQuery;
+                    
+
+
+
                     //var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Select(i => new 
                     //{
                     //    Id = i.Id,
