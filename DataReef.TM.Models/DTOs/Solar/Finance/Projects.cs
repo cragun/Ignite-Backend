@@ -9,7 +9,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     public class Projects
     {
 
-        public int term { get; set; }
+        public double term { get; set; }
         public double apr { get; set; }
         public string installStreet { get; set; }
         public string installCity { get; set; }
@@ -42,7 +42,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     public class Products
     {
         public string loanType { get; set; }
-        public int term { get; set; }
+        public double term { get; set; }
         public double apr { get; set; }
         public bool? isACH { get; set; }
         public string stateName { get; set; }
