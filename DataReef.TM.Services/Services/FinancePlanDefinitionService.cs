@@ -186,7 +186,7 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property.GetMainOccupant().FirstName, property.GetMainOccupant().LastName, property.GetMainEmailAddress(), property.GetMainPhoneNumber(), property.Address1, property.City, property.State, property.ZipCode,financePlan.TermInYears,financePlan.Apr);
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property,financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
                         }
