@@ -2341,7 +2341,7 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Solar System not found");
                 }
 
-                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                var data = new SystemCostItem(existingadderItem, solarSystem.SystemSize, false);
                 return data;
             }
         }

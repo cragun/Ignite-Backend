@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataReef.TM.Models;
+using DataReef.TM.Models.Finance;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -11,8 +13,11 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     [ServiceKnownType("GetKnownTypes", typeof(KnownTypesProvider))]
     public interface ISunlightAdapter
     {
+        //    [OperationContract]
+        //    string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode);
+
         [OperationContract]
-        string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode);
+        string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan);
 
         [OperationContract]
         string GetSunlightToken();

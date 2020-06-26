@@ -15,6 +15,10 @@ using DataReef.TM.Models.DataViews.Financing;
 using DataReef.Core.Infrastructure.Authorization;
 using System.Text;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
+using DataReef.TM.Models.DTOs.Signatures.Proposals;
+using DataReef.TM.Services.Services.ProposalAddons.TriSMART;
+using DataReef.TM.Services.Services.ProposalAddons.TriSMART.Models;
+using DataReef.Engines.FinancialEngine.Loan;
 
 namespace DataReef.TM.Services
 {
@@ -24,9 +28,19 @@ namespace DataReef.TM.Services
     {
 
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
+        private readonly Lazy<IFinancingCalculator> _loanCalculator;
+        private readonly Lazy<IOUSettingService> _ouSettingService;
 
-        public FinancePlanDefinitionService(ILogger logger, Func<IUnitOfWork> unitOfWorkFactory, Lazy<ISunlightAdapter> sunlightAdapter
-            ) : base(logger, unitOfWorkFactory) { _sunlightAdapter = sunlightAdapter; }
+        public FinancePlanDefinitionService(ILogger logger,
+            Func<IUnitOfWork> unitOfWorkFactory,
+            Lazy<IFinancingCalculator> loanCalculator,
+            Lazy<IOUSettingService> ouSettingService,
+            Lazy<ISunlightAdapter> sunlightAdapter
+            ) : base(logger, unitOfWorkFactory) {
+            _sunlightAdapter = sunlightAdapter;
+            _loanCalculator = loanCalculator;
+            _ouSettingService = ouSettingService;
+        }
 
         public override ICollection<FinancePlanDefinition> GetMany(IEnumerable<Guid> uniqueIds, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
@@ -140,7 +154,11 @@ namespace DataReef.TM.Services
         {
             using (var dc = new DataContext())
             {
-                var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
+
+                var financePlan = dc
+                    .FinancePlaneDefinitions
+                    .FirstOrDefault(x => x.Guid == financePlanDefinitionId);
+
                 if (financePlan != null)
                 {
                     var property = dc.Properties.FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
@@ -168,7 +186,7 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightApplicant(property.GetMainOccupant().FirstName, property.GetMainOccupant().LastName, property.GetMainEmailAddress(), property.GetMainPhoneNumber(), property.Address1, property.City, property.State, property.ZipCode);
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property,financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
                         }
