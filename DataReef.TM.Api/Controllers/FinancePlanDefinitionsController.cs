@@ -45,18 +45,7 @@ namespace DataReef.TM.Api.Controllers
         {
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }
-
-
-        public class SunlightProjects
-        {
-            public string returnCode { get; set; }
-            public List<Models.DTOs.Solar.Finance.Products> projects { get; set; }
-        }
-        public class SunlightProducts
-        {
-            public string returnCode { get; set; }
-            public List<Models.DTOs.Solar.Finance.Products> products { get; set; }
-        }
+        
 
         private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
 
@@ -66,34 +55,6 @@ namespace DataReef.TM.Api.Controllers
             {
                 return new RestClient(url);
             }
-        }
-        
-        public IRestResponse Test()
-        {
-            SunlightProducts req = new SunlightProducts();
-            Models.DTOs.Solar.Finance.Products product = new Models.DTOs.Solar.Finance.Products();
-
-            product.loanType = "Single";
-            product.term = 300;
-            product.apr = 3.99;
-            product.isACH = true;
-            product.stateName = "Texas";
-
-            req.products = new List<Models.DTOs.Solar.Finance.Products>();
-            req.products.Add(product);
-
-            string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Username"];
-            string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Password"];
-
-            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
-            var request = new RestRequest($"/product/fetchproducts/", Method.POST);
-            request.AddJsonBody(req);
-            request.AddHeader("Authorization", "Basic " + svcCredentials);
-            string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
-            request.AddHeader("SFAccessToken", "Bearer " + token);
-
-            var response = client.Execute(request);
-            return response;
         }
 
         #region Forbidden methods

@@ -164,34 +164,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             public string returnCode { get; set; }
             public List<Products> products { get; set; }
         }
-
-
-
-        public IRestResponse fetchProducts()
-        {
-            SunlightProducts req = new SunlightProducts();
-            Products product = new Products();
-
-            product.loanType = "Single";
-            product.term = 300;
-            product.apr = 3.99;
-            product.isACH = true;
-            product.stateName = "Texas";
-
-            req.products = new List<Products>();
-            req.products.Add(product);
-
-            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
-            var request = new RestRequest($"/product/fetchproducts/", Method.POST);
-            request.AddJsonBody(req);
-            request.AddHeader("Authorization", "Basic " + svcCredentials);
-            string token = GetSunlightToken();
-            request.AddHeader("SFAccessToken", "Bearer " + token);
-
-            var response = client.Execute(request);
-            return response;
-        }
-
+        
         public void fetchProduct(Projects data,string token)
         {
             SunlightProducts req = new SunlightProducts();
@@ -219,12 +192,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
             if (!ret.returnCode.Equals("200"))
             {
-                throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
+                throw new ApplicationException("Sorry, there seems to be a problem, Error 390. No products found. Please contact Sunlight Financial at (888) 850-3359 for assistance.");
             }
 
         }
 
-        public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
+        public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan,decimal loanAmount)
         {
             try
             {
@@ -255,7 +228,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 Quotes quote = new Quotes();
 
                 project.quotes = new List<Quotes>();
-                quote.loanAmount = 28000;
+                quote.loanAmount = loanAmount;
                 project.quotes.Add(quote);
 
                 req.projects = new List<Projects>();
