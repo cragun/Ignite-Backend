@@ -34,7 +34,7 @@ namespace DataReef.TM.Api
                 responseBody = await result.Content.ReadAsStringAsync();
             }
 
-            if (request.RequestUri.ToString().Contains("/uploadDocument/")  || request.RequestUri.ToString().Contains("/media/upload"))
+            if (request.RequestUri.ToString().ToLowerInvariant().Contains(("/uploaddocument/").ToLowerInvariant()))
             {
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
