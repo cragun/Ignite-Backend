@@ -192,6 +192,38 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             return response;
         }
 
+        public void fetchProduct(Projects data,string token)
+        {
+            SunlightProducts req = new SunlightProducts();
+            Products product = new Products();
+
+            product.loanType = "Single";
+            product.term = data.term;
+            product.apr = data.apr;
+            product.isACH = true;
+            product.stateName = data.installStateName;
+
+            req.products = new List<Products>();
+            req.products.Add(product);
+
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+            var request = new RestRequest($"/product/fetchproducts/", Method.POST);
+            request.AddJsonBody(req);
+            request.AddHeader("Authorization", "Basic " + svcCredentials);
+            request.AddHeader("SFAccessToken", "Bearer " + token);
+
+            var response = client.Execute(request);
+
+            var content = response.Content;
+            var ret = JsonConvert.DeserializeObject<SunlightProducts>(content);
+
+            if (!ret.returnCode.Equals("200"))
+            {
+                throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
+            }
+
+        }
+
         public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         {
             try
@@ -229,11 +261,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 req.projects = new List<Projects>();
                 req.projects.Add(project);
 
-                // string token = GetSunlightToken();
-                string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
+                string token = GetSunlightToken();
+                //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
 
-                //fetchProducts(project, token);
+                fetchProduct(project, token);
 
 
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
