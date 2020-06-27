@@ -193,7 +193,7 @@ namespace DataReef.TM.Services
                                 var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
                                 var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
 
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced);
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
                         }

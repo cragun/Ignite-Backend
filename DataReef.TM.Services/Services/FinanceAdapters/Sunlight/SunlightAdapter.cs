@@ -30,7 +30,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
         private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
         private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
-        private static readonly string FrameUrl_New = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url.New"];
 
         private RestClient client
         {
@@ -197,7 +196,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
         }
 
-        public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan,decimal loanAmount)
+        public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan,string loanAmount)
         {
             try
             {
@@ -257,9 +256,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
                 string frame = FrameUrl.Replace("{tokenid}", token)
-                                       .Replace("{hashid}", "&cid=" + ret.projects?.FirstOrDefault().hashId)
-                                       + "____" +
-                                       FrameUrl_New.Replace("{tokenid}", token)
                                        .Replace("{hashid}", "&cid=" + ret.projects?.FirstOrDefault().hashId);
 
                 return frame;

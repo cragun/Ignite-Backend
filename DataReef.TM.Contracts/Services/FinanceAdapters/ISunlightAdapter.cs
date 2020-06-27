@@ -17,7 +17,7 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
         //    string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode);
 
         [OperationContract]
-        string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan, decimal loanAmount);
+        string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan, string loanAmount);
 
         [OperationContract]
         string GetSunlightToken();

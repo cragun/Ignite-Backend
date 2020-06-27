@@ -57,7 +57,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public bool isSyncing { get; set; }
         public string quoteNumber { get; set; }
         public DateTime createdDateTime { get; set; }
-        public decimal loanAmount { get; set; }
+        public string loanAmount { get; set; }
         public double finalMonthlyPayment { get; set; }
         public double finalEscalatedMonthlyPayment { get; set; }
         public double monthlyPayment { get; set; }
