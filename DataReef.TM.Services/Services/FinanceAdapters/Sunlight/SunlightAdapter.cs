@@ -1,8 +1,10 @@
 ﻿using DataReef.Core.Attributes;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
+using DataReef.TM.Models;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.DTOs.Solar.Finance;
+using DataReef.TM.Models.Finance;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -20,7 +22,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     [Service(typeof(ISunlightAdapter))]
-    public class SunlightAdapter: ISunlightAdapter
+    public class SunlightAdapter : ISunlightAdapter
     {
         private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
         private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Username"];
@@ -28,7 +30,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
         private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
         private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
-        private static readonly string FrameUrl_New = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url.New"];
 
         private RestClient client
         {
@@ -48,10 +49,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         {
             public string access_token { get; set; }
         }
- 
-        public string GetState(string shortState,string type)
+
+        public string GetState(string shortState, string type)
         {
-            string stateName="";
+            string stateName = "";
 
             var list = new List<KeyValuePair<string, string>>();
             list.Add(new KeyValuePair<string, string>("AL", "Alabama"));
@@ -110,7 +111,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             if (type.Equals("shortState"))
             {
                 stateName = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
-            }else if (type.Equals("fullState"))
+            }
+            else if (type.Equals("fullState"))
             {
                 stateName = list.Where(x => x.Value.ToLower() == shortState.ToLower()).FirstOrDefault().Key;
             }
@@ -154,102 +156,90 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         public class SunlightProjects
         {
             public string returnCode { get; set; }
-            public List<Projects> Projects { get; set; }
+            public List<Projects> projects { get; set; }
         }
-
-        public string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode)
+        public class SunlightProducts
         {
-            try
+            public string returnCode { get; set; }
+            public List<Products> products { get; set; }
+        }
+        
+        public void fetchProduct(Projects data,string token)
+        {
+            SunlightProducts req = new SunlightProducts();
+            Products product = new Products();
+
+            product.loanType = "Single";
+            product.term = data.term;
+            product.apr = data.apr;
+            product.isACH = true;
+            product.stateName = data.installStateName;
+
+            req.products = new List<Products>();
+            req.products.Add(product);
+
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+            var request = new RestRequest($"/product/fetchproducts/", Method.POST);
+            request.AddJsonBody(req);
+            request.AddHeader("Authorization", "Basic " + svcCredentials);
+            request.AddHeader("SFAccessToken", "Bearer " + token);
+
+            var response = client.Execute(request);
+
+            var content = response.Content;
+            var ret = JsonConvert.DeserializeObject<SunlightProducts>(content);
+
+            if (!ret.returnCode.Equals("200"))
             {
-
-                state = GetState(state, "shortState");
-
-                SunlightProjects req = new SunlightProjects();
-                Projects project = new Projects();
-                Applicants applicnt = new Applicants();
-
-                applicnt.firstName = fname;
-                applicnt.lastName = lname;
-                applicnt.email = email;
-                applicnt.phone = phone;
-                applicnt.isPrimary = true;
-
-                project.applicants = new List<Applicants>();
-                project.applicants.Add(applicnt);
-                project.installStreet = street;
-                project.installCity = city;
-                project.installStateName = state;
-                project.installZipCode = zipcode;
-
-                req.Projects = new List<Projects>();
-                req.Projects.Add(project);
-
-                string token = GetSunlightToken();
-                string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
-                var request = new RestRequest($"/applicant/create/", Method.POST);
-                request.AddJsonBody(req);
-                request.AddHeader("Authorization", "Basic " + svcCredentials);
-                request.AddHeader("SFAccessToken", "Bearer " + token);
-
-                var response = client.Execute(request);
-
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
-                }
-
-                var content = response.Content;
-                var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-                string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + ret.Projects?.FirstOrDefault().hashId);
-
-                return frame;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
+                throw new ApplicationException("Sorry, there seems to be a problem, Error 390. No products found. Please contact Sunlight Financial at (888) 850-3359 for assistance.");
             }
 
         }
 
-
-        public string CreateSunlightAccount(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode,int term,double apr)
+        public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan,string loanAmount)
         {
             try
             {
-
-                state = GetState(state, "shortState");
-
                 SunlightProjects req = new SunlightProjects();
                 Projects project = new Projects();
-                Applicants applicnt = new Applicants();
-                Quotes quote = new Quotes();
 
-                applicnt.firstName = fname;
-                applicnt.lastName = lname;
-                applicnt.email = email;
-                applicnt.phone = phone;
-                applicnt.isPrimary = true;
-
-                quote.loanAmount = 28000;
-
-                project.applicants = new List<Applicants>();
-                project.quotes = new List<Quotes>();
-                project.applicants.Add(applicnt);
-                project.quotes.Add(quote);
-
-                project.term = term*12;
-                project.apr= double.Parse(String.Format("{0:0.##}", apr));
-                project.isACH =true;
-                project.installStreet = street;
-                project.installCity = city;
-                project.installStateName = state;
-                project.installZipCode = zipcode;
+                project.term = financePlan.TermInYears * 12;
+                project.apr = double.Parse(String.Format("{0:0.00}", financePlan.Apr));
+                project.isACH = true;
+                project.installStreet = property.StreetName;
+                project.installCity = property.City;
+                project.installStateName = GetState(property.State, "shortState");
+                project.installZipCode = property.ZipCode;
                 project.sendLinkEmail = false;
 
-                req.Projects = new List<Projects>();
-                req.Projects.Add(project);
+                Applicants applicnt = new Applicants();
+
+                var name = property.GetMainOccupant();
+
+                project.applicants = new List<Applicants>();
+                applicnt.firstName = name.FirstName;
+                applicnt.lastName = name.LastName;
+                applicnt.email = property.GetMainEmailAddress();
+                applicnt.phone = property.GetMainPhoneNumber();
+                applicnt.isPrimary = true;
+                project.applicants.Add(applicnt);
+
+                Quotes quote = new Quotes();
+
+                project.quotes = new List<Quotes>();
+                quote.loanAmount = loanAmount;
+                project.quotes.Add(quote);
+
+                req.projects = new List<Projects>();
+                req.projects.Add(project);
 
                 string token = GetSunlightToken();
+                //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
+
+
+                fetchProduct(project, token);
+
+
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                 var request = new RestRequest($"/pricing/createaccount/", Method.POST);
                 request.AddJsonBody(req);
@@ -266,10 +256,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
                 string frame = FrameUrl.Replace("{tokenid}", token)
-                                       .Replace("{hashid}", "&cid=" + ret.Projects?.FirstOrDefault().hashId)
-                                       +"____"+
-                                       FrameUrl_New.Replace("{tokenid}", token)
-                                       .Replace("{hashid}", "&cid=" + ret.Projects?.FirstOrDefault().hashId);
+                                       .Replace("{hashid}", "&pid=" + ret.projects?.FirstOrDefault().hashId);
 
                 return frame;
             }
@@ -277,7 +264,62 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             {
                 return ex.Message;
             }
-
         }
+
+
+
+        //public string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode)
+        //{
+        //    try
+        //    {
+
+        //        state = GetState(state, "shortState");
+
+        //        SunlightProjects req = new SunlightProjects();
+        //        Projects project = new Projects();
+        //        Applicants applicnt = new Applicants();
+
+        //        applicnt.firstName = fname;
+        //        applicnt.lastName = lname;
+        //        applicnt.email = email;
+        //        applicnt.phone = phone;
+        //        applicnt.isPrimary = true;
+
+        //        project.applicants = new List<Applicants>();
+        //        project.applicants.Add(applicnt);
+        //        project.installStreet = street;
+        //        project.installCity = city;
+        //        project.installStateName = state;
+        //        project.installZipCode = zipcode;
+
+        //        req.Projects = new List<Projects>();
+        //        req.Projects.Add(project);
+
+        //        string token = GetSunlightToken();
+        //        string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+        //        var request = new RestRequest($"/applicant/create/", Method.POST);
+        //        request.AddJsonBody(req);
+        //        request.AddHeader("Authorization", "Basic " + svcCredentials);
+        //        request.AddHeader("SFAccessToken", "Bearer " + token);
+
+        //        var response = client.Execute(request);
+
+        //        if (response.StatusCode != HttpStatusCode.OK)
+        //        {
+        //            throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
+        //        }
+
+        //        var content = response.Content;
+        //        var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+        //        string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + ret.Projects?.FirstOrDefault().hashId);
+
+        //        return frame;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ex.Message;
+        //    }
+
+        //}
     }
 }

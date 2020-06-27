@@ -19,6 +19,7 @@ using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Services.Services.ProposalAddons.TriSMART;
 using DataReef.TM.Services.Services.ProposalAddons.TriSMART.Models;
 using DataReef.Engines.FinancialEngine.Loan;
+using Newtonsoft.Json;
 
 namespace DataReef.TM.Services
 {
@@ -158,6 +159,8 @@ namespace DataReef.TM.Services
                 var financePlan = dc
                     .FinancePlaneDefinitions
                     .FirstOrDefault(x => x.Guid == financePlanDefinitionId);
+                
+
 
                 if (financePlan != null)
                 {
@@ -186,7 +189,11 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property.GetMainOccupant().FirstName, property.GetMainOccupant().LastName, property.GetMainEmailAddress(), property.GetMainPhoneNumber(), property.Address1, property.City, property.State, property.ZipCode,financePlan.TermInYears,financePlan.Apr);
+                                var proposal = dc.Proposal.Where(x => x.PropertyID == propertyID && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
+                                var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
+                                var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
+
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
                         }

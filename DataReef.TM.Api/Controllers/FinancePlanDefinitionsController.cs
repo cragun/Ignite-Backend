@@ -12,6 +12,10 @@ using DataReef.TM.Api.Classes.Requests;
 using System.Web.Http.Description;
 using DataReef.TM.Models.DataViews.Financing;
 using System.Threading.Tasks;
+using DataReef.TM.Services;
+using DataReef.TM.Services.Services.FinanceAdapters.Sunlight;
+using System.Text;
+using RestSharp;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -40,6 +44,17 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetPropertyCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID)
         {
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
+        }
+        
+
+        private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
+
+        private RestClient client
+        {
+            get
+            {
+                return new RestClient(url);
+            }
         }
 
         #region Forbidden methods

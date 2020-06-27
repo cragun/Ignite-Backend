@@ -1786,23 +1786,22 @@ namespace DataReef.TM.Services.Services
                 string resp = "";
                 using (var dataContext = new DataContext())
                 {
-                    var proposals = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
+                    var property = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
 
-                    if (proposals == null)
+                    if (property == null)
                     {
-                        resp = "Could not find Proposal Data!";
+                        resp = "Please Add Property Data!";
                         return resp;
 
                     }
                     ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
 
-                    using (var uow = UnitOfWorkFactory())
-                    {
+                    //using (var uow = UnitOfWorkFactory())
+                    //{
 
                         proposalMediaItem = new ProposalMediaItem
                         {
-
-                            ProposalID = proposals.Guid,
+                            ProposalID = property.Guid,
                             MimeType = request.ContentType,
                             MediaItemType = request.MediaItemType,
                             Name = request.Name
@@ -1817,10 +1816,10 @@ namespace DataReef.TM.Services.Services
                                     ContentType = request.ContentType,
                                 }, BlobAccessRights.Private);
                         proposalMediaItem.Url = docUrl;
-                        uow.Add(proposalMediaItem);
-                        uow.SaveChanges();
-                    }
-                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposals, DocId, proposalMediaItem);
+                        //uow.Add(proposalMediaItem);
+                        //uow.SaveChanges();
+                  //  }
+                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(property, DocId, proposalMediaItem);
                     resp = "success";
                     return resp;
                 }
