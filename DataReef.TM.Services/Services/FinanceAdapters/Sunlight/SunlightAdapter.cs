@@ -256,7 +256,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
                 string frame = FrameUrl.Replace("{tokenid}", token)
-                                       .Replace("{hashid}", "&cid=" + ret.projects?.FirstOrDefault().hashId);
+                                       .Replace("{hashid}", "&pid=" + ret.projects?.FirstOrDefault().hashId);
 
                 return frame;
             }
