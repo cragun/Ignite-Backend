@@ -77,7 +77,8 @@ namespace DataReef.TM.Services
                 Response = response,
                 Url = url,
                 Headers = headers,
-                TagString = apikey
+                TagString = apikey,
+                Prefix= apikey?.Substring(0, 4)
             };
 
             using (var context = new DataContext())

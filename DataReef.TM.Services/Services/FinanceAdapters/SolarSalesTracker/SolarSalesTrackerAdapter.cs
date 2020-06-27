@@ -432,7 +432,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, null);
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, integrationData.ApiKey);
                 }
                 catch (Exception)
                 {
