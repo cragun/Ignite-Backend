@@ -1146,7 +1146,7 @@ namespace DataReef.TM.Services
 
                     var peoples = (from peo in dc.People
                                  where OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted
-                                 select peo).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).Include(c => c.AssignedAppointments.Where(a => a.DateCreated.Date == dt.Date)).ToList();
+                                 select peo).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).Include(c => c.AssignedAppointments).ToList();
 
 
 
