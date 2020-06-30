@@ -1138,6 +1138,11 @@ namespace DataReef.TM.Services
                 using (DataContext dc = new DataContext())
                 {
                     DateTime dt = Convert.ToDateTime(date);
+
+                    //var customers = from oua in dc.OUAssociations
+                    //                where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted
+                    //                select oua;
+
                     var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
 
                     var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
@@ -1152,10 +1157,10 @@ namespace DataReef.TM.Services
                     //                                                     .Include(c => c.PersonSettings)
                     //                                                     .Include(c => c.PhoneNumbers);
 
-                        
+
 
                     //    return selectQuery;
-                    
+
 
 
 
@@ -1209,6 +1214,25 @@ namespace DataReef.TM.Services
             
         }
 
-        
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuidNew(Guid ouid, string date)
+        {
+            try
+            {
+                using (DataContext dc = new DataContext())
+                {
+                    DateTime dt = Convert.ToDateTime(date);
+                    var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
+
+                    var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
+                    
+                    return peoples;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
     }
 }
