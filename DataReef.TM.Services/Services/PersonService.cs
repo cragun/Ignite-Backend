@@ -339,7 +339,7 @@ namespace DataReef.TM.Services
 
                 uow.SaveChanges();
 
-                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();                    
+                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();
             }
 
             //  unregister user from MailChimp
@@ -354,7 +354,7 @@ namespace DataReef.TM.Services
             {
             }
 
-            var result = base.Delete(uniqueId);            
+            var result = base.Delete(uniqueId);
             return result;
         }
 
@@ -767,7 +767,7 @@ namespace DataReef.TM.Services
                 {
                     Task.Factory.StartNew(() =>
                     {
-                        Mail.Library.SendEmail(email, string.Empty, $"Proposal Summary Data", mailbody, true);                        
+                        Mail.Library.SendEmail(email, string.Empty, $"Proposal Summary Data", mailbody, true);
                     });
                 }
                 return summary;
@@ -1059,9 +1059,9 @@ namespace DataReef.TM.Services
                     person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
                 }
             }
-            if(person == null) { person = new PersonClockTime(); };
+            if (person == null) { person = new PersonClockTime(); };
             return person;
-        } 
+        }
 
 
         public IEnumerable<Person> personDetails(Guid ouid, DateTime date)
@@ -1082,11 +1082,11 @@ namespace DataReef.TM.Services
                 var result = new List<Person>();
                 foreach (var person in peoples)
                 {
-                    if(person.AssignedAppointments != null)
+                    if (person.AssignedAppointments != null)
                     {
                         person.AssignedAppointments = person.AssignedAppointments.Where(x => x.StartDate.Date == date.Date).ToList();
                     }
-                    
+
                     if (result.Any(r => r.Guid == person.Guid))
                     {
                         continue;
@@ -1131,100 +1131,36 @@ namespace DataReef.TM.Services
         }
 
 
-        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string date)
-         {
-            try
-            {
-                using (DataContext dc = new DataContext())
-                {
-                    DateTime dt = Convert.ToDateTime(date);
-
-                    //var customers = from oua in dc.OUAssociations
-                    //                where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted
-                    //                select oua;
-
-                    var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
-
-                    var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
-
-
-                    //dc.Configuration.LazyLoadingEnabled = false;
-                    //dc.Configuration.AutoDetectChangesEnabled = false;
-
-                    //IQueryable<Person> customObjectQueryable = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted);
-
-                    //    var selectQuery = customObjectQueryable.Include(c => c.AssignedAppointments)
-                    //                                                     .Include(c => c.PersonSettings)
-                    //                                                     .Include(c => c.PhoneNumbers);
-
-
-
-                    //    return selectQuery;
-
-
-
-
-                    //var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Select(i => new 
-                    //{
-                    //    Id = i.Id,
-                    //    ActivityName = i.ActivityName,
-                    //    Addresses = i.Addresses,
-                    //    BuildVersion = i.BuildVersion,
-                    //    CreatedByID = i.CreatedByID,
-                    //    CreatedByName = i.CreatedByName,
-                    //    DateCreated = i.DateCreated,
-                    //    DateLastModified = i.DateLastModified,
-                    //    DefaultExcludedProperties = i.DefaultExcludedProperties,
-                    //    EmailAddresses = i.EmailAddresses,
-                    //    EmailAddressString = i.EmailAddressString,
-                    //    ExternalID = i.ExternalID,
-                    //    AccountAssociations = i.AccountAssociations,
-                    //    FirstName = i.FirstName,
-                    //    IsDeleted = i.IsDeleted,
-                    //    Flags = i.Flags,
-                    //    Guid = i.Guid,
-                    //    IsNew = i.IsNew,
-                    //    LastActivityDate = i.LastActivityDate,
-                    //    LastLoginDate = i.LastLoginDate,
-
-                    //    LastModifiedBy = i.LastModifiedBy,
-                    //    LastModifiedByName = i.LastModifiedByName,
-                    //    LastName = i.LastName,
-                    //    MayEdit = i.MayEdit,
-                    //    MiddleName = i.MiddleName,
-                    //    Name = i.Name, 
-                    //    OnlineAppointmentPara  = i.OnlineAppointmentPara,
-                    //    PersonType = i.PersonType,
-                    //    Version = i.Version,
-
-
-
-                    //    AssignedAppointments = dc.Appointments.Where(c => c.AssigneeID == i.Guid && !c.IsDeleted).ToList().Where(y => y.StartDate.Date == dt.Date ).ToList(),
-                    //    PhoneNumbers = dc.PhoneNumbers.Where(c => c.PersonID == i.Guid  && !c.IsDeleted).ToList(),
-                    //    PersonSettings = dc.PersonSettings.Where(c => c.PersonID == i.Guid && !c.IsDeleted).ToList()
-                    //}).ToList();
-
-                    return peoples;
-                }
-            }
-            catch(Exception ex)
-            {
-                return null;
-            }
-            
-        }
-
-        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuidNew(Guid ouid, string date)
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate)
         {
             try
             {
+                List<Person> ret = new List<Person>();
                 using (DataContext dc = new DataContext())
                 {
-                    DateTime dt = Convert.ToDateTime(date);
-                    var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
+                    DateTime dt = Convert.ToDateTime(CurrentDate); // pass by default to check 
+                    var OUAssociationIds = (from oua in dc.OUAssociations
+                              where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted
+                              select oua.PersonID).Distinct().ToList();
 
-                    var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
-                    
+
+                    var peoples = (from peo in dc.People
+                                 where OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted
+                                 select peo).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).Include(c => c.AssignedAppointments.Where(a => a.DateCreated.Date == dt.Date)).ToList();
+
+
+
+                    //IQueryable<Person> query = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers);
+
+
+                    //var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
+
+                    //var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
+
+                    //IQueryable<Person> query = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers);
+                    //string command = dc.GetCommand(query).CommandText;
+
+                    //ret = query.ToList();
                     return peoples;
                 }
             }
@@ -1234,5 +1170,7 @@ namespace DataReef.TM.Services
             }
 
         }
+
+
     }
 }
