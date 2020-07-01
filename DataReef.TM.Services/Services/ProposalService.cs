@@ -1722,11 +1722,11 @@ namespace DataReef.TM.Services.Services
                 string resp = "";
                 using (var dataContext = new DataContext())
                 {
-                    var proposals = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
+                    var property = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
 
-                    if (proposals == null)
+                    if (property == null)
                     {
-                        resp = "Could not find Proposal Data!";
+                        resp = "Could not find property Data!";
                         return resp;
 
                     }
@@ -1738,7 +1738,7 @@ namespace DataReef.TM.Services.Services
                         proposalMediaItem = new ProposalMediaItem
                         {
 
-                            ProposalID = proposals.Guid,
+                            ProposalID = property.Guid,
                             MimeType = request.ContentType,
                             MediaItemType = request.MediaItemType,
                             Name = request.Name
@@ -1756,7 +1756,7 @@ namespace DataReef.TM.Services.Services
                         uow.Add(proposalMediaItem);
                         uow.SaveChanges();
                     }
-                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposals, DocId, proposalMediaItem);
+                    _solarSalesTrackerAdapter.Value.UploadDocumentItem(property, DocId, proposalMediaItem);
                     resp = "success";
                     return resp;
                 }

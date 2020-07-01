@@ -82,6 +82,6 @@ namespace DataReef.TM.Contracts.Services
         void SBDeactivate(Guid personid);
 
         [OperationContract]
-        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid);
+        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate);
     }
 }

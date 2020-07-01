@@ -352,9 +352,9 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("CalenderApp/{ouid}")]
         [ResponseType(typeof(IEnumerable<Person>))]
-        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid)
+        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate)
         {
-            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid);
+            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid, CurrentDate);
             return persn;
         }
 
