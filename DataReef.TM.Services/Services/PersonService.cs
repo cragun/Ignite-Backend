@@ -28,6 +28,7 @@ using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace DataReef.TM.Services
 {
@@ -1140,36 +1141,18 @@ namespace DataReef.TM.Services
                 {
                     DateTime dt = Convert.ToDateTime(CurrentDate);
                     DateTime dtt = dt.AddDays(1);
-                    
                     var OUAssociationIds = (from oua in dc.OUAssociations
-                              where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted && !oua.Person.IsDeleted 
-                              select oua.PersonID).Distinct().ToList();
+                                            where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted && !oua.Person.IsDeleted
+                                            select oua.PersonID).Distinct().ToList();
 
-                    var query = from peo in dc.People.Include("PersonSettings").Include("AssignedAppointments").Include("PhoneNumbers")
-                                where OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted && peo.AssignedAppointments.Any(ass => ass.DateCreated >= dt && ass.DateCreated <= dtt)
-                                select peo;
+                    var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
+                        .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
+                        .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
+                        .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted))
+                        .ToList();
 
-
-                    //var peoples = (from peo in dc.People
-                    //             where OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted &&
-                    //             peo.AssignedAppointments.Any(ass => ass.DateCreated >= dt && ass.DateCreated <= dt
-                    //             select peo).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).Include(c => c.AssignedAppointments).ToList();
-
-
-
-                    //IQueryable<Person> query = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers);
-
-
-                    //var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
-
-                    //var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers).ToList();
-
-                    //IQueryable<Person> query = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted).Include(c => c.AssignedAppointments).Include(c => c.PersonSettings).Include(c => c.PhoneNumbers);
-                    //string command = dc.GetCommand(query).CommandText;
-
-                    return  query.ToList();
-                    //return peoples.To;
-                }
+                    return peoples;
+                };
             }
             catch (Exception ex)
             {
