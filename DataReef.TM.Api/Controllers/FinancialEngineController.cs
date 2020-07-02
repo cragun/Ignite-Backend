@@ -18,14 +18,17 @@ namespace DataReef.TM.Api.Controllers
         private readonly IFinancingCalculator loanCalculator;
         private readonly IFinancePlanDefinitionService financePlanDefinitionService;
         private readonly Lazy<IFinancialService> _financialService;
+        private readonly ISmsService smsService;
 
         public FinancialEngineController(IFinancingCalculator loanCalculator,
                                          IFinancePlanDefinitionService financePlanDefinitionService,
-                                         Lazy<IFinancialService> financialService)
+                                         Lazy<IFinancialService> financialService,
+                                         ISmsService _smsService)
         {
             this.loanCalculator = loanCalculator;
             this.financePlanDefinitionService = financePlanDefinitionService;
             _financialService = financialService;
+            _smsService = smsService;
         }
 
         [Route("{financePlanId:guid}/calculate")]
@@ -33,6 +36,8 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(LoanResponse))]
         public async Task<IHttpActionResult> CalculateLoan(Guid financePlanId, LoanRequest request)
         {
+
+            smsService.SendSms();
             var data = financePlanDefinitionService.Get(financePlanId, "Details");
             LoanResponse response = null;
             switch (data.Type)
