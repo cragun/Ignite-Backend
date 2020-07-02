@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataReef.TM.Services", "DataReef.TM.Services", "{3B930DCA-49C9-4789-9838-3FA9A57A0274}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".0", ".0", "{3B930DCA-49C9-4789-9838-3FA9A57A0274}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataReef.TM.API", "DataReef.TM.API", "{5B579748-47B2-46B3-9F3A-9453A446C6DA}"
 EndProject
@@ -1236,7 +1236,7 @@ Global
 		{3FB2C5D1-6090-4E5F-BC19-0648CBE4FB54} = {3B930DCA-49C9-4789-9838-3FA9A57A0274}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.Integration.WPF.6.0.1304.0\lib\NET45
 		SolutionGuid = {DCF60401-E2BA-49E3-8B6E-CD4A61102494}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Validation.Integration.WPF.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal
