@@ -207,14 +207,14 @@ namespace DataReef.TM.Services
             {
                 var ouTerritoriesQuery = context.Territories.Where(t => t.OUID == ouid);
 
-                if (personID.HasValue)
-                {
-                    if (!context.OUAssociations.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
-                    {
-                        ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
-                    }
+                //if (personID.HasValue)
+                //{
+                //    if (!context.OUAssociations.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
+                //    {
+                //        ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
+                //    }
 
-                }
+                //}
 
                 AssignIncludes(include, ref ouTerritoriesQuery);
                 ouTerritoriesQuery = ApplyDeletedFilter(deletedItems, ouTerritoriesQuery);
@@ -229,15 +229,17 @@ namespace DataReef.TM.Services
                     var shapeTerritories = territoriesShapeQuery.ToList();
 
                     ouTerritories = ouTerritories.Union(shapeTerritories).ToList();
+
+                    foreach (var territory in ouTerritories)
+                    {
+                        var territoryShape = territoryShapeVersions?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
+
+                        if (territory.ShapesVersion == territoryShape?.Version)
+                            territory.WellKnownText = null;
+                    }
                 }
 
-                foreach (var territory in ouTerritories)
-                {
-                    var territoryShape = territoryShapeVersions?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
-
-                    if (territory.ShapesVersion == territoryShape?.Version)
-                        territory.WellKnownText = null;
-                }
+                
 
                 //ouTerritories = PopulateTerritoriesSummary(ouTerritories).Result.ToList();
 
