@@ -46,6 +46,9 @@ namespace DataReef.TM.Models
         public AppointmentStatus Status { get; set; }
 
         [DataMember]
+        public int AppointmentType { get; set; }
+
+        [DataMember]
         [StringLength(250)]
         public string TimeZone { get; set; }
 

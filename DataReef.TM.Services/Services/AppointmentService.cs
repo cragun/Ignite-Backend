@@ -281,7 +281,6 @@ namespace DataReef.TM.Services
                     throw new Exception("Please send Valid Apikey base on LeadId.");
                 }
 
-
                 appointment.PropertyID = property?.Guid ?? appointment.PropertyID;
                 appointment.StartDate = request.StartDate ?? appointment.StartDate;
                 appointment.EndDate = request.EndDate ?? appointment.EndDate;

@@ -14,6 +14,7 @@ using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
+using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Geo;
@@ -828,15 +829,28 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
+                var AppointmentType = GetAppoinmentType();
+
                 return new CanCreateAppointmentResponse
                 {
                     Status = CanCreateAppointmentStatus.CanCreate,
+                    AppointmentType = AppointmentType,
                     DisplayMessage = "There's no other entry for the current property. You can create an appointment"
                 };
-
-
             }
 
+        }
+
+        public List<DocType> GetAppoinmentType()
+        {
+            List<DocType> typeList = new List<DocType>();
+
+            typeList.Add(new DocType() { Id = 1, Name = "Proposal" });
+            typeList.Add(new DocType() { Id = 2, Name = "Follow Up" });
+            typeList.Add(new DocType() { Id = 3, Name = "Site Survey" });
+            typeList.Add(new DocType() { Id = 4, Name = "Install" });
+
+            return typeList;
         }
 
         public SBPropertyDTO CreatePropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)

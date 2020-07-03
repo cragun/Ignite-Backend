@@ -155,6 +155,8 @@ namespace DataReef.TM.Services
         {
             using (var dc = new DataContext())
             {
+           
+
 
                 var financePlan = dc
                     .FinancePlaneDefinitions
@@ -193,10 +195,20 @@ namespace DataReef.TM.Services
                                 var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
                                 var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
 
+                                //string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
+                                //url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
+
+
                                 string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
+                                byte[] bytes = Encoding.Default.GetBytes(sunlighturl);
+                                sunlighturl = Encoding.UTF8.GetString(bytes);
+
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
+
                             }
                         }
+
+                        
 
                         return creditCheckUrls;
                     }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataReef.TM.Models.DTOs.Signatures;
+using DataReef.TM.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,6 +16,9 @@ namespace DataReef.TM.Models.DTOs.Properties
     {
         [DataMember]
         public CanCreateAppointmentStatus Status { get; set; }
+
+        [DataMember]
+        public List<DocType> AppointmentType { get; set; }
 
         [DataMember]
         public string DisplayMessage { get; set; }

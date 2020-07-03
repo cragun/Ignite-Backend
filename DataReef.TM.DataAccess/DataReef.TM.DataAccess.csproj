@@ -1255,6 +1255,10 @@
     <Compile Include="Migrations\202007020720017_Add-IsTerritoryAdd.Designer.cs">
       <DependentUpon>202007020720017_Add-IsTerritoryAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007030825406_AddAppointmentType.cs" />
+    <Compile Include="Migrations\202007030825406_AddAppointmentType.Designer.cs">
+      <DependentUpon>202007030825406_AddAppointmentType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2155,6 +2159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007020720017_Add-IsTerritoryAdd.resx">
       <DependentUpon>202007020720017_Add-IsTerritoryAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007030825406_AddAppointmentType.resx">
+      <DependentUpon>202007030825406_AddAppointmentType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

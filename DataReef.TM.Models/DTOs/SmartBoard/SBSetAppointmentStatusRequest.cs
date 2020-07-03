@@ -38,5 +38,8 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
 
         [DataMember]
         public string TimeZone { get; set; }
+
+        [DataMember]
+        public int AppointmentType { get; set; }
     }
 }

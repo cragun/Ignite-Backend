@@ -196,7 +196,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             EventDate = (appointment?.StartDate)?.ToString("yyyy-MM-dd");
             StartTime = (appointment?.StartDate)?.ToString("hh:mm tt");
             EndTime = (appointment?.EndDate)?.ToString("hh:mm tt");
-            SBAppointmentType = "4";
+            SBAppointmentType = appointment.AppointmentType.ToString();
         }
 
         [JsonProperty("associated_id")]
