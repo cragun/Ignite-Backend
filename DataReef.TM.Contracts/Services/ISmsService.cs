@@ -10,7 +10,7 @@ namespace DataReef.TM.Contracts.Services
     [ServiceContract]
     public interface ISmsService
     {
-        void SendSms();
+        void SendSms(string message, string mobileNumber);
 
     }
 }
