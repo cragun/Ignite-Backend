@@ -194,10 +194,12 @@ namespace DataReef.TM.Services
                                 var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
 
                                 string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
+                                byte[] bytes = Encoding.Default.GetBytes(sunlighturl);
+                                sunlighturl = Encoding.UTF8.GetString(bytes);
+
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
 
-                                byte[] bytes = Encoding.Default.GetBytes(url.CreditCheckUrl);
-                                url.CreditCheckUrl = Encoding.UTF8.GetString(bytes);
+                                
                             }
                         }
 
