@@ -237,9 +237,7 @@ namespace DataReef.TM.Services
                         if (territory.ShapesVersion == territoryShape?.Version)
                             territory.WellKnownText = null;
                     }
-                }
-
-                
+                }               
 
                 //ouTerritories = PopulateTerritoriesSummary(ouTerritories).Result.ToList();
 
