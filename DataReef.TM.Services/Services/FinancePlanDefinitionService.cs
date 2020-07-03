@@ -195,6 +195,9 @@ namespace DataReef.TM.Services
 
                                 string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
+
+                                byte[] bytes = Encoding.Default.GetBytes(url.CreditCheckUrl);
+                                url.CreditCheckUrl = Encoding.UTF8.GetString(bytes);
                             }
                         }
 

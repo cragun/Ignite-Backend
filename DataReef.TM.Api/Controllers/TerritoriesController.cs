@@ -114,24 +114,6 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetByShapesVersion([FromBody]ICollection<TerritoryShapeVersion> shapesVersion, Guid ouid, Guid? personID = null, bool deletedItems = false, string include = "")
         {
             var territories = _territoryService.GetByShapesVersion(ouid, personID, shapesVersion, deletedItems, include).ToList();
-
-           // territories = territories.Where(param => param != null).ToList();
-
-
-
-            //var str =   JsonConvert.SerializeObject(territories, new JsonSerializerSettings()
-            //{
-            //    NullValueHandling = NullValueHandling.Ignore
-            //});
-
-            //string json = JsonConvert.SerializeObject(territories,
-            //                 Formatting.Indented,
-            //                new JsonSerializerSettings
-            //                {
-            //                    NullValueHandling = NullValueHandling.Ignore,
-            //                    DefaultValueHandling = DefaultValueHandling.Ignore
-            //                });
-
             return Ok(territories);
         }
 
