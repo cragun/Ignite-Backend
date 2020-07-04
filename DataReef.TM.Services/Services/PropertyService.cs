@@ -38,6 +38,7 @@ using System.Threading.Tasks;
 using Property = DataReef.TM.Models.Property;
 using PropertyAttribute = DataReef.TM.Models.PropertyAttribute;
 
+
 namespace DataReef.TM.Services.Services
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
@@ -54,8 +55,9 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
-    
-        
+        private readonly Lazy<ISmsService> _smsService;
+
+
         public PropertyService(ILogger logger,
             IGeoProvider geoProvider,
             Func<IGeographyBridge> geographyBridgeFactory,
@@ -67,7 +69,8 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
             Lazy<IAppointmentService> appointmentService,            
-            Lazy<IInquiryService> inquiryService)
+            Lazy<IInquiryService> inquiryService,
+            Lazy<ISmsService> smsService)
             : base(logger, unitOfWorkFactory)
         {
             _geoProvider = geoProvider;
@@ -79,7 +82,8 @@ namespace DataReef.TM.Services.Services
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
             _appointmentService = appointmentService;
-            _inquiryService = inquiryService;            
+            _inquiryService = inquiryService;
+            _smsService = smsService;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -402,6 +406,17 @@ namespace DataReef.TM.Services.Services
 
                         if (newAppointments?.Any() == true)
                         {
+                            var fstAppoint = newAppointments.FirstOrDefault();
+                            if (fstAppoint?.SendSmsToCust == true)
+                            {                                
+                                _smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
+                            }
+                            else if(fstAppoint?.SendSmsToEC == true)
+                            {
+                                var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
+                                _smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
+                            }
+                            
                             _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
                         }
 
