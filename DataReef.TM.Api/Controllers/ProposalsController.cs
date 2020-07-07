@@ -394,9 +394,9 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("UpdateExcludeProposalData/{ProposalID}")]
         [HttpPost]
-        public void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID)
+        public void UpdateExcludeProposalData(Guid ProposalID, [FromBody] GenericRequest<string> request)
         {
-            _proposalService.UpdateExcludeProposalData(excludeProposalJSON, ProposalID);
+            _proposalService.UpdateExcludeProposalData(request?.Request, ProposalID);
         }
 
         [AllowAnonymous]
