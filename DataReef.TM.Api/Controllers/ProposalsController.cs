@@ -45,7 +45,8 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<Proposal2DataView> GetProposalData(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
         {
-            return _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts); ;
+            var response =  _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts);
+            return response;
         }
 
         [Route("generate/proposal")]
