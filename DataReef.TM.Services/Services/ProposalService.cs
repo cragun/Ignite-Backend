@@ -2312,7 +2312,7 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Already added");
                 }
 
-                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == ProposalID);
+                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == existingProposal.ProposalID);
                 if (solarSystem == null)
                 {
                     throw new Exception("Solar System not found");
