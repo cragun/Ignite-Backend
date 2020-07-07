@@ -2346,6 +2346,22 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var existing = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
+
+                if (existing == null)
+                {
+                    throw new Exception("Data not found");
+                }
+
+                existing.excludeProposalJSON = excludeProposalJSON;
+                dataContext.SaveChanges();
+            }
+        }
+
         public void DeleteAddersIncentives(Guid adderID)
         {
             using (var dataContext = new DataContext())

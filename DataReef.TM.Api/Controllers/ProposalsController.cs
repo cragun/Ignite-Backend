@@ -38,7 +38,7 @@ namespace DataReef.TM.Api.Controllers
             _proposalService = dataService;
             _personService = personService;
         }
-        
+
         [AllowAnonymous]
         [InjectAuthPrincipal]
         [Route("data/{proposalDataId}/{utilityInflationRate=null}")]
@@ -110,7 +110,7 @@ namespace DataReef.TM.Api.Controllers
             var response = _proposalService.SignProposal(proposalDataId, request);
             return Ok(response);
         }
-        
+
 
         [Route("Documents/getType")]
         [HttpGet]
@@ -222,7 +222,7 @@ namespace DataReef.TM.Api.Controllers
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Ok(ex.Message);
             }
@@ -373,7 +373,7 @@ namespace DataReef.TM.Api.Controllers
         [InjectAuthPrincipal]
         [Route("AddAddersIncentives/{ProposalID}")]
         [HttpPost]
-        public async Task<IHttpActionResult> AddAddersIncentives(AdderItem adderItem,Guid ProposalID)
+        public async Task<IHttpActionResult> AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             var result = _proposalService.AddAddersIncentives(adderItem, ProposalID);
             return Ok(result);
@@ -387,6 +387,15 @@ namespace DataReef.TM.Api.Controllers
         {
             var result = _proposalService.UpdateQuantityAddersIncentives(adderItem);
             return Ok(result);
+        }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("UpdateExcludeProposalData")]
+        [HttpPost]
+        public void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID)
+        {
+            _proposalService.UpdateExcludeProposalData(excludeProposalJSON, ProposalID);
         }
 
         [AllowAnonymous]
