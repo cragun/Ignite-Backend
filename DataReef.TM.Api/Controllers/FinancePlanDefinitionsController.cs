@@ -42,7 +42,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
         public async Task<IHttpActionResult> GetPropertyCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID)
-        {
+        {            
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }
         
