@@ -155,14 +155,7 @@ namespace DataReef.TM.Services
         {
             using (var dc = new DataContext())
             {
-           
-
-
-                var financePlan = dc
-                    .FinancePlaneDefinitions
-                    .FirstOrDefault(x => x.Guid == financePlanDefinitionId);
-                
-
+                var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
 
                 if (financePlan != null)
                 {
@@ -200,8 +193,7 @@ namespace DataReef.TM.Services
 
 
                                 string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
-                                byte[] bytes = Encoding.Default.GetBytes(sunlighturl);
-                                sunlighturl = Encoding.UTF8.GetString(bytes);
+                                
 
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
 
