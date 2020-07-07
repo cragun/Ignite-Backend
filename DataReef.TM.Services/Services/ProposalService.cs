@@ -2299,6 +2299,12 @@ namespace DataReef.TM.Services.Services
         {
             using (var dataContext = new DataContext())
             {
+                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
+                if (existingProposal == null)
+                {
+                    throw new Exception("Data Not Found");
+                }
+
                 var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Type == adderItem.Type && i.Name == adderItem.Name && i.Cost == adderItem.Cost && i.SolarSystemID == ProposalID && i.TemplateID == adderItem.Guid);
 
                 if (existingadderItem != null)
@@ -2306,15 +2312,17 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Already added");
                 }
 
-                adderItem = AdderItem.ToDbModel(adderItem, ProposalID);
-                dataContext.AdderItems.Add(adderItem);
-                dataContext.SaveChanges();
-
                 var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == ProposalID);
                 if (solarSystem == null)
                 {
                     throw new Exception("Solar System not found");
                 }
+
+                adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
+                dataContext.AdderItems.Add(adderItem);
+                dataContext.SaveChanges();
+
+                
 
                 var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
                 return data;
