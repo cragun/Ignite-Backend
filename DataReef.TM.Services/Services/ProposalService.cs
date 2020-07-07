@@ -1799,26 +1799,26 @@ namespace DataReef.TM.Services.Services
                     //using (var uow = UnitOfWorkFactory())
                     //{
 
-                        proposalMediaItem = new ProposalMediaItem
-                        {
-                            ProposalID = property.Guid,
-                            MimeType = request.ContentType,
-                            MediaItemType = request.MediaItemType,
-                            Name = request.Name
-                        };
-                        string thumbUrl = proposalMediaItem.BuildUrl();
-                        var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
+                    proposalMediaItem = new ProposalMediaItem
+                    {
+                        ProposalID = property.Guid,
+                        MimeType = request.ContentType,
+                        MediaItemType = request.MediaItemType,
+                        Name = request.Name
+                    };
+                    string thumbUrl = proposalMediaItem.BuildUrl();
+                    var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
 
-                                new BlobModel
-                                {
+                            new BlobModel
+                            {
 
-                                    Content = request.Content,
-                                    ContentType = request.ContentType,
-                                }, BlobAccessRights.Private);
-                        proposalMediaItem.Url = docUrl;
-                        //uow.Add(proposalMediaItem);
-                        //uow.SaveChanges();
-                  //  }
+                                Content = request.Content,
+                                ContentType = request.ContentType,
+                            }, BlobAccessRights.Private);
+                    proposalMediaItem.Url = docUrl;
+                    //uow.Add(proposalMediaItem);
+                    //uow.SaveChanges();
+                    //  }
                     _solarSalesTrackerAdapter.Value.UploadDocumentItem(property, DocId, proposalMediaItem);
                     resp = "success";
                     return resp;
@@ -2319,13 +2319,22 @@ namespace DataReef.TM.Services.Services
                 }
 
                 adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
-                dataContext.AdderItems.Add(adderItem);
-                dataContext.SaveChanges();
 
-                
+                if (existingProposal.UsesNoSQLAggregatedData == true)
+                {
+                    _noSqlDataService.Value.PutValue(adderItem);
+                    adderItem = _noSqlDataService.Value.GetValue<AdderItem>(adderItem.Guid.ToString());
+                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                    return data;
+                }
+                else
+                {
+                    dataContext.AdderItems.Add(adderItem);
+                    dataContext.SaveChanges();
 
-                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
-                return data;
+                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                    return data;
+                }
             }
         }
 
