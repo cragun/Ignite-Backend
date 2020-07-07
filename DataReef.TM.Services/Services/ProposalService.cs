@@ -2323,15 +2323,18 @@ namespace DataReef.TM.Services.Services
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
                     _noSqlDataService.Value.PutValue(adderItem);
+                    adderItem = _noSqlDataService.Value.GetValue<AdderItem>(adderItem.Guid.ToString());
+                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                    return data;
                 }
                 else
                 {
                     dataContext.AdderItems.Add(adderItem);
                     dataContext.SaveChanges();
-                }
 
-                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
-                return data;
+                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                    return data;
+                }
             }
         }
 
