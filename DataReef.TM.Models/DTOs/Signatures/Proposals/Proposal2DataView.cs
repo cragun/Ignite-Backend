@@ -64,7 +64,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
             ProposalID = param.Proposal.Guid;
             SignedDate = param.Data.SignatureDate;
             UsageCollected = param.Proposal.Property.UsageCollected;
-            ExcludeProposalJSON = param.Data.excludeProposalJSON;
+            ExcludeProposalJSON = param.Data.excludeProposalJSON ?? "[]";
             if (!string.IsNullOrEmpty(param.Proposal?.SignedDocumentsJSON))
             {
                 SignedDocuments = JsonConvert.DeserializeObject<List<SignedDocumentDTO>>(param.Proposal.SignedDocumentsJSON)?.Select(x => x.Name)?.ToList();
