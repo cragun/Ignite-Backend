@@ -2319,29 +2319,29 @@ namespace DataReef.TM.Services.Services
                 }
 
                 adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
+                dataContext.AdderItems.Add(adderItem);
+                dataContext.SaveChanges();
 
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
-                    _noSqlDataService.Value.PutValue(adderItem);
-                    adderItem = _noSqlDataService.Value.GetValue<AdderItem>(adderItem.Guid.ToString());
-                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
-                    return data;
+                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
                 }
-                else
-                {
-                    dataContext.AdderItems.Add(adderItem);
-                    dataContext.SaveChanges();
 
-                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
-                    return data;
-                }
+                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                return data;
             }
         }
 
-        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem)
+        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
+                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
+                if (existingProposal == null)
+                {
+                    throw new Exception("Data Not Found");
+                }
+
                 var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Guid == adderItem.Guid);
 
                 if (existingadderItem == null)
@@ -2351,6 +2351,11 @@ namespace DataReef.TM.Services.Services
 
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
                 dataContext.SaveChanges();
+
+                if (existingProposal.UsesNoSQLAggregatedData == true)
+                {
+                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
+                }
 
                 var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == existingadderItem.SolarSystemID);
                 if (solarSystem == null)
@@ -2379,7 +2384,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteAddersIncentives(Guid adderID)
+        public void DeleteAddersIncentives(Guid adderID,Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2389,6 +2394,17 @@ namespace DataReef.TM.Services.Services
                .Delete();
 
                 dataContext.SaveChanges();
+
+                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
+                if (existingProposal == null)
+                {
+                    throw new Exception("Data Not Found");
+                }
+
+                if (existingProposal.UsesNoSQLAggregatedData == true)
+                {
+                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
+                }
             }
         }
     }

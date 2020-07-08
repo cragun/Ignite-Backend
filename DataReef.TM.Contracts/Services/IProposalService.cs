@@ -87,12 +87,12 @@ namespace DataReef.TM.Contracts.Services
         SystemCostItem AddAddersIncentives(AdderItem adderItem,Guid ProposalID);
 
         [OperationContract]
-        SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem);
+        SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID);
 
         [OperationContract]
         void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID);
 
         [OperationContract]
-        void DeleteAddersIncentives(Guid adderID);
+        void DeleteAddersIncentives(Guid adderID, Guid ProposalID);
     }
 }

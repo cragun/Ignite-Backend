@@ -382,11 +382,11 @@ namespace DataReef.TM.Api.Controllers
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
-        [Route("UpdateQuantityAddersIncentives")]
+        [Route("UpdateQuantityAddersIncentives/{ProposalID}")]
         [HttpPost]
-        public async Task<IHttpActionResult> UpdateQuantityAddersIncentives(AdderItem adderItem)
+        public async Task<IHttpActionResult> UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
-            var result = _proposalService.UpdateQuantityAddersIncentives(adderItem);
+            var result = _proposalService.UpdateQuantityAddersIncentives(adderItem, ProposalID);
             return Ok(result);
         }
 
@@ -402,11 +402,11 @@ namespace DataReef.TM.Api.Controllers
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
-        [Route("DeleteAddersIncentives/{adderID}")]
+        [Route("DeleteAddersIncentives/{adderID}/{ProposalID}")]
         [HttpPost]
-        public async Task<IHttpActionResult> DeleteAddersIncentives(Guid adderID)
+        public async Task<IHttpActionResult> DeleteAddersIncentives(Guid adderID,Guid ProposalID)
         {
-            _proposalService.DeleteAddersIncentives(adderID);
+            _proposalService.DeleteAddersIncentives(adderID, ProposalID);
             return Ok();
         }
 
