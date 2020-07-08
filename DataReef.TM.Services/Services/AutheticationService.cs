@@ -370,7 +370,7 @@ namespace DataReef.Application.Services
                                     });
                                     dataContext.SaveChanges();
                                 }
-                            });                           
+                            });
 
 
                             var pbi = new PBI_ActiveUser
@@ -400,8 +400,8 @@ namespace DataReef.Application.Services
 
         public bool updateUser(bool value, Guid userId)
         {
-                using (DataContext dc = new DataContext())
-                {
+            using (DataContext dc = new DataContext())
+            {
                 var person = dc
                      .People
                      .SingleOrDefault(p => p.Guid == userId);
@@ -441,12 +441,12 @@ namespace DataReef.Application.Services
             {
                 var isSuperAdmin = dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId && oa.OURole.RoleType == OURoleType.SuperAdmin).ToList();
 
-                if(isSuperAdmin.Count == 0)
+                if (isSuperAdmin.Count == 0)
                 {
                     throw new ArgumentException("Super-Admin can access only.");
                 }
 
-                var credentials = dc 
+                var credentials = dc
                                 .Credentials
                                 .Include(cred => cred.User.Person.PersonSettings)
                                 .Include(cred => cred.User.UserDevices)
@@ -548,6 +548,23 @@ namespace DataReef.Application.Services
                 return dc.UserInvitations.FirstOrDefault(ur => ur.Guid == invitationGuid && ur.Status == InvitationStatus.Pending);
             }
         }
+
+        public bool CheckUserExist(string email)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var people = dc.Credentials
+                                    .Include(cred => cred.User)
+                                    .Include(cred => cred.User.Person)
+                                    .FirstOrDefault(cc => cc.UserName == email);
+                if (people == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
 
         [FaultContract(typeof(PreconditionFailedFault))]
         public AuthenticationToken CreateUser(NewUser newUser, byte[] photo = null, string phoneNumber = null)

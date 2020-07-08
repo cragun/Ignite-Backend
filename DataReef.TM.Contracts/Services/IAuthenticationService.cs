@@ -19,7 +19,7 @@ namespace DataReef.TM.Contracts.Services
         AuthenticationToken AuthenticateUserBySuperAdmin(Guid personid);
 
         [OperationContract]
-        bool updateUser(bool value,Guid userId);
+        bool updateUser(bool value, Guid userId);
 
         [OperationContract]
         bool IsUserActive(Guid userId);
@@ -44,5 +44,7 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string GetCurrentUserFullName();
+
+        bool CheckUserExist(string email);
     }
 }
