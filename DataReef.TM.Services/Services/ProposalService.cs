@@ -1359,7 +1359,14 @@ namespace DataReef.TM.Services.Services
                 }
 
                 // Push the proposal to SB
-                _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                try
+                {
+                    _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                }
+                catch (Exception ex)
+                {
+                    proposal.SBProposalError = ex.Message + ". This lead will not be saved in SMARTBoard until it's added.";
+                }
 
                 var pbi = new PBI_ProposalSigned
                 {
@@ -1799,26 +1806,26 @@ namespace DataReef.TM.Services.Services
                     //using (var uow = UnitOfWorkFactory())
                     //{
 
-                        proposalMediaItem = new ProposalMediaItem
-                        {
-                            ProposalID = property.Guid,
-                            MimeType = request.ContentType,
-                            MediaItemType = request.MediaItemType,
-                            Name = request.Name
-                        };
-                        string thumbUrl = proposalMediaItem.BuildUrl();
-                        var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
+                    proposalMediaItem = new ProposalMediaItem
+                    {
+                        ProposalID = property.Guid,
+                        MimeType = request.ContentType,
+                        MediaItemType = request.MediaItemType,
+                        Name = request.Name
+                    };
+                    string thumbUrl = proposalMediaItem.BuildUrl();
+                    var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
 
-                                new BlobModel
-                                {
+                            new BlobModel
+                            {
 
-                                    Content = request.Content,
-                                    ContentType = request.ContentType,
-                                }, BlobAccessRights.Private);
-                        proposalMediaItem.Url = docUrl;
-                        //uow.Add(proposalMediaItem);
-                        //uow.SaveChanges();
-                  //  }
+                                Content = request.Content,
+                                ContentType = request.ContentType,
+                            }, BlobAccessRights.Private);
+                    proposalMediaItem.Url = docUrl;
+                    //uow.Add(proposalMediaItem);
+                    //uow.SaveChanges();
+                    //  }
                     _solarSalesTrackerAdapter.Value.UploadDocumentItem(property, DocId, proposalMediaItem);
                     resp = "success";
                     return resp;
@@ -2322,7 +2329,7 @@ namespace DataReef.TM.Services.Services
                 dataContext.AdderItems.Add(adderItem);
                 dataContext.SaveChanges();
 
-                
+
 
                 var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
                 return data;
