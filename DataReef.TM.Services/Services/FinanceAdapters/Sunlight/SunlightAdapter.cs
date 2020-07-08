@@ -200,8 +200,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         //  public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         {
-            try
-            {
+            //try
+            //{
                 using (var dc = new DataContext())
                 {
                     var proposal = dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
@@ -283,11 +283,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     return frame;
                 }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return ex.Message;
+            //}
         }
 
 
