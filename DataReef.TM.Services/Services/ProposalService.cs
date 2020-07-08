@@ -741,6 +741,8 @@ namespace DataReef.TM.Services.Services
 
                         if (attachPDF)
                         {
+                            proposalUrl = proposalUrl + "?customizeproposal=1";
+
                             var proposalPDF = _utilServices.Value.GetPDF(proposalUrl);
                             if (proposalPDF != null)
                             {
@@ -2332,7 +2334,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem,Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
