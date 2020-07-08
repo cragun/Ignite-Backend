@@ -1359,18 +1359,13 @@ namespace DataReef.TM.Services.Services
                 }
 
                 // Push the proposal to SB
-                try
+
+                var response = _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                if (response != null && response.Message.Type.Equals("error"))
                 {
-                    var response = _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
-                    if (response != null && response.Message.Type.Equals("error"))
-                    {
-                        proposal.SBProposalError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
-                    }
+                    proposal.SBProposalError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                 }
-                catch (Exception ex)
-                {
-                    proposal.SBProposalError = ex.Message + ". This lead will not be saved in SMARTBoard until it's added.";
-                }
+
 
                 var pbi = new PBI_ProposalSigned
                 {
