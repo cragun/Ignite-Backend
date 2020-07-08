@@ -37,7 +37,8 @@ namespace DataReef.TM.Services
             Lazy<IFinancingCalculator> loanCalculator,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ISunlightAdapter> sunlightAdapter
-            ) : base(logger, unitOfWorkFactory) {
+            ) : base(logger, unitOfWorkFactory)
+        {
             _sunlightAdapter = sunlightAdapter;
             _loanCalculator = loanCalculator;
             _ouSettingService = ouSettingService;
@@ -80,10 +81,10 @@ namespace DataReef.TM.Services
 
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinition(Guid financePlanDefinitionId)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
-                if(financePlan != null)
+                if (financePlan != null)
                 {
                     var metaData = financePlan.GetMetaData<FinancePlanDataModel>();
 
@@ -184,24 +185,15 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                var proposal = dc.Proposal.Where(x => x.PropertyID == propertyID && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
-                                var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
-                                var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
+                                //var proposal = dc.Proposal.Where(x => x.PropertyID == propertyID && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
+                                //var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
+                                //var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
 
-                                //string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
-                                //url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
-
-
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
-                                
-
+                                //  string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
-
                             }
                         }
-
-                        
-
                         return creditCheckUrls;
                     }
                 }

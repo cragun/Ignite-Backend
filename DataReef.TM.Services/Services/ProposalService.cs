@@ -739,8 +739,8 @@ namespace DataReef.TM.Services.Services
                         var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the attached file or the link below: <br/> <br/> <a href='{proposalUrl}'>Proposal for {homeOwnerName}</a> <br/>";
                         List<System.Net.Mail.Attachment> attachments = null;
 
-                        if (attachPDF)
-                        {
+                        //if (attachPDF)
+                        //{
                             proposalUrl = proposalUrl + "?customizeproposal=1";
 
                             var proposalPDF = _utilServices.Value.GetPDF(proposalUrl);
@@ -750,8 +750,9 @@ namespace DataReef.TM.Services.Services
                             new System.Net.Mail.Attachment(new MemoryStream(proposalPDF), $"Proposal [{planName.AsFileName()}].pdf", "application/pdf")
                             };
                             }
-                        }
-                        Mail.Library.SendEmail(salesRepEmailAddress, ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        // }
+                        //Mail.Library.SendEmail(salesRepEmailAddress, ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
 
