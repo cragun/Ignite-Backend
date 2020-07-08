@@ -112,31 +112,35 @@ namespace DataReef.TM.Api.Controllers.Web
         {
             try
             {
-                byte[] photo = null;
-                if (model.Photo?.InputStream != null)
+                if (ModelState.IsValid)
                 {
-                    try
+                    byte[] photo = null;
+                    if (model.Photo?.InputStream != null)
                     {
-                        photo = model.Photo.InputStream.GetResizedContent(200, 200);
+                        try
+                        {
+                            photo = model.Photo.InputStream.GetResizedContent(200, 200);
+                        }
+                        catch
+                        {
+                            throw new ApplicationException("The file you chose is not a valid image!");
+                        }
                     }
-                    catch
-                    {
-                        throw new ApplicationException("The file you chose is not a valid image!");
-                    }
+
+                    var response = _authService.Value.CreateUser(model.ToNewUser(), photo, model.PhoneNumber);
+
+                    return RedirectToAction("Success", new { id = 1 });
+                }
+                else
+                {
+                    model.ShowFormIfModelHasErrors = true;
                 }
 
-                var response = _authService.Value.CreateUser(model.ToNewUser(), photo, model.PhoneNumber);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("Error", ex.Message);
             }
-
-            if (ModelState.IsValid)
-            {
-                return RedirectToAction("Success", new { id = 1 });
-            }
-            model.ShowFormIfModelHasErrors = true;
 
             return View("UserRegistration", model);
         }
