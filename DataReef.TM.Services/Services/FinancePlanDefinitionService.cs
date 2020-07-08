@@ -160,7 +160,7 @@ namespace DataReef.TM.Services
 
                 if (financePlan != null)
                 {
-                    var property = dc.Properties.FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
+                    var property = dc.Properties.Include("PropertyBag").FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
                     var salesperson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId && !x.IsDeleted);
                     if (property != null)
                     {
