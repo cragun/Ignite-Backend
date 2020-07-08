@@ -47,15 +47,15 @@ namespace DataReef.TM.Api.Controllers
         }
         
 
-        private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
+        //private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
 
-        private RestClient client
-        {
-            get
-            {
-                return new RestClient(url);
-            }
-        }
+        //private RestClient client
+        //{
+        //    get
+        //    {
+        //        return new RestClient(url);
+        //    }
+        //}
 
         #region Forbidden methods
 

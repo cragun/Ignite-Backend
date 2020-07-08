@@ -228,7 +228,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 applicnt.firstName = name.FirstName;
                 applicnt.lastName = name.LastName;
                 applicnt.email = property.GetMainEmailAddress();
-                applicnt.phone = property.GetMainPhoneNumber();
+                applicnt.phone = property.GetMainPhoneNumber()?.Replace("-","");
                 applicnt.isPrimary = true;
                 project.applicants.Add(applicnt);
 
