@@ -255,12 +255,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-
-                byte[] bytess = Encoding.Default.GetBytes(token);
-                token = Encoding.UTF8.GetString(bytess);
-
-                byte[] bytes = Encoding.Default.GetBytes(ret.projects?.FirstOrDefault().hashId);
-                string hashId = Encoding.UTF8.GetString(bytes);
+               
+                token = Uri.EscapeDataString(token);
+                string hashId = Uri.EscapeDataString(ret.projects?.FirstOrDefault().hashId);
 
                 string frame = FrameUrl.Replace("{tokenid}", token)
                                        .Replace("{hashid}", "&pid=" + hashId);

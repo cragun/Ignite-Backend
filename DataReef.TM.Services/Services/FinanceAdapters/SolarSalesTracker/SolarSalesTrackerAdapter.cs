@@ -579,12 +579,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
         }
-        public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
+        public SstResponse AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;
             if (!ouid.HasValue || proposalDoc == null)
             {
-                return;
+                return null;
             }
 
             EnsureInitialized(ouid.Value);
@@ -609,7 +609,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 ?.SMARTBoard;
             if (integrationData == null)
             {
-                return;
+                return null;
             }
 
             // Push the lead to SB if it's not there yet.
@@ -700,10 +700,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 //    }
                 //}
 
-                SubmitProposal(integrationData, request, ouid.Value);
+                return SubmitProposal(integrationData, request, ouid.Value);
             }
-
-
         }
 
         public SBProposalDataModel BuildProposalDataModel(Guid proposalDataId)
@@ -896,7 +894,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return JsonConvert.DeserializeObject<SstResponse>(response);
         }
 
-        private void SubmitProposal(SMARTBoardIntegrationOptionData settings, object request, Guid ouid)
+        private SstResponse SubmitProposal(SMARTBoardIntegrationOptionData settings, object request, Guid ouid)
         {
             SetSSTSettings(settings);
 
@@ -915,6 +913,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
             }
+            return JsonConvert.DeserializeObject<SstResponse>(response);
         }
     }
 }

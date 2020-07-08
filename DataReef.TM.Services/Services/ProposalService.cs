@@ -1361,7 +1361,11 @@ namespace DataReef.TM.Services.Services
                 // Push the proposal to SB
                 try
                 {
-                    _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                    var response = _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                    if (response != null && response.Message.Type.Equals("error"))
+                    {
+                        proposal.SBProposalError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2319,20 +2323,29 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Already added");
                 }
 
-                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == ProposalID);
+                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == existingProposal.ProposalID);
                 if (solarSystem == null)
                 {
                     throw new Exception("Solar System not found");
                 }
 
                 adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
-                dataContext.AdderItems.Add(adderItem);
-                dataContext.SaveChanges();
 
+                if (existingProposal.UsesNoSQLAggregatedData == true)
+                {
+                    _noSqlDataService.Value.PutValue(adderItem);
+                    adderItem = _noSqlDataService.Value.GetValue<AdderItem>(adderItem.Guid.ToString());
+                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                    return data;
+                }
+                else
+                {
+                    dataContext.AdderItems.Add(adderItem);
+                    dataContext.SaveChanges();
 
-
-                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
-                return data;
+                    var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
+                    return data;
+                }
             }
         }
 
