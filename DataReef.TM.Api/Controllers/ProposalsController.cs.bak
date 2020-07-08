@@ -435,7 +435,7 @@ namespace DataReef.TM.Api.Controllers
             return JsonConvert.SerializeObject(obj);
         }
 
-        private async Task<T> DeserializeString<T>(string value)
+        private T DeserializeString<T>(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {

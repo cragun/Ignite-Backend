@@ -64,5 +64,11 @@ namespace DataReef.TM.Models
         public Person Creator { get; set; }
 
         #endregion
+
+        [NotMapped]
+        public Nullable<bool> SendSmsToCust { get; set; }
+
+        [NotMapped]
+        public Nullable<bool> SendSmsToEC { get; set; }
     }
 }

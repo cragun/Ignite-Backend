@@ -58,8 +58,11 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public string MetaInformationJSON { get; set; }
 
+        [DataMember]
+        public string excludeProposalJSON { get; set; }
 
-       
+
+
 
         #region Computed Properties
 

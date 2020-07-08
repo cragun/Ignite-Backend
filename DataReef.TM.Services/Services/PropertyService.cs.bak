@@ -14,7 +14,6 @@ using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
-using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Geo;
@@ -53,7 +52,6 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
-        private readonly Lazy<ISmsService> _smsService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
 
         public PropertyService(ILogger logger,
@@ -401,21 +399,11 @@ namespace DataReef.TM.Services.Services
                                                 .Where(ap => ap.IsNew == true)?
                                                 .ToList();
 
-                       if (newAppointments?.Any() == true)
+                        if (newAppointments?.Any() == true)
                         {
-                            var fstAppoint = newAppointments.FirstOrDefault();
-                            if (fstAppoint?.SendSmsToCust == true)
-                            {                                
-                                _smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
-                            }
-                            else if(fstAppoint?.SendSmsToEC == true)
-                            {
-                                var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
-                                _smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
-                            }
-                            
                             _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
                         }
+
                         // handle new inquiries
                         var newInquiries = entity
                                                 .Inquiries?
@@ -840,28 +828,15 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
-                var AppointmentType = GetAppoinmentType();
-
                 return new CanCreateAppointmentResponse
                 {
                     Status = CanCreateAppointmentStatus.CanCreate,
-                    AppointmentType = AppointmentType,
                     DisplayMessage = "There's no other entry for the current property. You can create an appointment"
                 };
+
+
             }
 
-        }
-
-        public List<DocType> GetAppoinmentType()
-        {
-            List<DocType> typeList = new List<DocType>();
-
-            typeList.Add(new DocType() { Id = 1, Name = "Proposal" });
-            typeList.Add(new DocType() { Id = 2, Name = "Follow Up" });
-            typeList.Add(new DocType() { Id = 3, Name = "Site Survey" });
-            typeList.Add(new DocType() { Id = 4, Name = "Install" });
-
-            return typeList;
         }
 
         public SBPropertyDTO CreatePropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)

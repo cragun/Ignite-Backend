@@ -140,11 +140,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string GetApikeyByOU(Guid ouid);
-        
-        [OperationContract]
-        IEnumerable<SBOU> GetOusList(string apikey);
 
         [OperationContract]
-        void InsertApikeyForOU(SBOUID request, string apikey);
+        IEnumerable<SBOU> GetOusList();
     }
 }

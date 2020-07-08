@@ -111,6 +111,7 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
 
         public string LogoImage { get; set; }
         public bool UseLogoOnProposal { get; set; }
+        public bool IsTerritoryAdd { get; set; }
     }
 
     public class NewOUEquipmentDataView : NewOUBaseDataView

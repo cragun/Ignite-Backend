@@ -19,6 +19,17 @@ namespace DataReef.TM.Models.DTOs.OUs
         public string Name { get; set; }
 
     }
+    [DataContract]
+    [NotMapped]
+    public class SBOUID
+    {
+        [DataMember]
+        public Guid OUID { get; set; }
+
+        [DataMember]
+        public string Apikey { get; set; }
+
+    }
 
     [DataContract]
     [NotMapped]
@@ -47,7 +58,7 @@ namespace DataReef.TM.Models.DTOs.OUs
 
         public SBOUDTO(OU ouObject, bool includeChildren = true)
         {
-            if(ouObject != null)
+            if (ouObject != null)
             {
                 Guid = ouObject.Guid;
                 Name = ouObject.Name;
@@ -63,7 +74,7 @@ namespace DataReef.TM.Models.DTOs.OUs
                         ?.Select(c => new SBOUDTO(c, false));
                 }
 
-                if(ouObject.Territories?.Any() == true)
+                if (ouObject.Territories?.Any() == true)
                 {
                     Territories = ouObject
                         ?.Territories
@@ -71,7 +82,7 @@ namespace DataReef.TM.Models.DTOs.OUs
                         ?.Select(t => new SBTerritoryDTO(t));
                 }
             }
-            
+
         }
     }
 }

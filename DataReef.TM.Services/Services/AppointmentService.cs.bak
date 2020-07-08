@@ -34,7 +34,7 @@ namespace DataReef.TM.Services
         private readonly Lazy<IUserInvitationService> _userInvitationService;
         private readonly Lazy<IPropertyService> _propertyService;
         private readonly Lazy<IPersonService> _personService;
-        private readonly Lazy<ISmsService> _smsService;
+
         public AppointmentService(ILogger logger,
             IOUAssociationService ouAssociationService,
             Lazy<IOUService> ouService,
@@ -43,7 +43,6 @@ namespace DataReef.TM.Services
             Lazy<IUserInvitationService> userInvitationService,
             Lazy<IPropertyService> propertyService,
             Lazy<IPersonService> personService,
-            Lazy<ISmsService> smsService,
             Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
         {
             _ouAssociationService = ouAssociationService;
@@ -53,7 +52,6 @@ namespace DataReef.TM.Services
             _userInvitationService = userInvitationService;
             _propertyService = propertyService;
             _personService = personService;
-            _smsService = smsService;
         }
 
         public Appointment SetAppointmentStatus(Guid appointmentID, AppointmentStatus status)
@@ -162,13 +160,13 @@ namespace DataReef.TM.Services
                         (x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase) 
                             || x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase)));
 
-                var creator = dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase));
+                var creator = people.FirstOrDefault(x => x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase));
                 
                 if (creator == null)
                 {
                     throw new Exception("No account linked to the specified CreatedByID");
                 }
-                var assignee = dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase));
+                var assignee = people.FirstOrDefault(x => x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase));
                 
                 if (assignee == null)
                 {
@@ -214,9 +212,7 @@ namespace DataReef.TM.Services
 
                 dc.Appointments.Add(appointment);
                 dc.SaveChanges();
-                _smsService
-                    .Value
-                    .SendSms("New Appointment is created!", creator.PhoneNumbers.FirstOrDefault().Number);
+
                 return new SBAppointmentDTO(appointment);
             }
         }

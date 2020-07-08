@@ -1278,6 +1278,10 @@
     <Compile Include="Migrations\202006080450414_Add BuildVersion in People.Designer.cs">
       <DependentUpon>202006080450414_Add BuildVersion in People.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007081520220_migration.cs" />
+    <Compile Include="Migrations\202007081520220_migration.Designer.cs">
+      <DependentUpon>202007081520220_migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2193,6 +2197,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006080450414_Add BuildVersion in People.resx">
       <DependentUpon>202006080450414_Add BuildVersion in People.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007081520220_migration.resx">
+      <DependentUpon>202007081520220_migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using DataReef.TM.Models.DTOs.Signatures;
 
 namespace DataReef.TM.Models.DTOs.Properties
 {
@@ -14,6 +15,9 @@ namespace DataReef.TM.Models.DTOs.Properties
     {
         [DataMember]
         public CanCreateAppointmentStatus Status { get; set; }
+
+        [DataMember]
+        public List<DocType> AppointmentType { get; set; }
 
         [DataMember]
         public string DisplayMessage { get; set; }

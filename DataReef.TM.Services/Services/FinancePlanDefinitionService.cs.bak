@@ -137,7 +137,7 @@ namespace DataReef.TM.Services
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
                 if (financePlan != null)
                 {
-                    var property = dc.Properties.Include("PropertyBag").FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
+                    var property = dc.Properties.FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
                     var salesperson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId && !x.IsDeleted);
                     if (property != null)
                     {
@@ -162,12 +162,7 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                //var proposal = dc.Proposal.Where(x => x.PropertyID == propertyID && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
-                                //var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
-                                //var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
-
-                                //  string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
+                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightApplicant(property.GetMainOccupant().FirstName, property.GetMainOccupant().LastName, property.GetMainEmailAddress(), property.GetMainPhoneNumber(), property.Address1, property.City, property.State, property.ZipCode);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
                         }

@@ -177,7 +177,6 @@ namespace DataReef.TM.Services
                 {
                     //self tracked kpis to include when making the call to the db
                     var searchKpis = new HashSet<string>();
-                    reportItems = reportItems.Where(x => x.IncludedPersonKpis != null).ToList();
                     foreach (var repItem in reportItems)
                     {
                         if(repItem.IncludedPersonKpis?.Any() == true)

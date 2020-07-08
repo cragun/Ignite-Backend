@@ -35,6 +35,12 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public string PricingQuoteID { get; set; }
 
+        [DataMember]
+        public string SunlightReqJson { get; set; }
+
+        [DataMember]
+        public string SunlightResponseJson { get; set; }
+
         #region Navigation
 
         [DataMember]

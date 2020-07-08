@@ -25,8 +25,10 @@ using DataReef.TM.Services.Extensions;
 using DataReef.TM.Services.InternalServices.Geo;
 using DataReef.TM.Services.InternalServices.Settings.EventHandlers;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
 using System.Data.SqlClient;
@@ -777,7 +779,7 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
-        public IEnumerable<SBOU> GetOusList()
+        public IEnumerable<SBOU> GetOusList(string apikey)
         {
             using (var dc = new DataContext())
             {
@@ -811,6 +813,43 @@ namespace DataReef.TM.Services.Services
                 });
 
             }
+        }
+
+
+        public void InsertApikeyForOU(SBOUID request, string apikey)
+        {
+            using (var uow = UnitOfWorkFactory())
+            {
+                    var valueObj = new SelectedIntegrationOption
+                    {
+                        Id = "smartBOARD-integration",
+                        Name = "SmartBOARD",
+                        Data = new IntegrationOptionData
+                        {
+                            SMARTBoard = new SMARTBoardIntegrationOptionData
+                            {
+                                BaseUrl =ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"],
+                                ApiKey = request.Apikey,
+                                HomeUrl = "/leads/view/{0}",
+                                CreditApplicationUrl = "SB_CreditApplicationUrl"
+                            }
+                        }
+                    };
+                    var newSetting = new OUSetting
+                    {
+                        OUID = request.OUID,
+                        Value = JsonConvert.SerializeObject(valueObj),
+                        CreatedByID = SmartPrincipal.UserId,
+                        Name = "Integrations.Options.Selected",
+                        Group = OUSettingGroupType.DealerSettings,
+                        Inheritable = true,
+                        ValueType = SettingValueType.JSON,
+                    };
+                    uow.Add(newSetting);
+                uow.SaveChanges();
+            }
+
+
         }
 
         public ICollection<OU> ListAllForPersonAndSetting(Guid personID, string settingName)
@@ -1548,7 +1587,8 @@ namespace DataReef.TM.Services.Services
                             RootOrganizationID = parent?.RootOrganizationID,
                             RootOrganizationName = parent?.RootOrganizationName,
                             CreatedByID = SmartPrincipal.UserId,
-                            CreatedByName = "InternalPortal"
+                            CreatedByName = "InternalPortal",
+                            IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd
                         };
 
                         dc.OUs.Add(ou);
@@ -1655,6 +1695,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 ou.Name = req.BasicInfo.OUName;
+                ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 var wkt = HandleOUStates(ouid, req.BasicInfo.States, dc);

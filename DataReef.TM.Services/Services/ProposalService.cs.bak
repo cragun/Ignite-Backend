@@ -1732,8 +1732,8 @@ namespace DataReef.TM.Services.Services
                     }
                     ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
 
-                   // using (var uow = UnitOfWorkFactory())
-                   // {
+                    using (var uow = UnitOfWorkFactory())
+                    {
 
                         proposalMediaItem = new ProposalMediaItem
                         {
@@ -1753,9 +1753,9 @@ namespace DataReef.TM.Services.Services
                                     ContentType = request.ContentType,
                                 }, BlobAccessRights.Private);
                         proposalMediaItem.Url = docUrl;
-                     //   uow.Add(proposalMediaItem);
-                      //  uow.SaveChanges();
-                   // }
+                        uow.Add(proposalMediaItem);
+                        uow.SaveChanges();
+                    }
                     _solarSalesTrackerAdapter.Value.UploadDocumentItem(property, DocId, proposalMediaItem);
                     resp = "success";
                     return resp;
@@ -2122,53 +2122,22 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SystemCostItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        public AdderItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
-                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
-                if (existingProposal == null)
-                {
-                    throw new Exception("Data Not Found");
-                }
-
-                var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Type == adderItem.Type && i.Name == adderItem.Name && i.Cost == adderItem.Cost && i.SolarSystemID == ProposalID && i.TemplateID == adderItem.Guid);
-
-                if (existingadderItem != null)
-                {
-                    throw new Exception("Already added");
-                }
-
-                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == existingProposal.ProposalID);
-                if (solarSystem == null)
-                {
-                    throw new Exception("Solar System not found");
-                }
-
-                adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
+                adderItem = AdderItem.ToDbModel(adderItem, ProposalID);
                 dataContext.AdderItems.Add(adderItem);
                 dataContext.SaveChanges();
-
-                if (existingProposal.UsesNoSQLAggregatedData == true)
-                {
-                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
-                }
-
-                var data = new SystemCostItem(adderItem, solarSystem.SystemSize, false);
-                return data;
             }
+
+            return adderItem;
         }
 
-        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem,Guid ProposalID)
+        public AdderItem UpdateQuantityAddersIncentives(AdderItem adderItem)
         {
             using (var dataContext = new DataContext())
             {
-                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
-                if (existingProposal == null)
-                {
-                    throw new Exception("Data Not Found");
-                }
-
                 var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Guid == adderItem.Guid);
 
                 if (existingadderItem == null)
@@ -2178,40 +2147,12 @@ namespace DataReef.TM.Services.Services
 
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
                 dataContext.SaveChanges();
-
-                if (existingProposal.UsesNoSQLAggregatedData == true)
-                {
-                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
-                }
-
-                var solarSystem = dataContext.SolarSystem.FirstOrDefault(i => i.Guid == existingadderItem.SolarSystemID);
-                if (solarSystem == null)
-                {
-                    throw new Exception("Solar System not found");
-                }
-
-                var data = new SystemCostItem(existingadderItem, solarSystem.SystemSize, false);
-                return data;
             }
+
+            return adderItem;
         }
 
-        public void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID)
-        {
-            using (var dataContext = new DataContext())
-            {
-                var existing = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
-
-                if (existing == null)
-                {
-                    throw new Exception("Data not found");
-                }
-
-                existing.excludeProposalJSON = excludeProposalJSON;
-                dataContext.SaveChanges();
-            }
-        }
-
-        public void DeleteAddersIncentives(Guid adderID,Guid ProposalID)
+        public void DeleteAddersIncentives(Guid adderID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2221,17 +2162,6 @@ namespace DataReef.TM.Services.Services
                .Delete();
 
                 dataContext.SaveChanges();
-
-                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
-                if (existingProposal == null)
-                {
-                    throw new Exception("Data Not Found");
-                }
-
-                if (existingProposal.UsesNoSQLAggregatedData == true)
-                {
-                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
-                }
             }
         }
     }
