@@ -273,9 +273,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     var ReqJson = new JavaScriptSerializer().Serialize(req);
 
-                    proposalfianaceplan.SunlightReqJson = ReqJson;
-                    proposalfianaceplan.SunlightResponseJson = content;
-                    dc.SaveChanges();
+                    using (var db = new DataContext())
+                    {
+                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        fianacepln.SunlightReqJson = ReqJson;
+                        fianacepln.SunlightResponseJson = content;
+                        db.SaveChanges();
+                    }
 
                     return frame;
                 }
