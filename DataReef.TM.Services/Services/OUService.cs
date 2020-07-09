@@ -1390,7 +1390,7 @@ namespace DataReef.TM.Services.Services
                         item.Provider.FinancePlanDefinitions = null;
                     }
                 }
-                return result;
+                return result.OrderBy(a => a.Name).ToList();
             }
         }
 
