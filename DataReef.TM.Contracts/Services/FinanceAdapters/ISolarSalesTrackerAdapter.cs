@@ -23,7 +23,7 @@ namespace DataReef.TM.Contracts.Services
         SBIntegrationLoginModel GetSBToken(Guid ouid);
 
         [OperationContract]
-        void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc);
+        SstResponse AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc);
 
         [OperationContract]
         void SignAgreement(Proposal proposal,string documentTypeId, SignedDocumentDTO proposalDoc);

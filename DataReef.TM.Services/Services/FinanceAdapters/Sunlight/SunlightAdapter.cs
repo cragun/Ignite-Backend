@@ -6,6 +6,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Finance;
+using DataReef.TM.Models.Solar;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -159,6 +160,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             public string returnCode { get; set; }
             public List<Projects> projects { get; set; }
         }
+
+        public class projectIdsmodel
+        {
+            public string projectIds { get; set; }
+        }
+
+            
         public class SunlightProducts
         {
             public string returnCode { get; set; }
@@ -228,7 +236,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 applicnt.firstName = name.FirstName;
                 applicnt.lastName = name.LastName;
                 applicnt.email = property.GetMainEmailAddress();
-                applicnt.phone = property.GetMainPhoneNumber()?.Replace("-","");
+                applicnt.phone = property.GetMainPhoneNumber()?.Replace("-", "");
                 applicnt.isPrimary = true;
                 project.applicants.Add(applicnt);
 
@@ -278,11 +286,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                 token = Uri.EscapeDataString(token);
                 string hashId = ret.projects?.FirstOrDefault().hashId;
-                if(!string.IsNullOrEmpty(hashId))
+                if (!string.IsNullOrEmpty(hashId))
                 {
                     hashId = Uri.EscapeDataString(hashId);
                 }
-                
+
 
                 string frame = FrameUrl.Replace("{tokenid}", token)
                                        .Replace("{hashid}", "&pid=" + hashId);
@@ -300,6 +308,107 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         }
 
 
+
+
+
+        public string GetSunlightloanstatus(Guid proposal)
+        {
+            try
+            {
+                using (var dc = new DataContext())
+                {
+                    var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
+                    string projectid = resp.projects?.FirstOrDefault().id;
+
+                    //string requesttxt = "{'projectIds': '" + projectid + "'}";
+                    string token = GetSunlightToken();
+
+                    string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+                    var request = new RestRequest($"/getstatus/status/", Method.POST);
+                    //var request = new RestRequest($"/sendloandocs/request/", Method.POST);
+
+                    projectIdsmodel prid = new projectIdsmodel();
+                    prid.projectIds = projectid;
+
+
+                    request.AddJsonBody(prid);
+                    request.AddHeader("Authorization", "Basic " + svcCredentials);
+                    request.AddHeader("SFAccessToken", "Bearer " + token);
+
+                    var response = client.Execute(request);
+
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new ApplicationException($"GetSunlightloanstatus Failed. {response.Content}");
+                    }
+
+                    var content = response.Content;
+
+                    var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+
+                    
+                    var ReqJson = new JavaScriptSerializer().Serialize(prid);
+
+                    using (var db = new DataContext())
+                    {
+                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        fianacepln.SunlightReqJson = ReqJson;
+                        fianacepln.SunlightResponseJson = content;
+                        db.SaveChanges();
+                    }
+
+                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus;
+
+                    return returnstr;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+
+
+        public string sendloandocs(Guid proposal)
+        {
+            try
+            {
+                using (var dc = new DataContext())
+                {
+                    var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
+                    string projectid = resp.projects?.FirstOrDefault().id;
+
+                    string requesttxt = "{'projects': [{'id': '" + projectid + "'}]}";
+                    string token = GetSunlightToken();
+
+                    string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+                    var request = new RestRequest($"/sendloandocs/request/", Method.POST);
+                    request.AddJsonBody(requesttxt);
+                    request.AddHeader("Authorization", "Basic " + svcCredentials);
+                    request.AddHeader("SFAccessToken", "Bearer " + token);
+
+                    var response = client.Execute(request);
+
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new ApplicationException($"GetSunlightloanstatus Failed. {response.Content}");
+                    }
+
+                    var content = response.Content;
+
+                    var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+
+                    return ret.projects?.FirstOrDefault().projectStatus  + " msg: "  + ret.projects?.FirstOrDefault().message;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
 
         //public string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode)
         //{
