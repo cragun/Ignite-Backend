@@ -130,6 +130,18 @@ namespace DataReef.TM.Services
             return id;
         }
 
+        public string GetSunlightloanstatus(Guid proposalId)
+        {
+            string sunlightstatus = _sunlightAdapter.Value.GetSunlightloanstatus(proposalId);
+            return sunlightstatus;
+        }
+
+        public string Sunlightsendloandocs(Guid proposalId)
+        {
+            string sunlightstatus = _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
+            return sunlightstatus;
+        }
+
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())

@@ -13,6 +13,9 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     [ServiceKnownType("GetKnownTypes", typeof(KnownTypesProvider))]
     public interface ISunlightAdapter
     {
+        //    [OperationContract]
+        //    string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode);
+
         [OperationContract]
         string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan);
         //string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan, string loanAmount);
@@ -23,5 +26,10 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
         [OperationContract]
         string GetState(string shortState, string type);
 
+        [OperationContract]
+        string GetSunlightloanstatus(Guid proposal);
+
+        [OperationContract]
+        string Sunlightsendloandocs(Guid proposal);
     }
 }

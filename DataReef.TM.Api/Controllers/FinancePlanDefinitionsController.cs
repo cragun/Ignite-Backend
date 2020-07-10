@@ -34,6 +34,20 @@ namespace DataReef.TM.Api.Controllers
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinition(financePlanDefinitionId));
         }
 
+        [Route("{proposalid:guid}/sunlightloanstatus")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetSunlightloanstatus(Guid proposalId)
+        {
+            return Ok(_financePlanDefinitionService.Value.GetSunlightloanstatus(proposalId));
+        }
+
+        [Route("{proposalid:guid}/Sunlightsendloandocs")]
+        [HttpGet]
+        public async Task<IHttpActionResult> Sunlightsendloandocs(Guid proposalId)
+        {
+            return Ok(_financePlanDefinitionService.Value.Sunlightsendloandocs(proposalId));
+        }
+
         [Route("{financePlanDefinitionId:guid}/{propertyId:guid}/creditcheckurls")]
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
