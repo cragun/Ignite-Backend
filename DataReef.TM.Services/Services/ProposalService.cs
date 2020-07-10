@@ -741,7 +741,9 @@ namespace DataReef.TM.Services.Services
 
                         //if (attachPDF)
                         //{
-                            var proposalPDF = _utilServices.Value.GetPDF(proposalUrl + "?customizeproposal=1");
+                            proposalUrl = proposalUrl + "?customizeproposal=1";
+
+                            var proposalPDF = _utilServices.Value.GetPDF(proposalUrl);
                             if (proposalPDF != null)
                             {
                                 attachments = new List<System.Net.Mail.Attachment> {
