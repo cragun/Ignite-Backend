@@ -741,13 +741,25 @@ namespace DataReef.TM.Services.Services
 
                         //if (attachPDF)
                         //{
-                            var proposalPDF = _utilServices.Value.GetPDF($"{proposalUrl}?customizeproposal=1");
-                            if (proposalPDF != null)
-                            {
-                                attachments = new List<System.Net.Mail.Attachment> {
+                        var proposalPDF = _utilServices.Value.GetPDF($"{proposalUrl}?customizeproposal=1");
+
+                        ApiLogEntry apilog = new ApiLogEntry();
+                        apilog.Id = Guid.NewGuid();
+                        apilog.User = "/CreateProposalData/service";
+                        apilog.Machine = Environment.MachineName;
+                        apilog.RequestTimestamp = DateTime.UtcNow;
+                        apilog.ResponseContentBody = proposalPDF.ToString();
+                        apilog.RequestContentBody = $"{proposalUrl}?customizeproposal=1";
+
+                        dataContext.ApiLogEntries.Add(apilog);
+                        dataContext.SaveChanges();
+
+                        if (proposalPDF != null)
+                        {
+                            attachments = new List<System.Net.Mail.Attachment> {
                             new System.Net.Mail.Attachment(new MemoryStream(proposalPDF), $"Proposal [{planName.AsFileName()}].pdf", "application/pdf")
                             };
-                            }
+                        }
                         // }
                         //Mail.Library.SendEmail(salesRepEmailAddress, ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                         Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
@@ -1358,7 +1370,7 @@ namespace DataReef.TM.Services.Services
                 catch
                 {
                 }
-                
+
                 // Push the proposal to SB
                 _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
 
@@ -2340,7 +2352,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem,Guid ProposalID)
+        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2392,7 +2404,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteAddersIncentives(Guid adderID,Guid ProposalID)
+        public void DeleteAddersIncentives(Guid adderID, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
