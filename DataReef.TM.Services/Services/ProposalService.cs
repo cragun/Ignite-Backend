@@ -748,7 +748,7 @@ namespace DataReef.TM.Services.Services
                         apilog.User = "/CreateProposalData/service";
                         apilog.Machine = Environment.MachineName;
                         apilog.RequestTimestamp = DateTime.UtcNow;
-                        apilog.ResponseContentBody = proposalPDF.ToString();
+                        //apilog.ResponseContentBody = proposalPDF.ToString();
                         apilog.RequestContentBody = $"{proposalUrl}?customizeproposal=1";
 
                         dataContext.ApiLogEntries.Add(apilog);
