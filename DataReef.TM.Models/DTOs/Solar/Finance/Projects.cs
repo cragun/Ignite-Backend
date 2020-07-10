@@ -22,8 +22,10 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string id { get; set; }
         public string hashId { get; set; }
         public string ownerEmail { get; set; }
+        public string message { get; set; }
         public bool? isACH { get; set; }
         public bool? isCreditAuthorized { get; set; }
+        public string projectStatus { get; set; }
         public string ownerName { get; set; }
         public string installerName { get; set; }
         public string projectCategory { get; set; }

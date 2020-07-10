@@ -147,10 +147,10 @@ namespace DataReef.TM.Services
         }
 
 
-        public string sunlighttest()
+        public string GetSunlightloanstatus(Guid proposalId)
         {
-            string sunlighturl = _sunlightAdapter.Value.GetSunlightToken();
-            return sunlighturl;
+            string sunlightstatus = _sunlightAdapter.Value.GetSunlightloanstatus(proposalId);
+            return sunlightstatus;
         }
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {

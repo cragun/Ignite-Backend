@@ -16,6 +16,9 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public ProposalStatus Status { get; set; }
 
+        [NotMapped]
+        public string SBProposalError { get; set; }
+
         /// <summary>
         /// Person who owns this proposal, who is making the proposal
         /// </summary>
