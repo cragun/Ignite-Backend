@@ -160,6 +160,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             public string returnCode { get; set; }
             public List<Projects> projects { get; set; }
         }
+
+        public class projectIdsmodel
+        {
+            public string projectIds { get; set; }
+        }
+
+            
         public class SunlightProducts
         {
             public string returnCode { get; set; }
@@ -314,13 +321,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
                     string projectid = resp.projects?.FirstOrDefault().id;
 
-                    string requesttxt = "{'projectIds': '" + projectid + "'}";
+                    //string requesttxt = "{'projectIds': '" + projectid + "'}";
                     string token = GetSunlightToken();
 
                     string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                     var request = new RestRequest($"/getstatus/status/", Method.POST);
                     //var request = new RestRequest($"/sendloandocs/request/", Method.POST);
-                    request.AddJsonBody(requesttxt);
+
+                    projectIdsmodel prid = new projectIdsmodel();
+                    prid.projectIds = projectid;
+
+
+                    request.AddJsonBody(prid);
                     request.AddHeader("Authorization", "Basic " + svcCredentials);
                     request.AddHeader("SFAccessToken", "Bearer " + token);
 
@@ -335,7 +347,20 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
 
-                    return ret.projects?.FirstOrDefault().projectStatus;
+                    
+                    var ReqJson = new JavaScriptSerializer().Serialize(prid);
+
+                    using (var db = new DataContext())
+                    {
+                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        fianacepln.SunlightReqJson = ReqJson;
+                        fianacepln.SunlightResponseJson = content;
+                        db.SaveChanges();
+                    }
+
+                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus;
+
+                    return returnstr;
                 }
             }
             catch (Exception ex)
