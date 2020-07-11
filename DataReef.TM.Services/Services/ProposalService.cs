@@ -1319,7 +1319,6 @@ namespace DataReef.TM.Services.Services
                         .ForEach(d =>
                         {
 
-
                             d.ProviderName = FinanceProvider?.Name;
                             d.Apr = apr;
                             d.Year = year;
@@ -1330,10 +1329,9 @@ namespace DataReef.TM.Services.Services
                             if (d.Name == "Proposal")
                             {
                                 d.EnergyBillUrl = data.UserInputLinks?.FirstOrDefault(lnk => lnk.Type == UserInputDataType.EnergyBill)?.ContentURL;
-                                d.Url = d.Url + "?customizeproposal=1";
                             }
-
-                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
+                           
+                            var pdfContent = _utilServices.Value.GetPDF(d.Name == "Proposal" ? d.Url + "?customizeproposal=1" : d.Url);
 
                             d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
                                  new BlobModel
