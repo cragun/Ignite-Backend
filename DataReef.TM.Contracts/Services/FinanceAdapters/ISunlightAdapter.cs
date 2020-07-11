@@ -30,6 +30,6 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
         string GetSunlightloanstatus(Guid proposal);
 
         [OperationContract]
-        string Sunlightsendloandocs(Guid proposal)
+        string Sunlightsendloandocs(Guid proposal);
     }
 }

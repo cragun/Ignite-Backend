@@ -165,7 +165,7 @@ namespace DataReef.TM.Services.Services
             if (entity.SolarSystem != null)
             {
                 // var totaPanelsCount = entity.SolarSystem.RoofPlanes.Sum(rp => rp.PanelsCount);
-                var req = JsonConvert.SerializeObject(entity);
+              //  var req = JsonConvert.SerializeObject(entity);
                 try
                 {
                     entity.SolarSystem.ValidateSystemValid();
