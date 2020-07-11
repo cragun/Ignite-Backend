@@ -742,18 +742,6 @@ namespace DataReef.TM.Services.Services
                         //if (attachPDF)
                         //{
                         var proposalPDF = _utilServices.Value.GetPDF($"{proposalUrl}?customizeproposal=1");
-
-                        ApiLogEntry apilog = new ApiLogEntry();
-                        apilog.Id = Guid.NewGuid();
-                        apilog.User = "/CreateProposalData/service";
-                        apilog.Machine = Environment.MachineName;
-                        apilog.RequestTimestamp = DateTime.UtcNow;
-                        //apilog.ResponseContentBody = proposalPDF.ToString();
-                        apilog.RequestContentBody = $"{proposalUrl}?customizeproposal=1";
-
-                        dataContext.ApiLogEntries.Add(apilog);
-                        dataContext.SaveChanges();
-
                         if (proposalPDF != null)
                         {
                             attachments = new List<System.Net.Mail.Attachment> {
@@ -1342,6 +1330,7 @@ namespace DataReef.TM.Services.Services
                             if (d.Name == "Proposal")
                             {
                                 d.EnergyBillUrl = data.UserInputLinks?.FirstOrDefault(lnk => lnk.Type == UserInputDataType.EnergyBill)?.ContentURL;
+                                d.Url = d.Url + "?customizeproposal=1";
                             }
 
                             var pdfContent = _utilServices.Value.GetPDF(d.Url);
