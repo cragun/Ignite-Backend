@@ -1356,8 +1356,6 @@ namespace DataReef.TM.Services.Services
                 }
 
                 // Push the proposal to SB
-                _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
-
                 var response = _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
                 if (response != null && response.Message.Type.Equals("error"))
                 {
