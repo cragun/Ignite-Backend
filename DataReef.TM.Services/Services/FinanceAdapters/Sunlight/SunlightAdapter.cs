@@ -166,7 +166,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             public string projectIds { get; set; }
         }
 
-            
+        public class SunProject
+        {
+            public List<Projects> projects { get; set; }
+        }
+
         public class SunlightProducts
         {
             public string returnCode { get; set; }
@@ -222,7 +226,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 project.term = financePlan.TermInYears * 12;
                 project.apr = double.Parse(String.Format("{0:0.00}", financePlan.Apr));
                 project.isACH = true;
-                project.installStreet = property.StreetName;
+                project.installStreet = property.Address1 + ", " + property.StreetName;
                 project.installCity = property.City;
                 project.installStateName = GetState(property.State, "shortState");
                 project.installZipCode = property.ZipCode;
@@ -326,7 +330,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                     var request = new RestRequest($"/getstatus/status/", Method.POST);
-                    //var request = new RestRequest($"/sendloandocs/request/", Method.POST);
 
                     projectIdsmodel prid = new projectIdsmodel();
                     prid.projectIds = projectid;
@@ -371,7 +374,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
 
 
-        public string sendloandocs(Guid proposal)
+        public string Sunlightsendloandocs(Guid proposal)
         {
             try
             {
@@ -379,14 +382,20 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 {
                     var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
                     var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
-                    string projectid = resp.projects?.FirstOrDefault().id;
+                    string projectid = resp.projects?.FirstOrDefault()?.id;
 
-                    string requesttxt = "{'projects': [{'id': '" + projectid + "'}]}";
+                   // string requesttxt = "{'projects': [{'id': '" + projectid + "'}]}";
+                    SunlightProjects req = new SunlightProjects();
+                    Projects project = new Projects();
+                    project.id = projectid;
+                    req.projects = new List<Projects>();
+                    req.projects.Add(project);
+
                     string token = GetSunlightToken();
 
                     string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                     var request = new RestRequest($"/sendloandocs/request/", Method.POST);
-                    request.AddJsonBody(requesttxt);
+                    request.AddJsonBody(req);
                     request.AddHeader("Authorization", "Basic " + svcCredentials);
                     request.AddHeader("SFAccessToken", "Bearer " + token);
 
@@ -394,14 +403,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        throw new ApplicationException($"GetSunlightloanstatus Failed. {response.Content}");
+                        throw new ApplicationException($"Sunlightsendloandocs Failed. {response.Content}");
                     }
 
                     var content = response.Content;
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
 
-                    return ret.projects?.FirstOrDefault().projectStatus  + " msg: "  + ret.projects?.FirstOrDefault().message;
+                    return ret.projects?.FirstOrDefault()?.projectStatus  + " msg: "  + ret.projects?.FirstOrDefault()?.message;
                 }
             }
             catch (Exception ex)

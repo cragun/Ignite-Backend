@@ -28,5 +28,8 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
 
         [OperationContract]
         string GetSunlightloanstatus(Guid proposal);
+
+        [OperationContract]
+        string Sunlightsendloandocs(Guid proposal)
     }
 }
