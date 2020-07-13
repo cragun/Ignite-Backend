@@ -361,9 +361,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                         db.SaveChanges();
                     }
 
-                    string returnstr = "Sunlight Project Status: " + ret.projects?.FirstOrDefault()?.projectStatus;
+                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus;
 
-                    return returnstr;
+                   // return returnstr;
+
+                    if (!string.IsNullOrEmpty(returnstr))
+                    {
+                        return "Approved";
+                    }
+                    else
+                    {
+                        return "Declined";
+                    }
                 }
             }
             catch (Exception ex)
@@ -408,10 +417,28 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     var content = response.Content;
 
-                    var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-                    string returndata = "Sunlight Loan Status: " + ret.projects?.FirstOrDefault()?.projectStatus + " msg: " + ret.projects?.FirstOrDefault()?.message;
+                    var ReqJson = new JavaScriptSerializer().Serialize(req);
+                    using (var db = new DataContext())
+                    {
+                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        fianacepln.SunlightReqJson = ReqJson;
+                        fianacepln.SunlightResponseJson = content;
+                        db.SaveChanges();
+                    }
 
-                    return returndata;
+                    var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus +  ret.projects?.FirstOrDefault()?.message;
+                    //string returndata = "Sunlight Loan Status: " + ret.projects?.FirstOrDefault()?.projectStatus + " msg: " + ret.projects?.FirstOrDefault()?.message;
+                    if(!string.IsNullOrEmpty(returnstr))
+                    {
+                        return "Approved";
+                    }
+                    else
+                    {
+                        return "Declined";
+                    }
+
+                   // return returnstr;
                 }
             }
             catch (Exception ex)
