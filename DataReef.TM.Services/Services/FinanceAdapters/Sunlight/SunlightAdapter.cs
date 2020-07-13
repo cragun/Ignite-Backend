@@ -226,7 +226,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 project.term = financePlan.TermInYears * 12;
                 project.apr = double.Parse(String.Format("{0:0.00}", financePlan.Apr));
                 project.isACH = true;
-                project.installStreet = property.Address1 + ", " + property.StreetName;
+                project.installStreet = property.Address1 /*+ ", " + property.StreetName*/;
                 project.installCity = property.City;
                 project.installStateName = GetState(property.State, "shortState");
                 project.installZipCode = property.ZipCode;
@@ -361,7 +361,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                         db.SaveChanges();
                     }
 
-                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus;
+                    string returnstr = "Sunlight Project Status: " + ret.projects?.FirstOrDefault()?.projectStatus;
 
                     return returnstr;
                 }
@@ -409,8 +409,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     var content = response.Content;
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+                    string returndata = "Sunlight Loan Status: " + ret.projects?.FirstOrDefault()?.projectStatus + " msg: " + ret.projects?.FirstOrDefault()?.message;
 
-                    return ret.projects?.FirstOrDefault()?.projectStatus + " msg: " + ret.projects?.FirstOrDefault()?.message;
+                    return returndata;
                 }
             }
             catch (Exception ex)
