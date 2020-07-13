@@ -350,7 +350,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
 
-                    
+
                     var ReqJson = new JavaScriptSerializer().Serialize(prid);
 
                     using (var db = new DataContext())
@@ -361,7 +361,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                         db.SaveChanges();
                     }
 
-                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus;
+                    string returnstr = "Sunlight Project Status: " + ret.projects?.FirstOrDefault()?.projectStatus;
 
                     return returnstr;
                 }
@@ -384,7 +384,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
                     string projectid = resp.projects?.FirstOrDefault()?.id;
 
-                   // string requesttxt = "{'projects': [{'id': '" + projectid + "'}]}";
+                    // string requesttxt = "{'projects': [{'id': '" + projectid + "'}]}";
                     SunlightProjects req = new SunlightProjects();
                     Projects project = new Projects();
                     project.id = projectid;
@@ -409,8 +409,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     var content = response.Content;
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
+                    string returndata = "Sunlight Loan Status: " + ret.projects?.FirstOrDefault()?.projectStatus + " msg: " + ret.projects?.FirstOrDefault()?.message;
 
-                    return ret.projects?.FirstOrDefault()?.projectStatus  + " msg: "  + ret.projects?.FirstOrDefault()?.message;
+                    return returndata;
                 }
             }
             catch (Exception ex)
