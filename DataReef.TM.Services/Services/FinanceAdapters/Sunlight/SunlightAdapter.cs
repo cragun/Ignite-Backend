@@ -226,7 +226,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 project.term = financePlan.TermInYears * 12;
                 project.apr = double.Parse(String.Format("{0:0.00}", financePlan.Apr));
                 project.isACH = true;
-                project.installStreet = property.Address1 + ", " + property.StreetName;
+                project.installStreet = property.Address1 /*+ ", " + property.StreetName*/;
                 project.installCity = property.City;
                 project.installStateName = GetState(property.State, "shortState");
                 project.installZipCode = property.ZipCode;
