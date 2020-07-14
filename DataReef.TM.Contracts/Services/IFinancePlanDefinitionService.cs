@@ -27,10 +27,10 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID);
 
         [OperationContract]
-        string GetSunlightloanstatus(Guid proposalId);
+        SunlightResponse GetSunlightloanstatus(Guid proposalId);
 
         [OperationContract]
-        string Sunlightsendloandocs(Guid proposalId);
+        SunlightResponse Sunlightsendloandocs(Guid proposalId);
 
     }
 }
