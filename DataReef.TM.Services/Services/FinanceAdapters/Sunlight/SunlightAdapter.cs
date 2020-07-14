@@ -315,8 +315,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
 
 
-        public string GetSunlightloanstatus(Guid proposal)
+        public SunlightResponse GetSunlightloanstatus(Guid proposal)
         {
+            SunlightResponse snresponse = new SunlightResponse();
             try
             {
                 using (var dc = new DataContext())
@@ -361,30 +362,41 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                         db.SaveChanges();
                     }
 
-                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus;
-
-                   // return returnstr;
-
-                    if (!string.IsNullOrEmpty(returnstr))
+                    if (ret.returnCode != "200")
                     {
-                        return "Approved";
+                        var error = JsonConvert.DeserializeObject<SunlightError>(content);
+                        snresponse.returnCode = error.returnCode;
+                        snresponse.projectstatus = error.error?.FirstOrDefault()?.errorMessage;
                     }
                     else
                     {
-                        return "Declined";
+                        string returnstr = ret.projects?.FirstOrDefault()?.projectStatus;
+                        snresponse.returnCode = ret.returnCode;
+
+                        if (!string.IsNullOrEmpty(returnstr))
+                        {
+                            snresponse.projectstatus = "Approved";
+                        }
+                        else
+                        {
+                            snresponse.projectstatus = "Declined";
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                snresponse.returnCode = "500";
+                snresponse.projectstatus = ex.Message;
             }
+            return snresponse;
         }
 
 
 
-        public string Sunlightsendloandocs(Guid proposal)
+        public SunlightResponse Sunlightsendloandocs(Guid proposal)
         {
+            SunlightResponse snresponse = new SunlightResponse();
             try
             {
                 using (var dc = new DataContext())
@@ -427,24 +439,35 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     }
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-                    string returnstr = ret.projects?.FirstOrDefault()?.projectStatus +  ret.projects?.FirstOrDefault()?.message;
-                    //string returndata = "Sunlight Loan Status: " + ret.projects?.FirstOrDefault()?.projectStatus + " msg: " + ret.projects?.FirstOrDefault()?.message;
-                    if(!string.IsNullOrEmpty(returnstr))
+                    // string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
+                    if (ret.returnCode != "200")
                     {
-                        return "Approved";
+                        var error = JsonConvert.DeserializeObject<SunlightError>(content);
+                        snresponse.returnCode = error.returnCode;
+                        snresponse.projectstatus = error.error?.FirstOrDefault()?.errorMessage;
                     }
                     else
                     {
-                        return "Declined";
-                    }
+                        string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
+                        snresponse.returnCode = ret.returnCode;
 
-                   // return returnstr;
+                        if (!string.IsNullOrEmpty(returnstr))
+                        {
+                            snresponse.projectstatus = "Approved";
+                        }
+                        else
+                        {
+                            snresponse.projectstatus = "Declined";
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                snresponse.returnCode = "500";
+                snresponse.projectstatus = ex.Message;
             }
+            return snresponse;
         }
 
         //public string CreateSunlightApplicant(string fname, string lname, string email, string phone, string street, string city, string state, string zipcode)
