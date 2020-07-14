@@ -164,15 +164,12 @@ namespace DataReef.TM.Services.Services
 
             if (entity.SolarSystem != null)
             {
-                // var totaPanelsCount = entity.SolarSystem.RoofPlanes.Sum(rp => rp.PanelsCount);
-                var req = JsonConvert.SerializeObject(entity);
                 try
                 {
                     entity.SolarSystem.ValidateSystemValid();
                 }
                 catch (Exception ex)
                 {
-                    // SaveRequest(req,  ex.Message, totaPanelsCount.ToString(), entity.SolarSystem.PanelCount.ToString(),  "proposalupdateEX");
                     throw new ApplicationException(ex.Message);
                 }
 
@@ -741,15 +738,13 @@ namespace DataReef.TM.Services.Services
 
                         //if (attachPDF)
                         //{
-                            proposalUrl = proposalUrl + "?customizeproposal=1";
-
-                            var proposalPDF = _utilServices.Value.GetPDF(proposalUrl);
-                            if (proposalPDF != null)
-                            {
-                                attachments = new List<System.Net.Mail.Attachment> {
+                        var proposalPDF = _utilServices.Value.GetPDF($"{proposalUrl}?customizeproposal=1");
+                        if (proposalPDF != null)
+                        {
+                            attachments = new List<System.Net.Mail.Attachment> {
                             new System.Net.Mail.Attachment(new MemoryStream(proposalPDF), $"Proposal [{planName.AsFileName()}].pdf", "application/pdf")
                             };
-                            }
+                        }
                         // }
                         //Mail.Library.SendEmail(salesRepEmailAddress, ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                         Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
@@ -1321,7 +1316,6 @@ namespace DataReef.TM.Services.Services
                         .ForEach(d =>
                         {
 
-
                             d.ProviderName = FinanceProvider?.Name;
                             d.Apr = apr;
                             d.Year = year;
@@ -1333,8 +1327,8 @@ namespace DataReef.TM.Services.Services
                             {
                                 d.EnergyBillUrl = data.UserInputLinks?.FirstOrDefault(lnk => lnk.Type == UserInputDataType.EnergyBill)?.ContentURL;
                             }
-
-                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
+                           
+                            var pdfContent = _utilServices.Value.GetPDF(d.Name == "Proposal" ? d.Url + "?customizeproposal=1" : d.Url);
 
                             d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
                                  new BlobModel
@@ -1362,7 +1356,12 @@ namespace DataReef.TM.Services.Services
                 }
 
                 // Push the proposal to SB
-                _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                var response = _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                if (response != null && response.Message.Type.Equals("error"))
+                {
+                    proposal.SBProposalError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                }
+
 
                 var pbi = new PBI_ProposalSigned
                 {
@@ -2335,7 +2334,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem,Guid ProposalID)
+        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2387,7 +2386,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteAddersIncentives(Guid adderID,Guid ProposalID)
+        public void DeleteAddersIncentives(Guid adderID, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {

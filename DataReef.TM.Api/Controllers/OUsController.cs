@@ -121,6 +121,16 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpGet]
+        [ResponseType(typeof(ICollection<FinancePlanDefinition>))]
+        [Route("{ouID:guid}/financeplandefinitions/proposal")]
+        [AllowAnonymous,InjectAuthPrincipal]
+        public async Task<IHttpActionResult> GetFinancePlanDefinitionsProposal(Guid ouID, string include = "", string exclude = "", string fields = "")
+        {
+            var result = ouService.GetFinancePlanDefinitions(ouID, include, exclude, fields);
+            return Ok(result);
+        }
+
+        [HttpGet]
         [ResponseType(typeof(ICollection<Territory>))]
         [Route("{ouID:guid}/territories/{territoryName}")]
         public async Task<IHttpActionResult> GetFilteredByNameTerritoriesForCurrentAndSubOUs(Guid ouID, string territoryName, string include = "", string fields = "", bool deletedItems = false)

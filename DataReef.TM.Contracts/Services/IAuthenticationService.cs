@@ -45,6 +45,7 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         string GetCurrentUserFullName();
 
+        [OperationContract]
         bool CheckUserExist(string email);
     }
 }

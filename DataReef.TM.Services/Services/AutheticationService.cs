@@ -565,7 +565,6 @@ namespace DataReef.Application.Services
             }
         }
 
-
         [FaultContract(typeof(PreconditionFailedFault))]
         public AuthenticationToken CreateUser(NewUser newUser, byte[] photo = null, string phoneNumber = null)
         {

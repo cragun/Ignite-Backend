@@ -135,7 +135,6 @@ namespace DataReef.TM.Api.Controllers.Web
                 {
                     model.ShowFormIfModelHasErrors = true;
                 }
-
             }
             catch (Exception ex)
             {

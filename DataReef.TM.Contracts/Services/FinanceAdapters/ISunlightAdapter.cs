@@ -1,4 +1,5 @@
 ﻿using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Finance;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,11 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
 
         [OperationContract]
         string GetState(string shortState, string type);
+
+        [OperationContract]
+        SunlightResponse GetSunlightloanstatus(Guid proposal);
+
+        [OperationContract]
+        SunlightResponse Sunlightsendloandocs(Guid proposal);
     }
 }

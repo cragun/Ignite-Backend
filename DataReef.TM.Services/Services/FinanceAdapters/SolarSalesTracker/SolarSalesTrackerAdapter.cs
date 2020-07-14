@@ -579,12 +579,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
         }
-        public void AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
+        public SstResponse AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;
             if (!ouid.HasValue || proposalDoc == null)
             {
-                return;
+                return null;
             }
 
             EnsureInitialized(ouid.Value);
@@ -609,7 +609,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 ?.SMARTBoard;
             if (integrationData == null)
             {
-                return;
+                return null;
             }
 
             // Push the lead to SB if it's not there yet.
@@ -638,20 +638,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     Lead = new SBLeadModel(proposal?.Property, dealer),
                     Proposal = new SBProposalModel
                     {
-
-                        //CustomerName =(proposal?.Property.Name).Replace(" ", ""),
-                        //ModuleQty= ProjectData?.ModuleCount.ToString(),
-                        //PanelBrand = (ProjectData?.ModuleModel).Replace(" ", ""),
-                        //PanelSize = ProjectData?.ModuleSize.ToString(),
-                        //SystemSize= ProjectData?.SystemSize + "kW",
-                        //Lender= (proposalDoc?.ProviderName).Replace(" ", ""),
-                        //TermInYears = proposalDoc?.Year.ToString(),
-                        //Apr = proposalDoc?.Apr.ToString(),
-                        //Year= proposalData?.SignatureDate?.Year.ToString(),
-                        //Month= proposalData?.SignatureDate?.Month.ToString(),
-                        //Day= proposalData?.SignatureDate?.Day.ToString(),
-                        //Hour= proposalData?.SignatureDate?.Hour.ToString(),
-                        //Minute= proposalData?.SignatureDate?.Minute.ToString(),
 
                         Name = (proposal?.Property.Name + "_" +
                                  ProjectData?.ModuleCount + "_" +
@@ -700,7 +686,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 //    }
                 //}
 
-                SubmitProposal(integrationData, request, ouid.Value);
+              return  SubmitProposal(integrationData, request, ouid.Value);
             }
 
 
@@ -896,7 +882,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return JsonConvert.DeserializeObject<SstResponse>(response);
         }
 
-        private void SubmitProposal(SMARTBoardIntegrationOptionData settings, object request, Guid ouid)
+        private SstResponse SubmitProposal(SMARTBoardIntegrationOptionData settings, object request, Guid ouid)
         {
             SetSSTSettings(settings);
 
@@ -915,6 +901,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
             }
+
+            return JsonConvert.DeserializeObject<SstResponse>(response);
         }
     }
 }
