@@ -1267,10 +1267,6 @@
     <Compile Include="Migrations\202007081201294_Add two Field in solar.Financeplan.Designer.cs">
       <DependentUpon>202007081201294_Add two Field in solar.Financeplan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202007140727328_Add migration.cs" />
-    <Compile Include="Migrations\202007140727328_Add migration.Designer.cs">
-      <DependentUpon>202007140727328_Add migration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2180,9 +2176,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007081201294_Add two Field in solar.Financeplan.resx">
       <DependentUpon>202007081201294_Add two Field in solar.Financeplan.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007140727328_Add migration.resx">
-      <DependentUpon>202007140727328_Add migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
