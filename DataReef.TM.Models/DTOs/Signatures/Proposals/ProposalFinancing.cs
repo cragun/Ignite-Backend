@@ -23,6 +23,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         public double MonthlyPayment { get; set; }
         public decimal DownPayment { get; set; }
         public double LeaseEscalator { get; set; }
+        public string RequestJSON { get; set; }
 
         public ProposalFinancing() { }
 
@@ -31,6 +32,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
             var plan = financePlan.FinancePlanDefinition;
 
             Loan = plan.Name;
+            RequestJSON = Newtonsoft.Json.JsonConvert.SerializeObject(request);
             InterestRate = (double)response.StatedApr;
             Term = plan.TermInYears;
             TermInMonths = plan.TermInMonths == 0 ? plan.TermInYears * 12 : plan.TermInMonths;

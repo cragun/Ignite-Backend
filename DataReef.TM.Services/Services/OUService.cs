@@ -783,35 +783,12 @@ namespace DataReef.TM.Services.Services
         {
             using (var dc = new DataContext())
             {
-                List<OU> result = new List<OU>();
+                    var allAncestorIDs = dc
+                                    .Database
+                                    .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
+                                    .ToList();
 
-                var OUList = dc
-                    .OUs?
-                    .Where(o => o.IsDeleted == false)
-                    .ToList();
-
-                var selectedList = dc
-                       .OUSettings
-                       .Where(os => os.Name == SolarTrackerResources.SelectedSettingName)
-                       .Select(os => os.OUID)
-                       .ToList();
-
-
-                foreach (var ou in OUList)
-                {
-                    var finalList = selectedList.Contains(ou.Guid).ToString();
-                    if (finalList.Equals("False"))
-                    {
-                        result.Add(ou);
-                    }
-                }
-
-                return result.Select(x => new SBOU
-                {
-                    OUID = x.Guid,
-                    Name = x.Name
-                });
-
+                return allAncestorIDs.OrderBy(x => x.Name);
             }
         }
 
