@@ -8,6 +8,7 @@ using System.Web.Http.Description;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataReef.TM.Models.DTOs;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -134,15 +135,17 @@ namespace DataReef.TM.Api.Controllers
             return user;
         }
 
-        [System.Web.Http.HttpPost]
-        [Route("adduserstapostrtdate")]
-        public async Task AddUserStartDate(string apiKey, DateTime startDate, Guid userId)
+
+        [HttpPost]
+        [Route("adduserstartdate")]
+        public async Task<User> AddUserStartDate(AddUserStartDateRequest request)
         {
-            var user = userDataService.Get(userId);
+            var user = userDataService.Get(request.UserId, "person");
             if (user == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            user.StartDate = startDate;
+            user.StartDate = request.Date;
             userDataService.Update(user);
+            return user;
         }
     }
 }

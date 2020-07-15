@@ -184,6 +184,7 @@
     <Compile Include="DataViews\Solar\Proposal\PowerMetaDataConsumptionDataView.cs" />
     <Compile Include="DataViews\Solar\Proposal\PowerMetaDataDataView.cs" />
     <Compile Include="DataViews\ValueTypePair.cs" />
+    <Compile Include="DTOs\AddUserStartDateRequest.cs" />
     <Compile Include="DTOs\Charting\Chart.cs" />
     <Compile Include="DTOs\Charting\ChartType.cs" />
     <Compile Include="DTOs\Charting\Point.cs" />
