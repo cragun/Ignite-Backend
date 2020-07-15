@@ -410,6 +410,16 @@ namespace DataReef.TM.Api.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
+        [Route("UpdateProposalFinancePlan/{ProposalID}")]
+        [InjectAuthPrincipal]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateProposalFinancePlan([FromUri]Guid ProposalID,FinancePlan plan)
+        {
+            _proposalService.UpdateProposalFinancePlan(ProposalID, plan);
+            return Ok();
+        }
+
         private async Task<DocumentSignRequest> GetProposalRequest()
         {
             var data = await GetMultiPartData<DocumentSignRequest>("RequestValue");

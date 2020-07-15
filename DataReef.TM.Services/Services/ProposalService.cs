@@ -2409,5 +2409,33 @@ namespace DataReef.TM.Services.Services
                 }
             }
         }
+
+        public void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
+
+                if (existingProposal == null)
+                {
+                    throw new Exception("Data not found");
+                }
+
+                var existingFinancePlan= dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                existingFinancePlan.ResponseJSON = financePlan.ResponseJSON;
+                existingFinancePlan.Name = financePlan.Name;
+                existingFinancePlan.FinancePlanType = financePlan.FinancePlanType;
+                existingFinancePlan.FinancePlanDefinitionID = financePlan.FinancePlanDefinitionID;
+
+                dataContext.SaveChanges();
+            }
+        }
+        
     }
 }

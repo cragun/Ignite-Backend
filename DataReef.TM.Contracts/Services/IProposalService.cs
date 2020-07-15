@@ -94,5 +94,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         void DeleteAddersIncentives(Guid adderID, Guid ProposalID);
+
+        [OperationContract]
+        void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan);
     }
 }
