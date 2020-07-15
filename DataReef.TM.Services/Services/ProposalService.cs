@@ -2428,6 +2428,17 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Plan not found");
                 }
 
+                var existingFinancePlanDefination = dataContext.FinancePlaneDefinitions.FirstOrDefault(i => i.Guid == existingFinancePlan.FinancePlanDefinitionID);
+
+                if (existingFinancePlanDefination == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                result.FinancePlanData = existingFinancePlanDefination.MetaDataJSON;
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 existingFinancePlan.ResponseJSON = financePlan.ResponseJSON;
                 existingFinancePlan.Name = financePlan.Name;
                 existingFinancePlan.FinancePlanType = financePlan.FinancePlanType;
