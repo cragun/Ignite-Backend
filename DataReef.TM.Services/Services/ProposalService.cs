@@ -736,18 +736,17 @@ namespace DataReef.TM.Services.Services
                         var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the attached file or the link below: <br/> <br/> <a href='{proposalUrl}'>Proposal for {homeOwnerName}</a> <br/>";
                         List<System.Net.Mail.Attachment> attachments = null;
 
-                        //if (attachPDF)
-                        //{
-                        var proposalPDF = _utilServices.Value.GetPDF($"{proposalUrl}?customizeproposal=1");
-                        if (proposalPDF != null)
+                        if (attachPDF)
                         {
-                            attachments = new List<System.Net.Mail.Attachment> {
+                            var proposalPDF = _utilServices.Value.GetPDF($"{proposalUrl}");
+                            if (proposalPDF != null)
+                            {
+                                attachments = new List<System.Net.Mail.Attachment> {
                             new System.Net.Mail.Attachment(new MemoryStream(proposalPDF), $"Proposal [{planName.AsFileName()}].pdf", "application/pdf")
                             };
+                            }
                         }
-                        // }
-                        //Mail.Library.SendEmail(salesRepEmailAddress, ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
-                        Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        Mail.Library.SendEmail(salesRepEmailAddress, ccEmails, $"Created Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
 
@@ -1327,7 +1326,7 @@ namespace DataReef.TM.Services.Services
                             {
                                 d.EnergyBillUrl = data.UserInputLinks?.FirstOrDefault(lnk => lnk.Type == UserInputDataType.EnergyBill)?.ContentURL;
                             }
-                           
+
                             var pdfContent = _utilServices.Value.GetPDF(d.Name == "Proposal" ? d.Url + "?customizeproposal=1" : d.Url);
 
                             d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
@@ -1422,7 +1421,8 @@ namespace DataReef.TM.Services.Services
                         var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
                         var to = disableSendingToCustomer ? salesRepEmailAddress : $"{salesRepEmailAddress};{homeOwnerEmailAddress}";
 
-                        Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        //Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
                 //var isSolarSalesTrackerEnabled = ouSettings.GetValue<SSTSettings>(SolarTrackerResources.SettingName)?.Enabled?.IsTrue() == true;
@@ -2421,7 +2421,7 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Data not found");
                 }
 
-                var existingFinancePlan= dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
 
                 if (existingFinancePlan == null)
                 {
@@ -2436,6 +2436,6 @@ namespace DataReef.TM.Services.Services
                 dataContext.SaveChanges();
             }
         }
-        
+
     }
 }
