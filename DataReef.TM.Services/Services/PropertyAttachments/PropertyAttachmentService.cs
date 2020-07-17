@@ -1072,7 +1072,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             var attachitm = propertyattech?.Items?.Where(i => i.SectionID == "s-0" && i.ItemID == "t-10")?.FirstOrDefault();
 
             uploadImageRequest.PropertyAttachmentID = item.Guid;
-            uploadImageRequest.PropertyAttachmentItemID = attachitm == null ? Guid.NewGuid() : attachitm.Guid;
+            if(attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
             uploadImageRequest.SectionID = "s-0";
             uploadImageRequest.ItemID = "t-10";
             //uploadImageRequest.ImagesWithNotes = ;
