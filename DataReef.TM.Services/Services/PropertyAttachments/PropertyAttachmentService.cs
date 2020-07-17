@@ -1046,13 +1046,12 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
 
             using (var context = new DataContext())
             {
-                // item = base.Get(itemEntity.Guid);
                 item = context.PropertyAttachments.FirstOrDefault(p => p.PropertyID == PropertyId && p.AttachmentTypeID == 1);
             }
 
-
             if (item == null)
             {
+                item = new PropertyAttachment();
                 item.Guid = Guid.NewGuid();
                 item.IsDeleted = false;
                 item.PropertyID = PropertyId;
