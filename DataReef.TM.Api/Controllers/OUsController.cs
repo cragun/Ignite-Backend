@@ -398,7 +398,7 @@ namespace DataReef.TM.Api.Controllers
                 zapierou.ouslist = ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
                 return Ok(zapierou);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 throw;
             }

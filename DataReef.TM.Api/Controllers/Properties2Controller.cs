@@ -16,6 +16,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using DataReef.Auth.Helpers;
 using System.Threading.Tasks;
+using DataReef.TM.Models.PropertyAttachments;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -288,6 +289,21 @@ namespace DataReef.TM.Api.Controllers
             var result = _propertyServiceFactory().EditPropertyNameFromSB(leadId,request);
 
             return Ok(result);
+        }
+
+
+
+        [HttpPost]
+        [ResponseType(typeof(PropertyAttachmentItemDTO))]
+        [Route("Appointment/utilityBill/upload/{PropertyId}")]
+        public async Task<IHttpActionResult> UploadUtilityBill(Guid PropertyId, [FromBody]UploadImageToPropertyAttachmentRequest uploadImageRequest)
+        {
+
+            if (uploadImageRequest == null || (uploadImageRequest.Images?.Any() != true))
+                return BadRequest($"Invalid {nameof(uploadImageRequest)}");
+
+            var response = _propertyAttachmentServiceFactory().UploadUtilityBillImage(PropertyId, uploadImageRequest);
+            return Ok(response);
         }
 
 

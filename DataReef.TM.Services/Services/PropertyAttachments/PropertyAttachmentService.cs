@@ -21,6 +21,7 @@ using System.Data.Entity;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 
@@ -38,8 +39,9 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
         private readonly Lazy<IAuthenticationService> _authService;
         private readonly Lazy<IOUSettingService> _ouSettingsService;
         private readonly Lazy<IPersonService> _personService;
-
-        public PropertyAttachmentService(ILogger logger,
+        // private readonly IDataService<PropertyAttachment> _dataService;
+        public PropertyAttachmentService(  //IDataService<PropertyAttachment> dataService, 
+            ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IBlobService> blobService,
             Lazy<IAuthenticationService> authService,
@@ -1034,6 +1036,57 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             model.RejectionMessage = image.RejectionMessage;
             model.ImageUrl = image?.Thumbnails?.FirstOrDefault(t => t.Type == ThumbnailType.Small)?.Url;
             return model;
+        }
+
+        // 
+        public PropertyAttachmentItemDTO UploadUtilityBillImage(Guid PropertyId, UploadImageToPropertyAttachmentRequest uploadImageRequest)
+        {
+
+            PropertyAttachment item = new PropertyAttachment();
+
+            using (var context = new DataContext())
+            {
+                // item = base.Get(itemEntity.Guid);
+                item = context.PropertyAttachments.FirstOrDefault(p => p.PropertyID == PropertyId && p.AttachmentTypeID == 1);
+            }
+
+            if (item == null && item.Guid == Guid.Empty)
+            {
+                item.Guid = Guid.NewGuid();
+                item.IsDeleted = false;
+                item.PropertyID = PropertyId;
+                item.SystemTypeID = "st-01";
+                item.AttachmentTypeID = 1;
+                item = Insert(item);
+            }
+            else
+            {
+                item = Update(item);
+            }
+
+            
+                var propertyattech = base.Get(item.Guid, "Items");
+
+            //var propertyattechitm = propertyattech.Items.Where();
+
+            var attachitm = propertyattech?.Items?.Where(i => i.SectionID == "s-0" && i.ItemID == "t-10")?.FirstOrDefault();
+
+            uploadImageRequest.PropertyAttachmentID = item.Guid;
+            uploadImageRequest.PropertyAttachmentItemID = attachitm == null ? Guid.NewGuid() : attachitm.Guid;
+            uploadImageRequest.SectionID = "s-0";
+            uploadImageRequest.ItemID = "t-10";
+            //uploadImageRequest.ImagesWithNotes = ;
+            //uploadImageRequest.Location = ;
+
+            var response = UploadImage(uploadImageRequest.PropertyAttachmentID,
+                    uploadImageRequest.PropertyAttachmentItemID,
+                    uploadImageRequest.SectionID,
+                    uploadImageRequest.ItemID,
+                    uploadImageRequest.Images,
+                    uploadImageRequest.ImagesWithNotes,
+                    uploadImageRequest.Location);
+
+            return response;
         }
 
 

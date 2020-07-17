@@ -1251,21 +1251,9 @@
     <Compile Include="Migrations\202006270522492_Add Prefix in AdapterRequests table.Designer.cs">
       <DependentUpon>202006270522492_Add Prefix in AdapterRequests table.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202007020720017_Add-IsTerritoryAdd.cs" />
-    <Compile Include="Migrations\202007020720017_Add-IsTerritoryAdd.Designer.cs">
-      <DependentUpon>202007020720017_Add-IsTerritoryAdd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007030825406_AddAppointmentType.cs" />
-    <Compile Include="Migrations\202007030825406_AddAppointmentType.Designer.cs">
-      <DependentUpon>202007030825406_AddAppointmentType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007061128102_AddexcludeProposalJSON.cs" />
-    <Compile Include="Migrations\202007061128102_AddexcludeProposalJSON.Designer.cs">
-      <DependentUpon>202007061128102_AddexcludeProposalJSON.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007081201294_Add two Field in solar.Financeplan.cs" />
-    <Compile Include="Migrations\202007081201294_Add two Field in solar.Financeplan.Designer.cs">
-      <DependentUpon>202007081201294_Add two Field in solar.Financeplan.cs</DependentUpon>
+    <Compile Include="Migrations\202007160532490_migration1.cs" />
+    <Compile Include="Migrations\202007160532490_migration1.Designer.cs">
+      <DependentUpon>202007160532490_migration1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2165,17 +2153,8 @@
     <EmbeddedResource Include="Migrations\202006270522492_Add Prefix in AdapterRequests table.resx">
       <DependentUpon>202006270522492_Add Prefix in AdapterRequests table.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007020720017_Add-IsTerritoryAdd.resx">
-      <DependentUpon>202007020720017_Add-IsTerritoryAdd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007030825406_AddAppointmentType.resx">
-      <DependentUpon>202007030825406_AddAppointmentType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007061128102_AddexcludeProposalJSON.resx">
-      <DependentUpon>202007061128102_AddexcludeProposalJSON.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007081201294_Add two Field in solar.Financeplan.resx">
-      <DependentUpon>202007081201294_Add two Field in solar.Financeplan.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202007160532490_migration1.resx">
+      <DependentUpon>202007160532490_migration1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
