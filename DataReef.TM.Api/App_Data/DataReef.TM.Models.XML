@@ -51,6 +51,11 @@
             Guid of the ApiKey object
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.FavouriteTerritory.PersonID">
+            <summary>
+            Guid of the person assigned a territory
+            </summary>
+        </member>
         <member name="T:DataReef.TM.Models.Account">
             <summary>
             Accounts are paying entities.  In TM, they are the master company we sign up.  In Leap, they are the Company, or User if solo
@@ -5317,6 +5322,11 @@
         <member name="P:DataReef.TM.Models.Person.Assignments">
             <summary>
             Assignments link a person to the territories he/she has access to
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Person.FavouriteTerritories">
+            <summary>
+            Favorite territory assigned to this person
             </summary>
         </member>
         <member name="P:DataReef.TM.Models.Person.AssignedAppointments">

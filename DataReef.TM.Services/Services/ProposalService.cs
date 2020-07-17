@@ -2445,6 +2445,13 @@ namespace DataReef.TM.Services.Services
                 existingFinancePlan.FinancePlanDefinitionID = financePlan.FinancePlanDefinitionID;
 
                 dataContext.SaveChanges();
+
+                if (existingProposal.UsesNoSQLAggregatedData == true)
+                {
+                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
+                }
+
+
             }
         }
 

@@ -1255,6 +1255,10 @@
     <Compile Include="Migrations\202007160532490_migration1.Designer.cs">
       <DependentUpon>202007160532490_migration1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007170735348_AddFavouriteTerritory.cs" />
+    <Compile Include="Migrations\202007170735348_AddFavouriteTerritory.Designer.cs">
+      <DependentUpon>202007170735348_AddFavouriteTerritory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2155,6 +2159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007160532490_migration1.resx">
       <DependentUpon>202007160532490_migration1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007170735348_AddFavouriteTerritory.resx">
+      <DependentUpon>202007170735348_AddFavouriteTerritory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

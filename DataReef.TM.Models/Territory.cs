@@ -119,6 +119,11 @@ namespace DataReef.TM.Models
         [InverseProperty("Territory")]
         [DataMember]
         [AttachOnUpdate]
+        public ICollection<FavouriteTerritory> FavouriteTerritories { get; set; }
+
+        [InverseProperty("Territory")]
+        [DataMember]
+        [AttachOnUpdate]
         public ICollection<PrescreenBatch> Prescreens { get; set; }
 
         [DataMember]
@@ -156,6 +161,7 @@ namespace DataReef.TM.Models
             }
 
             Assignments = FilterEntityCollection(Assignments, newInclusionPath);
+            FavouriteTerritories = FilterEntityCollection(FavouriteTerritories, newInclusionPath);
             Prescreens = FilterEntityCollection(Prescreens, newInclusionPath);
             Shapes = FilterEntityCollection(Shapes, newInclusionPath);
 
