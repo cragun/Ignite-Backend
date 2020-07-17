@@ -17,6 +17,7 @@ using System.Web.Http.Description;
 using DataReef.Auth.Helpers;
 using System.Threading.Tasks;
 using DataReef.TM.Models.PropertyAttachments;
+using System.Web;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -296,8 +297,19 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("Appointment/utilityBill/upload/{PropertyId}")]
-        public async Task<IHttpActionResult> UploadUtilityBill(Guid PropertyId, [FromBody]UploadImageToPropertyAttachmentRequest uploadImageRequest)
+        public async Task<IHttpActionResult> UploadUtilityBill(Guid PropertyId)
         {
+            var PicFile = HttpContext.Current.Request.Files["file"];
+
+            System.IO.Stream fs = PicFile.InputStream;
+            System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
+            Byte[] bytes = br.ReadBytes((Int32)fs.Length);
+            string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
+
+
+            UploadImageToPropertyAttachmentRequest uploadImageRequest = new UploadImageToPropertyAttachmentRequest();
+            uploadImageRequest.Images = new List<string>();
+            uploadImageRequest.Images.Add(base64String);
 
             if (uploadImageRequest == null || (uploadImageRequest.Images?.Any() != true))
                 return BadRequest($"Invalid {nameof(uploadImageRequest)}");
