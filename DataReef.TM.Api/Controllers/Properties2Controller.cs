@@ -300,22 +300,27 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> UploadUtilityBill(Guid PropertyId)
         {
             var PicFile = HttpContext.Current.Request.Files["file"];
+            if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
+            {
 
-            System.IO.Stream fs = PicFile.InputStream;
-            System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
-            Byte[] bytes = br.ReadBytes((Int32)fs.Length);
-            string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
+                System.IO.Stream fs = PicFile.InputStream;
+                System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
+                Byte[] bytes = br.ReadBytes((Int32)fs.Length);
+                string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
 
 
-            UploadImageToPropertyAttachmentRequest uploadImageRequest = new UploadImageToPropertyAttachmentRequest();
-            uploadImageRequest.Images = new List<string>();
-            uploadImageRequest.Images.Add(base64String);
+                UploadImageToPropertyAttachmentRequest uploadImageRequest = new UploadImageToPropertyAttachmentRequest();
+                uploadImageRequest.Images = new List<string>();
+                uploadImageRequest.Images.Add(base64String);
 
-            if (uploadImageRequest == null || (uploadImageRequest.Images?.Any() != true))
-                return BadRequest($"Invalid {nameof(uploadImageRequest)}");
+                if (uploadImageRequest == null || (uploadImageRequest.Images?.Any() != true))
+                    return BadRequest($"Invalid {nameof(uploadImageRequest)}");
 
-            var response = _propertyAttachmentServiceFactory().UploadUtilityBillImage(PropertyId, uploadImageRequest);
-            return Ok(response);
+                var response = _propertyAttachmentServiceFactory().UploadUtilityBillImage(PropertyId, uploadImageRequest);
+                return Ok(response);
+            }
+
+            return BadRequest("Could not find the file!");
         }
 
 
