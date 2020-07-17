@@ -1050,7 +1050,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                 item = context.PropertyAttachments.FirstOrDefault(p => p.PropertyID == PropertyId && p.AttachmentTypeID == 1);
             }
 
-            if (item == null && item.Guid == Guid.Empty)
+            if (item == null)
             {
                 item.Guid = Guid.NewGuid();
                 item.IsDeleted = false;
