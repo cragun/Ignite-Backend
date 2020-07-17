@@ -38,5 +38,11 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForTerritory(Guid territoryId, OUReportingSettings reportSettings, DateTime? specifiedDay);
+
+        [OperationContract]
+        FavouriteTerritory InsertFavoriteTerritory(Guid territoryId, Guid personID);
+
+        [OperationContract]
+        void RemoveFavoriteTerritory(Guid territoryId, Guid personID);
     }
 }

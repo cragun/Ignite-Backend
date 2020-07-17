@@ -104,6 +104,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public bool IsArchived { get; set; }
 
+        [NotMapped]
+        public bool IsFavourite { get; set; }
+
         #endregion
 
         #region Navigation
