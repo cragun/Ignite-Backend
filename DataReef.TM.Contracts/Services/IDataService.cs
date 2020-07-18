@@ -52,5 +52,11 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         ICollection<SaveResult> DeleteMany(Guid[] uniqueIds);
 
+        [OperationContract]
+        SaveResult Activate(Guid uniqueId);
+
+        [OperationContract]
+        ICollection<SaveResult> ActivateMany(Guid[] uniqueIds);
+
     }
 }

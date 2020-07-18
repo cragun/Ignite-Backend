@@ -20,5 +20,20 @@ namespace DataReef.TM.Services.Extensions
 
             entities.ToList().ForEach(uow.Delete);
         }
+
+
+        public static void Activate<T>(this IUnitOfWork uow, T entity) where T : EntityBase
+        {
+            entity.IsDeleted = false;
+            uow.Update(entity);
+        }
+
+        public static void ActivateMany<T>(this IUnitOfWork uow, IEnumerable<T> entities) where T : EntityBase
+        {
+            if (entities == null || !entities.Any())
+                return;
+
+            entities.ToList().ForEach(uow.Activate);
+        }
     }
 }

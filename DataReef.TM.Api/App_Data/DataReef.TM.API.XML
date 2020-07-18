@@ -910,6 +910,13 @@
             <param name="guid">The unique id of the object to delete.</param>
             <returns>Returns Accepted if the operation is successful or InternalServerError if the object could not be deleted or BadRequest if the request is faulty.</returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.ActivateByGuid(System.Guid)">
+            <summary>
+            Activate a entity.
+            </summary>
+            <param name="guid">The unique id of the object to Activate.</param>
+            <returns>Returns Accepted if the operation is successful or InternalServerError if the object could not be activated or BadRequest if the request is faulty.</returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.DeleteMany(DataReef.TM.Api.Classes.Requests.IDsListWrapperRequest)">
             <summary>
             Using POST because RestKit won't allow DELETE with body

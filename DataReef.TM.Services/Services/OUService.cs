@@ -757,6 +757,77 @@ namespace DataReef.TM.Services.Services
             return results;
         }
 
+
+        public override SaveResult Activate(Guid uniqueId)
+        {
+            var results = ActivateMany(new Guid[] { uniqueId });
+            return results.FirstOrDefault();
+        }
+
+        public override ICollection<SaveResult> ActivateMany(Guid[] uniqueIds)
+        {
+            var results = new List<SaveResult>();
+            try
+            {
+                using (var uow = UnitOfWorkFactory())
+                {
+                    var ous = uow.Get<OU>()
+                        .Include(ou => ou.Associations)
+                        .Include(ou => ou.Territories.Select(t => t.Assignments))
+                        .Include(ou => ou.Children)
+                        .Where(ou => uniqueIds.Contains(ou.Guid))
+                        .ToList();
+                    foreach (var ou in ous)
+                    {                        
+                            var result = TryEntitySoftActivate(ou.Guid, ou);
+                            results.Add(result);
+
+                        //// cascade activate
+                        //var guids = GetOUAndChildrenGuids(ou.Guid);
+                        var guids = ou.Children.Select(o => o.Guid).ToList();
+
+                        // remove current OU
+                        guids = guids
+                                        .Distinct()
+                                        .Except(new Guid[] { ou.Guid })
+                                        .ToList();
+
+                            if (guids.Count > 0)
+                            {
+                                var data = ActivateMany(guids.ToArray());
+
+                                // Activate UserInvitations for Activated OU
+                                var userInvitations = uow.Get<UserInvitation>()
+                                    .Where(ui => ui.OUID == ou.Guid && ui.IsDeleted == true)
+                                    .ToList();
+
+                                uow.ActivateMany(userInvitations);
+                                uow.ActivateMany(ou.Associations);
+                                uow.ActivateMany(ou.Territories);
+                                if (ou.Territories?.SelectMany(t => t.Assignments) != null)
+                                {
+                                    uow.ActivateMany(ou.Territories.SelectMany(t => t.Assignments).ToList());
+                                }
+                            }
+                    }
+
+                    uow.SaveChanges(new DataSaveOperationContext
+                    {
+                        DataAction = DataAction.Update
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                foreach (var saveResult in results)
+                    saveResult.Success = false;
+
+                results.Add(SaveResult.FromException(ex, DataAction.Delete));
+            }
+
+            return results;
+        }
+
         public ICollection<OU> ListAllForPerson(Guid personID)
         {
 
