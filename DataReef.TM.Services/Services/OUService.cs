@@ -1636,7 +1636,8 @@ namespace DataReef.TM.Services.Services
                             RootOrganizationName = parent?.RootOrganizationName,
                             CreatedByID = SmartPrincipal.UserId,
                             CreatedByName = "InternalPortal",
-                            IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd
+                            IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd,
+                            MinModule = req.BasicInfo.MinModule
                         };
 
                         dc.OUs.Add(ou);
@@ -1744,6 +1745,7 @@ namespace DataReef.TM.Services.Services
 
                 ou.Name = req.BasicInfo.OUName;
                 ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
+                ou.MinModule = req.BasicInfo.MinModule;
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 var wkt = HandleOUStates(ouid, req.BasicInfo.States, dc);
