@@ -118,6 +118,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public bool IsTerritoryAdd { get; set; }
 
+        [DataMember]
+        public int MinModule { get; set; }
+
         /// <summary>
         /// Property used by the Portal, to populate the breadcrumb
         /// Will contain the list of ancestors based on current user's access
