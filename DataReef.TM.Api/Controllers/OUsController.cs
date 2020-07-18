@@ -304,9 +304,9 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [Route("{ouid:guid}/withancestors")]
         [ResponseType(typeof(OU))]
-        public async Task<OU> GetWithAncestors(Guid ouid, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "")
+        public async Task<OU> GetWithAncestors(Guid ouid, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false)
         {
-            var entity = ouService.GetWithAncestors(ouid, include, exclude, fields, summary, query);
+            var entity = ouService.GetWithAncestors(ouid, include, exclude, fields, summary, query, deletedItems);
             entity.SetupSerialization(include, exclude, fields);
             return entity;
         }

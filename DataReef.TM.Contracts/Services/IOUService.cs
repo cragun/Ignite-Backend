@@ -97,7 +97,7 @@ namespace DataReef.TM.Contracts.Services
         void EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req);
 
         [OperationContract]
-        OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "");
+        OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false);
 
         [OperationContract]
         List<OUsAndRoleTree> GetOUsRoleTree(Guid personID);

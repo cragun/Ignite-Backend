@@ -1964,9 +1964,9 @@ namespace DataReef.TM.Services.Services
             
         }
 
-        public OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "")
+        public OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false)
         {
-            OU ou = GetOU(uniqueId, include, exclude, fields, false, true);
+            OU ou = GetOU(uniqueId, include, exclude, fields, deletedItems, true);
             //ou = OUBuilder(ou, include, exclude, fields, true, true);
 
             if (ou.Children != null)
@@ -1974,7 +1974,7 @@ namespace DataReef.TM.Services.Services
                 if (!string.IsNullOrWhiteSpace(query))
                 {
                     var childIds = GetChildOUIDs(new List<Guid> { uniqueId }, query);
-                    ou.Children = base.GetMany(childIds, include, exclude, fields);
+                    ou.Children = base.GetMany(childIds, include, exclude, fields, deletedItems);
 
                     // if Parent is present, it will break the serialization
                     foreach (var child in ou.Children)
