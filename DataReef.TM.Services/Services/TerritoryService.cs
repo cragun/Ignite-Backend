@@ -220,18 +220,26 @@ namespace DataReef.TM.Services
                 ouTerritoriesQuery = ApplyDeletedFilter(deletedItems, ouTerritoriesQuery);
                 var ouTerritories = ouTerritoriesQuery.ToList();
 
-                if (personID.HasValue)
-                {
-                    var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
-                    foreach (var territory in ouTerritories)
-                    {
-                        var favourite = favouriteTerritories?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
 
-                        if (favourite != null)
-                            territory.IsFavourite = true;
-                        else
-                            territory.IsFavourite = false;
+                if (!personID.HasValue)
+                {
+                    var isSuperAdmin = context.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId && oa.OURole.RoleType == OURoleType.SuperAdmin).FirstOrDefault();
+
+                    if (isSuperAdmin != null)
+                    {
+                        personID = SmartPrincipal.UserId;
                     }
+                }
+
+                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
+                foreach (var territory in ouTerritories)
+                {
+                    var favourite = favouriteTerritories?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
+
+                    if (favourite != null)
+                        territory.IsFavourite = true;
+                    else
+                        territory.IsFavourite = false;
                 }
 
 
@@ -624,7 +632,7 @@ namespace DataReef.TM.Services
 
                 dc.FavouriteTerritories.Add(territory);
                 dc.SaveChanges();
-             
+
                 return territory;
             }
         }
