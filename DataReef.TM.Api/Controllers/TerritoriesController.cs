@@ -147,7 +147,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> RemoveFavoriteTerritory(FavouriteTerritory request)
         {
             _territoryService.RemoveFavoriteTerritory(request.TerritoryID, request.PersonID);
-            return Ok();
+            return Ok("removed successfully");
         }
 
         protected override string PrepareEntityForNavigationPropertiesAttachment(Territory entity)
