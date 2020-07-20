@@ -134,20 +134,18 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("addFavourite")]
-        [ResponseType(typeof(string))]
         public async Task<IHttpActionResult> InsertFavoriteTerritory(FavouriteTerritory request)
         {
             var territory = _territoryService.InsertFavoriteTerritory(request.TerritoryID, request.PersonID);
-            return Ok("added successfully");
+            return Ok(new GenericResponse<string> { Response = "added successfully" });
         }
 
         [HttpPost]
         [Route("removeFavourite")]
-        [ResponseType(typeof(string))]
         public async Task<IHttpActionResult> RemoveFavoriteTerritory(FavouriteTerritory request)
         {
             _territoryService.RemoveFavoriteTerritory(request.TerritoryID, request.PersonID);
-            return Ok("removed successfully");
+            return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
 
         protected override string PrepareEntityForNavigationPropertiesAttachment(Territory entity)
