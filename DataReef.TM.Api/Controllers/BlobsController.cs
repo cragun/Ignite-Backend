@@ -70,6 +70,7 @@ namespace DataReef.TM.API.Controllers
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         [Route("{guid:guid}")]
         public async Task<HttpResponseMessage> GetBytes(Guid guid)
