@@ -1835,7 +1835,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SBAddDocument GetDocuments(Guid propertyID)
+        public SBGetDocument GetDocuments(Guid propertyID)
         {
             string resp = "";
             using (var dataContext = new DataContext())
