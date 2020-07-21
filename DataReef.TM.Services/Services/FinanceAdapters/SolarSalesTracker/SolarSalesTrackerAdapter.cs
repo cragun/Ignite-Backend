@@ -377,7 +377,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
         }
 
-        public List<ProposalMediaItem> GetProposalDocuments(Property property)
+        public string GetProposalDocuments(Property property)
         {
             var ouid = property?.Territory?.OUID;
             if (!ouid.HasValue)
@@ -421,7 +421,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
 
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
-            return JsonConvert.DeserializeObject<List<ProposalMediaItem>>(response);
+            //return JsonConvert.DeserializeObject<List<ProposalMediaItem>>(response);
+            return response;
         }
 
         public void SBActiveDeactiveUser(bool IsActive, string sbid)

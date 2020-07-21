@@ -1834,7 +1834,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<ProposalMediaItem> GetDocuments(Guid propertyID)
+        public string GetDocuments(Guid propertyID)
         {
             string resp = "";
             using (var dataContext = new DataContext())
