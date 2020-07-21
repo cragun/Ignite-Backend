@@ -5,6 +5,7 @@ using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.Solar;
 using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace DataReef.TM.Contracts.Services
@@ -30,6 +31,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         void UploadDocumentItem(Property property, string documentTypeId, ProposalMediaItem proposalDoc);
+
+        [OperationContract]
+        List<ProposalMediaItem> GetProposalDocuments(Property property);
 
         [OperationContract]
         void SBActiveDeactiveUser(bool IsActive, string sbid);

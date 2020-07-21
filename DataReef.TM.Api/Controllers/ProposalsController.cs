@@ -181,6 +181,14 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
+        [Route("{propertyID:guid}/getDocuments")]
+        [HttpPost]
+        public async Task<IHttpActionResult> GetDocuments(Guid propertyID)
+        {
+            _proposalService.GetDocuments(propertyID);
+            return Ok();
+        }
+
 
         /// <summary>
         /// Upload multiple documents using a multi-part body

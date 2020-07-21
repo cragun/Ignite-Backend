@@ -1834,6 +1834,23 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public List<ProposalMediaItem> GetDocuments(Guid propertyID)
+        {
+            string resp = "";
+            using (var dataContext = new DataContext())
+            {
+                var property = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
+
+                if (property == null)
+                {
+                    throw new ApplicationException("Please Add Property Data");
+                }
+
+                var response = _solarSalesTrackerAdapter.Value.GetProposalDocuments(property);
+                return response;
+            }
+        }
+
 
         //public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
         //{
