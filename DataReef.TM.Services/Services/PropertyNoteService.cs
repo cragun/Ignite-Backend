@@ -27,7 +27,7 @@ namespace DataReef.TM.Services.Services
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
-    public class PropertyNoteService : DataService<PropertyNote>, IPropertyNoteService 
+    public class PropertyNoteService : DataService<PropertyNote>, IPropertyNoteService
     {
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<IOUService> _ouService;
@@ -103,6 +103,18 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
                 entity.SaveResult = SaveResult.SuccessfulInsert;
 
+                if (entity.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                    var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    if (not != null && proprty != null)
+                    {
+                        NotifyComment(not.PersonID, not, proprty, dc);
+                    }
+                }
+
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -134,6 +146,17 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
+                if (entity.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                    var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    if (not != null && proprty != null)
+                    {
+                        NotifyComment(not.PersonID, not, proprty, dc);
+                    }
+                }
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -230,6 +253,17 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
+                if (entity.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                    var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    if (not != null && proprty != null)
+                    {
+                        NotifyComment(not.PersonID, not, proprty, dc);
+                    }
+                }
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -247,8 +281,7 @@ namespace DataReef.TM.Services.Services
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
-                    }
-
+                    }                    
                 }
             }
             return ret;
@@ -316,7 +349,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-       public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
+        public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             //ApiLogEntry apilog = new ApiLogEntry
             //{
@@ -376,7 +409,7 @@ namespace DataReef.TM.Services.Services
                 {
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true , user.Guid);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
                     if (emails?.Any() == true)
                     {
                         SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
@@ -529,23 +562,23 @@ namespace DataReef.TM.Services.Services
             {
                 string userID = string.Join(",", noteRequest.userId);
                 string apiKey = string.Join(",", noteRequest.apiKey);
-                
+
                 using (var dc = new DataContext())
                 {
-                    
-                        var NoteList = dc
-                            .Database
-                            .SqlQuery<SBNoteData>("exec usp_getnoteDatagroupbyProperty @fromdate, @todate, @apiKey, @userid",
-                            new SqlParameter("@fromdate", fromDate),
-                            new SqlParameter("@todate", toDate),
-                            new SqlParameter("@apiKey", apiKey),
-                            new SqlParameter("@userid", userID))
-                            .ToList();
+
+                    var NoteList = dc
+                        .Database
+                        .SqlQuery<SBNoteData>("exec usp_getnoteDatagroupbyProperty @fromdate, @todate, @apiKey, @userid",
+                        new SqlParameter("@fromdate", fromDate),
+                        new SqlParameter("@todate", toDate),
+                        new SqlParameter("@apiKey", apiKey),
+                        new SqlParameter("@userid", userID))
+                        .ToList();
 
 
-                        NoteList.RemoveAll(x => x.LeadID == null || x.apiKey == null || x.DateCreated == null);
-                    
-                        return NoteList;
+                    NoteList.RemoveAll(x => x.LeadID == null || x.apiKey == null || x.DateCreated == null);
+
+                    return NoteList;
 
                 }
 
@@ -730,7 +763,7 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("No lead found with the specified ID(s)");
                 }
-              //  property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
+                //  property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
                 //validate the token
                 var sbSettings = _ouSettingService
                                     .Value
@@ -889,13 +922,48 @@ namespace DataReef.TM.Services.Services
                                 PersonID = person.Guid,
                                 TerritoryID = property.TerritoryID,
                                 Status = AssignmentStatus.Open,
-                                Notes = (IsFromSmartBoard == true) ? "FromNotes" : null                                
+                                Notes = (IsFromSmartBoard == true) ? "FromNotes" : null
                             });
                         }
                     }
                 }
             }
 
+
+        }
+
+
+        private void NotifyComment(Guid prsnid, PropertyNote note, Property property, DataContext dataContext = null)
+        {
+            bool releaseDataContext = dataContext == null;
+            dataContext = dataContext ?? new DataContext();
+
+            string smartboardNotificationID = null;
+            try
+            {
+                smartboardNotificationID = _sbAdapter.Value.AddUserTaggingNotification(property, note.CreatedByID.Value, prsnid);
+                smartboardNotificationID = smartboardNotificationID.Replace("\"", string.Empty);
+            }
+            catch { }
+
+            Notification Notification = new Notification
+            {
+                Value = note.Guid,
+                Description = $"",
+                PersonID = prsnid,
+                Content = $"New Comment on note for property {property.Name}",
+                SmartBoardID = smartboardNotificationID,
+                CreatedByID = note.CreatedByID,
+                CreatedByName = note.CreatedByName
+            };
+
+            dataContext.Notifications.Add(Notification);
+            dataContext.SaveChanges();
+
+            if (releaseDataContext)
+            {
+                dataContext.Dispose();
+            }
 
         }
     }
