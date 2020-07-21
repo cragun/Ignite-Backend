@@ -5,6 +5,7 @@ using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
@@ -183,7 +184,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("{propertyID:guid}/getDocuments")]
         [HttpPost]
-        [ResponseType(typeof(string))]
+        [ResponseType(typeof(SBAddDocument))]
         public async Task<IHttpActionResult> GetDocuments(Guid propertyID)
         { 
             var response = _proposalService.GetDocuments(propertyID);

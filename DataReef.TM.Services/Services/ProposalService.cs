@@ -13,6 +13,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.ClientAPI;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Blobs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
@@ -1834,7 +1835,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string GetDocuments(Guid propertyID)
+        public SBAddDocument GetDocuments(Guid propertyID)
         {
             string resp = "";
             using (var dataContext = new DataContext())

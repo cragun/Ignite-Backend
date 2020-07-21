@@ -33,7 +33,7 @@ namespace DataReef.TM.Contracts.Services
         void UploadDocumentItem(Property property, string documentTypeId, ProposalMediaItem proposalDoc);
 
         [OperationContract]
-        string GetProposalDocuments(Property property);
+        SBAddDocument GetProposalDocuments(Property property);
 
         [OperationContract]
         void SBActiveDeactiveUser(bool IsActive, string sbid);
