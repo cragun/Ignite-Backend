@@ -13,6 +13,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.ClientAPI;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Blobs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
@@ -1831,6 +1832,23 @@ namespace DataReef.TM.Services.Services
 
             {
                 return ex.Message;
+            }
+        }
+
+        public SBGetDocument GetDocuments(Guid propertyID)
+        {
+            string resp = "";
+            using (var dataContext = new DataContext())
+            {
+                var property = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
+
+                if (property == null)
+                {
+                    throw new ApplicationException("Please Add Property Data");
+                }
+
+                var response = _solarSalesTrackerAdapter.Value.GetProposalDocuments(property);
+                return response;
             }
         }
 

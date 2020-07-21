@@ -5,6 +5,7 @@ using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
@@ -179,6 +180,15 @@ namespace DataReef.TM.Api.Controllers
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(blob.ContentType);
             response.Content.Headers.ContentLength = blob.Content.Length;
             return response;
+        }
+
+        [Route("{propertyID:guid}/getDocuments")]
+        [HttpPost]
+        [ResponseType(typeof(SBGetDocument))]
+        public async Task<IHttpActionResult> GetDocuments(Guid propertyID)
+        { 
+            var response = _proposalService.GetDocuments(propertyID);
+            return Ok(response);
         }
 
 
