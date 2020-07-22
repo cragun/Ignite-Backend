@@ -192,6 +192,18 @@ namespace DataReef.TM.Services.Services
                 var properties = dc.Properties.Include(x => x.Territory).Where(x => propertyIds.Contains(x.Guid)).ToList();
                 foreach (var entity in entities)
                 {
+                    if (entity.ContentType == "Comment")
+                    {
+                        var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                        var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                        if (not != null && proprty != null)
+                        {
+                            NotifyComment(not.PersonID, not, proprty, dc);
+                        }
+                    }
+
+
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
                     {
@@ -298,6 +310,17 @@ namespace DataReef.TM.Services.Services
                 var properties = dc.Properties.Include(x => x.Territory).Where(x => propertyIds.Contains(x.Guid)).ToList();
                 foreach (var entity in entities)
                 {
+
+                    if (entity.ContentType == "Comment")
+                    {
+                        var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                        var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                        if (not != null && proprty != null)
+                        {
+                            NotifyComment(not.PersonID, not, proprty, dc);
+                        }
+                    }
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
                     {

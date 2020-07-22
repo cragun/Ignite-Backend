@@ -383,6 +383,7 @@ namespace DataReef.TM.Api.Controllers
 
         // api/v1/ous/sbzapierOus?Address=&City=&State=&Country=&Zip=
         // api/v1/ous/sbzapierOus?Address=Rue du Cornet 6&City=VERVIERS&State=null&Country=Belgium&Zip=B-4800
+        // /api/v1/ous/sbzapierOus?Address=ROSS PRAIRIE RD&City=FAYETTEVILLE&State=Texas&Country=&Zip=78940
         public async Task<IHttpActionResult> GetzapierOus(string Address, string City, string State, string Country, string Zip)
         {
             try
