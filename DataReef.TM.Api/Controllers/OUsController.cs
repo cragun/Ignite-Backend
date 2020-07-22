@@ -268,8 +268,8 @@ namespace DataReef.TM.Api.Controllers
             bool checkTime = CryptographyHelper.checkTime(apikey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
 
-            ouService.InsertApikeyForOU(request, DecyptApiKey);
-            return Ok(); 
+            string ret = ouService.InsertApikeyForOU(request, DecyptApiKey);
+            return Ok(ret); 
         }
 
 

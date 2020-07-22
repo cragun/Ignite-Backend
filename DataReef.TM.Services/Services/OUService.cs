@@ -864,10 +864,13 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public void InsertApikeyForOU(SBOUID request, string apikey)
+        public string InsertApikeyForOU(SBOUID request, string apikey)
         {
-            using (var uow = UnitOfWorkFactory())
+            string ret = "";
+            try
             {
+                using (var uow = UnitOfWorkFactory())
+                {
                     var valueObj = new SelectedIntegrationOption
                     {
                         Id = "smartBOARD-integration",
@@ -876,7 +879,7 @@ namespace DataReef.TM.Services.Services
                         {
                             SMARTBoard = new SMARTBoardIntegrationOptionData
                             {
-                                BaseUrl =ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"],
+                                BaseUrl = ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"],
                                 ApiKey = request.Apikey,
                                 HomeUrl = "/leads/view/{0}",
                                 CreditApplicationUrl = "SB_CreditApplicationUrl"
@@ -894,10 +897,18 @@ namespace DataReef.TM.Services.Services
                         ValueType = SettingValueType.JSON,
                     };
                     uow.Add(newSetting);
-                uow.SaveChanges();
+                    uow.SaveChanges();
+                }
+
+                ret = "Success";
+
+            }
+            catch(Exception ex)
+            {
+                ret = ex.Message;
             }
 
-
+            return ret;
         }
 
         public ICollection<OU> ListAllForPersonAndSetting(Guid personID, string settingName)
