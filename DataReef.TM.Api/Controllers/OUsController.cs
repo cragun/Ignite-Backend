@@ -480,6 +480,17 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Get method used by Portal to retrieve the ouroles
+        /// </summary>
+        [HttpGet, Route("getouroles")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<OURole>))]
+        public async Task<IEnumerable<OURole>> GetOuRoles()
+        {
+            return ouService.GetOuRoles();
+        }
+
         public override async Task<OU> Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             return await base.Get(guid, include, exclude, fields, deletedItems);

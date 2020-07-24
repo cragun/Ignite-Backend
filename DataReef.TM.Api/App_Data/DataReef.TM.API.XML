@@ -692,6 +692,11 @@
             </summary>
             <param name="item"></param>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOuRoles">
+            <summary>
+            Get method used by POrtal to retrieve the ouroles
+            </summary>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.PersonSettingsController">
             <summary>
             Managers CRUD for PersonSetting.

@@ -2144,9 +2144,34 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public IEnumerable<OURole> GetOuRoles()
+        {
+            using (var dc = new DataContext())
+            {
+                var ouRoles = dc.OURoles.Where(a => a.IsActive == true).ToList();
+                return ouRoles;
+            }
+        }
+
+        public void UpdateOuRoles(List<OURole> roles)
+        {
+            using (var dc = new DataContext())
+            {
+                foreach (var role in roles)
+                {
+                    var ourole = dc.OURoles.FirstOrDefault(a => a.Guid == role.Guid);
+                    role.Permissions = ourole.Permissions;
+                    ourole.Updated(role.Guid);
+                }
+
+                dc.SaveChanges();
+            }
+        }
+
+
 
     }
-    
+
 
 
 

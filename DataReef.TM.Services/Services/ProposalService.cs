@@ -2273,6 +2273,11 @@ namespace DataReef.TM.Services.Services
             typeList.Add(new DocType() { Id = 2, Name = "Contract" });
             typeList.Add(new DocType() { Id = 3, Name = "Reference" });
             typeList.Add(new DocType() { Id = 4, Name = "Design" });
+            typeList.Add(new DocType() { Id = 5, Name = "Addendum" });
+            typeList.Add(new DocType() { Id = 6, Name = "HOA" });
+            typeList.Add(new DocType() { Id = 7, Name = "Installation" });
+            typeList.Add(new DocType() { Id = 8, Name = "Survey" });
+            typeList.Add(new DocType() { Id = 9, Name = "Reference" });
 
             return typeList;
         }

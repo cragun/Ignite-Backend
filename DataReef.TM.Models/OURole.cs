@@ -53,6 +53,18 @@ namespace DataReef.TM.Models
 
         }
 
+        /// <summary>
+        /// Increase version and update DateLastModified
+        /// </summary>
+        public void Updated(Guid? modifiedBy = null, string modifiedByName = null)
+        {
+            Version += 1;
+            DateLastModified = DateTime.UtcNow;
+            LastModifiedBy = modifiedBy;
+            LastModifiedByName = modifiedByName;
+        }
+
+
         public bool ShouldSerializeOUAssociations() { return false; }
 
         public bool IsGreaterThanOrEqual(OURole role)

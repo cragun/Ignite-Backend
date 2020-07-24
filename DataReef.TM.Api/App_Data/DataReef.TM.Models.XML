@@ -5339,6 +5339,11 @@
             Appointments created by this person
             </summary>
         </member>
+        <member name="M:DataReef.TM.Models.OURole.Updated(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Increase version and update DateLastModified
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.Territory.Status">
             <summary>
                 Turns the territory on or off
