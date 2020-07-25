@@ -66,7 +66,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
-            Lazy<IAppointmentService> appointmentService,            
+            Lazy<IAppointmentService> appointmentService,
             Lazy<IInquiryService> inquiryService,
             Lazy<ISmsService> smsService)
             : base(logger, unitOfWorkFactory)
@@ -339,11 +339,40 @@ namespace DataReef.TM.Services.Services
 
                         entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
+
+                        #region for Dan Dyer
+                        if (entity.Id == 1075882)
+                        {
+                            var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(entity);
+
+                            ApiLogEntry apilog = new ApiLogEntry();
+                            apilog.Id = Guid.NewGuid();
+                            apilog.User = SmartPrincipal.UserId.ToString();
+                            apilog.Machine = Environment.MachineName;
+                            apilog.RequestContentType = "1075882";
+                            apilog.RequestRouteTemplate = "";
+                            apilog.RequestRouteData = "";
+                            apilog.RequestIpAddress = "";
+                            apilog.RequestMethod = "";
+                            apilog.RequestHeaders = "";
+                            apilog.RequestTimestamp = DateTime.UtcNow;
+                            apilog.RequestUri = "";
+                            apilog.ResponseContentBody = "";
+                            apilog.RequestContentBody = json != null ? json : "";
+
+                            using (var dc = new DataContext())
+                            {
+                                dc.ApiLogEntries.Add(apilog);
+                                dc.SaveChanges();
+                            }
+                        }
+                        #endregion for Dan Dyer
+
                         // remove property bags
                         dataContext
-                                .Fields
-                                .Where(f => f.PropertyId == entity.Guid)
-                                .Delete();
+                                    .Fields
+                                    .Where(f => f.PropertyId == entity.Guid)
+                                    .Delete();
 
                         // remove occupants property bags
                         var occupantIds = dataContext
@@ -401,19 +430,19 @@ namespace DataReef.TM.Services.Services
                                                 .Where(ap => ap.IsNew == true)?
                                                 .ToList();
 
-                       if (newAppointments?.Any() == true)
+                        if (newAppointments?.Any() == true)
                         {
                             var fstAppoint = newAppointments.FirstOrDefault();
                             if (fstAppoint?.SendSmsToCust == true)
-                            {                                
+                            {
                                 _smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
                             }
-                            else if(fstAppoint?.SendSmsToEC == true)
+                            else if (fstAppoint?.SendSmsToEC == true)
                             {
                                 var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
                                 _smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
                             }
-                            
+
                             _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
                         }
                         // handle new inquiries
@@ -446,7 +475,7 @@ namespace DataReef.TM.Services.Services
                             _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
                         });
 
-                        //if (needToUpdateSB && !pushedToSB)
+                        // if (needToUpdateSB && !pushedToSB)
                         if (needToUpdateSB)
                         {
                             bool IsdispositionChanged = false;
@@ -457,7 +486,7 @@ namespace DataReef.TM.Services.Services
 
                             try
                             {
-                                var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);                                
+                                var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
 
                                 if (response != null && response.Message.Type.Equals("error"))
                                 {
@@ -1378,7 +1407,7 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("No user found with the specified ID");
                 }
 
-                if(Request.DispositionTypeId != null && Request.DispositionTypeId > 0)
+                if (Request.DispositionTypeId != null && Request.DispositionTypeId > 0)
                 {
                     if (Request.DispositionTypeId != property.DispositionTypeId)
                     {
