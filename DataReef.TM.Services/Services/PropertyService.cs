@@ -343,6 +343,7 @@ namespace DataReef.TM.Services.Services
                         #region for Dan Dyer
                         if (entity.Id == 1075882)
                         {
+
                             var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(entity);
 
                             ApiLogEntry apilog = new ApiLogEntry();
