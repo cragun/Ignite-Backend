@@ -1298,6 +1298,14 @@
     <Compile Include="Migrations\202007180834074_AddMinModule.Designer.cs">
       <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007131619056_added_startDate_in_user.cs" />
+    <Compile Include="Migrations\202007131619056_added_startDate_in_user.Designer.cs">
+      <DependentUpon>202007131619056_added_startDate_in_user.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007141152084_add_startdate.cs" />
+    <Compile Include="Migrations\202007141152084_add_startdate.Designer.cs">
+      <DependentUpon>202007141152084_add_startdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2204,6 +2212,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007180834074_AddMinModule.resx">
       <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007131619056_added_startDate_in_user.resx">
+      <DependentUpon>202007131619056_added_startDate_in_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007141152084_add_startdate.resx">
+      <DependentUpon>202007141152084_add_startdate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
