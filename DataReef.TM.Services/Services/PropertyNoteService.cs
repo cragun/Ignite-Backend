@@ -105,8 +105,12 @@ namespace DataReef.TM.Services.Services
 
                 if (entity.ContentType == "Comment")
                 {
-                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();                    
                     var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                    not.Updated(SmartPrincipal.UserId, people);
+                    dc.SaveChanges();
 
                     if (not != null && proprty != null)
                     {
@@ -150,6 +154,10 @@ namespace DataReef.TM.Services.Services
                 {
                     var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
                     var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                    not.Updated(SmartPrincipal.UserId, people);
+                    dc.SaveChanges();
 
                     if (not != null && proprty != null)
                     {
@@ -196,6 +204,10 @@ namespace DataReef.TM.Services.Services
                     {
                         var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
                         var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                        var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                        not.Updated(SmartPrincipal.UserId, people);
+                        dc.SaveChanges();
 
                         if (not != null && proprty != null)
                         {
@@ -270,6 +282,10 @@ namespace DataReef.TM.Services.Services
                     var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
                     var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
 
+                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                    not.Updated(SmartPrincipal.UserId, people);
+                    dc.SaveChanges();
+
                     if (not != null && proprty != null)
                     {
                         NotifyComment(not.PersonID, not, proprty, dc);
@@ -315,6 +331,10 @@ namespace DataReef.TM.Services.Services
                     {
                         var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
                         var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                        var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                        not.Updated(SmartPrincipal.UserId, people);
+                        dc.SaveChanges();
 
                         if (not != null && proprty != null)
                         {
