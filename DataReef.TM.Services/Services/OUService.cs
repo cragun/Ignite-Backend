@@ -2077,7 +2077,7 @@ namespace DataReef.TM.Services.Services
             {
                 using (var writer = new StreamWriter(memStream))
                 {
-                    using (var csv = new CsvWriter(writer, System.Globalization.CultureInfo.CurrentCulture))
+                    using (var csv = new CsvWriter(writer))
                     {
                         csv.WriteRecords(data.Item2);
                         writer.Flush();
