@@ -161,7 +161,7 @@ namespace DataReef.TM.Services
             {
                 using (var streamWriter = new StreamWriter(memStream))
                 {
-                    using (var csvWriter = new CsvWriter(streamWriter))
+                    using (var csvWriter = new CsvWriter(streamWriter, System.Globalization.CultureInfo.CurrentCulture))
                     {
                         //write headers
                         headers.ForEach(x => csvWriter.WriteField(x));
