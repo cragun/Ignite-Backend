@@ -40,6 +40,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Datadog.Trace, Version=1.18.3.0, Culture=neutral, PublicKeyToken=def86d061d0d2eeb, processorArchitecture=MSIL">
+      <HintPath>..\packages\Datadog.Trace.1.18.3\lib\net461\Datadog.Trace.dll</HintPath>
+    </Reference>
+    <Reference Include="Datadog.Trace.OpenTracing, Version=1.18.3.0, Culture=neutral, PublicKeyToken=def86d061d0d2eeb, processorArchitecture=MSIL">
+      <HintPath>..\packages\Datadog.Trace.OpenTracing.1.18.3\lib\net461\Datadog.Trace.OpenTracing.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis, Version=1.20.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.20.0\lib\net45\Google.Apis.dll</HintPath>
     </Reference>
