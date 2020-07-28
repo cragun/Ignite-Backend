@@ -8,7 +8,6 @@ using System.Web.Http.Description;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataReef.TM.Models.DTOs;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -26,10 +25,10 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="userDataService"></param>
         public UsersController(IDataService<User> userDataService, IDataService<Person> personService, IDataService<Territory> territoryService, IOUService ouService)
         {
-            this.userDataService = userDataService;
-            this.personService = personService;
-            this.territoryService = territoryService;
-            this._ouService = ouService;
+            this.userDataService        = userDataService;
+            this.personService          = personService;
+            this.territoryService       = territoryService;
+            this._ouService             = ouService;
         }
 
         [HttpGet]
@@ -41,7 +40,7 @@ namespace DataReef.TM.Api.Controllers
             List<Territory> ret = new List<Territory>();
             Person person = personService.Get(userID, "Assignments.Territory");
 
-            if (person == null || person.Assignments == null)
+            if (person == null || person.Assignments==null )
             {
                 return NotFound();
             }
@@ -61,7 +60,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(Territory))]
         [Route("{userID:guid}/territories/{territoryID:guid}")]
-        public async Task<IHttpActionResult> GetTerritoriesForUser(Guid userID, Guid territoryID)
+        public async Task<IHttpActionResult> GetTerritoriesForUser(Guid userID,Guid territoryID)
         {
 
             Territory ret = null;
@@ -76,7 +75,7 @@ namespace DataReef.TM.Api.Controllers
             List<Assignment> assignments = person.Assignments.ToList();
 
             Assignment ass = assignments.Where(aaa => aaa.TerritoryID == territoryID).FirstOrDefault();
-            if (ass == null || ass.Territory == null)
+            if (ass == null || ass.Territory==null)
             {
                 return NotFound();
             }
@@ -90,32 +89,32 @@ namespace DataReef.TM.Api.Controllers
         [Route("{userID:guid}/territories/access/{territoryID:guid}")]
         public async Task<IHttpActionResult> GetUserHasTerritoryAccess(Guid userID, Guid territoryID)
         {
-            Person person = personService.Get(userID, "Assignments.Territory, OUAssociations.OURole");
-            Territory territory = territoryService.Get(territoryID, "OU");
+            Person person               = personService.Get(userID, "Assignments.Territory, OUAssociations.OURole");
+            Territory territory         = territoryService.Get(territoryID, "OU");
 
             if (person == null || person.IsDeleted || territory == null || territory.IsDeleted || territory.OU == null || territory.OU.IsDeleted)
             {
                 return NotFound();
             }
 
-            OU ou = territory.OU;
-            List<Guid> ouIDs = new List<Guid> { ou.Guid };
+            OU ou               = territory.OU;
+            List<Guid> ouIDs    = new List<Guid> { ou.Guid };
 
             //check if there are any assignments of the user for this particular territory
-            bool hasAccess = person.Assignments.Any(a => !a.IsDeleted && a.TerritoryID.Equals(territoryID));
+            bool hasAccess  = person.Assignments.Any(a => !a.IsDeleted && a.TerritoryID.Equals(territoryID));
 
             if (!hasAccess && person.OUAssociations != null && person.OUAssociations.Count != 0)
             {
                 while (ou.ParentID.HasValue)
                 {
                     ou = this._ouService.Get(ou.ParentID.Value);
-                    if (!ou.IsDeleted)
+                    if(!ou.IsDeleted)
                     {
                         ouIDs.Add(ou.Guid);
                     }
                 }
 
-                hasAccess = person.OUAssociations.Any(oua => !oua.IsDeleted &&
+                hasAccess = person.OUAssociations.Any(oua => !oua.IsDeleted && 
                                                               ouIDs.Contains(oua.OUID) &&
                                                               (oua.OURole.IsOwner || oua.OURole.IsAdmin));
 
@@ -132,19 +131,6 @@ namespace DataReef.TM.Api.Controllers
             var user = userDataService.Get(SmartPrincipal.UserId, "Person");
             if (user == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            return user;
-        }
-
-
-        [HttpPost]
-        [Route("adduserstartdate")]
-        public async Task<User> AddUserStartDate(AddUserStartDateRequest request)
-        {
-            var user = userDataService.Get(request.UserId, "person");
-            if (user == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            user.StartDate = request.Date;
-            userDataService.Update(user);
             return user;
         }
     }
