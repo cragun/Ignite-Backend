@@ -694,7 +694,7 @@
         </member>
         <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOuRoles">
             <summary>
-            Get method used by Portal to retrieve the ouroles
+            Get method used by POrtal to retrieve the ouroles
             </summary>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.PersonSettingsController">
