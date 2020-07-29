@@ -2266,7 +2266,6 @@ namespace DataReef.TM.Services.Services
 
         public List<DocType> GetDocumentType()
         {
-
             List<DocType> typeList = new List<DocType>();
 
             typeList.Add(new DocType() { Id = 1, Name = "Proposal" });
