@@ -64,7 +64,6 @@ namespace DataReef.TM.API.Controllers
         }
 
 
-
         /// <summary>
         /// Get the login Days
         /// </summary>
