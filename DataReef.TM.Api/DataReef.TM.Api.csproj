@@ -549,7 +549,6 @@
     </Content>
     <Content Include=".ebextensions\0_commands.config" />
     <Content Include="Content\Images\json.json" />
-    <Content Include="certificate.pfx" />
     <None Include="Properties\PublishProfiles\datareef-territorymanager-api.pubxml" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <Content Include="ppa.txt">
