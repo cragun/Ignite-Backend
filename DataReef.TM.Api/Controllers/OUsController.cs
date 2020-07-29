@@ -21,6 +21,7 @@ using WebApi.OutputCache.V2;
 using GoogleMaps.LocationServices;
 using System.Threading.Tasks;
 using DataReef.Auth.Helpers;
+using DataReef.TM.Api.Classes.Requests;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -480,6 +481,17 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Get method used by Portal to retrieve the ouroles
+        /// </summary>
+        [HttpGet, Route("getouroles")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<OURole>))]
+        public async Task<IEnumerable<OURole>> GetOuRoles()
+        {
+            return ouService.GetOuRoles();
+        }
+
         public override async Task<OU> Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             return await base.Get(guid, include, exclude, fields, deletedItems);
@@ -503,7 +515,67 @@ namespace DataReef.TM.Api.Controllers
         public override async Task<HttpResponseMessage> DeleteByGuid(Guid guid)
         {
             return await base.DeleteByGuid(guid);
-        }        
+        }
+
+        [HttpPost]
+        [Route("updatepermission")]
+        [ResponseType(typeof(bool))]
+        public async Task<IHttpActionResult> UpdateOuRolesPermission(List<OURole> roles)
+        {
+           var response = ouService.UpdateOuRolesPermission(roles);
+            return Ok(new GenericResponse<bool> { Response = response });
+        }
+
+        [HttpPost]
+        [Route("roles/create")]
+        public async Task<IHttpActionResult> AddOuRole(OURole req)
+        {
+            if (req == null)
+            {
+                throw new ApplicationException("Invalid request. No data!");
+            }
+
+            if (string.IsNullOrWhiteSpace(req?.Name))
+            {
+                throw new ApplicationException("Invalid request. No OU Role Name!");
+            }
+
+            ouService.CreateNewOURole(req);
+            return Ok();
+        }
+
+        
+        [HttpGet]
+        [Route("getourole/{roleID}")]
+        public async Task<IHttpActionResult> GetOURole(Guid? roleID)
+        {
+                return Ok(ouService.GetOuRoleByID(roleID));
+        }
+
+        [HttpPatch]
+        [Route("roles/edit/{ouid}")]
+        public async Task<IHttpActionResult> EditOURole([FromUri]Guid ouid, [FromBody] OURole req)
+        {
+            if (req == null)
+            {
+                throw new ApplicationException("Invalid request. No data!");
+            }
+
+            ouService.EditOURole(ouid, req);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Get method used by Portal to retrieve the ouroles
+        /// </summary>
+        [HttpGet, Route("sb/getouroles")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(IEnumerable<GuidNamePair>))]
+        public async Task<IHttpActionResult> SBGetOuRoles()
+        {
+            return Ok(ouService.SBGetOuRoles());
+        }
+
 
         [HttpPost]
         public override async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
