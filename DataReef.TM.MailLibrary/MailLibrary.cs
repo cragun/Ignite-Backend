@@ -189,6 +189,7 @@ namespace DataReef.TM.Mail
                 return baseUri.AbsoluteUri;
             }
 
+
             var parameters = string.Format(format, args);
             return string.Format("{0}{1}", path, parameters);
         }
