@@ -160,7 +160,7 @@ namespace DataReef.TM.Services.Services
             var result = new List<InquiryStatisticsForOrganization>();
 
             //if no settings are supplied, try to get them from the db for the ou 
-            if(reportSettings == null)
+            if (reportSettings == null)
             {
                 reportSettings =
                         _settingsService
@@ -192,7 +192,7 @@ namespace DataReef.TM.Services.Services
             }
             if (!territoryIds.Any())
             {
-                foreach(var repItem in reportSettings.ReportItems)
+                foreach (var repItem in reportSettings.ReportItems)
                 {
                     result.Add(new InquiryStatisticsForOrganization { Name = repItem.ColumnName, Actions = new InquiryStatisticsByDate(), People = new InquiryStatisticsByDate() });
                 }
@@ -219,7 +219,7 @@ namespace DataReef.TM.Services.Services
                         ?.GetValue<OUReportingSettings>();
             }
 
-            if(reportSettings == null)
+            if (reportSettings == null)
             {
                 return result;
             }
@@ -246,20 +246,20 @@ namespace DataReef.TM.Services.Services
                 return result;
             }
 
-            if(associatedPersonIds?.Any() == true)
+            if (associatedPersonIds?.Any() == true)
             {
                 result = _personKPIService.Value.GetSelfTrackedStatisticsForSalesPeopleTerritories(associatedPersonIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
             }
-            
-            if(territoryIds?.Any() == true)
+
+            if (territoryIds?.Any() == true)
             {
                 var inquiries = _inquiryService.GetInquiryStatisticsForSalesPeopleTerritories(territoryIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
 
-                foreach(var inquiryResult in inquiries)
+                foreach (var inquiryResult in inquiries)
                 {
                     var matchingItem = result.FirstOrDefault(x => x.PersonId == inquiryResult.PersonId && x.Name == inquiryResult.Name);
                     //data for the same column exists. merge results
-                    if(matchingItem != null)
+                    if (matchingItem != null)
                     {
                         matchingItem.Actions.AllTime += inquiryResult.Actions.AllTime;
                         matchingItem.Actions.Today += inquiryResult.Actions.Today;
@@ -442,13 +442,13 @@ namespace DataReef.TM.Services.Services
                 }
 
                 Guid? rootOUID = null;
-                foreach(var setting in matchingSettings)
+                foreach (var setting in matchingSettings)
                 {
                     var sbSetting = setting?.GetValue<ICollection<SelectedIntegrationOption>>()?
                                     .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
                                     .Data?
                                     .SMARTBoard;
-                    if(sbSetting?.ApiKey == apiKey)
+                    if (sbSetting?.ApiKey == apiKey)
                     {
                         rootOUID = setting.OUID;
                         break;
@@ -632,7 +632,7 @@ namespace DataReef.TM.Services.Services
             //the client sometimes doesn't set the RoleType on the association. do it here
             if (entity.Associations?.Any() == true)
             {
-                using(var dc = new DataContext())
+                using (var dc = new DataContext())
                 {
                     var roleIds = entity.Associations.Select(x => x.OURoleID);
                     var roles = dc.OURoles.Where(x => roleIds.Contains(x.Guid)).ToList();
@@ -757,6 +757,77 @@ namespace DataReef.TM.Services.Services
             return results;
         }
 
+
+        public override SaveResult Activate(Guid uniqueId)
+        {
+            var results = ActivateMany(new Guid[] { uniqueId });
+            return results.FirstOrDefault();
+        }
+
+        public override ICollection<SaveResult> ActivateMany(Guid[] uniqueIds)
+        {
+            var results = new List<SaveResult>();
+            try
+            {
+                using (var uow = UnitOfWorkFactory())
+                {
+                    var ous = uow.Get<OU>()
+                        .Include(ou => ou.Associations)
+                        .Include(ou => ou.Territories.Select(t => t.Assignments))
+                        .Include(ou => ou.Children)
+                        .Where(ou => uniqueIds.Contains(ou.Guid))
+                        .ToList();
+                    foreach (var ou in ous)
+                    {
+                        var result = TryEntitySoftActivate(ou.Guid, ou);
+                        results.Add(result);
+
+                        //// cascade activate
+                        //var guids = GetOUAndChildrenGuids(ou.Guid);
+                        var guids = ou.Children.Select(o => o.Guid).ToList();
+
+                        // remove current OU
+                        guids = guids
+                                        .Distinct()
+                                        .Except(new Guid[] { ou.Guid })
+                                        .ToList();
+
+                        if (guids.Count > 0)
+                        {
+                            var data = ActivateMany(guids.ToArray());
+
+                            // Activate UserInvitations for Activated OU
+                            var userInvitations = uow.Get<UserInvitation>()
+                                .Where(ui => ui.OUID == ou.Guid && ui.IsDeleted == true)
+                                .ToList();
+
+                            uow.ActivateMany(userInvitations);
+                            uow.ActivateMany(ou.Associations);
+                            uow.ActivateMany(ou.Territories);
+                            if (ou.Territories?.SelectMany(t => t.Assignments) != null)
+                            {
+                                uow.ActivateMany(ou.Territories.SelectMany(t => t.Assignments).ToList());
+                            }
+                        }
+                    }
+
+                    uow.SaveChanges(new DataSaveOperationContext
+                    {
+                        DataAction = DataAction.Update
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                foreach (var saveResult in results)
+                    saveResult.Success = false;
+
+                results.Add(SaveResult.FromException(ex, DataAction.Delete));
+            }
+
+            return results;
+        }
+
         public ICollection<OU> ListAllForPerson(Guid personID)
         {
 
@@ -783,20 +854,23 @@ namespace DataReef.TM.Services.Services
         {
             using (var dc = new DataContext())
             {
-                    var allAncestorIDs = dc
-                                    .Database
-                                    .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
-                                    .ToList();
+                var allAncestorIDs = dc
+                                .Database
+                                .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
+                                .ToList();
 
                 return allAncestorIDs.OrderBy(x => x.Name);
             }
         }
 
 
-        public void InsertApikeyForOU(SBOUID request, string apikey)
+        public string InsertApikeyForOU(SBOUID request, string apikey)
         {
-            using (var uow = UnitOfWorkFactory())
+            string ret = "";
+            try
             {
+                using (var uow = UnitOfWorkFactory())
+                {
                     var valueObj = new SelectedIntegrationOption
                     {
                         Id = "smartBOARD-integration",
@@ -805,7 +879,7 @@ namespace DataReef.TM.Services.Services
                         {
                             SMARTBoard = new SMARTBoardIntegrationOptionData
                             {
-                                BaseUrl =ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"],
+                                BaseUrl = ConfigurationManager.AppSettings["Integrations.SMARTBoard.BaseURL"],
                                 ApiKey = request.Apikey,
                                 HomeUrl = "/leads/view/{0}",
                                 CreditApplicationUrl = "SB_CreditApplicationUrl"
@@ -823,10 +897,18 @@ namespace DataReef.TM.Services.Services
                         ValueType = SettingValueType.JSON,
                     };
                     uow.Add(newSetting);
-                uow.SaveChanges();
+                    uow.SaveChanges();
+                }
+
+                ret = "Success";
+
+            }
+            catch (Exception ex)
+            {
+                ret = ex.Message;
             }
 
-
+            return ret;
         }
 
         public ICollection<OU> ListAllForPersonAndSetting(Guid personID, string settingName)
@@ -1252,7 +1334,7 @@ namespace DataReef.TM.Services.Services
 
         public OUChildrenAndTerritories GetOUWithChildrenAnTerritories(Guid ouID)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var userAssociations = dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId).ToList();
                 var canViewAll = false;
@@ -1281,16 +1363,16 @@ namespace DataReef.TM.Services.Services
                     .Include(o => o.Territories)
                     .Include(o => o.Territories.Select(x => x.Assignments))
                     .FirstOrDefault(o => !o.IsDeleted && o.Guid == ouID);
-                
-                if(ou == null)
+
+                if (ou == null)
                 {
                     return null;
                 }
 
-                
 
-                var matchingTerritories = canViewAll 
-                    ? ou.Territories.Where(t => !t.IsDeleted) 
+
+                var matchingTerritories = canViewAll
+                    ? ou.Territories.Where(t => !t.IsDeleted)
                     : ou.Territories.Where(t => !t.IsDeleted && !t.IsArchived && t.Assignments?.Any(a => a.PersonID == SmartPrincipal.UserId) == true);
 
                 return new OUChildrenAndTerritories
@@ -1565,7 +1647,8 @@ namespace DataReef.TM.Services.Services
                             RootOrganizationName = parent?.RootOrganizationName,
                             CreatedByID = SmartPrincipal.UserId,
                             CreatedByName = "InternalPortal",
-                            IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd
+                            IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd,
+                            MinModule = req.BasicInfo.MinModule
                         };
 
                         dc.OUs.Add(ou);
@@ -1673,6 +1756,7 @@ namespace DataReef.TM.Services.Services
 
                 ou.Name = req.BasicInfo.OUName;
                 ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
+                ou.MinModule = req.BasicInfo.MinModule;
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 var wkt = HandleOUStates(ouid, req.BasicInfo.States, dc);
@@ -1856,7 +1940,7 @@ namespace DataReef.TM.Services.Services
 
         public IEnumerable<Person> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var allAncestorIDs = dc
                                 .Database
@@ -1885,15 +1969,15 @@ namespace DataReef.TM.Services.Services
                             .OrderBy(p => p.Name)
                             .ToList();
 
-                
+
                 return result;
             }
-            
+
         }
 
-        public OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "")
+        public OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false)
         {
-            OU ou = GetOU(uniqueId, include, exclude, fields, false, true);
+            OU ou = GetOU(uniqueId, include, exclude, fields, deletedItems, true);
             //ou = OUBuilder(ou, include, exclude, fields, true, true);
 
             if (ou.Children != null)
@@ -1901,7 +1985,7 @@ namespace DataReef.TM.Services.Services
                 if (!string.IsNullOrWhiteSpace(query))
                 {
                     var childIds = GetChildOUIDs(new List<Guid> { uniqueId }, query);
-                    ou.Children = base.GetMany(childIds, include, exclude, fields);
+                    ou.Children = base.GetMany(childIds, include, exclude, fields, deletedItems);
 
                     // if Parent is present, it will break the serialization
                     foreach (var child in ou.Children)
@@ -2026,7 +2110,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string  GetApikeyByOU(Guid ouid)
+        public string GetApikeyByOU(Guid ouid)
         {
             // validate apiKey
             var sbSettings = _settingsService
@@ -2040,9 +2124,6 @@ namespace DataReef.TM.Services.Services
 
             return sbSettings.ApiKey;
         }
-
-
-
 
         public IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
         {
@@ -2060,14 +2141,136 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public IEnumerable<OURole> GetOuRoles()
+        {
+            using (var dc = new DataContext())
+            {
+                var ouRoles = dc.OURoles.Where(a => a.IsActive == true).ToList();
+                return ouRoles;
+            }
+        }
 
+        public void UpdateOuRoles(List<OURole> roles)
+        {
+            using (var dc = new DataContext())
+            {
+                foreach (var role in roles)
+                {
+                    var ourole = dc.OURoles.FirstOrDefault(a => a.Guid == role.Guid);
+                    role.Permissions = ourole.Permissions;
+                    ourole.Updated(role.Guid);
+                }
+
+                dc.SaveChanges();
+            }
+        }
+
+        public IEnumerable<GuidNamePair> SBGetOuRoles()
+        {
+            using (var dc = new DataContext())
+            {
+                var ouRoles = dc.OURoles.Where(a => a.IsActive == true).Select(o => new GuidNamePair
+                {
+                    Guid = o.Guid,
+                    Name = o.Name,
+                }).ToList(); ;
+
+                return ouRoles;
+            }
+        }
+
+
+        public OURole GetOuRoleByID(Guid? roleid)
+        {
+            using (var dc = new DataContext())
+            {
+                var ouRoles = dc.OURoles.FirstOrDefault(a => a.Guid == roleid);
+                if (ouRoles == null)
+                {
+                    throw new ApplicationException("OU does not exist!");
+                }
+
+                return ouRoles;
+            }
+        }
+
+        public bool UpdateOuRolesPermission(List<OURole> roles)
+        {
+            try
+            {
+                using (var dc = new DataContext())
+                {
+                    foreach (var role in roles)
+                    {
+                        var ourole = dc.OURoles.FirstOrDefault(a => a.Guid == role.Guid);
+                        ourole.Permissions = role.Permissions;
+                        ourole.Updated(ourole.Guid);
+                    }
+
+                    dc.SaveChanges();
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public void CreateNewOURole(OURole req)
+        {
+            using (var dc = new DataContext())
+            {
+                using (var transaction = dc.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        // Create the OU
+                        var ourole = new OURole
+                        {
+                            Name = req.Name,
+                            IsActive = req.IsActive,
+                            IsAdmin = req.IsAdmin
+                        };
+
+                        dc.OURoles.Add(ourole);
+                        dc.SaveChanges();
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+
+        public void EditOURole(Guid ouid, OURole req)
+        {
+            using (var dc = new DataContext())
+            {
+                var role = dc
+                            .OURoles
+                            .FirstOrDefault(o => o.Guid == ouid);
+
+                if (role == null)
+                {
+                    throw new ApplicationException("OU Role does not exist!");
+                }
+
+                role.Name = req.Name;
+                role.IsActive = req.IsActive;
+                role.IsAdmin = req.IsAdmin;
+                role.Updated(SmartPrincipal.UserId, "InternalPortal");
+
+                dc.SaveChanges();
+            }
+        }
     }
-    
-
-
-
-
-
 
     //public void UpdateFinancing()
     //{

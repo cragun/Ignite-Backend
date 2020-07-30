@@ -377,7 +377,52 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
         }
 
+        public SBGetDocument GetProposalDocuments(Property property)
+        {
+            var ouid = property?.Territory?.OUID;
+            if (!ouid.HasValue)
+            {
+                throw new ApplicationException("Orgainization Not Found");
+            }
+            EnsureInitialized(ouid.Value);
+            var integrationSettings = new IntegrationOptionSettings
+            {
+                Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
 
+            };
+
+            var integrationData =
+                integrationSettings
+                ?.SelectedIntegrations
+                ?.FirstOrDefault(x =>
+                {
+                    var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                    return matchingOption?.Type == IntegrationType.SMARTBoard;
+                })
+                ?.Data
+                ?.SMARTBoard;
+            if (integrationData == null)
+            {
+                throw new ApplicationException("Something Went Wrong");
+            }
+
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+            var url = $"/apis/get_lead_documents/{encryptedAPIkey}";
+
+            var request = new SstRequest
+            {
+                Lead = new SstRequestLead
+                {
+                    AssociatedID = property.Id
+                },
+            };
+
+            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+            return JsonConvert.DeserializeObject<SBGetDocument>(response);
+        }
 
         public void SBActiveDeactiveUser(bool IsActive, string sbid)
         {
@@ -568,7 +613,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 }
             };
 
-            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
+            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.POST);
 
             try
             {
@@ -686,7 +731,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 //    }
                 //}
 
-              return  SubmitProposal(integrationData, request, ouid.Value);
+                return SubmitProposal(integrationData, request, ouid.Value);
             }
 
 

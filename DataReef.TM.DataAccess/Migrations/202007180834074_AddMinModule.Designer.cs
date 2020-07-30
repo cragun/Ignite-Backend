@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddtwoFieldinsolarFinanceplan : IMigrationMetadata
+    public sealed partial class AddMinModule : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddtwoFieldinsolarFinanceplan));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddMinModule));
         
         string IMigrationMetadata.Id
         {
-            get { return "202007081201294_Add two Field in solar.Financeplan"; }
+            get { return "202007180834074_AddMinModule"; }
         }
         
         string IMigrationMetadata.Source

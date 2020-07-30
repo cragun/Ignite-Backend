@@ -71,7 +71,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("SuperAdm/{personid}")]
         [HttpPost]
-       // [AllowAnonymous]
+        // [AllowAnonymous]
         public async Task<IHttpActionResult> AuthUserBySuperAdmin(Guid personid)
         {
             try
@@ -100,14 +100,14 @@ namespace DataReef.TM.Api.Controllers
         {
 
 
-                var status = authService.updateUser(value, userId);
+            var status = authService.updateUser(value, userId);
 
 
-                return Ok(status);
+            return Ok(status);
 
-           
-            
-            
+
+
+
         }
 
 
@@ -144,6 +144,7 @@ namespace DataReef.TM.Api.Controllers
             catch (Exception ex)
             {
                 throw;
+
                 //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
             }
 
@@ -168,7 +169,7 @@ namespace DataReef.TM.Api.Controllers
                 }
 
                 var createdUserInvitation = this._userInvitationService.Value.SilentInsertFromSmartboard(user, apiKey);
-                if(createdUserInvitation == null)
+                if (createdUserInvitation == null)
                 {
                     throw new Exception("Could not create the user invitation");
                 }
@@ -206,128 +207,128 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="completionObject"></param>
         /// <returns>AuthenticationToken</returns>
         [GenericRoute("reset/complete")]
-          [HttpPost]
-          [AllowAnonymous]
-          public async Task<IHttpActionResult> CompleteResetPassword(PasswordResetCompletion completionObject)
-          {
-              try
-              {
-                  AuthenticationToken token = authService.CompletePasswordReset(completionObject.ResetGuid, completionObject.NewPassword);
-                  Jwt ret = this.EncodeToken(token);
-                  return Ok<Jwt>(ret);
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> CompleteResetPassword(PasswordResetCompletion completionObject)
+        {
+            try
+            {
+                AuthenticationToken token = authService.CompletePasswordReset(completionObject.ResetGuid, completionObject.NewPassword);
+                Jwt ret = this.EncodeToken(token);
+                return Ok<Jwt>(ret);
 
-              }
-              catch (System.ServiceModel.FaultException fe)
-              {
-                  throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
-              }
-              catch (ResourceExistsException)
-              {
-                  throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
-              }
-              catch (Exception ex)
-              {
-                  throw;
-                  //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
-              }
+            }
+            catch (System.ServiceModel.FaultException fe)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
+            }
+            catch (ResourceExistsException)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
+            }
+            catch (Exception ex)
+            {
+                throw;
+                //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+            }
 
-          }
-
-
-          [GenericRoute("changepassword")]
-          [HttpPut]
-          [AllowAnonymous]
-          public async Task<IHttpActionResult> ChangePassword(PasswordChange change)
-          {
-              try
-              {
-
-                  AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword);
-                  Jwt ret = this.EncodeToken(token);
-                  return Ok<Jwt>(ret);
-
-              }
-              catch (System.ServiceModel.FaultException fe)
-              {
-                  throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
-              }
-              catch (ResourceExistsException)
-              {
-                  throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
-              }
-              catch (Exception ex)
-              {
-                  throw;
-                  //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
-              }
-
-          }
+        }
 
 
-          /// <summary>
-          ///  Inititiates a PassReset that is completed via email
-          /// </summary>
-          /// <param name="user"></param>
-          /// <returns></returns>
-          [GenericRoute("reset/initiate")]
-          [HttpPost]
-          [AllowAnonymous]
-          public async Task<IHttpActionResult> ResetPassword(PasswordReset resetObject)
-          {
-              try
-              {
-                  resetObject.ExpirationDate = System.DateTime.UtcNow.AddDays(2);
-                  var saveResult = authService.InitiatePasswordReset(resetObject);
-                  if (saveResult.Success)
-                  {
-                      return Ok();
-                  }
+        [GenericRoute("changepassword")]
+        [HttpPut]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> ChangePassword(PasswordChange change)
+        {
+            try
+            {
 
-                  return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Gone) { Content = new StringContent(saveResult.ExceptionMessage) });
-              }
-              catch (System.ServiceModel.FaultException)
-              {
-                  throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
-              }
-              catch (ResourceExistsException)
-              {
-                  throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
-              }
-              catch (Exception)
-              {
-                  throw;
-                  //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
-              }
-          }
+                AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword);
+                Jwt ret = this.EncodeToken(token);
+                return Ok<Jwt>(ret);
 
-          [GenericRoute("token/extend")]
-          [HttpPost]
-          [AllowAnonymous]
-          public async Task<IHttpActionResult> ExtendTokenValidity([FromBody]string token)
-          {
-              var certificate = DataReef.TM.Api.Security.Certificates.Certificate.Get();
-              var authToken = AuthenticationToken.FromEncryptedString(token, certificate);
-              authToken.Expiration = DateTime.UtcNow.AddDays(7).ToUnixTime();
-              return Ok<Jwt>(EncodeToken(authToken));
-          }
+            }
+            catch (System.ServiceModel.FaultException fe)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
+            }
+            catch (ResourceExistsException)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
+            }
+            catch (Exception ex)
+            {
+                throw;
+                //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+            }
 
-          #region Private
+        }
 
-          private Jwt EncodeToken(AuthenticationToken token)
-          {
-              string tokenJson = JsonConvert.SerializeObject(token);
-              var cert = DataReef.TM.Api.Security.Certificates.Certificate.Get();
-              RSACryptoServiceProvider rsa = cert.PublicKey.Key as RSACryptoServiceProvider;
-              byte[] cryptedData = rsa.Encrypt(System.Text.UTF8Encoding.UTF8.GetBytes(tokenJson), true);
-              string tokenString = Convert.ToBase64String(cryptedData);
 
-              return new Jwt
-              {
-                  Expiration    = token.Expiration,
-                  Token         = tokenString
-              };
-          }
+        /// <summary>
+        ///  Inititiates a PassReset that is completed via email
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [GenericRoute("reset/initiate")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> ResetPassword(PasswordReset resetObject)
+        {
+            try
+            {
+                resetObject.ExpirationDate = System.DateTime.UtcNow.AddDays(2);
+                var saveResult = authService.InitiatePasswordReset(resetObject);
+                if (saveResult.Success)
+                {
+                    return Ok();
+                }
 
-          #endregion
+                return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Gone) { Content = new StringContent(saveResult.ExceptionMessage) });
+            }
+            catch (System.ServiceModel.FaultException)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
+            }
+            catch (ResourceExistsException)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict));
+            }
+            catch (Exception)
+            {
+                throw;
+                //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [GenericRoute("token/extend")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> ExtendTokenValidity([FromBody]string token)
+        {
+            var certificate = DataReef.TM.Api.Security.Certificates.Certificate.Get();
+            var authToken = AuthenticationToken.FromEncryptedString(token, certificate);
+            authToken.Expiration = DateTime.UtcNow.AddDays(7).ToUnixTime();
+            return Ok<Jwt>(EncodeToken(authToken));
+        }
+
+        #region Private
+
+        private Jwt EncodeToken(AuthenticationToken token)
+        {
+            string tokenJson = JsonConvert.SerializeObject(token);
+            var cert = DataReef.TM.Api.Security.Certificates.Certificate.Get();
+            RSACryptoServiceProvider rsa = cert.PublicKey.Key as RSACryptoServiceProvider;
+            byte[] cryptedData = rsa.Encrypt(System.Text.UTF8Encoding.UTF8.GetBytes(tokenJson), true);
+            string tokenString = Convert.ToBase64String(cryptedData);
+
+            return new Jwt
+            {
+                Expiration = token.Expiration,
+                Token = tokenString
+            };
+        }
+
+        #endregion
     }
 }

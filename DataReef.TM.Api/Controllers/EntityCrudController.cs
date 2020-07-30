@@ -374,6 +374,44 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+
+
+
+        /// <summary>
+        /// Activate a entity.
+        /// </summary>
+        /// <param name="guid">The unique id of the object to Activate.</param>
+        /// <returns>Returns Accepted if the operation is successful or InternalServerError if the object could not be activated or BadRequest if the request is faulty.</returns>
+        [HttpPost]
+        [CrudApiAction]
+        [GenericRoute("activate/{guid:guid}")]
+        public virtual async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
+        {
+            try
+            {
+                SaveResult result = this._dataService.Activate(guid);
+
+                if (!result.Success)
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    {
+                        Content = new StringContent(result.Exception + " " + result.ExceptionMessage)
+                    });
+
+                return Request.CreateResponse(HttpStatusCode.Accepted, result);
+            }
+            catch (HttpResponseException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(ex + " " + ex.InnerException)
+                });
+            }
+        }
+
         /// <summary>
         /// Using POST because RestKit won't allow DELETE with body
         /// </summary>

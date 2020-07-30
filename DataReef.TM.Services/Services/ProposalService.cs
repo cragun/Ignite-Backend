@@ -13,6 +13,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.ClientAPI;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Blobs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
@@ -1834,6 +1835,23 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public SBGetDocument GetDocuments(Guid propertyID)
+        {
+            string resp = "";
+            using (var dataContext = new DataContext())
+            {
+                var property = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
+
+                if (property == null)
+                {
+                    throw new ApplicationException("Please Add Property Data");
+                }
+
+                var response = _solarSalesTrackerAdapter.Value.GetProposalDocuments(property);
+                return response;
+            }
+        }
+
 
         //public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
         //{
@@ -2248,13 +2266,17 @@ namespace DataReef.TM.Services.Services
 
         public List<DocType> GetDocumentType()
         {
-
             List<DocType> typeList = new List<DocType>();
 
             typeList.Add(new DocType() { Id = 1, Name = "Proposal" });
             typeList.Add(new DocType() { Id = 2, Name = "Contract" });
             typeList.Add(new DocType() { Id = 3, Name = "Reference" });
             typeList.Add(new DocType() { Id = 4, Name = "Design" });
+            typeList.Add(new DocType() { Id = 5, Name = "Addendum" });
+            typeList.Add(new DocType() { Id = 6, Name = "HOA" });
+            typeList.Add(new DocType() { Id = 7, Name = "Installation" });
+            typeList.Add(new DocType() { Id = 8, Name = "Survey" });
+            typeList.Add(new DocType() { Id = 9, Name = "Reference" });
 
             return typeList;
         }
@@ -2428,15 +2450,15 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Plan not found");
                 }
 
-                var existingFinancePlanDefination = dataContext.FinancePlaneDefinitions.FirstOrDefault(i => i.Guid == existingFinancePlan.FinancePlanDefinitionID);
+                var FinancePlanDefination = dataContext.FinancePlaneDefinitions.FirstOrDefault(i => i.Guid == financePlan.FinancePlanDefinitionID);
 
-                if (existingFinancePlanDefination == null)
+                if (FinancePlanDefination == null)
                 {
                     throw new Exception("Plan not found");
                 }
 
                 var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
-                result.FinancePlanData = existingFinancePlanDefination.MetaDataJSON;
+                result.FinancePlanData = FinancePlanDefination.MetaDataJSON;
 
                 existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 existingFinancePlan.ResponseJSON = financePlan.ResponseJSON;
@@ -2445,6 +2467,13 @@ namespace DataReef.TM.Services.Services
                 existingFinancePlan.FinancePlanDefinitionID = financePlan.FinancePlanDefinitionID;
 
                 dataContext.SaveChanges();
+
+                if (existingProposal.UsesNoSQLAggregatedData == true)
+                {
+                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
+                }
+
+
             }
         }
 

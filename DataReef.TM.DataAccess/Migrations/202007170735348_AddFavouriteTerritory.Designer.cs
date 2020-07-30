@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddexcludeProposalJSON : IMigrationMetadata
+    public sealed partial class AddFavouriteTerritory : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddexcludeProposalJSON));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddFavouriteTerritory));
         
         string IMigrationMetadata.Id
         {
-            get { return "202007061128102_AddexcludeProposalJSON"; }
+            get { return "202007170735348_AddFavouriteTerritory"; }
         }
         
         string IMigrationMetadata.Source

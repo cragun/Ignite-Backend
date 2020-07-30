@@ -52,6 +52,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.5.0-beta\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
@@ -1251,21 +1254,17 @@
     <Compile Include="Migrations\202006270522492_Add Prefix in AdapterRequests table.Designer.cs">
       <DependentUpon>202006270522492_Add Prefix in AdapterRequests table.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202007020720017_Add-IsTerritoryAdd.cs" />
-    <Compile Include="Migrations\202007020720017_Add-IsTerritoryAdd.Designer.cs">
-      <DependentUpon>202007020720017_Add-IsTerritoryAdd.cs</DependentUpon>
+    <Compile Include="Migrations\202007160532490_migration1.cs" />
+    <Compile Include="Migrations\202007160532490_migration1.Designer.cs">
+      <DependentUpon>202007160532490_migration1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202007030825406_AddAppointmentType.cs" />
-    <Compile Include="Migrations\202007030825406_AddAppointmentType.Designer.cs">
-      <DependentUpon>202007030825406_AddAppointmentType.cs</DependentUpon>
+    <Compile Include="Migrations\202007170735348_AddFavouriteTerritory.cs" />
+    <Compile Include="Migrations\202007170735348_AddFavouriteTerritory.Designer.cs">
+      <DependentUpon>202007170735348_AddFavouriteTerritory.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202007061128102_AddexcludeProposalJSON.cs" />
-    <Compile Include="Migrations\202007061128102_AddexcludeProposalJSON.Designer.cs">
-      <DependentUpon>202007061128102_AddexcludeProposalJSON.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007081201294_Add two Field in solar.Financeplan.cs" />
-    <Compile Include="Migrations\202007081201294_Add two Field in solar.Financeplan.Designer.cs">
-      <DependentUpon>202007081201294_Add two Field in solar.Financeplan.cs</DependentUpon>
+    <Compile Include="Migrations\202007180834074_AddMinModule.cs" />
+    <Compile Include="Migrations\202007180834074_AddMinModule.Designer.cs">
+      <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202007131619056_added_startDate_in_user.cs" />
     <Compile Include="Migrations\202007131619056_added_startDate_in_user.Designer.cs">
@@ -2177,17 +2176,14 @@
     <EmbeddedResource Include="Migrations\202006270522492_Add Prefix in AdapterRequests table.resx">
       <DependentUpon>202006270522492_Add Prefix in AdapterRequests table.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007020720017_Add-IsTerritoryAdd.resx">
-      <DependentUpon>202007020720017_Add-IsTerritoryAdd.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202007160532490_migration1.resx">
+      <DependentUpon>202007160532490_migration1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007030825406_AddAppointmentType.resx">
-      <DependentUpon>202007030825406_AddAppointmentType.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202007170735348_AddFavouriteTerritory.resx">
+      <DependentUpon>202007170735348_AddFavouriteTerritory.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007061128102_AddexcludeProposalJSON.resx">
-      <DependentUpon>202007061128102_AddexcludeProposalJSON.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007081201294_Add two Field in solar.Financeplan.resx">
-      <DependentUpon>202007081201294_Add two Field in solar.Financeplan.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202007180834074_AddMinModule.resx">
+      <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007131619056_added_startDate_in_user.resx">
       <DependentUpon>202007131619056_added_startDate_in_user.cs</DependentUpon>
