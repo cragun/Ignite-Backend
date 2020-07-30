@@ -304,7 +304,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Classes\Enums\WebRedirectActions.cs" />
     <Compile Include="Classes\Infrastructure\CustomMultipartFormDataProvider.cs" />
     <Compile Include="Classes\Infrastructure\InMemoryMultipartFormDataStreamProvider.cs" />

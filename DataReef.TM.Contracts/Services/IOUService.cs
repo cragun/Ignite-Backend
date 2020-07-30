@@ -152,6 +152,9 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<OURole> GetOuRoles();
 
         [OperationContract]
+        void UpdateOuRoles(List<OURole> roles);
+
+        [OperationContract]
         bool UpdateOuRolesPermission(List<OURole> roles);
 
         [OperationContract]
