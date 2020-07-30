@@ -144,6 +144,7 @@ namespace DataReef.TM.Api.Controllers
             catch (Exception ex)
             {
                 throw;
+
                 //throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
             }
 
