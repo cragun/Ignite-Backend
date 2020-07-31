@@ -36,6 +36,7 @@ namespace DataReef.TM.Api.Controllers
             this._userInvitationService = userInvitationService;
         }
 
+
         /// <summary>
         /// Authenticates UserName and Password and returns an Authentication Token
         /// </summary>
