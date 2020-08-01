@@ -317,6 +317,7 @@ namespace DataReef.TM.Api.Controllers
 
         private Jwt EncodeToken(AuthenticationToken token)
         {
+
             string tokenJson = JsonConvert.SerializeObject(token);
             var cert = DataReef.TM.Api.Security.Certificates.Certificate.Get();
             RSACryptoServiceProvider rsa = cert.PublicKey.Key as RSACryptoServiceProvider;
