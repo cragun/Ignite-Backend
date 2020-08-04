@@ -110,5 +110,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// Tells the client to show/hide the Build button
         /// </summary>
         public bool CanBuild { get; set; }
+        public decimal LenderFee { get; set; }
+        public decimal PPW { get; set; }
     }
 }
