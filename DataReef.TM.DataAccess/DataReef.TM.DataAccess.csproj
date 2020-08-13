@@ -1271,6 +1271,10 @@
     <Compile Include="Migrations\202008120658152_RemoveMeterId.Designer.cs">
       <DependentUpon>202008120658152_RemoveMeterId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008130548376_AddMeterIdIsFavourite.cs" />
+    <Compile Include="Migrations\202008130548376_AddMeterIdIsFavourite.Designer.cs">
+      <DependentUpon>202008130548376_AddMeterIdIsFavourite.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2183,6 +2187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008120658152_RemoveMeterId.resx">
       <DependentUpon>202008120658152_RemoveMeterId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008130548376_AddMeterIdIsFavourite.resx">
+      <DependentUpon>202008130548376_AddMeterIdIsFavourite.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

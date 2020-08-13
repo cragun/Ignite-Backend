@@ -875,7 +875,8 @@ namespace DataReef.TM.Services
 
                     if (request.DispositionsQuery?.Any(x => !customDispositionsList.Contains(x)) == true)
                     {
-                        propertiesQuery = propertiesQuery.Where(p => p.Inquiries.Any(i => request.DispositionsQuery.Contains(i.Disposition)));
+                        //propertiesQuery = propertiesQuery.Where(p => p.Inquiries.Any(i => request.DispositionsQuery.Contains(i.Disposition)));
+                        propertiesQuery = propertiesQuery.Where(p => request.DispositionsQuery.Contains(p.LatestDisposition));
                     }
                 }
 
@@ -1064,7 +1065,6 @@ namespace DataReef.TM.Services
             return person;
         }
 
-
         public IEnumerable<Person> personDetails(Guid ouid, DateTime date)
         {
             using (DataContext dc = new DataContext())
@@ -1099,8 +1099,6 @@ namespace DataReef.TM.Services
             }
         }
 
-
-
         private string ReplaceTokens(string source, Property property)
         {
             if (property == null)
@@ -1132,7 +1130,7 @@ namespace DataReef.TM.Services
         }
 
 
-        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate)
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate, string type)
         {
             try
             {
@@ -1144,23 +1142,51 @@ namespace DataReef.TM.Services
                     var OUAssociationIds = (from oua in dc.OUAssociations
                                             where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted && !oua.Person.IsDeleted
                                             select oua.PersonID).Distinct().ToList();
+                    if (type == "Favourite")
+                    {
+                        var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
+                                                .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
+                                                .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
+                                                .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted && i.IsFavourite))
+                                                .ToList();
 
-                    var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
+                        return peoples;
+                    }
+                    else
+                    {
+                        var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
                         .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
                         .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
                         .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted))
                         .ToList();
 
-                    return peoples;
+                        return peoples;
+                    }
                 };
             }
             catch (Exception ex)
             {
                 return null;
             }
-
         }
 
+        /// <summary>
+        /// This method add or remove AppointMent as a Favorite 
+        /// </summary>
+        public Appointment AddRemoveFavoriteAppointment(Guid guid, bool IsFavourite)
+        {
+            using (var dc = new DataContext())
+            {
+                var appointment = dc.Appointments.FirstOrDefault(x => x.Guid == guid);
 
+                if (appointment == null)
+                    throw new ApplicationException("Appointment Not Found");
+
+                //appointment.IsFavourite = IsFavourite; 
+                dc.SaveChanges();
+
+                return appointment;
+            }
+        }
     }
 }

@@ -80,7 +80,10 @@ namespace DataReef.TM.Contracts.Services
         void SBDeactivate(Guid personid);
 
         [OperationContract]        
-        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid,string date);
+        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid,string date,string type);
 
+        [OperationContract]
+        Appointment AddRemoveFavoriteAppointment(Guid guid,bool IsFavourite);
+        
     }
 }

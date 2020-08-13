@@ -645,6 +645,10 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("The Lead with the specified LeadId was not found");
                 }
 
+                if (TerritoryId == null)
+                {
+                    throw new Exception("Please select Territory");
+                }
 
                 var territory = dc.Territories.Where(x => x.Guid == TerritoryId).FirstOrDefault();
                 if (territory == null)

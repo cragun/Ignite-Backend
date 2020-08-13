@@ -82,6 +82,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok();
         }
 
+        [HttpGet, Route("proposal/{propertyId}/count")]
+        [ResponseType(typeof(GenericResponse<string>))]
+        public async Task<IHttpActionResult> GetProposalCount(Guid propertyId)
+        {
+            int count = _proposalService.GetProposalCount(propertyId);
+            return Ok(new GenericResponse<string> { Response = count.ToString() });
+        }
+
         [Route("{proposalDataId}/sign/document")]
         [HttpPost]
         [ResponseType(typeof(Proposal))]
