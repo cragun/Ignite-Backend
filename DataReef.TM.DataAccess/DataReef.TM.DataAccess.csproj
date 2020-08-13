@@ -1266,6 +1266,14 @@
     <Compile Include="Migrations\202007180834074_AddMinModule.Designer.cs">
       <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008120645418_AddMeterId.cs" />
+    <Compile Include="Migrations\202008120645418_AddMeterId.Designer.cs">
+      <DependentUpon>202008120645418_AddMeterId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008120658152_RemoveMeterId.cs" />
+    <Compile Include="Migrations\202008120658152_RemoveMeterId.Designer.cs">
+      <DependentUpon>202008120658152_RemoveMeterId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2172,6 +2180,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007180834074_AddMinModule.resx">
       <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008120645418_AddMeterId.resx">
+      <DependentUpon>202008120645418_AddMeterId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008120658152_RemoveMeterId.resx">
+      <DependentUpon>202008120658152_RemoveMeterId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
