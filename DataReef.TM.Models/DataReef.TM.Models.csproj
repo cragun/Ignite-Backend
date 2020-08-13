@@ -105,6 +105,7 @@
     <Compile Include="ApiLogEntry.cs" />
     <Compile Include="ApiToken.cs" />
     <Compile Include="Appointment.cs" />
+    <Compile Include="AppointmentFavouritePerson.cs" />
     <Compile Include="FavouriteTerritory.cs" />
     <Compile Include="Authentication.cs" />
     <Compile Include="Account.cs" />
