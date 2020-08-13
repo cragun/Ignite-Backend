@@ -1147,9 +1147,7 @@ namespace DataReef.TM.Services
                         var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
                                                 .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
                                                 .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
-                                                //.IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted && i.IsFavourite))
-                                                .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted))
-                                                .ToList();
+                                                .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted && i.IsFavourite)) .ToList();
 
                         return peoples;
                     }
@@ -1183,7 +1181,7 @@ namespace DataReef.TM.Services
                 if (appointment == null)
                     throw new ApplicationException("Appointment Not Found");
 
-                //appointment.IsFavourite = IsFavourite; 
+                appointment.IsFavourite = IsFavourite;
                 dc.SaveChanges();
 
                 return appointment;

@@ -363,10 +363,8 @@ namespace DataReef.TM.Api.Controllers
         [Route("FavouriteAppointments/{guid}")]
         public async Task<IHttpActionResult> AddRemoveFavoriteAppointMent(Guid guid,Appointment request)
         {
-            //var appointment = peopleService.AddRemoveFavoriteAppointment(guid, request.IsFavourite);
-            //return Ok(new GenericResponse<string> { Response = request.IsFavourite == true ? "Appointment Favourited successfully" : "Appointment UnFavourited successfully" });
-
-            return Ok();
+            var appointment = peopleService.AddRemoveFavoriteAppointment(guid, request.IsFavourite);
+            return Ok(new GenericResponse<string> { Response = request.IsFavourite == true ? "Appointment Favourited successfully" : "Appointment UnFavourited successfully" });
         }
 
         public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
