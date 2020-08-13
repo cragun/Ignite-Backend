@@ -51,6 +51,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
+
         [HttpGet]
         [ResponseType(typeof(ICollection<Property>))]
         [Route("{territoryID:guid}/properties/withproposal")]
