@@ -1287,6 +1287,10 @@
     <Compile Include="Migrations\202008131130336_AddAppointmentFavouritePerson.Designer.cs">
       <DependentUpon>202008131130336_AddAppointmentFavouritePerson.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008131211219_migration3.cs" />
+    <Compile Include="Migrations\202008131211219_migration3.Designer.cs">
+      <DependentUpon>202008131211219_migration3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2211,6 +2215,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008131130336_AddAppointmentFavouritePerson.resx">
       <DependentUpon>202008131130336_AddAppointmentFavouritePerson.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008131211219_migration3.resx">
+      <DependentUpon>202008131211219_migration3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
