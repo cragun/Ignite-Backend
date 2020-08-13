@@ -49,12 +49,6 @@ namespace DataReef.TM.Models
         public int AppointmentType { get; set; }
 
         [DataMember]
-        public bool IsFavourite { get; set; }
-
-        [DataMember]
-        public string MeterID { get; set; }
-
-        [DataMember]
         [StringLength(250)]
         public string TimeZone { get; set; }
 
