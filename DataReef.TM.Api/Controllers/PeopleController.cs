@@ -353,18 +353,26 @@ namespace DataReef.TM.Api.Controllers
         //[Route("CalenderApp/{ouid}/{date}")]
         [Route("CalenderApp/{ouid}")]
         [ResponseType(typeof(IEnumerable<Person>))]
-        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate , string type)
+        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate)
         {
-            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid, CurrentDate , type);
+            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid, CurrentDate);
             return persn;
         }
 
         [HttpPost]
-        [Route("FavouriteAppointments/{guid}")]
-        public async Task<IHttpActionResult> AddRemoveFavoriteAppointMent(Guid guid,Appointment request)
+        [Route("addFavourite")]
+        public async Task<IHttpActionResult> InsertFavoritePerson(AppointmentFavouritePerson request)
         {
-            var appointment = peopleService.AddRemoveFavoriteAppointment(guid, request.IsFavourite);
-            return Ok(new GenericResponse<string> { Response = request.IsFavourite == true ? "Appointment Favourited successfully" : "Appointment UnFavourited successfully" });
+            var territory = peopleService.InsertFavoritePerson(request.FavouritePersonID);
+            return Ok(new GenericResponse<string> { Response = "added successfully" });
+        }
+
+        [HttpPost]
+        [Route("removeFavourite")]
+        public async Task<IHttpActionResult> RemoveFavoritePerson(AppointmentFavouritePerson request)
+        {
+            peopleService.RemoveFavoritePerson(request.FavouritePersonID);
+            return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
 
         public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
