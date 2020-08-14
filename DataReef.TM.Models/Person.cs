@@ -156,7 +156,6 @@ namespace DataReef.TM.Models
         public string SmartBoardID { get; set; }
 
         [NotMapped]
-        [JsonIgnore]
         public bool IsFavourite { get; set; }
 
         #endregion

@@ -1130,7 +1130,7 @@ namespace DataReef.TM.Services
         }
 
 
-        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate)
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate, string type)
         {
             try
             {
@@ -1156,9 +1156,12 @@ namespace DataReef.TM.Services
                     {
                         item.IsFavourite = favouritePeopleIds.Contains(item.Guid);
                     }
+                    if (type == "Favourite")
+                    {
+                        peoples = peoples.Where(a => a.IsFavourite == true).ToList();
+                    }
 
                     return peoples;
-
                 };
             }
             catch (Exception ex)
