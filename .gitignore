@@ -202,3 +202,6 @@ DataReef.TM.Api/Google.ServiceAccountKey.json
 /DataReef.TM.Api/Templates/Email - Copy
 /DataReef.TM.Api/Templates/Email/ExistingUserInvitation - Copy.cshtml
 /DataReef.TM.Api/Templates/OldEmail
+/DataReef.TM.DataAccess/Migrations/202007310438280_Remove territories .cs
+/DataReef.TM.DataAccess/Migrations/202007310438280_Remove territories .Designer.cs
+/DataReef.TM.DataAccess/Migrations/202007310438280_Remove territories .resx
