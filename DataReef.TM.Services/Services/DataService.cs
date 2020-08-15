@@ -433,6 +433,52 @@ namespace DataReef.TM.Services
             return results;
         }
 
+        public virtual SaveResult Activate(Guid uniqueId)
+        {
+            return ActivateMany(new[] { uniqueId }).FirstOrDefault();
+        }
+
+        public virtual ICollection<SaveResult> ActivateMany(Guid[] uniqueIds)
+        {
+            var results = new List<SaveResult>();
+
+            try
+            {
+                using (var uow = UnitOfWorkFactory())
+                {
+                    var entities = uow.Get<T>().Where(eb => uniqueIds.Contains(eb.Guid)).ToArray();
+
+                    foreach (var uniqueId in uniqueIds)
+                    {
+                        var entity = entities.FirstOrDefault(e => e.Guid == uniqueId);
+                        var result = TryEntitySoftActivate(uniqueId, entity);
+                        if (entity != null)
+                        {
+                            OnActivate(entity);
+                        }
+
+                        results.Add(result);
+                    }
+
+                    uow.SaveChanges(new DataSaveOperationContext
+                    {
+                        DataAction = DataAction.Update
+                    });
+
+                    OnActivatedMany(entities);
+                }
+            }
+            catch (Exception ex)
+            {
+                foreach (var saveResult in results)
+                    saveResult.Success = false;
+
+                results.Add(SaveResult.FromException(ex, DataAction.Update));
+            }
+
+            return results;
+        }
+
         public void AttachNavigationProperties<U>(ICollection<U> properties, DataContext dc = null, bool saveContext = true) where U : EntityBase
         {
             if (properties == null || properties.Count == 0)
@@ -508,6 +554,34 @@ namespace DataReef.TM.Services
                 entity.IsDeleted = true;
 
                 result = SaveResult.SuccessfulDeletion;
+                result.EntityUniqueId = uniqueId;
+            }
+            else
+            {
+                result = new SaveResult
+                {
+                    Action = DataAction.None,
+                    EntityUniqueId = uniqueId,
+                    Success = false
+                };
+            }
+
+            return result;
+        }
+
+        protected virtual void OnActivate(T entity)
+        { }
+
+        protected virtual void OnActivatedMany(T[] entities)
+        { }
+        protected static SaveResult TryEntitySoftActivate(Guid uniqueId, T entity)
+        {
+            SaveResult result;
+            if (entity != null)
+            {
+                entity.IsDeleted = false;
+
+                result = SaveResult.SuccessfulUpdate;
                 result.EntityUniqueId = uniqueId;
             }
             else

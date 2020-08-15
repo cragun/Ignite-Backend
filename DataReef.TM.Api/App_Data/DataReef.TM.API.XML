@@ -692,6 +692,16 @@
             </summary>
             <param name="item"></param>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOuRoles">
+            <summary>
+            Get method used by Portal to retrieve the ouroles
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.SBGetOuRoles">
+            <summary>
+            Get method used by Portal to retrieve the ouroles
+            </summary>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.PersonSettingsController">
             <summary>
             Managers CRUD for PersonSetting.
@@ -909,6 +919,13 @@
             </summary>
             <param name="guid">The unique id of the object to delete.</param>
             <returns>Returns Accepted if the operation is successful or InternalServerError if the object could not be deleted or BadRequest if the request is faulty.</returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.ActivateByGuid(System.Guid)">
+            <summary>
+            Activate a entity.
+            </summary>
+            <param name="guid">The unique id of the object to Activate.</param>
+            <returns>Returns Accepted if the operation is successful or InternalServerError if the object could not be activated or BadRequest if the request is faulty.</returns>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.DeleteMany(DataReef.TM.Api.Classes.Requests.IDsListWrapperRequest)">
             <summary>

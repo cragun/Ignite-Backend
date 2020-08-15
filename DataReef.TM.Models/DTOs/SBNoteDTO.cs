@@ -34,9 +34,9 @@ namespace DataReef.TM.Models.DTOs
 
 
     {
-        public string userId { get; set; }
+        //public string userId { get; set; }
 
-        public string apiKey { get; set; }
+        //public string apiKey { get; set; }
 
         public string Action { get; set; }
 
@@ -58,9 +58,9 @@ namespace DataReef.TM.Models.DTOs
 
         public string Content { get; set; }
 
-        public string CustomerFirstName { get; set; }
+        //public string CustomerFirstName { get; set; }
 
-        public string CustomerLastName { get; set; }
+        //public string CustomerLastName { get; set; }
 
         public string UserID { get; set; }
 
@@ -70,9 +70,9 @@ namespace DataReef.TM.Models.DTOs
 
         public DateTime? DateLastModified { get; set; }
 
-        public string UserFirstName { get; set; }
+        //public string UserFirstName { get; set; }
 
-        public string UserLastName { get; set; }
+        //public string UserLastName { get; set; }
 
         public SBNoteDTO()
         {

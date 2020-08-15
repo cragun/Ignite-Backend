@@ -13,6 +13,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.ClientAPI;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Blobs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
@@ -703,7 +704,7 @@ namespace DataReef.TM.Services.Services
 
                         if (attachPDF)
                         {
-                            var proposalPDF = _utilServices.Value.GetPDF(proposalUrl);
+                            var proposalPDF = _utilServices.Value.GetPDF($"{proposalUrl}");
                             if (proposalPDF != null)
                             {
                                 attachments = new List<System.Net.Mail.Attachment> {
@@ -1267,7 +1268,8 @@ namespace DataReef.TM.Services.Services
                                 d.EnergyBillUrl = data.UserInputLinks?.FirstOrDefault(lnk => lnk.Type == UserInputDataType.EnergyBill)?.ContentURL;
                             }
 
-                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
+                            //var pdfContent = _utilServices.Value.GetPDF(d.Url);
+                            var pdfContent = _utilServices.Value.GetPDF(d.Name == "Proposal" ? d.Url + "?customizeproposal=1" : d.Url);
 
                             d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
                                  new BlobModel
@@ -1295,7 +1297,12 @@ namespace DataReef.TM.Services.Services
                 }
 
                 // Push the proposal to SST
-                _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                // _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                var response = _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                if (response != null && response.Message.Type.Equals("error"))
+                {
+                    proposal.SBProposalError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                }
 
                 var pbi = new PBI_ProposalSigned
                 {
@@ -1768,6 +1775,24 @@ namespace DataReef.TM.Services.Services
                 return ex.Message;
             }
         }
+
+        public SBGetDocument GetDocuments(Guid propertyID)
+        {
+            string resp = "";
+            using (var dataContext = new DataContext())
+            {
+                var property = dataContext.Properties.Include(p => p.Territory).FirstOrDefault(pd => pd.Guid == propertyID);
+
+                if (property == null)
+                {
+                    throw new ApplicationException("Please Add Property Data");
+                }
+
+                var response = _solarSalesTrackerAdapter.Value.GetProposalDocuments(property);
+                return response;
+            }
+        }
+
         public List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request)
         {
             var result = new List<ProposalMediaItem>();
@@ -2080,6 +2105,11 @@ namespace DataReef.TM.Services.Services
             typeList.Add(new DocType() { Id = 2, Name = "Contract" });
             typeList.Add(new DocType() { Id = 3, Name = "Reference" });
             typeList.Add(new DocType() { Id = 4, Name = "Design" });
+            typeList.Add(new DocType() { Id = 5, Name = "Addendum" });
+            typeList.Add(new DocType() { Id = 6, Name = "HOA" });
+            typeList.Add(new DocType() { Id = 7, Name = "Installation" });
+            typeList.Add(new DocType() { Id = 8, Name = "Survey" });
+            typeList.Add(new DocType() { Id = 9, Name = "Reference" });
 
             return typeList;
         }
@@ -2232,6 +2262,60 @@ namespace DataReef.TM.Services.Services
                 {
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
                 }
+            }
+        }
+
+        public void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
+
+                if (existingProposal == null)
+                {
+                    throw new Exception("Data not found");
+                }
+
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var FinancePlanDefination = dataContext.FinancePlaneDefinitions.FirstOrDefault(i => i.Guid == financePlan.FinancePlanDefinitionID);
+
+                if (FinancePlanDefination == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                result.FinancePlanData = FinancePlanDefination.MetaDataJSON;
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
+                existingFinancePlan.ResponseJSON = financePlan.ResponseJSON;
+                existingFinancePlan.Name = financePlan.Name;
+                existingFinancePlan.FinancePlanType = financePlan.FinancePlanType;
+                existingFinancePlan.FinancePlanDefinitionID = financePlan.FinancePlanDefinitionID;
+
+                dataContext.SaveChanges();
+
+                if (existingProposal.UsesNoSQLAggregatedData == true)
+                {
+                    PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
+                }
+
+
+            }
+        }
+        public int GetProposalCount(Guid PropertyID)
+        {
+            using (var dc = new DataContext())
+            {
+
+                int count = dc.Proposal.Count(x => x.PropertyID == PropertyID);
+                return count;
             }
         }
     }

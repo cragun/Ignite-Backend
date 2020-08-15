@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataReef.TM.Models.DataViews;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,6 +18,14 @@ namespace DataReef.TM.Api.Classes.ViewModels
                 Guid = Guid,
                 Email = Username,
                 ShowFormIfModelHasErrors = false
+            };
+        }
+
+        public NewUser ToNewUser()
+        {
+            return new NewUser
+            {
+                InvitationGuid = Guid,
             };
         }
     }

@@ -55,6 +55,8 @@ namespace DataReef.TM.DataAccess.Database
         public DbSet<IntegrationToken> ApiIntegrationTokens { get; set; }
 
         public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<FavouriteTerritory> FavouriteTerritories { get; set; }
+        public DbSet<AppointmentFavouritePerson> AppointmentFavouritePersons { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Authentication> Authentications { get; set; }
         public DbSet<Credential> Credentials { get; set; }

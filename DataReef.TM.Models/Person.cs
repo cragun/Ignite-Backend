@@ -156,6 +156,9 @@ namespace DataReef.TM.Models
         [StringLength(25)]
         public string SmartBoardID { get; set; }
 
+        [NotMapped]
+        public bool IsFavourite { get; set; }
+
         #endregion
 
         #region Navigation
@@ -231,6 +234,13 @@ namespace DataReef.TM.Models
         public ICollection<Assignment> Assignments { get; set; }
 
         /// <summary>
+        /// Favorite territory assigned to this person
+        /// </summary>
+        [InverseProperty("Person")]
+        [DataMember]
+        public ICollection<FavouriteTerritory> FavouriteTerritories { get; set; }
+
+        /// <summary>
         /// Appointments assigned to this person
         /// </summary>
         [InverseProperty("Assignee")]
@@ -271,6 +281,7 @@ namespace DataReef.TM.Models
             AccountAssociations = FilterEntityCollection(AccountAssociations, newInclusionPath);
             OUAssociations = FilterEntityCollection(OUAssociations, newInclusionPath);
             Assignments = FilterEntityCollection(Assignments, newInclusionPath);
+            FavouriteTerritories = FilterEntityCollection(FavouriteTerritories, newInclusionPath);
 
             User = FilterEntity(User, newInclusionPath);
         }

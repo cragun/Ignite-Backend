@@ -97,7 +97,7 @@ namespace DataReef.TM.Contracts.Services
         void EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req);
 
         [OperationContract]
-        OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "");
+        OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false);
 
         [OperationContract]
         List<OUsAndRoleTree> GetOUsRoleTree(Guid personID);
@@ -145,6 +145,27 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SBOU> GetOusList(string apikey);
 
         [OperationContract]
-        void InsertApikeyForOU(SBOUID request, string apikey);
+        string InsertApikeyForOU(SBOUID request, string apikey);
+
+        [OperationContract]
+        IEnumerable<OURole> GetOuRoles();
+
+        [OperationContract]
+        void UpdateOuRoles(List<OURole> roles);
+
+        [OperationContract]
+        bool UpdateOuRolesPermission(List<OURole> roles);
+
+        [OperationContract]
+        OURole GetOuRoleByID(Guid? ouid);
+
+        [OperationContract]
+        void CreateNewOURole(OURole req);
+
+        [OperationContract]
+        IEnumerable<GuidNamePair> SBGetOuRoles();
+
+        [OperationContract]
+        void EditOURole(Guid ouid, OURole req);
     }
 }

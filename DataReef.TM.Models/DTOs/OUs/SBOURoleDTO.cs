@@ -18,6 +18,9 @@ namespace DataReef.TM.Models.DTOs.OUs
         [DataMember]
         public string Name { get; set; }
 
+        [DataMember]
+        public string ParentTree { get; set; }
+
     }
     [DataContract]
     [NotMapped]

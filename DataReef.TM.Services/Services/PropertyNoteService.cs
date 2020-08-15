@@ -101,6 +101,22 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
                 entity.SaveResult = SaveResult.SuccessfulInsert;
 
+                if (entity.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                    var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                    not.Updated(SmartPrincipal.UserId, people);
+                    dc.SaveChanges();
+
+                    if (not != null && proprty != null)
+                    {
+                        NotifyComment(not.PersonID, not, proprty, dc);
+                    }
+                }
+
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -131,6 +147,21 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
+
+                if (entity.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                    var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                    not.Updated(SmartPrincipal.UserId, people);
+                    dc.SaveChanges();
+
+                    if (not != null && proprty != null)
+                    {
+                        NotifyComment(not.PersonID, not, proprty, dc);
+                    }
+                }
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -166,6 +197,22 @@ namespace DataReef.TM.Services.Services
                 var properties = dc.Properties.Include(x => x.Territory).Where(x => propertyIds.Contains(x.Guid)).ToList();
                 foreach (var entity in entities)
                 {
+                    if (entity.ContentType == "Comment")
+                    {
+                        var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                        var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                        var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                        not.Updated(SmartPrincipal.UserId, people);
+                        dc.SaveChanges();
+
+                        if (not != null && proprty != null)
+                        {
+                            NotifyComment(not.PersonID, not, proprty, dc);
+                        }
+                    }
+
+
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
                     {
@@ -227,6 +274,21 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
+                if (entity.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                    var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                    not.Updated(SmartPrincipal.UserId, people);
+                    dc.SaveChanges();
+
+                    if (not != null && proprty != null)
+                    {
+                        NotifyComment(not.PersonID, not, proprty, dc);
+                    }
+                }
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -262,6 +324,20 @@ namespace DataReef.TM.Services.Services
                 var properties = dc.Properties.Include(x => x.Territory).Where(x => propertyIds.Contains(x.Guid)).ToList();
                 foreach (var entity in entities)
                 {
+                    if (entity.ContentType == "Comment")
+                    {
+                        var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
+                        var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
+
+                        var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
+                        not.Updated(SmartPrincipal.UserId, people);
+                        dc.SaveChanges();
+
+                        if (not != null && proprty != null)
+                        {
+                            NotifyComment(not.PersonID, not, proprty, dc);
+                        }
+                    }
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
                     {
@@ -547,6 +623,10 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("The Lead with the specified LeadId was not found");
                 }
 
+                if (TerritoryId == null)
+                {
+                    throw new Exception("Please select Territory");
+                }
 
                 var territory = dc.Territories.Where(x => x.Guid == TerritoryId).FirstOrDefault();
                 if (territory == null)
@@ -874,7 +954,39 @@ namespace DataReef.TM.Services.Services
                     }
                 }
             }
+        }
 
+        private void NotifyComment(Guid prsnid, PropertyNote note, Property property, DataContext dataContext = null)
+        {
+            bool releaseDataContext = dataContext == null;
+            dataContext = dataContext ?? new DataContext();
+
+            string smartboardNotificationID = null;
+            try
+            {
+                smartboardNotificationID = _sbAdapter.Value.AddUserTaggingNotification(property, note.CreatedByID.Value, prsnid);
+                smartboardNotificationID = smartboardNotificationID.Replace("\"", string.Empty);
+            }
+            catch { }
+
+            Notification Notification = new Notification
+            {
+                Value = note.Guid,
+                Description = $"",
+                PersonID = prsnid,
+                Content = $"New Comment on note for property {property.Name}",
+                SmartBoardID = smartboardNotificationID,
+                CreatedByID = note.CreatedByID,
+                CreatedByName = note.CreatedByName
+            };
+
+            dataContext.Notifications.Add(Notification);
+            dataContext.SaveChanges();
+
+            if (releaseDataContext)
+            {
+                dataContext.Dispose();
+            }
 
         }
     }

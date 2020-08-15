@@ -549,6 +549,22 @@ namespace DataReef.Application.Services
             }
         }
 
+        public bool CheckUserExist(string email)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var people = dc.Credentials
+                                    .Include(cred => cred.User)
+                                    .Include(cred => cred.User.Person)
+                                    .FirstOrDefault(cc => cc.UserName == email);
+                if (people == null)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         [FaultContract(typeof(PreconditionFailedFault))]
         public AuthenticationToken CreateUser(NewUser newUser, byte[] photo = null, string phoneNumber = null)
         {

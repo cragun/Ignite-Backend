@@ -207,18 +207,39 @@ namespace DataReef.TM.Services
             {
                 var ouTerritoriesQuery = context.Territories.Where(t => t.OUID == ouid);
 
-                //if (personID.HasValue)
-                //{
-                //    if (!context.OUAssociations.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
-                //    {
-                //        ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
-                //    }
+                if (personID.HasValue)
+                {
+                    if (!context.OUAssociations.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
+                    {
+                        ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
+                    }
 
-                //}
+                }
 
                 AssignIncludes(include, ref ouTerritoriesQuery);
                 ouTerritoriesQuery = ApplyDeletedFilter(deletedItems, ouTerritoriesQuery);
                 var ouTerritories = ouTerritoriesQuery.ToList();
+
+                if (!personID.HasValue)
+                {
+                    var isSuperAdmin = context.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId && oa.OURole.RoleType == OURoleType.SuperAdmin).FirstOrDefault();
+
+                    if (isSuperAdmin != null)
+                    {
+                        personID = SmartPrincipal.UserId;
+                    }
+                }
+
+                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
+                foreach (var territory in ouTerritories)
+                {
+                    var favourite = favouriteTerritories?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
+
+                    if (favourite != null)
+                        territory.IsFavourite = true;
+                    else
+                        territory.IsFavourite = false;
+                }
 
                 if (territoryShapeVersions != null)
                 {
@@ -583,6 +604,50 @@ namespace DataReef.TM.Services
                 result.ExceptionMessage = string.Format("{0}{1}", ouName, number + 1);
 
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// This method insert Territory as a Favorite 
+        /// </summary>
+        public FavouriteTerritory InsertFavoriteTerritory(Guid territoryID, Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteTerritory = dc.FavouriteTerritories.FirstOrDefault(x => x.PersonID == personID && x.TerritoryID == territoryID);
+
+                if (FavouriteTerritory != null)
+                    throw new ApplicationException("Already Favourited");
+
+                var territory = new FavouriteTerritory
+                {
+                    TerritoryID = territoryID,
+                    PersonID = personID,
+                    isFavourite = true,
+                    CreatedByID = SmartPrincipal.UserId
+                };
+
+                dc.FavouriteTerritories.Add(territory);
+                dc.SaveChanges();
+
+                return territory;
+            }
+        }
+
+        /// <summary>
+        /// This method remove Territory as a Favorite 
+        /// </summary>
+        public void RemoveFavoriteTerritory(Guid territoryID, Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteTerritory = dc.FavouriteTerritories.FirstOrDefault(x => x.PersonID == personID && x.TerritoryID == territoryID);
+
+                if (FavouriteTerritory == null)
+                    throw new ApplicationException("Territory not found");
+
+                dc.FavouriteTerritories.Remove(FavouriteTerritory);
+                dc.SaveChanges();
             }
         }
     }

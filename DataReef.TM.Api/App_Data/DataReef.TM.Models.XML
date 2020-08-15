@@ -4207,6 +4207,11 @@
             Unspecified error occured. 
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.FavouriteTerritory.PersonID">
+            <summary>
+            Guid of the person assigned a territory
+            </summary>
+        </member>
         <member name="T:DataReef.TM.Models.KeyValue">
             <summary>
             KeyValue is a dictionary entry that can be associated with any entity.  Its primary purpose is for the users of the ClientAPI to decorate the object with their own meta data
@@ -5319,6 +5324,11 @@
             Assignments link a person to the territories he/she has access to
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.Person.FavouriteTerritories">
+            <summary>
+            Favorite territory assigned to this person
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.Person.AssignedAppointments">
             <summary>
             Appointments assigned to this person
@@ -5327,6 +5337,11 @@
         <member name="P:DataReef.TM.Models.Person.CreatedAppointments">
             <summary>
             Appointments created by this person
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Models.OURole.Updated(System.Nullable{System.Guid},System.String)">
+            <summary>
+            Increase version and update DateLastModified
             </summary>
         </member>
         <member name="P:DataReef.TM.Models.Territory.Status">

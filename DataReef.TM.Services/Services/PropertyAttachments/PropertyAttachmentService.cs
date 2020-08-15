@@ -1036,6 +1036,56 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             return model;
         }
 
+        public PropertyAttachmentItemDTO UploadUtilityBillImage(Guid PropertyId, UploadImageToPropertyAttachmentRequest uploadImageRequest)
+        {
+
+            PropertyAttachment item = new PropertyAttachment();
+
+            using (var context = new DataContext())
+            {
+                item = context.PropertyAttachments.FirstOrDefault(p => p.PropertyID == PropertyId && p.AttachmentTypeID == 1);
+            }
+
+            if (item == null)
+            {
+                item = new PropertyAttachment();
+                item.Guid = Guid.NewGuid();
+                item.IsDeleted = false;
+                item.PropertyID = PropertyId;
+                item.SystemTypeID = "st-01";
+                item.AttachmentTypeID = 1;
+                item = Insert(item);
+            }
+            else
+            {
+                item = Update(item);
+            }
+
+
+            var propertyattech = base.Get(item.Guid, "Items");
+
+            //var propertyattechitm = propertyattech.Items.Where();
+
+            var attachitm = propertyattech?.Items?.Where(i => i.SectionID == "s-0" && i.ItemID == "t-10")?.FirstOrDefault();
+
+            uploadImageRequest.PropertyAttachmentID = item.Guid;
+            if (attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
+            uploadImageRequest.SectionID = "s-0";
+            uploadImageRequest.ItemID = "t-10";
+            //uploadImageRequest.ImagesWithNotes = ;
+            //uploadImageRequest.Location = ;
+
+            var response = UploadImage(uploadImageRequest.PropertyAttachmentID,
+                    uploadImageRequest.PropertyAttachmentItemID,
+                    uploadImageRequest.SectionID,
+                    uploadImageRequest.ItemID,
+                    uploadImageRequest.Images,
+                    uploadImageRequest.ImagesWithNotes,
+                    uploadImageRequest.Location);
+
+            return response;
+        }
+
 
 
     }

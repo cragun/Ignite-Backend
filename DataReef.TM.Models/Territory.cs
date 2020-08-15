@@ -104,6 +104,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public bool IsArchived { get; set; }
 
+        [NotMapped]
+        public bool IsFavourite { get; set; }
+
         #endregion
 
         #region Navigation
@@ -115,6 +118,11 @@ namespace DataReef.TM.Models
         [DataMember]
         [AttachOnUpdate]
         public ICollection<Assignment> Assignments { get; set; }
+
+        [InverseProperty("Territory")]
+        [DataMember]
+        [AttachOnUpdate]
+        public ICollection<FavouriteTerritory> FavouriteTerritories { get; set; }
 
         [InverseProperty("Territory")]
         [DataMember]
@@ -156,6 +164,7 @@ namespace DataReef.TM.Models
             }
 
             Assignments = FilterEntityCollection(Assignments, newInclusionPath);
+            FavouriteTerritories = FilterEntityCollection(FavouriteTerritories, newInclusionPath);
             Prescreens = FilterEntityCollection(Prescreens, newInclusionPath);
             Shapes = FilterEntityCollection(Shapes, newInclusionPath);
 

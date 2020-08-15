@@ -5,6 +5,7 @@ using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
 using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
@@ -80,6 +81,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok();
         }
 
+        [HttpGet, Route("proposal/{propertyId}/count")]
+        [ResponseType(typeof(GenericResponse<string>))]
+        public async Task<IHttpActionResult> GetProposalCount(Guid propertyId)
+        {
+            int count = _proposalService.GetProposalCount(propertyId);
+            return Ok(new GenericResponse<string> { Response = count.ToString() });
+        }
+
         [Route("{proposalDataId}/sign/document")]
         [HttpPost]
         [ResponseType(typeof(Proposal))]
@@ -125,7 +134,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("Documents/getType")]
         [HttpGet]
         [ResponseType(typeof(List<DocType>))]
-        public IHttpActionResult GetDocumentType()
+        public async Task<IHttpActionResult> GetDocumentType()
         {
             return Ok(_proposalService.GetDocumentType());
         }
@@ -190,6 +199,14 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
+        [Route("{propertyID:guid}/getDocuments")]
+        [HttpPost]
+        [ResponseType(typeof(SBGetDocument))]
+        public async Task<IHttpActionResult> GetDocuments(Guid propertyID)
+        {
+            var response = _proposalService.GetDocuments(propertyID);
+            return Ok(response);
+        }
 
         /// <summary>
         /// Upload multiple documents using a multi-part body
@@ -383,6 +400,16 @@ namespace DataReef.TM.Api.Controllers
             return Ok();
         }
 
+
+        [AllowAnonymous]
+        [Route("UpdateProposalFinancePlan/{ProposalID}")]
+        [InjectAuthPrincipal]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateProposalFinancePlan([FromUri]Guid ProposalID, FinancePlan plan)
+        {
+            _proposalService.UpdateProposalFinancePlan(ProposalID, plan);
+            return Ok();
+        }
 
         private async Task<DocumentSignRequest> GetProposalRequest()
         {

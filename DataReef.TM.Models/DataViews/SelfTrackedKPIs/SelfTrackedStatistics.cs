@@ -18,4 +18,15 @@ namespace DataReef.TM.Models.DataViews.SelfTrackedKPIs
         [DataMember]
         public SelfTrackedKPIByDate Actions { get; set; }
     }
+
+    [DataContract]
+    [NotMapped]
+    public class InquiryStatistics
+    {
+        [DataMember]
+        public string Name { get; set; }
+
+        [DataMember]
+        public SelfTrackedKPIByDate Actions { get; set; }
+    }
 }

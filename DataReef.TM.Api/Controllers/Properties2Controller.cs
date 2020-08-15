@@ -16,6 +16,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using DataReef.Auth.Helpers;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -265,7 +266,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, Route("sb/{apiKey}")]
         [ResponseType(typeof(SBAppointmentDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public SBPropertyDTO CreateNewPropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
+        public async Task<SBPropertyDTO> CreateNewPropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
         {
 
             bool checkTime = CryptographyHelper.checkTime(apiKey);
@@ -288,6 +289,35 @@ namespace DataReef.TM.Api.Controllers
             var result = _propertyServiceFactory().EditPropertyNameFromSB(leadId,request);
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        [ResponseType(typeof(PropertyAttachmentItemDTO))]
+        [Route("Appointment/utilityBill/upload/{PropertyId}")]
+        public async Task<IHttpActionResult> UploadUtilityBill(Guid PropertyId)
+        {
+            var PicFile = HttpContext.Current.Request.Files["file"];
+            if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
+            {
+
+                System.IO.Stream fs = PicFile.InputStream;
+                System.IO.BinaryReader br = new System.IO.BinaryReader(fs);
+                Byte[] bytes = br.ReadBytes((Int32)fs.Length);
+                string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
+
+
+                UploadImageToPropertyAttachmentRequest uploadImageRequest = new UploadImageToPropertyAttachmentRequest();
+                uploadImageRequest.Images = new List<string>();
+                uploadImageRequest.Images.Add(base64String);
+
+                if (uploadImageRequest == null || (uploadImageRequest.Images?.Any() != true))
+                    return BadRequest($"Invalid {nameof(uploadImageRequest)}");
+
+                var response = _propertyAttachmentServiceFactory().UploadUtilityBillImage(PropertyId, uploadImageRequest);
+                return Ok(response);
+            }
+
+            return BadRequest("Could not find the file!");
         }
 
 

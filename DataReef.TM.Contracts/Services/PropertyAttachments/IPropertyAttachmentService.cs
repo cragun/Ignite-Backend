@@ -47,5 +47,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         IEnumerable<SBAttachmentDataDTO> GetSBAttachmentData(long propertyID, string apiKey);
+
+        [OperationContract]
+        PropertyAttachmentItemDTO UploadUtilityBillImage(Guid PropertyId, UploadImageToPropertyAttachmentRequest uploadImageRequest);
     }
 }

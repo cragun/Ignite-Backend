@@ -190,7 +190,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new { });
         }
 
-        private decimal GetAmountFinanced(LoanRequestSpruce loanRequest)
+        private async Task<decimal> GetAmountFinanced(LoanRequestSpruce loanRequest)
         {
             decimal purchasePrice = (loanRequest.PricePerWattASP * loanRequest.SystemSize) * (1 + loanRequest.TaxRate);
             return purchasePrice - loanRequest.DownPayment;

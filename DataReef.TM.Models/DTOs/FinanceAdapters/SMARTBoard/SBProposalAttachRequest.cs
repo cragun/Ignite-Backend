@@ -1,7 +1,9 @@
 ﻿using DataReef.TM.Models.DataViews.Geo;
+using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.Solar;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 {
@@ -34,6 +36,17 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         //}
 
         public DocumentModel Document { get; set; }
+    }
+
+    public class SBGetDocument
+    {
+        //public SBAddDocument(Proposal proposal)
+        //{
+        //   Document = new DocumentModel();
+        //}
+
+        public List<DocumentModel> Document { get; set; }
+        public List<DocType> DocumentType { get; set; }
     }
 
     public class DocumentModel

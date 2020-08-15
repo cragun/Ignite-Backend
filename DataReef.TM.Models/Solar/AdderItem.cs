@@ -233,10 +233,12 @@ namespace DataReef.TM.Models.Solar
             }
             return IsCalculatedPerRoofPlane;
         }
-        public static AdderItem ToDbModel(AdderItem item, Guid solarSystemID)
+        public static AdderItem ToDbModel(AdderItem item,Guid solarSystemID)
         {
             AdderItem ret = new AdderItem();
             ret = item;
+            ret.TemplateID = item.Guid;
+            ret.Guid = Guid.NewGuid();
             ret.Description = item.Description ?? "";
             ret.Quantity = item.Quantity == 0 ? 1 : item.Quantity;
             ret.Version = 1;

@@ -30,6 +30,9 @@ namespace DataReef.TM.Models.DTOs.Signatures
         /// </summary>
         [DataMember]
         public string ProposalDataJSON { get; set; }
+
+        [DataMember]
+        public string DocumentTypeId { get; set; }
     }
 
     [DataContract]
