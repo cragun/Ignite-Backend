@@ -350,7 +350,6 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpGet]
-        //[Route("CalenderApp/{ouid}/{date}")]
         [Route("CalenderApp/{ouid}")]
         [ResponseType(typeof(IEnumerable<Person>))]
         public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate, string type = "")
