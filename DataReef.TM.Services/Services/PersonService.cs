@@ -260,6 +260,7 @@ namespace DataReef.TM.Services
                     RecipientEmailAddress = person.EmailAddressString,
                     DownloadURL = ConfigurationManager.AppSettings["LegionDownloadURL"]
                 };
+
                 Mail.Library.SendUserReactivationEmail(template);
 
                 //  register to MailChimp
