@@ -20,7 +20,7 @@ namespace DataReef.TM.Models.DTOs.Persons
 
         public Guid RoleID { get; set; }
 
-        public int ID { get; set; }
+        public string ID { get; set; }
 
         public string[] apikey { get; set; }
     }

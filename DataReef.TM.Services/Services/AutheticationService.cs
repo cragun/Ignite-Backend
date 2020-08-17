@@ -829,6 +829,15 @@ namespace DataReef.Application.Services
                 {
                     try
                     {
+                        var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
+                        if (isExist != null)
+                        {
+                            string reason = "User already exist";
+                            PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
+                            throw new FaultException<PreconditionFailedFault>(f, reason);
+                        }
+
+
                         //see if a user exists for this emaiAddress
                         var credential = dc.Credentials
                                     .Include(cred => cred.User)
@@ -847,7 +856,7 @@ namespace DataReef.Application.Services
                                 FirstName = newUser.FirstName,
                                 LastName = newUser.LastName,
                                 EmailAddressString = newUser.EmailAddress,
-                                SmartBoardID = newUser.ID.ToString(),
+                                SmartBoardID = newUser.ID,
                                 Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName)
                             };
 
