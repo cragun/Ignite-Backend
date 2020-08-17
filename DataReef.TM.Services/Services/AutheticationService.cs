@@ -829,6 +829,15 @@ namespace DataReef.Application.Services
                 {
                     try
                     {
+                        var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
+                        if (isExist != null)
+                        {
+                            string reason = "User already exist";
+                            PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
+                            throw new FaultException<PreconditionFailedFault>(f, reason);
+                        }
+
+
                         //see if a user exists for this emaiAddress
                         var credential = dc.Credentials
                                     .Include(cred => cred.User)
@@ -847,7 +856,7 @@ namespace DataReef.Application.Services
                                 FirstName = newUser.FirstName,
                                 LastName = newUser.LastName,
                                 EmailAddressString = newUser.EmailAddress,
-                                SmartBoardID = newUser.ID.ToString(),
+                                SmartBoardID = newUser.ID,
                                 Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName)
                             };
 
@@ -913,7 +922,9 @@ namespace DataReef.Application.Services
 
                             if (ouSetting == null)
                             {
-                                return null;
+                                string reason = "Currently this ou is not available.";
+                                PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
+                                throw new FaultException<PreconditionFailedFault>(f, reason);
                             }
 
                             //check to see if the user is already part of the OU
@@ -921,6 +932,14 @@ namespace DataReef.Application.Services
                             if (organizationalUnitAssociation != null)
                             {
                                 string reason = "User is already a member of the Organization OU.";
+                                PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
+                                throw new FaultException<PreconditionFailedFault>(f, reason);
+                            }
+
+                            var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                            if (Ou == null)
+                            {
+                                string reason = "Currently this ou is not available.";
                                 PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
                                 throw new FaultException<PreconditionFailedFault>(f, reason);
                             }
@@ -936,12 +955,6 @@ namespace DataReef.Application.Services
                                 RoleType = role.RoleType
                             };
                             dc.OUAssociations.Add(organizationalUnitAssociation);
-
-                            var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                            if (Ou == null)
-                            {
-                                return null;
-                            }
                         }
 
                         try
@@ -977,10 +990,6 @@ namespace DataReef.Application.Services
 
                         var authenticationToken = new AuthenticationToken
                         {
-                            Audience = "tm",
-                            AccountID = accountID,
-                            ClientSecret = "asdfjkl;qweruipo",
-                            Expiration = System.DateTime.UtcNow.AddDays(TOKEN_EXPIRATION_DAYS).ToUnixTime(),
                             UserID = user.Guid
                         };
                         transaction.Commit();

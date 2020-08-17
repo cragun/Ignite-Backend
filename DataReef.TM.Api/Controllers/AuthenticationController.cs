@@ -312,7 +312,7 @@ namespace DataReef.TM.Api.Controllers
         [GenericRoute("createuser/smartboard")]
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult CreateUserFromSB([FromBody]CreateUserDTO user,string[] apikey)
+        public IHttpActionResult CreateUserFromSB(CreateUserDTO user)
         {
             try
             {
@@ -321,7 +321,7 @@ namespace DataReef.TM.Api.Controllers
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
                 }
 
-                AuthenticationToken ret = authService.CreateUserFromSB(user,apikey);
+                AuthenticationToken ret = authService.CreateUserFromSB(user,user.apikey);
                 return Ok(ret);
             }
             catch (System.ServiceModel.FaultException fe)
