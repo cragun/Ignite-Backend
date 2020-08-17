@@ -34,8 +34,7 @@ namespace DataReef.TM.Api.Controllers
             this.authService = authService;
             this.credentialService = credentialService;
             this._userInvitationService = userInvitationService;
-        }
-
+        } 
 
         /// <summary>
         /// Authenticates UserName and Password and returns an Authentication Token
@@ -99,16 +98,8 @@ namespace DataReef.TM.Api.Controllers
         // [AllowAnonymous]
         public async Task<IHttpActionResult> UpdateUserStatus(bool value, Guid userId)
         {
-
-
             var status = authService.updateUser(value, userId);
-
-
             return Ok(status);
-
-
-
-
         }
 
 
@@ -311,6 +302,40 @@ namespace DataReef.TM.Api.Controllers
             var authToken = AuthenticationToken.FromEncryptedString(token, certificate);
             authToken.Expiration = DateTime.UtcNow.AddDays(7).ToUnixTime();
             return Ok<Jwt>(EncodeToken(authToken));
+        }
+
+        /// <summary>
+        /// Creates a new user from smart board
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [GenericRoute("createuser/smartboard")]
+        [HttpPost]
+        [AllowAnonymous]
+        public IHttpActionResult CreateUserFromSB([FromBody]CreateUserDTO user,string[] apikey)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
+                }
+
+                AuthenticationToken ret = authService.CreateUserFromSB(user,apikey);
+                return Ok(ret);
+            }
+            catch (System.ServiceModel.FaultException fe)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(fe.Message) });
+            }
+            catch (ResourceExistsException ree)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(ree.Message) });
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         #region Private

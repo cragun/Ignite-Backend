@@ -572,6 +572,13 @@
             <param name="user"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CreateUserFromSB(DataReef.TM.Models.DTOs.Persons.CreateUserDTO,System.String[])">
+            <summary>
+            Creates a new user and returns an authentication token
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.HealthController.GetHealth">
             <summary>
             This method fails if CORE is unreachable or fails.

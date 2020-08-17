@@ -3,6 +3,7 @@ using DataReef.Core.Infrastructure.Authorization;
 using DataReef.TM.Contracts.Auth;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs.Persons;
 using System;
 using System.ServiceModel;
 
@@ -47,5 +48,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         bool CheckUserExist(string email);
+
+        [OperationContract]
+        AuthenticationToken CreateUserFromSB(CreateUserDTO newUser, string[] apikey = null);
     }
 }
