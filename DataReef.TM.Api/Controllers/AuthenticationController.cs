@@ -309,10 +309,9 @@ namespace DataReef.TM.Api.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [GenericRoute("createuser/smartboard")]
-        [HttpPost]
+        [HttpPost , Route("createuser/smartboard")]
         [AllowAnonymous]
-        public IHttpActionResult CreateUserFromSB(CreateUserDTO user)
+        public IHttpActionResult CreateUserFromSB([FromBody]CreateUserDTO user)
         {
             try
             {

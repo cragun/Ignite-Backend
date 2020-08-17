@@ -831,12 +831,12 @@ namespace DataReef.Application.Services
                     {
                         var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
                         if (isExist != null)
+
                         {
                             string reason = "User already exist";
                             PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
                             throw new FaultException<PreconditionFailedFault>(f, reason);
                         }
-
 
                         //see if a user exists for this emaiAddress
                         var credential = dc.Credentials
@@ -994,6 +994,34 @@ namespace DataReef.Application.Services
                         };
                         transaction.Commit();
                         return authenticationToken;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        public AuthenticationToken UpdateUserFromSB(CreateUserDTO newUser, string[] apikey)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                using (var transaction = dc.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
+                        if (isExist == null)
+                        {
+                            string reason = "User not found";
+                            PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
+                            throw new FaultException<PreconditionFailedFault>(f, reason);
+                        }
+                        
+                        transaction.Commit();
+                        return null;
                     }
                     catch (Exception ex)
                     {
