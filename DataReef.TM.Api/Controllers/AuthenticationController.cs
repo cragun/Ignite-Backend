@@ -1,4 +1,5 @@
 ﻿using DataReef.Core;
+using DataReef.Core.Classes;
 using DataReef.TM.Api.Bootstrap;
 using DataReef.TM.Api.Classes;
 using DataReef.TM.Contracts.Auth;
@@ -14,6 +15,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -34,7 +36,7 @@ namespace DataReef.TM.Api.Controllers
             this.authService = authService;
             this.credentialService = credentialService;
             this._userInvitationService = userInvitationService;
-        } 
+        }
 
         /// <summary>
         /// Authenticates UserName and Password and returns an Authentication Token
@@ -309,32 +311,18 @@ namespace DataReef.TM.Api.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpPost , Route("createuser/smartboard")]
+        [HttpPost, Route("createuser/smartboard")]
         [AllowAnonymous]
-        public IHttpActionResult CreateUserFromSB([FromBody]CreateUserDTO user)
+        [ResponseType(typeof(SaveResult))]
+        public SaveResult CreateUserFromSB([FromBody]CreateUserDTO user)
         {
-            try
+            if (user == null)
             {
-                if (user == null)
-                {
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
-                }
+                return new SaveResult { Success = false, ExceptionMessage = "request data can not null" };
+            }
 
-                AuthenticationToken ret = authService.CreateUserFromSB(user,user.apikey);
-                return Ok(ret);
-            }
-            catch (System.ServiceModel.FaultException fe)
-            {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(fe.Message) });
-            }
-            catch (ResourceExistsException ree)
-            {
-                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Conflict) { Content = new StringContent(ree.Message) });
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            var ret = authService.CreateUserFromSB(user, user.apikey);
+            return ret;
         }
 
         #region Private

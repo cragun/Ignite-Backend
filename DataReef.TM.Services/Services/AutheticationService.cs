@@ -821,7 +821,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public AuthenticationToken CreateUserFromSB(CreateUserDTO newUser, string[] apikey)
+        public SaveResult  CreateUserFromSB(CreateUserDTO newUser, string[] apikey)
         {
             using (DataContext dc = new DataContext())
             {
@@ -833,9 +833,7 @@ namespace DataReef.Application.Services
                         if (isExist != null)
 
                         {
-                            string reason = "User already exist";
-                            PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
-                            throw new FaultException<PreconditionFailedFault>(f, reason);
+                            return new SaveResult { Success = false, ExceptionMessage = "User already exist" };
                         }
 
                         //see if a user exists for this emaiAddress
@@ -922,26 +920,20 @@ namespace DataReef.Application.Services
 
                             if (ouSetting == null)
                             {
-                                string reason = "Currently this ou is not available.";
-                                PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
-                                throw new FaultException<PreconditionFailedFault>(f, reason);
+                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
                             }
 
                             //check to see if the user is already part of the OU
                             var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == ouSetting.OUID);
                             if (organizationalUnitAssociation != null)
                             {
-                                string reason = "User is already a member of the Organization OU.";
-                                PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
-                                throw new FaultException<PreconditionFailedFault>(f, reason);
+                                return new SaveResult { Success = false, ExceptionMessage = "User is already a member of the Organization OU" };
                             }
 
                             var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
                             if (Ou == null)
                             {
-                                string reason = "Currently this ou is not available.";
-                                PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
-                                throw new FaultException<PreconditionFailedFault>(f, reason);
+                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
                             }
 
                             var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
@@ -993,7 +985,8 @@ namespace DataReef.Application.Services
                             UserID = user.Guid
                         };
                         transaction.Commit();
-                        return authenticationToken;
+
+                        return new SaveResult { Success = true , SuccessMessage = "User created successfully" };
                     }
                     catch (Exception ex)
                     {
