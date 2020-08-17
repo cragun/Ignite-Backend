@@ -572,9 +572,9 @@
             <param name="user"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CreateUserFromSB(DataReef.TM.Models.DTOs.Persons.CreateUserDTO,System.String[])">
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.CreateUserFromSB(DataReef.TM.Models.DTOs.Persons.CreateUserDTO)">
             <summary>
-            Creates a new user and returns an authentication token
+            Creates a new user from smart board
             </summary>
             <param name="user"></param>
             <returns></returns>
