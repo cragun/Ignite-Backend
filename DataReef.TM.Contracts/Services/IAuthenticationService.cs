@@ -51,5 +51,10 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         SaveResult CreateUserFromSB(CreateUserDTO newUser, string[] apikey = null);
+
+        [OperationContract]
+        SaveResult UpdateUserFromSB(CreateUserDTO newUser, string[] apikey = null);
+
+        
     }
 }

@@ -905,13 +905,10 @@ namespace DataReef.Application.Services
 
                             if (person != null) person.IsDeleted = false;
                         }
-
+                        string not_avail = "";
                         foreach (var item in apikey)
                         {
-                            var ouSetting = dc
-                          .OUSettings
-                          .Where(x => x.Name == SolarTrackerResources.SelectedSettingName)
-                          .ToList()
+                            var ouSetting = dc.OUSettings.Where(x => x.Name == SolarTrackerResources.SelectedSettingName).ToList()
                           .FirstOrDefault(x =>
                           {
                               var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
@@ -920,33 +917,29 @@ namespace DataReef.Application.Services
 
                             if (ouSetting == null)
                             {
-                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
+                                not_avail += item + ",";
                             }
 
                             //check to see if the user is already part of the OU
                             var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == ouSetting.OUID);
-                            if (organizationalUnitAssociation != null)
+                            if (organizationalUnitAssociation == null)
                             {
-                                return new SaveResult { Success = false, ExceptionMessage = "User is already a member of the Organization OU" };
+                                var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                if (Ou != null)
+                                {
+                                    var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                    //add the OU association and the Role to that Association
+                                    organizationalUnitAssociation = new OUAssociation
+                                    {
+                                        OUID = ouSetting.OUID,
+                                        PersonID = person.Guid,
+                                        OURoleID = newUser.RoleID,
+                                        RoleType = role.RoleType
+                                    };
+                                    dc.OUAssociations.Add(organizationalUnitAssociation);
+                                }
                             }
-
-                            var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                            if (Ou == null)
-                            {
-                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
-                            }
-
-                            var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
-
-                            //add the OU association and the Role to that Association
-                            organizationalUnitAssociation = new OUAssociation
-                            {
-                                OUID = ouSetting.OUID,
-                                PersonID = person.Guid,
-                                OURoleID = newUser.RoleID,
-                                RoleType = role.RoleType
-                            };
-                            dc.OUAssociations.Add(organizationalUnitAssociation);
                         }
 
                         try
@@ -984,9 +977,15 @@ namespace DataReef.Application.Services
                         {
                             UserID = user.Guid
                         };
+
                         transaction.Commit();
 
-                        return new SaveResult { Success = true, SuccessMessage = "User created successfully" };
+                        if (!String.IsNullOrEmpty(not_avail))
+                        {
+                            not_avail = not_avail.TrimEnd(',');
+                        }
+
+                        return new SaveResult { Success = true, SuccessMessage = "User created successfully", Exception = not_avail };
                     }
                     catch (Exception ex)
                     {
@@ -1008,9 +1007,7 @@ namespace DataReef.Application.Services
                         var isExistPerson = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
                         if (isExistPerson == null)
                         {
-                            string reason = "User not found";
-                            PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
-                            throw new FaultException<PreconditionFailedFault>(f, reason);
+                            return new SaveResult { Success = false, ExceptionMessage = "User not found" };
                         }
 
                         isExistPerson.FirstName = newUser.FirstName;
@@ -1032,12 +1029,14 @@ namespace DataReef.Application.Services
                             isExistCredentials.PerformHash();
                         }
 
+                        var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExistPerson.Guid);
+                        dc.OUAssociations.RemoveRange(OUAssociations);
+
+                        string not_avail = "";
+
                         foreach (var item in apikey)
                         {
-                            var ouSetting = dc
-                          .OUSettings
-                          .Where(x => x.Name == SolarTrackerResources.SelectedSettingName)
-                          .ToList()
+                            var ouSetting = dc.OUSettings.Where(x => x.Name == SolarTrackerResources.SelectedSettingName).ToList()
                           .FirstOrDefault(x =>
                           {
                               var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
@@ -1046,35 +1045,38 @@ namespace DataReef.Application.Services
 
                             if (ouSetting == null)
                             {
-                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
-                            }
-
-                            var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                            if (Ou == null)
-                            {
-                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
+                                not_avail += item + ",";
                             }
 
                             //check to see if the user is already part of the OU
                             var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExistPerson.Guid && oua.OUID == ouSetting.OUID);
                             if (organizationalUnitAssociation == null)
                             {
-                                var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
-
-                                //add the OU association and the Role to that Association
-                                organizationalUnitAssociation = new OUAssociation
+                                var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                if (Ou != null)
                                 {
-                                    OUID = ouSetting.OUID,
-                                    PersonID = isExistPerson.Guid,
-                                    OURoleID = newUser.RoleID,
-                                    RoleType = role.RoleType
-                                };
-                                dc.OUAssociations.Add(organizationalUnitAssociation);
+                                    var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                    //add the OU association and the Role to that Association
+                                    organizationalUnitAssociation = new OUAssociation
+                                    {
+                                        OUID = ouSetting.OUID,
+                                        PersonID = isExistPerson.Guid,
+                                        OURoleID = newUser.RoleID,
+                                        RoleType = role.RoleType
+                                    };
+                                    dc.OUAssociations.Add(organizationalUnitAssociation);
+                                }
                             }
                         }
 
                         transaction.Commit();
-                        return null;
+                        if (!String.IsNullOrEmpty(not_avail))
+                        {
+                            not_avail = not_avail.TrimEnd(',');
+                        }
+
+                        return new SaveResult { Success = true, SuccessMessage = "User updated successfully", Exception = not_avail };
                     }
                     catch (Exception ex)
                     {

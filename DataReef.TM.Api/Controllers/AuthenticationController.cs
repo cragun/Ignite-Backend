@@ -325,6 +325,27 @@ namespace DataReef.TM.Api.Controllers
             return ret;
         }
 
+        /// <summary>
+        /// Creates a new user from smart board
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost, Route("updateuser/smartboard")]
+        [AllowAnonymous]
+        [ResponseType(typeof(SaveResult))]
+        public SaveResult UpdateUserFromSB([FromBody]CreateUserDTO user)
+        {
+            if (user == null)
+            {
+                return new SaveResult { Success = false, ExceptionMessage = "request data can not null" };
+            }
+
+            var ret = authService.UpdateUserFromSB(user, user.apikey);
+            return ret;
+        }
+
+        
+
         #region Private
 
         private Jwt EncodeToken(AuthenticationToken token)
