@@ -2270,6 +2270,49 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// This method insert Ou as a Favorite 
+        /// </summary>
+        public FavouriteOu InsertFavouriteOu(Guid ouID, Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteOu = dc.FavouriteOus.FirstOrDefault(x => x.PersonID == personID && x.OUID == ouID);
+
+                if (FavouriteOu != null)
+                    throw new ApplicationException("Already Favourited");
+
+                var ou = new FavouriteOu
+                {
+                    OUID = ouID,
+                    PersonID = personID,
+                    CreatedByID = SmartPrincipal.UserId
+                };
+
+                dc.FavouriteOus.Add(ou);
+                dc.SaveChanges();
+
+                return ou;
+            }
+        }
+
+        /// <summary>
+        /// This method remove Ou as a Favorite 
+        /// </summary>
+        public void RemoveFavouriteOu(Guid ouID, Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteOu = dc.FavouriteOus.FirstOrDefault(x => x.PersonID == personID && x.OUID == ouID);
+
+                if (FavouriteOu == null)
+                    throw new ApplicationException("OU not found");
+
+                dc.FavouriteOus.Remove(FavouriteOu);
+                dc.SaveChanges();
+            }
+        }
     }
 
     //public void UpdateFinancing()

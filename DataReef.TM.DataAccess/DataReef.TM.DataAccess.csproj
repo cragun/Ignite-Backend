@@ -1295,6 +1295,10 @@
     <Compile Include="Migrations\202008180540107_AddfavouriteOu.Designer.cs">
       <DependentUpon>202008180540107_AddfavouriteOu.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008180605098_migration4.cs" />
+    <Compile Include="Migrations\202008180605098_migration4.Designer.cs">
+      <DependentUpon>202008180605098_migration4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2225,6 +2229,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008180540107_AddfavouriteOu.resx">
       <DependentUpon>202008180540107_AddfavouriteOu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008180605098_migration4.resx">
+      <DependentUpon>202008180605098_migration4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
