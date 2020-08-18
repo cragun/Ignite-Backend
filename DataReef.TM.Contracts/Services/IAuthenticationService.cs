@@ -50,11 +50,6 @@ namespace DataReef.TM.Contracts.Services
         bool CheckUserExist(string email);
 
         [OperationContract]
-        SaveResult CreateUserFromSB(CreateUserDTO newUser, string[] apikey = null);
-
-        [OperationContract]
-        SaveResult UpdateUserFromSB(CreateUserDTO newUser, string[] apikey = null);
-
-        
+        SaveResult CreateUpdateUserFromSB(CreateUserDTO newUser, string[] apikey = null);
     }
 }
