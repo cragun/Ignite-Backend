@@ -1266,6 +1266,10 @@
     <Compile Include="Migrations\202007180834074_AddMinModule.Designer.cs">
       <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008181730517_added_Lenderfee_and_PPW.cs" />
+    <Compile Include="Migrations\202008181730517_added_Lenderfee_and_PPW.Designer.cs">
+      <DependentUpon>202008181730517_added_Lenderfee_and_PPW.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2172,6 +2176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202007180834074_AddMinModule.resx">
       <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008181730517_added_Lenderfee_and_PPW.resx">
+      <DependentUpon>202008181730517_added_Lenderfee_and_PPW.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

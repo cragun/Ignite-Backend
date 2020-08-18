@@ -52,6 +52,12 @@ namespace DataReef.TM.Models.Finance
         public double? DealerFee { get; set; }
 
         [DataMember]
+        public double? LenderFee { get; set; }
+
+        [DataMember]
+        public double? PPW { get; set; }
+
+        [DataMember]
         public string Description { get; set; }
 
         /// <summary>

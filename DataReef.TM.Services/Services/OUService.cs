@@ -1584,6 +1584,8 @@ namespace DataReef.TM.Services.Services
                                         Name = sp.Name,
                                         FlowType = sp.Provider.ProposalFlowType,
                                         DefaultDealerFee = sp.DealerFee,
+                                        DefaultLenderFee = sp.LenderFee,
+                                        PPW = sp.PPW,
                                         IntegrationProvider = sp.IntegrationProvider,
                                         MetaData = sp.MetaDataJSON,
                                     })
