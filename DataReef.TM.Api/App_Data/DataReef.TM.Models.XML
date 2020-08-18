@@ -51,6 +51,11 @@
             Guid of the ApiKey object
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.FavouriteOu.PersonID">
+            <summary>
+            Guid of the person assigned a Ou
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.FavouriteTerritory.PersonID">
             <summary>
             Guid of the person assigned a territory
@@ -5292,6 +5297,11 @@
         <member name="P:DataReef.TM.Models.OU.Associations">
             <summary>
             Collection of OUAssociations
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.OU.FavouriteOus">
+            <summary>
+            Favorite territory assigned to this person
             </summary>
         </member>
         <member name="P:DataReef.TM.Models.OU.Account">

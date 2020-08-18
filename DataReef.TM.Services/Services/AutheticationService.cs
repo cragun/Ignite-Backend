@@ -821,7 +821,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public SaveResult  CreateUserFromSB(CreateUserDTO newUser, string[] apikey)
+        public SaveResult CreateUserFromSB(CreateUserDTO newUser, string[] apikey)
         {
             using (DataContext dc = new DataContext())
             {
@@ -986,7 +986,7 @@ namespace DataReef.Application.Services
                         };
                         transaction.Commit();
 
-                        return new SaveResult { Success = true , SuccessMessage = "User created successfully" };
+                        return new SaveResult { Success = true, SuccessMessage = "User created successfully" };
                     }
                     catch (Exception ex)
                     {
@@ -997,7 +997,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public AuthenticationToken UpdateUserFromSB(CreateUserDTO newUser, string[] apikey)
+        public SaveResult UpdateUserFromSB(CreateUserDTO newUser, string[] apikey)
         {
             using (DataContext dc = new DataContext())
             {
@@ -1005,14 +1005,74 @@ namespace DataReef.Application.Services
                 {
                     try
                     {
-                        var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
-                        if (isExist == null)
+                        var isExistPerson = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
+                        if (isExistPerson == null)
                         {
                             string reason = "User not found";
                             PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
                             throw new FaultException<PreconditionFailedFault>(f, reason);
                         }
-                        
+
+                        isExistPerson.FirstName = newUser.FirstName;
+                        isExistPerson.LastName = newUser.LastName;
+                        isExistPerson.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
+                        isExistPerson.EmailAddressString = newUser.EmailAddress;
+
+                        var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExistPerson.Guid);
+                        if (isExistPerson != null)
+                        {
+                            isExistPhoneNumber.Number = newUser.PhoneNumber;
+                        }
+
+                        var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExistPerson.Guid);
+                        if (isExistCredentials != null)
+                        {
+                            isExistCredentials.UserName = newUser.EmailAddress;
+                            isExistCredentials.PasswordRaw = newUser.Password;
+                            isExistCredentials.PerformHash();
+                        }
+
+                        foreach (var item in apikey)
+                        {
+                            var ouSetting = dc
+                          .OUSettings
+                          .Where(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                          .ToList()
+                          .FirstOrDefault(x =>
+                          {
+                              var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
+                              return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                          });
+
+                            if (ouSetting == null)
+                            {
+                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
+                            }
+
+                            var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                            if (Ou == null)
+                            {
+                                return new SaveResult { Success = false, ExceptionMessage = "Currently this ou is not available" };
+                            }
+
+                            //check to see if the user is already part of the OU
+                            var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExistPerson.Guid && oua.OUID == ouSetting.OUID);
+                            if (organizationalUnitAssociation == null)
+                            {
+                                var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                //add the OU association and the Role to that Association
+                                organizationalUnitAssociation = new OUAssociation
+                                {
+                                    OUID = ouSetting.OUID,
+                                    PersonID = isExistPerson.Guid,
+                                    OURoleID = newUser.RoleID,
+                                    RoleType = role.RoleType
+                                };
+                                dc.OUAssociations.Add(organizationalUnitAssociation);
+                            }
+                        }
+
                         transaction.Commit();
                         return null;
                     }
