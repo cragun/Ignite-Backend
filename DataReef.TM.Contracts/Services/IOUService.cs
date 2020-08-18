@@ -168,5 +168,11 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         void EditOURole(Guid ouid, OURole req);
+
+        [OperationContract]
+        FavouriteOu InsertFavouriteOu(Guid ouId, Guid personID);
+
+        [OperationContract]
+        void RemoveFavouriteOu(Guid ouId, Guid personID);
     }
 }

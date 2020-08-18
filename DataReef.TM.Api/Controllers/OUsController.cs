@@ -576,12 +576,29 @@ namespace DataReef.TM.Api.Controllers
             return Ok(ouService.SBGetOuRoles());
         }
 
+        [HttpPost]
+        [Route("addFavourite")]
+        public async Task<IHttpActionResult> InsertFavouriteOu(FavouriteOu request)
+        {
+            var territory = ouService.InsertFavouriteOu(request.OUID, request.PersonID);
+            return Ok(new GenericResponse<string> { Response = "added successfully" });
+        }
+
+        [HttpPost]
+        [Route("removeFavourite")]
+        public async Task<IHttpActionResult> RemoveFavouriteOu(FavouriteOu request)
+        {
+            ouService.RemoveFavouriteOu(request.OUID, request.PersonID);
+            return Ok(new GenericResponse<string> { Response = "removed successfully" });
+        }
+
 
         [HttpPost]
         public override async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
         {
             return await base.ActivateByGuid(guid);
         }
+
 
         public override async Task<OU> Post(OU item)
         {

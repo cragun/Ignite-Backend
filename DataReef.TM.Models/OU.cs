@@ -128,6 +128,10 @@ namespace DataReef.TM.Models
         [DataMember]
         [NotMapped]
         public List<GuidNamePair> Ancestors { get; set; }
+
+        [DataMember]
+        [NotMapped]
+        public bool IsFavourite { get; set; }
         #endregion
 
         #region Navigation
@@ -216,6 +220,13 @@ namespace DataReef.TM.Models
         public ICollection<OUReport> OUReports { get; set; }
 
         /// <summary>
+        /// Favorite territory assigned to this person
+        /// </summary>
+        [InverseProperty("OU")]
+        [DataMember]
+        public ICollection<FavouriteOu> FavouriteOus { get; set; }
+
+        /// <summary>
         /// The account that owns the OU
         /// </summary>
         [DataMember]
@@ -268,6 +279,7 @@ namespace DataReef.TM.Models
             OULayers = FilterEntityCollection(OULayers, newInclusionPath);
             WebHooks = FilterEntityCollection(WebHooks, newInclusionPath);
             ApiKeys = FilterEntityCollection(ApiKeys, newInclusionPath);
+            FavouriteOus = FilterEntityCollection(FavouriteOus, newInclusionPath);
 
             Parent = FilterEntity(Parent, newInclusionPath);
             Account = FilterEntity(Account, newInclusionPath);

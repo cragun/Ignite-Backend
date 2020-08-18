@@ -875,7 +875,8 @@ namespace DataReef.TM.Services
 
                     if (request.DispositionsQuery?.Any(x => !customDispositionsList.Contains(x)) == true)
                     {
-                        propertiesQuery = propertiesQuery.Where(p => p.Inquiries.Any(i => request.DispositionsQuery.Contains(i.Disposition)));
+                        //propertiesQuery = propertiesQuery.Where(p => p.Inquiries.Any(i => request.DispositionsQuery.Contains(i.Disposition)));
+                        propertiesQuery = propertiesQuery.Where(p => request.DispositionsQuery.Contains(p.LatestDisposition));
                     }
                 }
 
@@ -1064,7 +1065,6 @@ namespace DataReef.TM.Services
             return person;
         }
 
-
         public IEnumerable<Person> personDetails(Guid ouid, DateTime date)
         {
             using (DataContext dc = new DataContext())
@@ -1099,8 +1099,6 @@ namespace DataReef.TM.Services
             }
         }
 
-
-
         private string ReplaceTokens(string source, Property property)
         {
             if (property == null)
@@ -1132,7 +1130,8 @@ namespace DataReef.TM.Services
         }
 
 
-        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate)
+
+        public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate, string type)
         {
             try
             {
@@ -1146,10 +1145,22 @@ namespace DataReef.TM.Services
                                             select oua.PersonID).Distinct().ToList();
 
                     var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
-                        .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
-                        .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
-                        .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted))
-                        .ToList();
+                    .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
+                    .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
+                    .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted))
+                    .ToList();
+
+                    var favouritePeopleIds = (from oua in dc.AppointmentFavouritePersons
+                                           where oua.PersonID == SmartPrincipal.UserId
+                                           select oua.FavouritePersonID).Distinct().ToList();
+                    foreach (var item in peoples)
+                    {
+                        item.IsFavourite = favouritePeopleIds.Contains(item.Guid);
+                    }
+                    if (type == "Favourite")
+                    {
+                        peoples = peoples.Where(a => a.IsFavourite == true).ToList();
+                    }
 
                     return peoples;
                 };
@@ -1158,9 +1169,49 @@ namespace DataReef.TM.Services
             {
                 return null;
             }
-
         }
 
+        /// <summary>
+        /// This method insert Person as a Favorite 
+        /// </summary>
+        public AppointmentFavouritePerson InsertFavoritePerson(Guid FavouritePersonID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouritePerson = dc.AppointmentFavouritePersons.FirstOrDefault(x => x.PersonID == SmartPrincipal.UserId && x.FavouritePersonID == FavouritePersonID);
 
+                if (FavouritePerson != null)
+                    throw new ApplicationException("Already Favourited");
+
+                var person = new AppointmentFavouritePerson
+                {
+                    FavouritePersonID = FavouritePersonID,
+                    PersonID = SmartPrincipal.UserId,
+                    CreatedByID = SmartPrincipal.UserId
+                };
+
+                dc.AppointmentFavouritePersons.Add(person);
+                dc.SaveChanges();
+
+                return person;
+            }
+        }
+
+        /// <summary>
+        /// This method remove Person as a Favorite 
+        /// </summary>
+        public void RemoveFavoritePerson(Guid FavouritePersonID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouritePerson = dc.AppointmentFavouritePersons.FirstOrDefault(x => x.PersonID == SmartPrincipal.UserId && x.FavouritePersonID == FavouritePersonID);
+
+                if (FavouritePerson == null)
+                    throw new ApplicationException("Territory not found");
+
+                dc.AppointmentFavouritePersons.Remove(FavouritePerson);
+                dc.SaveChanges();
+            }
+        }
     }
 }

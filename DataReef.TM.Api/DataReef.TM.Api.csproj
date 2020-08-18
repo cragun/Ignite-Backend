@@ -54,9 +54,6 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.Core.3.5.0-beta\lib\net45\AWSSDK.Core.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -580,16 +577,6 @@
     <Content Include="Scripts\ZeroClipboard.min.js" />
     <Content Include="Scripts\ZeroClipboard.swf" />
     <Content Include="SqlServerTypes\readme.htm" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Web.config">
@@ -620,11 +607,22 @@
     <Content Include="Templates\Email\TerritoryAssignmentNotification.cshtml" />
     <Content Include="Templates\Email\UserInvitation.cshtml" />
     <Content Include="Templates\Email\UserReactivation.cshtml" />
-    <None Include="Web.QA.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
-    <None Include="Web.Stage.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <None Include="web.QA.config">
+      <DependentUpon>web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="web.Stage.config">
+      <DependentUpon>web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>

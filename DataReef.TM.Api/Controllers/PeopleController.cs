@@ -353,10 +353,26 @@ namespace DataReef.TM.Api.Controllers
         //[Route("CalenderApp/{ouid}/{date}")]
         [Route("CalenderApp/{ouid}")]
         [ResponseType(typeof(IEnumerable<Person>))]
-        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate)
+        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate ,string type)
         {
-            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid, CurrentDate);
+            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid, CurrentDate , type);
             return persn;
+        }
+
+        [HttpPost]
+        [Route("addFavourite")]
+        public async Task<IHttpActionResult> InsertFavoritePerson(AppointmentFavouritePerson request)
+        {
+            var territory = peopleService.InsertFavoritePerson(request.FavouritePersonID);
+            return Ok(new GenericResponse<string> { Response = "added successfully" });
+        }
+
+        [HttpPost]
+        [Route("removeFavourite")]
+        public async Task<IHttpActionResult> RemoveFavoritePerson(AppointmentFavouritePerson request)
+        {
+            peopleService.RemoveFavoritePerson(request.FavouritePersonID);
+            return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
 
         public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)

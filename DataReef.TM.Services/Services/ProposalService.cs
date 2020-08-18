@@ -2477,5 +2477,15 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public int GetProposalCount(Guid PropertyID)
+        {
+            using (var dc = new DataContext())
+            {
+
+                int count = dc.Proposal.Count(x => x.PropertyID == PropertyID);
+                return count;
+            }
+        }
+
     }
 }

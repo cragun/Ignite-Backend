@@ -101,5 +101,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan);
+
+        [OperationContract]
+        int GetProposalCount(Guid PropertyID);
+        
     }
 }

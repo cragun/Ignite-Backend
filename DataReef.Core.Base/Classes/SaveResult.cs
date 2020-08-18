@@ -62,6 +62,9 @@ namespace DataReef.Core.Classes
         public bool Success { get; set; }
 
         [DataMember]
+        public string SuccessMessage { get; set; }
+
+        [DataMember]
         public string Exception { get; set; }
 
         [DataMember]

@@ -63,8 +63,5 @@
     <Compile Include="Region.cs" />
     <Compile Include="Step.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
