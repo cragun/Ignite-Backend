@@ -375,15 +375,31 @@ namespace DataReef.TM.Services.Services
             OU ou = base.Get(uniqueId, getInclude, exclude, fields, deletedItems);
             ou = OUBuilder(ou, include, exclude, fields, includeAncestors, deletedItems);
 
-            if (ou.Children != null)
+            using (var context = new DataContext())
             {
-                foreach (var child in ou.Children)
-                {
-                    PopulateOUSummary(child);
-                }
-            }
+                var favouriteOus = context.FavouriteOus.Where(f => f.PersonID == SmartPrincipal.UserId).ToList();
+                var favourite = favouriteOus?.FirstOrDefault(s => s.OUID == ou.Guid);
+                if (favourite != null)
+                    ou.IsFavourite = true;
+                else
+                    ou.IsFavourite = false;
 
-            return ou;
+                if (ou.Children != null)
+                {
+                    foreach (var child in ou.Children)
+                    {
+                        var favouriteChild = favouriteOus?.FirstOrDefault(s => s.OUID == child.Guid);
+                        if (favouriteChild != null)
+                            child.IsFavourite = true;
+                        else
+                            child.IsFavourite = false;
+
+                        PopulateOUSummary(child);
+                    }
+                }
+
+                return ou;
+            }
         }
 
         public IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey)

@@ -128,6 +128,10 @@ namespace DataReef.TM.Models
         [DataMember]
         [NotMapped]
         public List<GuidNamePair> Ancestors { get; set; }
+
+        [DataMember]
+        [NotMapped]
+        public bool IsFavourite { get; set; }
         #endregion
 
         #region Navigation
