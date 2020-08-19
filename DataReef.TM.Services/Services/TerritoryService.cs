@@ -209,7 +209,12 @@ namespace DataReef.TM.Services
 
                 if (personID.HasValue)
                 {
-                    if (!context.OUAssociations.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
+
+                    var oususer = context.OUAssociations.Where(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)).ToList();
+
+                    //if (!ouassslist.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
+
+                    if (oususer.Any(x => x.OUID == ouid))
                     {
                         ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
                     }
