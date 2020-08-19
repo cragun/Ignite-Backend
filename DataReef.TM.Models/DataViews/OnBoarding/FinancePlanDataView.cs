@@ -23,6 +23,12 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public double? DefaultDealerFee { get; set; }
 
         [DataMember]
+        public double? DefaultLenderFee { get; set; }
+
+        [DataMember]
+        public double? PPW { get; set; }
+
+        [DataMember]
         public string MetaData { get; set; }
 
         public FinancePlanDataView() : base()

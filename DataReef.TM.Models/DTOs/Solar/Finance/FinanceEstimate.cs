@@ -57,6 +57,8 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             Name = plan.Type == FinancePlanType.Mortgage ? $"Mortgage {Terms} / {InterestRate.ToString("n2")}%" : plan.Name;
 
             TotalInterestPayment = response.TotalInterestPayment;
+            LenderFee = plan.LenderFee ?? plan.LenderFee.Value;
+            PPW = plan.PPW ?? plan.PPW.Value;
         }
 
         public Guid FinancePlanDefinitionId { get; set; }
@@ -110,5 +112,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// Tells the client to show/hide the Build button
         /// </summary>
         public bool CanBuild { get; set; }
+        public double LenderFee { get; set; }
+        public double PPW { get; set; }
     }
 }
