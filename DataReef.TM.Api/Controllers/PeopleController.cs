@@ -178,6 +178,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("ActivateUser/{SmartBoardId}")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> ActivateUser(string SmartBoardId)
         {
             peopleService.Reactivate(Guid.Empty, SmartBoardId);
@@ -188,6 +189,7 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("DeactivateUser/{SmartBoardId}")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> DeactivateUser(string SmartBoardId)
         {
             peopleService.DeactivateUser(SmartBoardId);

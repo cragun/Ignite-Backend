@@ -1021,27 +1021,29 @@ namespace DataReef.Application.Services
                                 {
                                     not_avail += item + ",";
                                 }
-
-                                //check to see if the user is already part of the OU
-                                var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == ouSetting.OUID);
-                                if (organizationalUnitAssociation == null)
+                                else
                                 {
-                                    var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                                    if (Ou != null)
+                                    //check to see if the user is already part of the OU
+                                    var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == ouSetting.OUID);
+                                    if (organizationalUnitAssociation == null)
                                     {
-                                        var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
-
-                                        //add the OU association and the Role to that Association
-                                        organizationalUnitAssociation = new OUAssociation
+                                        var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                        if (Ou != null)
                                         {
-                                            OUID = ouSetting.OUID,
-                                            PersonID = person.Guid,
-                                            OURoleID = newUser.RoleID,
-                                            RoleType = role.RoleType
-                                        };
-                                        dc.OUAssociations.Add(organizationalUnitAssociation);
+                                            var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                            //add the OU association and the Role to that Association
+                                            organizationalUnitAssociation = new OUAssociation
+                                            {
+                                                OUID = ouSetting.OUID,
+                                                PersonID = person.Guid,
+                                                OURoleID = newUser.RoleID,
+                                                RoleType = role.RoleType
+                                            };
+                                            dc.OUAssociations.Add(organizationalUnitAssociation);
+                                        }
                                     }
-                                }
+                                }    
                             }
 
                             try
