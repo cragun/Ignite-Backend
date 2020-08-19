@@ -832,25 +832,46 @@ namespace DataReef.Application.Services
                     {
                         try
                         {
-                            isExist.FirstName = newUser.FirstName;
-                            isExist.LastName = newUser.LastName;
-                            isExist.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
-                            isExist.EmailAddressString = newUser.EmailAddress;
-
-                            var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
-                            if (isExist != null)
+                            if (!String.IsNullOrEmpty(newUser.FirstName))
                             {
-                                isExistPhoneNumber.Number = newUser.PhoneNumber;
+                                isExist.FirstName = newUser.FirstName;
                             }
 
-                            var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
-                            if (isExistCredentials != null)
+                            if (!String.IsNullOrEmpty(newUser.LastName))
                             {
-                                isExistCredentials.UserName = newUser.EmailAddress;
-                                isExistCredentials.PasswordRaw = newUser.Password;
-                                isExistCredentials.PerformHash();
+                                isExist.LastName = newUser.LastName;
                             }
 
+                            if (!String.IsNullOrEmpty(newUser.FirstName) && !String.IsNullOrEmpty(newUser.LastName))
+                            {
+                                isExist.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.EmailAddress))
+                            {
+                                isExist.EmailAddressString = newUser.EmailAddress;
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.PhoneNumber))
+                            {
+                                var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                                if (isExistPhoneNumber != null)
+                                {
+                                    isExistPhoneNumber.Number = newUser.PhoneNumber;
+                                }
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.Password))
+                            {
+                                var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                                if (isExistCredentials != null)
+                                {
+                                    isExistCredentials.UserName = newUser.EmailAddress;
+                                    isExistCredentials.PasswordRaw = newUser.Password;
+                                    isExistCredentials.PerformHash();
+                                }
+                            }
+                            
                             var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
                             dc.OUAssociations.RemoveRange(OUAssociations);
 
@@ -891,6 +912,7 @@ namespace DataReef.Application.Services
                                     }
                                 }
                             }
+
                             dc.SaveChanges();
                             transaction.Commit();
                             if (!String.IsNullOrEmpty(not_avail))
