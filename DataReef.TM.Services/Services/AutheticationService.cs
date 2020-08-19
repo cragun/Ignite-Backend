@@ -825,13 +825,18 @@ namespace DataReef.Application.Services
         {
             using (DataContext dc = new DataContext())
             {
-                var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID && cc.IsDeleted == false);
+                var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
                 if (isExist != null)
                 {
                     using (var transaction = dc.Database.BeginTransaction())
                     {
                         try
                         {
+                            if (isExist.IsDeleted == true)
+                            {
+                                return new SaveResult { Success = false, SuccessMessage = "Please activate user"  };
+                            }
+
                             if (!String.IsNullOrEmpty(newUser.FirstName))
                             {
                                 isExist.FirstName = newUser.FirstName;
@@ -931,7 +936,7 @@ namespace DataReef.Application.Services
                         }
                     }
                 }
-                else
+                else 
                 {
                     using (var transaction = dc.Database.BeginTransaction())
                     {
