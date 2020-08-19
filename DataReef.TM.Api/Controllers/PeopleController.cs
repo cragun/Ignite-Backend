@@ -181,7 +181,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> ActivateUser(string SmartBoardId)
         {
             peopleService.Reactivate(Guid.Empty, SmartBoardId);
-            return Ok();
+            return Ok(true);
         }
 
         /// <param name="SmartBoardId"></param>
@@ -191,7 +191,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> DeactivateUser(string SmartBoardId)
         {
             peopleService.DeactivateUser(SmartBoardId);
-            return Ok();
+            return Ok(true);
         }
 
 
