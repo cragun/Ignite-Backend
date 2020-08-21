@@ -255,7 +255,6 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(IEnumerable<SBOU>))]
         public async Task<IEnumerable<SBOU>> GetOusList(string apikey)
         {
-
             bool checkTime = CryptographyHelper.checkTime(apikey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
 
