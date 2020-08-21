@@ -868,6 +868,7 @@ namespace DataReef.TM.Services.Services
 
         public IEnumerable<SBOU> GetOusList(string apikey)
         {
+
             using (var dc = new DataContext())
             {
                 var allAncestorIDs = dc
