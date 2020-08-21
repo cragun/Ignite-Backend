@@ -129,6 +129,15 @@ namespace DataReef.TM.Api.Controllers
         {
             return Ok(_proposalService.GetDocumentType());
         }
+
+        [Route("Documents/{ouid}/getType")]
+        [HttpGet]
+        [ResponseType(typeof(List<DocType>))]
+        public async Task<IHttpActionResult> GetOuDocumentType(Guid ouid)
+        {
+            return Ok(_proposalService.GetOuDocumentType(ouid));
+        }
+
         /// <summary>
         /// Update ProposalData.ProposalDataJSON for given proposalDataId.
         /// The ProposalDataJSON will be read from the Body of the request.

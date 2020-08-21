@@ -22,6 +22,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Auth.Helpers;
+using DataReef.TM.Models.DTOs.Signatures;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 {
@@ -422,6 +423,40 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
+        }
+
+        public List<DocType> GetOuDocumentType(Guid ouid)
+        {  
+            EnsureInitialized(ouid);
+            var integrationSettings = new IntegrationOptionSettings
+            {
+                Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+            };
+
+            var integrationData =
+                integrationSettings
+                ?.SelectedIntegrations
+                ?.FirstOrDefault(x =>
+                {
+                    var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                    return matchingOption?.Type == IntegrationType.SMARTBoard;
+                })
+                ?.Data
+                ?.SMARTBoard;
+            if (integrationData == null)
+            {
+                throw new ApplicationException("Something Went Wrong");
+            }
+
+            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+            var url = $"/apis/document_tabs_and_types/{encryptedAPIkey}";
+
+            var response = MakeRequest(ouid, url, null , serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+            return JsonConvert.DeserializeObject<List<DocType>>(response);
         }
 
         public void SBActiveDeactiveUser(bool IsActive, string sbid)

@@ -834,7 +834,7 @@ namespace DataReef.Application.Services
                         {
                             if (isExist.IsDeleted == true)
                             {
-                                return new SaveResult { Success = false, SuccessMessage = "Please activate user"  };
+                                return new SaveResult { Success = false, SuccessMessage = "Please activate user" };
                             }
 
                             if (!String.IsNullOrEmpty(newUser.FirstName))
