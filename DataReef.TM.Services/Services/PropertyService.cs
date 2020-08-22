@@ -1475,7 +1475,12 @@ namespace DataReef.TM.Services.Services
                 throw new ApplicationException(response.Content);
             }
 
-            return response.Content;
+            using (var dataContext = new DataContext())
+            {
+                var propty = dataContext.Properties.Where(x => x.Guid == propertyid);
+            }
+
+                return response.Content;
         }
 
 
