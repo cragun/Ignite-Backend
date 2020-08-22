@@ -67,5 +67,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request);
 
+        [OperationContract]
+        string GetEsidByAddress(Guid propertyid);
+
     }
 }

@@ -25,6 +25,7 @@ using DataReef.TM.Services.InternalServices.Geo;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using EntityFramework.Extensions;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -1458,6 +1459,23 @@ namespace DataReef.TM.Services.Services
 
                 return new SBPropertyDTO(property);
             }
+        }
+
+
+        public string GetEsidByAddress(Guid propertyid)
+        {
+            var request = new RestRequest($"account_number=2006430223&user_id=ankita@hevintechnoweb.com&pass_word=hevin123&address=west&zip=77502", Method.GET);
+            request.AddDataReefAuthHeader();
+
+            var client = new RestClient("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
+            var response = client.Execute(request);
+
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new ApplicationException(response.Content);
+            }
+
+            return response.Content;
         }
 
 

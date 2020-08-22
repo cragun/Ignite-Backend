@@ -60,6 +60,26 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// / Gets all Territories regardless of Lat - Long, for a property
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <returns></returns>
+        [Route("GetEsid/{propertyID:guid}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetEsidByAddressPropertyid(Guid propertyID)
+        {
+            try
+            {
+                var result = propertyService.GetEsidByAddress(propertyID);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
 
 
 
