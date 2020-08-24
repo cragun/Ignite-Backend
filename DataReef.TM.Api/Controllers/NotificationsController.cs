@@ -101,7 +101,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<int> { Response = result });
         }
 
-
         /// <summary>
         /// Dismiss Notification from smartboard
         /// </summary>
