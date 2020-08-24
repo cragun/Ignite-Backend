@@ -301,6 +301,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return response;
         }
 
+
         public SBIntegrationLoginModel GetSBToken(Guid ouid)
         {
             EnsureInitialized(ouid);
