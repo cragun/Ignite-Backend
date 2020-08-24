@@ -6,6 +6,7 @@ using DataReef.TM.Models.Commerce;
 using DataReef.TM.Models.DTOs.Commerce;
 using DataReef.TM.Models.DTOs.Common;
 using DataReef.TM.Models.DTOs;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -27,5 +28,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         bool MarkAsReadFromSmartboard(string notificationSmartboardID, string apiKey);
+
+        [OperationContract]
+        Task<bool> SendPushNotificationAsync(string message, string device, string title);
     }
 }

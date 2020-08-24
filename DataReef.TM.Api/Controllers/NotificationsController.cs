@@ -27,7 +27,7 @@ namespace DataReef.TM.Api.Controllers
     [RoutePrefix("api/v1/notifications")]
     public class NotificationsController : EntityCrudController<Notification>
     {
-        private readonly INotificationService _notificationService;
+        private readonly INotificationService _notificationService; 
 
         public NotificationsController(INotificationService notificationService,
                                     ILogger logger)
@@ -118,6 +118,19 @@ namespace DataReef.TM.Api.Controllers
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
             var result = _notificationService.MarkAsReadFromSmartboard(notificationID, DecyptApiKey);
+
+            return Ok(result);
+        }
+         
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(bool))]
+        [Route("send")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SendPushNotification()
+        {
+            string token = "dkUoX6H9dk7rnVjf26KR_A:APA91bFGnd2rT4KXCn-4huR_Etmf_yenHqfPixEkxrSWDDTtdWD2v2s8kfk0VbCFgk2mD7M4LTY7rayRNHXWgICYNdO7hFD70QX5-gnLNoY8RWDOcYXLt53AVJ-sFfU_tKFpqS6LmIOn"; 
+
+            var result = _notificationService.SendPushNotificationAsync("This is test message", token , "Ignite");
 
             return Ok(result);
         }
