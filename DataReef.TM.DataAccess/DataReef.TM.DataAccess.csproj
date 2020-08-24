@@ -1243,69 +1243,9 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202006231323586_migration.cs" />
-    <Compile Include="Migrations\202006231323586_migration.Designer.cs">
-      <DependentUpon>202006231323586_migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202006270522492_Add Prefix in AdapterRequests table.cs" />
-    <Compile Include="Migrations\202006270522492_Add Prefix in AdapterRequests table.Designer.cs">
-      <DependentUpon>202006270522492_Add Prefix in AdapterRequests table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007160532490_migration1.cs" />
-    <Compile Include="Migrations\202007160532490_migration1.Designer.cs">
-      <DependentUpon>202007160532490_migration1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007170735348_AddFavouriteTerritory.cs" />
-    <Compile Include="Migrations\202007170735348_AddFavouriteTerritory.Designer.cs">
-      <DependentUpon>202007170735348_AddFavouriteTerritory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202007180834074_AddMinModule.cs" />
-    <Compile Include="Migrations\202007180834074_AddMinModule.Designer.cs">
-      <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008120645418_AddMeterId.cs" />
-    <Compile Include="Migrations\202008120645418_AddMeterId.Designer.cs">
-      <DependentUpon>202008120645418_AddMeterId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008120658152_RemoveMeterId.cs" />
-    <Compile Include="Migrations\202008120658152_RemoveMeterId.Designer.cs">
-      <DependentUpon>202008120658152_RemoveMeterId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008130548376_AddMeterIdIsFavourite.cs" />
-    <Compile Include="Migrations\202008130548376_AddMeterIdIsFavourite.Designer.cs">
-      <DependentUpon>202008130548376_AddMeterIdIsFavourite.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008130849185_RemoveMeterIdIsFavourite.cs" />
-    <Compile Include="Migrations\202008130849185_RemoveMeterIdIsFavourite.Designer.cs">
-      <DependentUpon>202008130849185_RemoveMeterIdIsFavourite.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008130932285_AddMeterIdIsFavourite1.cs" />
-    <Compile Include="Migrations\202008130932285_AddMeterIdIsFavourite1.Designer.cs">
-      <DependentUpon>202008130932285_AddMeterIdIsFavourite1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008131130336_AddAppointmentFavouritePerson.cs" />
-    <Compile Include="Migrations\202008131130336_AddAppointmentFavouritePerson.Designer.cs">
-      <DependentUpon>202008131130336_AddAppointmentFavouritePerson.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008131211219_migration3.cs" />
-    <Compile Include="Migrations\202008131211219_migration3.Designer.cs">
-      <DependentUpon>202008131211219_migration3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008180540107_AddfavouriteOu.cs" />
-    <Compile Include="Migrations\202008180540107_AddfavouriteOu.Designer.cs">
-      <DependentUpon>202008180540107_AddfavouriteOu.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008180605098_migration4.cs" />
-    <Compile Include="Migrations\202008180605098_migration4.Designer.cs">
-      <DependentUpon>202008180605098_migration4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008190525465_Add migration.cs" />
-    <Compile Include="Migrations\202008190525465_Add migration.Designer.cs">
-      <DependentUpon>202008190525465_Add migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008191252555_Add finance migration.cs" />
-    <Compile Include="Migrations\202008191252555_Add finance migration.Designer.cs">
-      <DependentUpon>202008191252555_Add finance migration.cs</DependentUpon>
+    <Compile Include="Migrations\202008240503126_Add stage migration.cs" />
+    <Compile Include="Migrations\202008240503126_Add stage migration.Designer.cs">
+      <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2199,53 +2139,8 @@
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006231323586_migration.resx">
-      <DependentUpon>202006231323586_migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006270522492_Add Prefix in AdapterRequests table.resx">
-      <DependentUpon>202006270522492_Add Prefix in AdapterRequests table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007160532490_migration1.resx">
-      <DependentUpon>202007160532490_migration1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007170735348_AddFavouriteTerritory.resx">
-      <DependentUpon>202007170735348_AddFavouriteTerritory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202007180834074_AddMinModule.resx">
-      <DependentUpon>202007180834074_AddMinModule.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008120645418_AddMeterId.resx">
-      <DependentUpon>202008120645418_AddMeterId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008120658152_RemoveMeterId.resx">
-      <DependentUpon>202008120658152_RemoveMeterId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008130548376_AddMeterIdIsFavourite.resx">
-      <DependentUpon>202008130548376_AddMeterIdIsFavourite.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008130849185_RemoveMeterIdIsFavourite.resx">
-      <DependentUpon>202008130849185_RemoveMeterIdIsFavourite.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008130932285_AddMeterIdIsFavourite1.resx">
-      <DependentUpon>202008130932285_AddMeterIdIsFavourite1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008131130336_AddAppointmentFavouritePerson.resx">
-      <DependentUpon>202008131130336_AddAppointmentFavouritePerson.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008131211219_migration3.resx">
-      <DependentUpon>202008131211219_migration3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008180540107_AddfavouriteOu.resx">
-      <DependentUpon>202008180540107_AddfavouriteOu.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008180605098_migration4.resx">
-      <DependentUpon>202008180605098_migration4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008190525465_Add migration.resx">
-      <DependentUpon>202008190525465_Add migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008191252555_Add finance migration.resx">
-      <DependentUpon>202008191252555_Add finance migration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202008240503126_Add stage migration.resx">
+      <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
