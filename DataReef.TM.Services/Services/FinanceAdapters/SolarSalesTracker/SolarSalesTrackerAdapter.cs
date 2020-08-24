@@ -425,7 +425,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
-        public List<DocType> GetOuDocumentType(Guid ouid)
+        public SBGetDocument GetOuDocumentType(Guid ouid)
         {  
             EnsureInitialized(ouid);
             var integrationSettings = new IntegrationOptionSettings
@@ -455,8 +455,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var url = $"/apis/document_tabs_and_types/{encryptedAPIkey}";
 
-            var response = MakeRequest(ouid, url, null , serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
-            return JsonConvert.DeserializeObject<List<DocType>>(response);
+            var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+                return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
         public void SBActiveDeactiveUser(bool IsActive, string sbid)

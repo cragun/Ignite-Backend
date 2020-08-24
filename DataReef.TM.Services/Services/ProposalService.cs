@@ -1852,7 +1852,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<DocType> GetOuDocumentType(Guid ouid)
+        public SBGetDocument GetOuDocumentType(Guid ouid)
         {
             var response = _solarSalesTrackerAdapter.Value.GetOuDocumentType(ouid);
             return response;

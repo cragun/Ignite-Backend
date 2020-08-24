@@ -135,7 +135,8 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(List<DocType>))]
         public async Task<IHttpActionResult> GetOuDocumentType(Guid ouid)
         {
-            return Ok(_proposalService.GetOuDocumentType(ouid));
+            var response = _proposalService.GetOuDocumentType(ouid);
+            return Ok(response.DocumentType);
         }
 
         /// <summary>
@@ -231,7 +232,6 @@ namespace DataReef.TM.Api.Controllers
                 {
                     fileData = binaryReader.ReadBytes(PicFile.ContentLength);
                 }
-
 
                 if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
                 {

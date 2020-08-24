@@ -37,7 +37,7 @@ namespace DataReef.TM.Contracts.Services
         SBGetDocument GetProposalDocuments(Property property);
 
         [OperationContract]
-        List<DocType> GetOuDocumentType(Guid ouid);
+        SBGetDocument GetOuDocumentType(Guid ouid);
         
         [OperationContract]
         void SBActiveDeactiveUser(bool IsActive, string sbid);
