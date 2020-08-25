@@ -1484,7 +1484,7 @@ namespace DataReef.TM.Services.Services
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
+                client.BaseAddress = new Uri("http://www.esiids.com/cgi-bin/esiids_xml.cgi");
                // client.DefaultRequestHeaders.Accept.Clear();
                // client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //GET Method  
