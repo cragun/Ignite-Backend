@@ -33,6 +33,8 @@ using System.Data.Entity.Spatial;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
@@ -1476,27 +1478,43 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public string 
-            GetEsidByAddress(Guid propertyid)
+        public async Task<string> GetEsidByAddress(Guid propertyid)
         {
-            var request = new RestRequest($"?user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502", Method.GET);
-            request.AddDataReefAuthHeader();
 
-           // var client = new RestClient("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
 
-            var response = Client.Execute(request);
-
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            using (var client = new HttpClient())
             {
-                throw new ApplicationException(response.Content);
+                client.BaseAddress = new Uri("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
+               // client.DefaultRequestHeaders.Accept.Clear();
+               // client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //GET Method  
+                HttpResponseMessage response = await client.GetAsync("user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502");
+                if (response.IsSuccessStatusCode)
+                {
+                    var ts = response.Content;
+                }
+
+                return await response.Content.ReadAsStringAsync();
             }
 
-            using (var dataContext = new DataContext())
-            {
-                var propty = dataContext.Properties.Where(x => x.Guid == propertyid);
-            }
+            // var request = new RestRequest($"?user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502", Method.GET);
+            // request.AddDataReefAuthHeader();
 
-                return response.Content;
+            //// var client = new RestClient("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
+
+            // var response = Client.Execute(request);
+
+            // if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            // {
+            //     throw new ApplicationException(response.Content);
+            // }
+
+            //using (var dataContext = new DataContext())
+            //{
+            //    var propty = dataContext.Properties.Where(x => x.Guid == propertyid);
+            //}
+
+            //  return response.Content;
         }
 
 

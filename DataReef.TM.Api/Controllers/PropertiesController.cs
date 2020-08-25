@@ -71,7 +71,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                var result = propertyService.GetEsidByAddress(propertyID);
+                var result = await propertyService.GetEsidByAddress(propertyID);
                 return Ok(result);
             }
             catch (System.Exception)
