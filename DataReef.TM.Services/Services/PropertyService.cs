@@ -1488,7 +1488,7 @@ namespace DataReef.TM.Services.Services
                // client.DefaultRequestHeaders.Accept.Clear();
                // client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //GET Method  
-                HttpResponseMessage response = await client.GetAsync("user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502");
+                HttpResponseMessage response = await client.GetAsync("?user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502");
                 if (response.IsSuccessStatusCode)
                 {
                     var ts = response.Content;
