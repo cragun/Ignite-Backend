@@ -1483,6 +1483,7 @@ namespace DataReef.TM.Services.Services
             request.AddDataReefAuthHeader();
 
            // var client = new RestClient("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
+
             var response = Client.Execute(request);
 
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
