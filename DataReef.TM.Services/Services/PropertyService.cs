@@ -1484,11 +1484,11 @@ namespace DataReef.TM.Services.Services
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://www.esiids.com/cgi-bin/esiids_xml.cgi");
+                client.BaseAddress = new Uri("http://www.esiids.com/");
                // client.DefaultRequestHeaders.Accept.Clear();
                // client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //GET Method  
-                HttpResponseMessage response = await client.GetAsync("?user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502");
+                HttpResponseMessage response = await client.GetAsync("/cgi-bin/esiids_xml.cgi?user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502");
                 if (response.IsSuccessStatusCode)
                 {
                     var ts = response.Content;
