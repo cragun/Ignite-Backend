@@ -1479,7 +1479,7 @@ namespace DataReef.TM.Services.Services
         public string 
             GetEsidByAddress(Guid propertyid)
         {
-            var request = new RestRequest($"?account_number=2006430223&user_id=ankita@hevintechnoweb.com&pass_word=hevin123&address=west&zip=77502", Method.GET);
+            var request = new RestRequest($"?user_id=ankita@hevintechnoweb.com&account_number=2006430223&pass_word=hevin123&address=west&zip=77502", Method.GET);
             request.AddDataReefAuthHeader();
 
            // var client = new RestClient("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
