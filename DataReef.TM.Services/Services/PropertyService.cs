@@ -58,7 +58,21 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
         private readonly Lazy<ISmsService> _smsService;
 
+        private static string BaseURL = "http://www.esiids.com/cgi-bin/esiids_xml.cgi?";
 
+        private RestClient _client;
+        private RestClient Client
+        {
+            get
+            {
+
+                if (_client == null)
+                {
+                    _client = new RestClient(BaseURL);
+                }
+                return _client;
+            }
+        }
         public PropertyService(ILogger logger,
             IGeoProvider geoProvider,
             Func<IGeographyBridge> geographyBridgeFactory,
@@ -1462,13 +1476,14 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public string GetEsidByAddress(Guid propertyid)
+        public string 
+            GetEsidByAddress(Guid propertyid)
         {
-            var request = new RestRequest($"account_number=2006430223&user_id=ankita@hevintechnoweb.com&pass_word=hevin123&address=west&zip=77502", Method.GET);
+            var request = new RestRequest($"?account_number=2006430223&user_id=ankita@hevintechnoweb.com&pass_word=hevin123&address=west&zip=77502", Method.GET);
             request.AddDataReefAuthHeader();
 
-            var client = new RestClient("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
-            var response = client.Execute(request);
+           // var client = new RestClient("http://www.esiids.com/cgi-bin/esiids_xml.cgi?");
+            var response = Client.Execute(request);
 
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
