@@ -1563,7 +1563,6 @@ namespace DataReef.TM.Services.Services
 
                 HttpResponseMessage response = await client.GetAsync(Esidparams);
 
-
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
                 apilog.User = "EsidRequestResponse";
