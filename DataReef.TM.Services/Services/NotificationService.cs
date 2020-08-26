@@ -199,6 +199,11 @@ namespace DataReef.TM.Services.Services
                 httpWebRequest.Headers.Add("Authorization:key=" + ServerKey);
                 httpWebRequest.Method = "POST";
 
+                httpWebRequest.UseDefaultCredentials = true;
+                httpWebRequest.PreAuthenticate = true;
+                httpWebRequest.Credentials = CredentialCache.DefaultCredentials;
+
+
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
                     string json = "{\"to\": [" + device + "],\"data\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"}}";
