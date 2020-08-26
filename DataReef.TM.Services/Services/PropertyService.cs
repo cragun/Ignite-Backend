@@ -1554,10 +1554,12 @@ namespace DataReef.TM.Services.Services
                 using (var dataContext = new DataContext())
                 {
                     var propty = dataContext.Properties.Where(x => x.Guid == propertyid).FirstOrDefault();
-                    string address = propty != null ? propty.Address1 + " " + propty.City + " " + propty.State : "";
+                    string address = propty != null ? propty.Address1 : "";
+                  //  string address = propty != null ? propty.Address1 + " " + propty.City + " " + propty.State : "";
                     string zipcode = propty != null ? propty.ZipCode : "";
                     Esidparams = Esidparams.Replace("{address}", address).ToString();
                     Esidparams = Esidparams.Replace("{zip}", zipcode).ToString();
+                    Esidparams = Esidparams.Replace("%26", "&").ToString();
                 }
                 HttpResponseMessage response = await client.GetAsync(Esidparams);
 
@@ -1565,7 +1567,7 @@ namespace DataReef.TM.Services.Services
                 apilog.Id = Guid.NewGuid();
                 apilog.User = "EsidRequestResponse";
                 apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "";
+                apilog.RequestContentType = "html";
                 apilog.RequestRouteTemplate = "";
                 apilog.RequestRouteData = "";
                 apilog.RequestIpAddress = "";
