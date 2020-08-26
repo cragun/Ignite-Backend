@@ -1559,7 +1559,6 @@ namespace DataReef.TM.Services.Services
                     Esidparams = Esidparams.Replace("{address}", address).ToString();
                     Esidparams = Esidparams.Replace("{zip}", zipcode).ToString();
                 }
-
                 HttpResponseMessage response = await client.GetAsync(Esidparams);
 
                 ApiLogEntry apilog = new ApiLogEntry();
