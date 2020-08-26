@@ -1302,6 +1302,10 @@
     <Compile Include="Migrations\202008180605098_migration4.cs" />
     <Compile Include="Migrations\202008180605098_migration4.Designer.cs">
       <DependentUpon>202008180605098_migration4.cs</DependentUpon>
+	   </Compile>
+    <Compile Include="Migrations\202008240503126_Add stage migration.cs" />
+    <Compile Include="Migrations\202008240503126_Add stage migration.Designer.cs">
+      <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2239,6 +2243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008180605098_migration4.resx">
       <DependentUpon>202008180605098_migration4.cs</DependentUpon>
+	  </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008240503126_Add stage migration.resx">
+      <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

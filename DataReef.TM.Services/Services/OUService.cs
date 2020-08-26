@@ -868,6 +868,7 @@ namespace DataReef.TM.Services.Services
 
         public IEnumerable<SBOU> GetOusList(string apikey)
         {
+
             using (var dc = new DataContext())
             {
                 var allAncestorIDs = dc
@@ -875,7 +876,7 @@ namespace DataReef.TM.Services.Services
                                 .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
                                 .ToList();
 
-                return allAncestorIDs.OrderBy(x => x.Name);
+                return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
             }
         }
 

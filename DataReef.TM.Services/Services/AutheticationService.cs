@@ -825,32 +825,58 @@ namespace DataReef.Application.Services
         {
             using (DataContext dc = new DataContext())
             {
-                var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID && cc.IsDeleted == false);
+                var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
                 if (isExist != null)
                 {
                     using (var transaction = dc.Database.BeginTransaction())
                     {
                         try
                         {
-                            isExist.FirstName = newUser.FirstName;
-                            isExist.LastName = newUser.LastName;
-                            isExist.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
-                            isExist.EmailAddressString = newUser.EmailAddress;
-
-                            var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
-                            if (isExist != null)
+                            if (isExist.IsDeleted == true)
                             {
-                                isExistPhoneNumber.Number = newUser.PhoneNumber;
+                                return new SaveResult { Success = false, SuccessMessage = "Please activate user" };
                             }
 
-                            var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
-                            if (isExistCredentials != null)
+                            if (!String.IsNullOrEmpty(newUser.FirstName))
                             {
-                                isExistCredentials.UserName = newUser.EmailAddress;
-                                isExistCredentials.PasswordRaw = newUser.Password;
-                                isExistCredentials.PerformHash();
+                                isExist.FirstName = newUser.FirstName;
                             }
 
+                            if (!String.IsNullOrEmpty(newUser.LastName))
+                            {
+                                isExist.LastName = newUser.LastName;
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.FirstName) && !String.IsNullOrEmpty(newUser.LastName))
+                            {
+                                isExist.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.EmailAddress))
+                            {
+                                isExist.EmailAddressString = newUser.EmailAddress;
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.PhoneNumber))
+                            {
+                                var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                                if (isExistPhoneNumber != null)
+                                {
+                                    isExistPhoneNumber.Number = newUser.PhoneNumber;
+                                }
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.Password))
+                            {
+                                var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                                if (isExistCredentials != null)
+                                {
+                                    isExistCredentials.UserName = newUser.EmailAddress;
+                                    isExistCredentials.PasswordRaw = newUser.Password;
+                                    isExistCredentials.PerformHash();
+                                }
+                            }
+                            
                             var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
                             dc.OUAssociations.RemoveRange(OUAssociations);
 
@@ -869,28 +895,31 @@ namespace DataReef.Application.Services
                                 {
                                     not_avail += item + ",";
                                 }
-
-                                //check to see if the user is already part of the OU
-                                var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExist.Guid && oua.OUID == ouSetting.OUID);
-                                if (organizationalUnitAssociation == null)
+                                else
                                 {
-                                    var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                                    if (Ou != null)
+                                    //check to see if the user is already part of the OU
+                                    var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExist.Guid && oua.OUID == ouSetting.OUID);
+                                    if (organizationalUnitAssociation == null)
                                     {
-                                        var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
-
-                                        //add the OU association and the Role to that Association
-                                        organizationalUnitAssociation = new OUAssociation
+                                        var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                        if (Ou != null)
                                         {
-                                            OUID = ouSetting.OUID,
-                                            PersonID = isExist.Guid,
-                                            OURoleID = newUser.RoleID,
-                                            RoleType = role.RoleType
-                                        };
-                                        dc.OUAssociations.Add(organizationalUnitAssociation);
+                                            var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                            //add the OU association and the Role to that Association
+                                            organizationalUnitAssociation = new OUAssociation
+                                            {
+                                                OUID = ouSetting.OUID,
+                                                PersonID = isExist.Guid,
+                                                OURoleID = newUser.RoleID,
+                                                RoleType = role.RoleType
+                                            };
+                                            dc.OUAssociations.Add(organizationalUnitAssociation);
+                                        }
                                     }
                                 }
                             }
+
                             dc.SaveChanges();
                             transaction.Commit();
                             if (!String.IsNullOrEmpty(not_avail))
@@ -907,7 +936,7 @@ namespace DataReef.Application.Services
                         }
                     }
                 }
-                else
+                else 
                 {
                     using (var transaction = dc.Database.BeginTransaction())
                     {
@@ -997,27 +1026,29 @@ namespace DataReef.Application.Services
                                 {
                                     not_avail += item + ",";
                                 }
-
-                                //check to see if the user is already part of the OU
-                                var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == ouSetting.OUID);
-                                if (organizationalUnitAssociation == null)
+                                else
                                 {
-                                    var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                                    if (Ou != null)
+                                    //check to see if the user is already part of the OU
+                                    var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == ouSetting.OUID);
+                                    if (organizationalUnitAssociation == null)
                                     {
-                                        var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
-
-                                        //add the OU association and the Role to that Association
-                                        organizationalUnitAssociation = new OUAssociation
+                                        var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                        if (Ou != null)
                                         {
-                                            OUID = ouSetting.OUID,
-                                            PersonID = person.Guid,
-                                            OURoleID = newUser.RoleID,
-                                            RoleType = role.RoleType
-                                        };
-                                        dc.OUAssociations.Add(organizationalUnitAssociation);
+                                            var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                            //add the OU association and the Role to that Association
+                                            organizationalUnitAssociation = new OUAssociation
+                                            {
+                                                OUID = ouSetting.OUID,
+                                                PersonID = person.Guid,
+                                                OURoleID = newUser.RoleID,
+                                                RoleType = role.RoleType
+                                            };
+                                            dc.OUAssociations.Add(organizationalUnitAssociation);
+                                        }
                                     }
-                                }
+                                }    
                             }
 
                             try

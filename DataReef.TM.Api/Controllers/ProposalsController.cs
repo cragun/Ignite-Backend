@@ -129,6 +129,16 @@ namespace DataReef.TM.Api.Controllers
         {
             return Ok(_proposalService.GetDocumentType());
         }
+
+        [Route("Documents/{ouid}/getType")]
+        [HttpGet]
+        [ResponseType(typeof(List<DocType>))]
+        public async Task<IHttpActionResult> GetOuDocumentType(Guid ouid)
+        {
+            var response = _proposalService.GetOuDocumentType(ouid);
+            return Ok(response.DocumentType);
+        }
+
         /// <summary>
         /// Update ProposalData.ProposalDataJSON for given proposalDataId.
         /// The ProposalDataJSON will be read from the Body of the request.
@@ -222,7 +232,6 @@ namespace DataReef.TM.Api.Controllers
                 {
                     fileData = binaryReader.ReadBytes(PicFile.ContentLength);
                 }
-
 
                 if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
                 {

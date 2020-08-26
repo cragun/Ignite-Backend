@@ -3,7 +3,7 @@ namespace DataReef.TM.DataAccess.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddfavouriteOu : DbMigration
+    public partial class Addstagemigration : DbMigration
     {
         public override void Up()
         {
@@ -41,6 +41,8 @@ namespace DataReef.TM.DataAccess.Migrations
                 .Index(t => t.Version)
                 .Index(t => t.ExternalID);
             
+            AddColumn("finance.PlanDefinitions", "LenderFee", c => c.Double());
+            AddColumn("finance.PlanDefinitions", "PPW", c => c.Double());
         }
         
         public override void Down()
@@ -55,6 +57,8 @@ namespace DataReef.TM.DataAccess.Migrations
             DropIndex("dbo.FavouriteOus", "CLUSTERED_INDEX_ON_LONG");
             DropIndex("dbo.FavouriteOus", new[] { "OUID" });
             DropIndex("dbo.FavouriteOus", new[] { "PersonID" });
+            DropColumn("finance.PlanDefinitions", "PPW");
+            DropColumn("finance.PlanDefinitions", "LenderFee");
             DropTable("dbo.FavouriteOus");
         }
     }

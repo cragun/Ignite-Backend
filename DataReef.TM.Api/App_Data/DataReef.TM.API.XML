@@ -742,6 +742,13 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetEsidByAddressPropertyid(System.Guid)">
+            <summary>
+            / Gets all Territories regardless of Lat - Long, for a property
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetInquiriesForProperty(System.Guid)">
             <summary>
             / Gets all inquiries regardless of person, for a property

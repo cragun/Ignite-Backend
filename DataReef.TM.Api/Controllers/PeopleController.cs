@@ -178,20 +178,22 @@ namespace DataReef.TM.Api.Controllers
         /// <returns></returns>
         [Route("ActivateUser/{SmartBoardId}")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> ActivateUser(string SmartBoardId)
         {
             peopleService.Reactivate(Guid.Empty, SmartBoardId);
-            return Ok();
+            return Ok(true);
         }
 
         /// <param name="SmartBoardId"></param>
         /// <returns></returns>
         [Route("DeactivateUser/{SmartBoardId}")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> DeactivateUser(string SmartBoardId)
         {
             peopleService.DeactivateUser(SmartBoardId);
-            return Ok();
+            return Ok(true);
         }
 
 

@@ -43,6 +43,9 @@ namespace DataReef.TM.Contracts.Services
         List<DocumentDataLink> GetProposalDocuments(Guid proposalID);
 
         [OperationContract]
+        SBGetDocument GetOuDocumentType(Guid proposalID);
+
+        [OperationContract]
         SBGetDocument GetDocuments(Guid propertID);
 
         [OperationContract]
@@ -80,7 +83,7 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<DocType> GetDocumentType();
-        
+
         [OperationContract]
         Proposal SignAgreement(Guid proposalDataId, DocumentSignRequest request);
 
@@ -88,7 +91,7 @@ namespace DataReef.TM.Contracts.Services
         List<KeyValue> GetAddersIncentives(Guid ProposalID);
 
         [OperationContract]
-        SystemCostItem AddAddersIncentives(AdderItem adderItem,Guid ProposalID);
+        SystemCostItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID);
 
         [OperationContract]
         SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID);
@@ -104,6 +107,6 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         int GetProposalCount(Guid PropertyID);
-        
+
     }
 }

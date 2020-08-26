@@ -76,8 +76,8 @@ namespace DataReef.Integrations
 
             var response = client.Execute(request);
             if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ApplicationException($"GetProperties Failed. {response.Content}");
+            { 
+                throw new ApplicationException($"GetProperties Failed. {response.Content}  {response.ErrorException} {response.ErrorException.InnerException}");
             }
 
             var content = response.Content;
