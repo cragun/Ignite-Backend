@@ -1564,9 +1564,31 @@ namespace DataReef.TM.Services.Services
                 HttpResponseMessage response = await client.GetAsync(Esidparams);
                 if (response.IsSuccessStatusCode)
                 {
-                   // var ts = response.Content;
                     var serializer = new XmlSerializer(typeof(EsIDResponse));
                     EsIDResponse result;
+
+                    
+                        ApiLogEntry apilog = new ApiLogEntry();
+                        apilog.Id = Guid.NewGuid();
+                        apilog.User = "EsidRequestResponse";
+                        apilog.Machine = Environment.MachineName;
+                        apilog.RequestContentType = "";
+                        apilog.RequestRouteTemplate = "";
+                        apilog.RequestRouteData = "";
+                        apilog.RequestIpAddress = "";
+                        apilog.RequestMethod = "";
+                        apilog.RequestHeaders = "";
+                        apilog.RequestTimestamp = DateTime.UtcNow;
+                        apilog.RequestUri = Esidurl;
+                        apilog.ResponseContentBody = response.Content.ToString();
+                        apilog.RequestContentBody = Esidparams;
+
+                        using (var dc = new DataContext())
+                        {
+                            dc.ApiLogEntries.Add(apilog);
+                            dc.SaveChanges();
+                        }
+
 
                     using (TextReader reader = new StringReader(response.Content.ToString()))
                     {
