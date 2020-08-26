@@ -1555,7 +1555,7 @@ namespace DataReef.TM.Services.Services
                 using (var dataContext = new DataContext())
                 {
                     var propty = dataContext.Properties.Where(x => x.Guid == propertyid).FirstOrDefault();
-                    string address = propty != null ? propty.Address1 + " " + propty.StreetName + " " + propty.City + " " + propty.State : "";
+                    string address = propty != null ? propty.Address1 + " " + propty.City + " " + propty.State : "";
                     string zipcode = propty != null ? propty.ZipCode : "";
                     Esidparams = Esidparams.Replace("{address}", address).ToString();
                     Esidparams = Esidparams.Replace("{zip}", zipcode).ToString();
