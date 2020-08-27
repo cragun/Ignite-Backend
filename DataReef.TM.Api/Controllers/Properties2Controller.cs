@@ -72,6 +72,7 @@ namespace DataReef.TM.Api.Controllers
                 return BadRequest($"Invalid {nameof(propertyID)}");
 
             var response = _propertyServiceFactory().SyncProperty(propertyID, include);
+           // var rd = response.PropertyBag.ToList().OrderByDescendingDynamic
 
             return Ok(response);
         }

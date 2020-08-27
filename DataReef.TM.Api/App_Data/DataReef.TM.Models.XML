@@ -51,6 +51,51 @@
             Guid of the ApiKey object
             </summary>
         </member>
+        <member name="T:DataReef.TM.Models.Enums.ItemSyncStatus">
+            <summary>
+            Sync operation status enum
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Models.Enums.ItemSyncStatus.Ok">
+            <summary>
+            Sync operation success
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Models.Enums.ItemSyncStatus.Error">
+            <summary>
+            Sync operation resulted in an error
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Models.Enums.ItemSyncStatus.Conflict">
+            <summary>
+            Sync operation cannot be performed due to version conflict
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Enums.SyncStatus">
+            <summary>
+            Synchronization request servcer status
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Models.Enums.SyncStatus.Ok">
+            <summary>
+            Ok, existing deltas are included in the package
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Models.Enums.SyncStatus.ForceFullSync">
+            <summary>
+            Delta threshold has been reached. Force client for full sync
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Models.Enums.SyncStatus.InvalidSession">
+            <summary>
+            Client has sent an invalid session guid. Begin is required
+            </summary>
+        </member>
+        <member name="F:DataReef.TM.Models.Enums.SyncStatus.Error">
+            <summary>
+            Unspecified error occured. 
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.FavouriteOu.PersonID">
             <summary>
             Guid of the person assigned a Ou
@@ -4170,51 +4215,6 @@
         <member name="P:DataReef.TM.Models.DTOs.Solar.MonthlyPower.ProductionInKwh">
             <summary>
             KiloWatts produced in a month by the solar array.
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Enums.ItemSyncStatus">
-            <summary>
-            Sync operation status enum
-            </summary>
-        </member>
-        <member name="F:DataReef.TM.Models.Enums.ItemSyncStatus.Ok">
-            <summary>
-            Sync operation success
-            </summary>
-        </member>
-        <member name="F:DataReef.TM.Models.Enums.ItemSyncStatus.Error">
-            <summary>
-            Sync operation resulted in an error
-            </summary>
-        </member>
-        <member name="F:DataReef.TM.Models.Enums.ItemSyncStatus.Conflict">
-            <summary>
-            Sync operation cannot be performed due to version conflict
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Enums.SyncStatus">
-            <summary>
-            Synchronization request servcer status
-            </summary>
-        </member>
-        <member name="F:DataReef.TM.Models.Enums.SyncStatus.Ok">
-            <summary>
-            Ok, existing deltas are included in the package
-            </summary>
-        </member>
-        <member name="F:DataReef.TM.Models.Enums.SyncStatus.ForceFullSync">
-            <summary>
-            Delta threshold has been reached. Force client for full sync
-            </summary>
-        </member>
-        <member name="F:DataReef.TM.Models.Enums.SyncStatus.InvalidSession">
-            <summary>
-            Client has sent an invalid session guid. Begin is required
-            </summary>
-        </member>
-        <member name="F:DataReef.TM.Models.Enums.SyncStatus.Error">
-            <summary>
-            Unspecified error occured. 
             </summary>
         </member>
         <member name="T:DataReef.TM.Models.KeyValue">
