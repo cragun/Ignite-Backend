@@ -209,6 +209,12 @@ namespace DataReef.TM.Models
         [DataMember(EmitDefaultValue = false)]
         public ICollection<PersonSetting> PersonSettings { get; set; }
 
+        [DataMember]
+        [JsonIgnore]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public virtual System.DateTime StartDate { get; set; }
+
         /// <summary>
         /// AccountAssociations links a person to an Account.  A person must have an AccountAssoication for ever account in which they have an OUAssoications
         /// </summary>

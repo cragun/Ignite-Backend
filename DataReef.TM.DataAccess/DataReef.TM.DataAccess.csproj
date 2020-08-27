@@ -1247,6 +1247,10 @@
     <Compile Include="Migrations\202008240503126_Add stage migration.Designer.cs">
       <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202008271307442_Add StartDate in person .cs" />
+    <Compile Include="Migrations\202008271307442_Add StartDate in person .Designer.cs">
+      <DependentUpon>202008271307442_Add StartDate in person .cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2141,6 +2145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008240503126_Add stage migration.resx">
       <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008271307442_Add StartDate in person .resx">
+      <DependentUpon>202008271307442_Add StartDate in person .cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

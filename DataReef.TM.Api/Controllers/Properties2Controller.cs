@@ -63,6 +63,12 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
+        public object GetPropertyValue(object car, string propertyName)
+        {
+            return car.GetType().GetProperties()
+               .Single(pi => pi.Name == propertyName)
+               .GetValue(car, null);
+        }
 
         [HttpGet]
         [Route("sync/{propertyID:guid}")]
@@ -73,12 +79,23 @@ namespace DataReef.TM.Api.Controllers
 
             var response = _propertyServiceFactory().SyncProperty(propertyID, include);
 
-           // string queryString = "";
+            string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
 
-            //foreach (string propname in queryString.Split(','))
-            //    response.PropertyBag.OrderBy(x => GetPropertyValue(x, propname));
+            var rd = response.PropertyBag.ToList();
+            List<Models.Geo.Field> propbags = new List<Models.Geo.Field>();
+            foreach (string propname in queryString.Split(','))
+            {
+                var propbg = rd.Where(x => x.DisplayName == propname).FirstOrDefault();
 
-            // var rd = response.PropertyBag.ToList().OrderByDescendingDynamic
+                if(propbg != null)
+                {
+                    propbags.Add(propbg);
+                }
+            }
+
+            var temp = propbags;
+            propbags.AddRange(rd.Except(temp).ToList());
+            response.PropertyBag = propbags;            
 
             return Ok(response);
         }
