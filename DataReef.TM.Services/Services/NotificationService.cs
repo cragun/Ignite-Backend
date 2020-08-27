@@ -193,9 +193,9 @@ namespace DataReef.TM.Services.Services
             try
             {
                 string ServerKey = ConfigurationManager.AppSettings["Firebase.ServerKey"];
-
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
-                request.Headers.TryAddWithoutValidation("Authorization", "key=" + ServerKey); 
+                var authorizationKey = string.Format("key={0}", ServerKey);
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
+                request.Headers.TryAddWithoutValidation("Authorization", authorizationKey); 
 
                 var messageInformation = new 
                 {
