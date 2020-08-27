@@ -1539,19 +1539,6 @@ namespace DataReef.TM.Services.Services
 
         public async Task<EsIDResponse> GetEsidByAddress(Guid propertyid)
         {
-
-            //string xmlread = "<?xml version=\"1.0\" ?>\n<root>\n  <title>ESI ID Lookup By Address And Zip></title>\n  <author>Esiids.com</author>\n  <site>http://www.esiids.com/</site>\n  <c_program>/cgi-bin/esiids_xml.cgi</c_program>\n  <usage>http://www.esiids.com/cgi-bin/esiids_xml.cgi?account_number=xxxxxxxxxx&amp;user_id=xxxxxxxxxx&amp;pass_word=xxxxxxxxxx&amp;address=west&amp;zip=77502></usage>\n  <error_flag>0</error_flag>\n  <error_message></error_message>\n  <ip_address><![CDATA[54.185.30.8]]></ip_address>\n  <address_like><![CDATA[2407 Seedling Ln]]></address_like>\n  <zip><![CDATA[75287]]></zip>\n  <account_number><![CDATA[2606564132]]></account_number>\n  <user_id><![CDATA[hevin.android@gmail.com]]></user_id>\n  <pass_word><![CDATA[xxxxxxxxx]]></pass_word>\n  <available_rows><![CDATA[160]]></available_rows>\n  <rows><![CDATA[1]]></rows>\n  <row>\n    <esiid><![CDATA[10443720003525948]]></esiid>\n    <address><![CDATA[02407 SEEDLING LN]]></address>\n    <address_2><![CDATA[]]></address_2>\n    <city><![CDATA[DALLAS]]></city>\n    <state><![CDATA[TX]]></state>\n    <zip><![CDATA[75287]]></zip>\n    <plus4><![CDATA[5856]]></plus4>\n    <read_day><![CDATA[10]]></read_day>\n    <premise_type><![CDATA[Residential]]></premise_type>\n    <metered><![CDATA[Y]]></metered>\n    <energized><![CDATA[A]]></energized>\n    <power_region><![CDATA[ERCOT]]></power_region>\n    <status><![CDATA[A]]></status>\n    <stationcode><![CDATA[CRLTR]]></stationcode>\n    <stationname><![CDATA[CARROLLTON TARPLEY RD]]></stationname>\n    <csv_file><![CDATA[ONCOR_ELEC___FUL-REPORTS-03-AUG-20.csv]]></csv_file>\n    <full_status><![CDATA[Active]]></full_status>\n    <tdsp_duns><![CDATA[1039940674000]]></tdsp_duns>\n    <polr_customer_class><![CDATA[Residential]]></polr_customer_class>\n    <ams_meter_flag><![CDATA[Y]]></ams_meter_flag>\n    <tdsp_name><![CDATA[ONCOR - TXU SERVICE AREA]]></tdsp_name>\n    <trans_count><![CDATA[2]]></trans_count>\n    <service_orders><![CDATA[2008-10-08 - Switch|2009-06-11 - Switch]]></service_orders>\n    <cmz><![CDATA[NORTH_CENTRAL - NORTH]]></cmz>\n    <tdu><![CDATA[TXU]]></tdu>\n  </row>\n</root>\n";
-
-            //var serializer = new XmlSerializer(typeof(EsIDResponse));
-            //EsIDResponse result;
-
-            //using (TextReader reader = new StringReader(xmlread))
-            //{
-            //    result = (EsIDResponse)serializer.Deserialize(reader);
-            //}
-
-            //return result;
-
             string Esidurl = System.Configuration.ConfigurationManager.AppSettings["EsIdUrl"];
             string Esidparams = System.Configuration.ConfigurationManager.AppSettings["EsIdParams"];
 
