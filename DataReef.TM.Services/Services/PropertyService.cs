@@ -1378,9 +1378,6 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
-
-
         public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
         {
             using (var dc = new DataContext())
