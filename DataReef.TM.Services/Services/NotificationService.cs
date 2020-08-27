@@ -195,14 +195,14 @@ namespace DataReef.TM.Services.Services
                 string ServerKey = ConfigurationManager.AppSettings["Firebase.ServerKey"];
 
                 var request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
-                request.Headers.TryAddWithoutValidation("Authorization", "key=" + ServerKey);
+                request.Headers.Add("Authorization", "key=" + ServerKey); 
 
                 var messageInformation = new 
                 {
                     notification = new  
                     {
-                        title = title,
-                        text = message
+                        title,
+                        body = message
                     }, 
                     to = device
                 };
