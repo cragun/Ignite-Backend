@@ -206,7 +206,7 @@ namespace DataReef.TM.Services.Services
 
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    string json = "{\"to\": [" + device + "],\"data\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"}}";
+                    string json = "{\"to\": [" + device + "],\"notification\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"}}";
                     streamWriter.Write(json);
                     streamWriter.Flush();
                 }
