@@ -8,6 +8,7 @@ using DataReef.TM.Models.Solar;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using System.Threading.Tasks;
+using DataReef.TM.Models;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -68,7 +69,7 @@ namespace DataReef.TM.Contracts.Services
         SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request);
 
         [OperationContract]
-        Task<string> GetEsidByAddress(Guid propertyid);
+        Task<EsIDResponse> GetEsidByAddress(Guid propertyid);
 
     }
 }
