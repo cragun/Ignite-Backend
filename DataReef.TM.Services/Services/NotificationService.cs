@@ -22,6 +22,7 @@ using System.Net.Http;
 using System.Configuration;
 using System.Net;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace DataReef.TM.Services.Services
 {
@@ -187,36 +188,34 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string SendNotificationFromFirebaseCloud(string message, string device, string title)
+        public async Task<string> SendNotificationFromFirebaseCloud(string message, string device, string title)
         {
             try
             {
-                var result = "-1";
                 string ServerKey = ConfigurationManager.AppSettings["Firebase.ServerKey"];
 
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://fcm.googleapis.com/fcm/send");
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Headers.Add("Authorization","key=" + ServerKey);
-                httpWebRequest.Method = "POST";
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
+                request.Headers.TryAddWithoutValidation("Authorization", "key=" + ServerKey);
 
-                httpWebRequest.UseDefaultCredentials = true;
-                httpWebRequest.PreAuthenticate = true;
-                httpWebRequest.Credentials = CredentialCache.DefaultCredentials;
-
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                var messageInformation = new 
                 {
-                    string json = "{\"to\": [" + device + "],\"notification\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"}}";
-                    streamWriter.Write(json);
-                    streamWriter.Flush();
-                }
+                    notification = new  
+                    {
+                        title = title,
+                        text = message
+                    }, 
+                    to = device
+                };
+                string jsonMessage = JsonConvert.SerializeObject(messageInformation);
 
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                request.Content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
+                string result;
+                using (var client = new HttpClient())
                 {
-                    result = streamReader.ReadToEnd();
+                    HttpResponseMessage response = await client.SendAsync(request);
+                    result = await response.Content.ReadAsStringAsync();
                 }
-
+             
                 return result;
             }
             catch (Exception ex)
