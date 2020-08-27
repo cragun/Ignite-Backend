@@ -14,25 +14,25 @@ namespace DataReef.TM.Models.Enums
         //[EnumMember]
         //Length of Residence = 1 ,
 
-        [EnumMember]
-        Manager = 2,
+        //[EnumMember]
+        //Year Built = 2,
 
-        [EnumMember]
-        Member = 3,
+        //[EnumMember]
+        //Income Level = 3,
 
-        [EnumMember]
-        Installer = 4,
+        //[EnumMember]
+        //Home Size = 4,
 
-        [EnumMember]
-        PhotosManager = 5,
+        //[EnumMember]
+        //Bedrooms on Record = 5,
 
-        [EnumMember]
-        FranchiseManager = 6,
+        //[EnumMember]
+        //Bathrooms on Record = 6,
 
-        [EnumMember]
-        SuperAdmin = 7,
+        //[EnumMember]
+        //Phone Number = 7,
 
-        [EnumMember]
-        PhotosAdmin = 8
+        //[EnumMember]
+        //Home Phone Number = 8
     }
 }
