@@ -1572,7 +1572,7 @@ namespace DataReef.TM.Services.Services
                     apilog.RequestHeaders = response.StatusCode.ToString();
                     apilog.RequestTimestamp = DateTime.UtcNow;
                     apilog.RequestUri = Esidurl;
-                    apilog.ResponseContentBody = response.Content.ToString();
+                    apilog.ResponseContentBody = await response.Content.ReadAsStringAsync();
                     apilog.RequestContentBody = Esidparams;
 
                     using (var dc = new DataContext())
@@ -1596,7 +1596,7 @@ namespace DataReef.TM.Services.Services
                  log.RequestHeaders = response.StatusCode.ToString();
                  log.RequestTimestamp = DateTime.UtcNow;
                  log.RequestUri = Esidurl;
-                 log.ResponseContentBody = response.Content.ToString();
+                log.ResponseContentBody = await response.Content.ReadAsStringAsync();
                  log.RequestContentBody = Esidparams;
 
                 using (var dc = new DataContext())
