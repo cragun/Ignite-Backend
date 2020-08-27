@@ -196,7 +196,7 @@ namespace DataReef.TM.Services.Services
 
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://fcm.googleapis.com/fcm/send");
                 httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Headers.Add("Authorization:key=" + ServerKey);
+                httpWebRequest.Headers.Add("Authorization","key=" + ServerKey);
                 httpWebRequest.Method = "POST";
 
                 httpWebRequest.UseDefaultCredentials = true;
