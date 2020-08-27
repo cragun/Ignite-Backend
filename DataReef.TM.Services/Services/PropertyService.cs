@@ -1571,8 +1571,8 @@ namespace DataReef.TM.Services.Services
                 apilog.RequestRouteTemplate = "";
                 apilog.RequestRouteData = "";
                 apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "";
-                apilog.RequestHeaders = "";
+                apilog.RequestMethod = response.RequestMessage.RequestUri.ToString();
+                apilog.RequestHeaders = response.StatusCode.ToString();
                 apilog.RequestTimestamp = DateTime.UtcNow;
                 apilog.RequestUri = Esidurl;
                 apilog.ResponseContentBody = response.Content.ToString();
@@ -1582,6 +1582,11 @@ namespace DataReef.TM.Services.Services
                 {
                     dc.ApiLogEntries.Add(apilog);
                     dc.SaveChanges();
+                }                
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    throw new ApplicationException(await response.Content.ReadAsStringAsync());
                 }
 
                 if (response.IsSuccessStatusCode)
@@ -1589,20 +1594,11 @@ namespace DataReef.TM.Services.Services
                     var serializer = new XmlSerializer(typeof(EsIDResponse));
                     EsIDResponse result;
 
-
-
-
-
                     using (TextReader reader = new StringReader(response.Content.ToString()))
                     {
                         result = (EsIDResponse)serializer.Deserialize(reader);
                     }
 
-                }
-
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    throw new ApplicationException(await response.Content.ReadAsStringAsync());
                 }
 
                 return await response.Content.ReadAsStringAsync();
