@@ -258,9 +258,8 @@ namespace DataReef.TM.Services.Services
                     return result;
                 }
                 catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    return "err";
+                { 
+                    return ex.Message.ToString();
                 }
 
                 //var authorizationKey = string.Format("key={0}", ServerKey);
