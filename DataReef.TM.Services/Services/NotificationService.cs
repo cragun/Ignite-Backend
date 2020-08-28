@@ -227,7 +227,7 @@ namespace DataReef.TM.Services.Services
 
                 //string ServerKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
 
-                string serverKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
+                string serverKey = "AAAAjcK0I_g:APA91bE9yx0Ximczoh423GN5fUhOSG5XOYnLxHDJtciBdGcapueC9LhCe0xyMMJwnfY79UrZ83rPXhbQLvW_JOcbbT6xNy_P7U96YKfQXB_U2Zr5Um58Dk0TglI_pvRghEoll5AqfN94";
 
                 try
                 {
