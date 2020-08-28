@@ -79,6 +79,7 @@ namespace DataReef.TM.Api.Controllers
 
             var response = _propertyServiceFactory().SyncProperty(propertyID, include);
 
+
             string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
 
             var rd = response.PropertyBag.ToList();
