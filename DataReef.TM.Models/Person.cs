@@ -87,6 +87,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public DateTime? LastActivityDate { get; set; }
 
+        [DataMember]
+        public string fcm_token { get; set; }
+
         [DataMember(EmitDefaultValue = false)]
         [StringLength(250)]
         public string ActivityName { get; set; }

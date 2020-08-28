@@ -55,7 +55,7 @@ namespace DataReef.TM.Api.Controllers
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
                 }
 
-                AuthenticationToken token = authService.Authenticate(post.UserName, post.Password);
+                AuthenticationToken token = authService.Authenticate(post.UserName, post.Password , post.fcm_token);
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
             }
@@ -207,7 +207,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                AuthenticationToken token = authService.CompletePasswordReset(completionObject.ResetGuid, completionObject.NewPassword);
+                AuthenticationToken token = authService.CompletePasswordReset(completionObject.ResetGuid, completionObject.NewPassword , completionObject.fcm_token);
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
 
@@ -237,7 +237,7 @@ namespace DataReef.TM.Api.Controllers
             try
             {
 
-                AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword);
+                AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword , change.fcm_token);
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
 
