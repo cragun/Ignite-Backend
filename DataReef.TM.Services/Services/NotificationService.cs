@@ -24,6 +24,8 @@ using System.Configuration;
 using RestSharp;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace DataReef.TM.Services.Services
 {
@@ -189,63 +191,65 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        private RestClient client
-        {
-            get
-            {
-                return new RestClient("https://fcm.googleapis.com/fcm/send");
-            }
-        } 
+        //private RestClient client
+        //{
+        //    get
+        //    {
+        //        return new RestClient("https://fcm.googleapis.com/fcm/send");
+        //    }
+        //} 
 
         public async Task<string> SendNotificationFromFirebaseCloud(string message, string device, string title)
         {
             try
             {
-                var msg = new JObject();
-                msg.Add("to", device);
-                var notification = new JObject();
-                notification.Add("title", title);
-                notification.Add("text", message);
-                msg.Add("notification", notification); 
+                //    var msg = new JObject();
+                //    msg.Add("to", device);
+                //    var notification = new JObject();
+                //    notification.Add("title", title);
+                //    notification.Add("text", message);
+                //    msg.Add("notification", notification); 
+
+                //    string ServerKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
+                //    var request = new RestRequest(Method.POST); 
+                //    request.AddHeader("Authorization", "key=" + ServerKey);
+                //    request.AddHeader("Content-Type", "application/json");
+                //    request.AddJsonBody(msg);
+                //    var response = client.Execute(request);
+
+                //    if (response.StatusCode != HttpStatusCode.OK)
+                //    {
+                //        throw new ApplicationException($"Notification Failed. {response.Content}");
+                //    }
+
+                //    var content = response.Content;
 
                 string ServerKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
-                var request = new RestRequest(Method.POST); 
-                request.AddHeader("Authorization", "key=" + ServerKey);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddJsonBody(msg);
-                var response = client.Execute(request);
+                 
+                var authorizationKey = string.Format("key={0}", ServerKey);
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
+                request.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                var messageInformation = new
                 {
-                    throw new ApplicationException($"Notification Failed. {response.Content}");
+                    notification = new
+                    {
+                        title,
+                        body = message
+                    },
+                    to = device
+                };
+                string jsonMessage = JsonConvert.SerializeObject(messageInformation);
+
+                request.Content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
+                string result;
+                using (var client = new HttpClient())
+                {
+                    HttpResponseMessage response = await client.SendAsync(request);
+                    result = await response.Content.ReadAsStringAsync();
                 }
 
-                var content = response.Content;
-
-                //var authorizationKey = string.Format("key={0}", ServerKey);
-                //HttpRequestMessage  request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
-                //request.Headers.TryAddWithoutValidation("Authorization", authorizationKey); 
-
-                //var messageInformation = new 
-                //{
-                //    notification = new  
-                //    {
-                //        title,
-                //        body = message
-                //    }, 
-                //    to = device
-                //};
-                //string jsonMessage = JsonConvert.SerializeObject(messageInformation);
-
-                //request.Content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
-                //string result;
-                //using (var client = new HttpClient())
-                //{
-                //    HttpResponseMessage response = await client.SendAsync(request);
-                //    result = await response.Content.ReadAsStringAsync();
-                //}
-             
-                return content.ToString();
+                return result;
             }
             catch (Exception ex)
             {
