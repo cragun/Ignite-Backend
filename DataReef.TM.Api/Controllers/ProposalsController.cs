@@ -180,8 +180,7 @@ namespace DataReef.TM.Api.Controllers
         {
             return Ok(_proposalService.GetProposalMediaItemsAsShareableLinks(proposalID));
         }
-
-
+        
         [Route("media/{proposalMediaId:guid}/{thumb}")]
         [ResponseType(typeof(byte[]))]
         [HttpGet]
