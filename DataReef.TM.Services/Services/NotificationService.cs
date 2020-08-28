@@ -227,7 +227,7 @@ namespace DataReef.TM.Services.Services
 
                 //string ServerKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
 
-                string serverKey =   ConfigurationManager.AppSettings["Firebase.ServerKey"].ToString();
+                string serverKey = ConfigurationManager.AppSettings["Firebase.ServerKey"];
 
                 try
                 {
