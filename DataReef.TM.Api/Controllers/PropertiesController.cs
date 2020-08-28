@@ -160,6 +160,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(powerConsumptions);
         }
 
+
         /// <summary>
         /// Get method used by SmartBoard to retrieve all the attachments for a property
         /// </summary>
