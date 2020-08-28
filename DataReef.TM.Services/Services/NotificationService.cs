@@ -26,6 +26,7 @@ using System.Net;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.IO;
 
 namespace DataReef.TM.Services.Services
 {
@@ -224,32 +225,68 @@ namespace DataReef.TM.Services.Services
 
                 //    var content = response.Content;
 
-                string ServerKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
-                 
-                var authorizationKey = string.Format("key={0}", ServerKey);
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
-                request.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
+                //string ServerKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
 
-                var messageInformation = new
+                string serverKey = System.Configuration.ConfigurationManager.AppSettings["Firebase.ServerKey"];
+
+                try
                 {
-                    notification = new
+                    var result = "-1";
+                    var webAddr = "https://fcm.googleapis.com/fcm/send";
+
+                    var regID = device;
+
+                    var httpWebRequest = (HttpWebRequest)WebRequest.Create(webAddr);
+                    httpWebRequest.ContentType = "application/json";
+                    httpWebRequest.Headers.Add("Authorization:key=" + serverKey);
+                    httpWebRequest.Method = "POST";
+
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {
-                        title,
-                        body = message
-                    },
-                    to = device
-                };
-                string jsonMessage = JsonConvert.SerializeObject(messageInformation);
+                        string json = "{\"to\": \"" + regID + "\",\"notification\": {\"title\": \"New deal\",\"body\": \"20% deal!\"},\"priority\":10}";
+                        //registration_ids, array of strings -  to, single recipient
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                    }
 
-                request.Content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
-                string result;
-                using (var client = new HttpClient())
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        result = streamReader.ReadToEnd();
+                    }
+
+                    return result;
+                }
+                catch (Exception ex)
                 {
-                    HttpResponseMessage response = await client.SendAsync(request);
-                    result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(ex.ToString());
+                    return "err";
                 }
 
-                return result;
+                //var authorizationKey = string.Format("key={0}", ServerKey);
+                //HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
+                //request.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
+
+                //var messageInformation = new
+                //{
+                //    notification = new
+                //    {
+                //        title,
+                //        body = message
+                //    },
+                //    to = device
+                //};
+                //string jsonMessage = JsonConvert.SerializeObject(messageInformation);
+
+                //request.Content = new StringContent(jsonMessage, Encoding.UTF8, "application/json");
+                //string result;
+                //using (var client = new HttpClient())
+                //{
+                //    HttpResponseMessage response = await client.SendAsync(request);
+                //    result = await response.Content.ReadAsStringAsync();
+                //}
+
+                //return result;
             }
             catch (Exception ex)
             {
