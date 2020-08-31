@@ -146,6 +146,18 @@ namespace DataReef.TM.Services
             return id;
         }
 
+        public void UpdateCashPPW(double cashPPW)
+        {
+            using (var dc = new DataContext())
+            {
+                var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
+                if (financePlan != null)
+                {
+                    financePlan.PPW = cashPPW;
+                    dc.SaveChanges();
+                }
+            }
+        }
 
         public SunlightResponse GetSunlightloanstatus(Guid proposalId)
         {

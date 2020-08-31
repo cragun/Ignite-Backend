@@ -32,5 +32,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         SunlightResponse Sunlightsendloandocs(Guid proposalId);
 
+        [OperationContract]
+        void UpdateCashPPW(double cashPPW);
+
     }
 }
