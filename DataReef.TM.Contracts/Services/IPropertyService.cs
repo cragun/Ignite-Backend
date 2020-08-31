@@ -71,5 +71,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Task<EsIDResponse> GetEsidByAddress(Guid propertyid);
 
+        [OperationContract]
+        Task<bool> IsPropertyAvailable(long igniteId);
+
     }
 }

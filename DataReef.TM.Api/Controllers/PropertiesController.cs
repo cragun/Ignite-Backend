@@ -81,6 +81,27 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
+        /// <summary>
+        /// / Check Is Property available or not
+        /// </summary>
+        /// <param name="igniteId"></param>
+        /// <returns></returns>
+        [Route("IsPropertyAvailable/{igniteId}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> IsPropertyAvailable(long igniteId)
+        {
+            try
+            {
+                var result = await propertyService.IsPropertyAvailable(igniteId);
+                //return Ok(result);
+                return Json(new { result = result });
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
 
 
         /// <summary>

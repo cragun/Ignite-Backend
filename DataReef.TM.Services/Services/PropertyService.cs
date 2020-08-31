@@ -1572,5 +1572,21 @@ namespace DataReef.TM.Services.Services
                 return result;
             }
         }
+
+        public async Task<bool> IsPropertyAvailable(long igniteId)
+        {
+            using (var data = new DataContext())
+            {
+                var property = data.Properties.FirstOrDefault(x => x.Id == igniteId);
+                if (property == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
     }
 }

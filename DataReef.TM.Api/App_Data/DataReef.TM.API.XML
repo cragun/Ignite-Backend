@@ -749,6 +749,13 @@
             <param name="propertyID"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.IsPropertyAvailable(System.Int64)">
+            <summary>
+            / Check Is Property available or not
+            </summary>
+            <param name="igniteId"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetInquiriesForProperty(System.Guid)">
             <summary>
             / Gets all inquiries regardless of person, for a property
