@@ -2,6 +2,7 @@
 using DataReef.TM.Models;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -23,8 +24,5 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         bool MarkAsReadFromSmartboard(string notificationSmartboardID, string apiKey);
-
-        [OperationContract]
-        string SendNotificationFromFirebaseCloud(string message, string device, string title);
     }
 }

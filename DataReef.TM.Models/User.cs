@@ -42,12 +42,7 @@ namespace DataReef.TM.Models
         [JsonIgnore]
         public int NumberOfDevicesAllowed { get; set; }
 
-        [DataMember]
-        [JsonIgnore]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public virtual System.DateTime? StartDate { get; set; }
-
+        
         #region Navigation
 
         /// <summary>

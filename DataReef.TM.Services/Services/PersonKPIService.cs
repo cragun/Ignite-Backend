@@ -68,6 +68,7 @@ namespace DataReef.TM.Services
             }
         }
 
+
         public void ResetKPIs(DateTime date)
         {
             // set person setting

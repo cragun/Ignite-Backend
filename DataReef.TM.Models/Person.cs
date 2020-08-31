@@ -87,12 +87,19 @@ namespace DataReef.TM.Models
         [DataMember]
         public DateTime? LastActivityDate { get; set; }
 
+        [DataMember]
+        public string fcm_token { get; set; }
+
         [DataMember(EmitDefaultValue = false)]
         [StringLength(250)]
         public string ActivityName { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public string BuildVersion { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime StartDate { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public List<string> EmailAddresses
@@ -207,7 +214,7 @@ namespace DataReef.TM.Models
         /// The settings of a person.
         /// </summary>
         [DataMember(EmitDefaultValue = false)]
-        public ICollection<PersonSetting> PersonSettings { get; set; }
+        public ICollection<PersonSetting> PersonSettings { get; set; }        
 
         /// <summary>
         /// AccountAssociations links a person to an Account.  A person must have an AccountAssoication for ever account in which they have an OUAssoications

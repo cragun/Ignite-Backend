@@ -121,18 +121,5 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok(result);
         }
-
-        [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(string))]
-        [Route("send")]
-        [HttpPost]
-        public async Task<IHttpActionResult> SendPushNotification()
-        {
-            string token = "dkUoX6H9dk7rnVjf26KR_A:APA91bFGnd2rT4KXCn-4huR_Etmf_yenHqfPixEkxrSWDDTtdWD2v2s8kfk0VbCFgk2mD7M4LTY7rayRNHXWgICYNdO7hFD70QX5-gnLNoY8RWDOcYXLt53AVJ-sFfU_tKFpqS6LmIOn";
-
-            var result = _notificationService.SendNotificationFromFirebaseCloud("This is test message", token, "Ignite");
-
-            return Ok(result);
-        }
     }
 }

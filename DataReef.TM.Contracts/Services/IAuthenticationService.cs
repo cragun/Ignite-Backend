@@ -14,7 +14,7 @@ namespace DataReef.TM.Contracts.Services
     public interface IAuthenticationService
     {
         [OperationContract]
-        AuthenticationToken Authenticate(string userName, string password);
+        AuthenticationToken Authenticate(string userName, string password , string fcm_token);
 
         [OperationContract]
         AuthenticationToken AuthenticateUserBySuperAdmin(Guid personid);
@@ -38,10 +38,10 @@ namespace DataReef.TM.Contracts.Services
         SaveResult InitiatePasswordReset(PasswordReset resetObject);
 
         [OperationContract]
-        AuthenticationToken CompletePasswordReset(Guid resetGuid, string newPassword);
+        AuthenticationToken CompletePasswordReset(Guid resetGuid, string newPassword, string fcm_token);
 
         [OperationContract]
-        AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword);
+        AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword , string fcm_token);
 
         [OperationContract]
         string GetCurrentUserFullName();

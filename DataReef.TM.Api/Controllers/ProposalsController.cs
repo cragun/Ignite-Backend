@@ -10,7 +10,6 @@ using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.Solar;
-using GoogleMaps.LocationServices;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -181,8 +180,7 @@ namespace DataReef.TM.Api.Controllers
         {
             return Ok(_proposalService.GetProposalMediaItemsAsShareableLinks(proposalID));
         }
-
-
+        
         [Route("media/{proposalMediaId:guid}/{thumb}")]
         [ResponseType(typeof(byte[]))]
         [HttpGet]
@@ -200,6 +198,7 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
+
         [Route("{propertyID:guid}/getDocuments")]
         [HttpPost]
         [ResponseType(typeof(SBGetDocument))]
@@ -208,7 +207,6 @@ namespace DataReef.TM.Api.Controllers
             var response = _proposalService.GetDocuments(propertyID);
             return Ok(response);
         }
-
 
         /// <summary>
         /// Upload multiple documents using a multi-part body

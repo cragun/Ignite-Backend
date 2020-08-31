@@ -1378,9 +1378,6 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
-
-
         public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
         {
             using (var dc = new DataContext())
@@ -1537,12 +1534,8 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public async Task<string> GetEsidByAddress(Guid propertyid)
+        public async Task<EsIDResponse> GetEsidByAddress(Guid propertyid)
         {
-
-            //string xmlresp = "<root><title>ESI ID Lookup By Address And Zip></title><author>Esiids.com</author><site>http://www.esiids.com/</site><c_program>/cgi-bin/esiids_xml.cgi</c_program><usage>http://www.esiids.com/cgi-bin/esiids_xml.cgi?account_number=xxxxxxxxxx%26user_id=xxxxxxxxxx%26pass_word=xxxxxxxxxx%26address=west%26zip=77502></usage><error_flag>0</error_flag><error_message/><ip_address>49.36.75.161</ip_address><address_like>west</address_like><zip>77502</zip><account_number>2006430223</account_number><user_id>ankita@hevintechnoweb.com</user_id><pass_word>xxxxxxxxx</pass_word><available_rows>21</available_rows><rows>21</rows><row><esiid>1008901009129901238100</esiid><address>108 WEST AVE</address><address_2></address_2><city>PASADENA</city><state>TX</state><zip>77502</zip><plus4>3628</plus4><read_day>20</read_day><premise_type>Small Non-Residential</premise_type><metered>Y</metered><energized>A</energized><power_region>ERCOT</power_region><status>A</status><stationcode>PA</stationcode><stationname>PASADENA</stationname><csv_file>CENTERPOINT__FUL-REPORTS-03-AUG-20.csv</csv_file><full_status>Active</full_status><tdsp_duns>957877905</tdsp_duns><polr_customer_class>Small Non-Residential</polr_customer_class><ams_meter_flag>Y</ams_meter_flag><tdsp_name>CENTERPOINT</tdsp_name><trans_count>3</trans_count><service_orders> 2012-08-06 - Move I|2012-08-06 - Move In|2012-10-02 - Move I </service_orders><cmz>COAST - HOUSTON</cmz><tdu>CNP</tdu></row><row><esiid>1008901009129901239100</esiid><address>110 WEST AVE</address><address_2></address_2><city>PASADENA</city><state>TX</state><zip>77502</zip><plus4>3628</plus4><read_day>20</read_day><premise_type>Small Non-Residential</premise_type><metered>Y</metered><energized>A</energized><power_region>ERCOT</power_region><status>A</status><stationcode>PA</stationcode><stationname>PASADENA</stationname><csv_file>CENTERPOINT__FUL-REPORTS-03-AUG-20.csv</csv_file><full_status>Active</full_status><tdsp_duns>957877905</tdsp_duns><polr_customer_class>Small Non-Residential</polr_customer_class><ams_meter_flag>Y</ams_meter_flag><tdsp_name>CENTERPOINT</tdsp_name><trans_count>5</trans_count><service_orders> 2012-02-08 - Switch|2012-08-27 - Move I|2012-09-03 - Move I|2014-03-03 - Move I|2014-04-07 - Move I </service_orders><cmz>COAST - HOUSTON</cmz><tdu>CNP</tdu></row></root>";
-
-
 
             string Esidurl = System.Configuration.ConfigurationManager.AppSettings["EsIdUrl"];
             string Esidparams = System.Configuration.ConfigurationManager.AppSettings["EsIdParams"];
@@ -1555,7 +1548,6 @@ namespace DataReef.TM.Services.Services
                 {
                     var propty = dataContext.Properties.Where(x => x.Guid == propertyid).FirstOrDefault();
                     string address = propty != null ? propty.Address1 : "";
-                  //  string address = propty != null ? propty.Address1 + " " + propty.City + " " + propty.State : "";
                     string zipcode = propty != null ? propty.ZipCode : "";
                     Esidparams = Esidparams.Replace("{address}", address).ToString();
                     Esidparams = Esidparams.Replace("{zip}", zipcode).ToString();
@@ -1563,49 +1555,38 @@ namespace DataReef.TM.Services.Services
                 }
                 HttpResponseMessage response = await client.GetAsync(Esidparams);
 
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = "EsidRequestResponse";
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "html";
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = Esidurl;
-                apilog.ResponseContentBody = response.Content.ToString();
-                apilog.RequestContentBody = Esidparams;
-
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var serializer = new XmlSerializer(typeof(EsIDResponse));
-                    EsIDResponse result;
-
-
-
-
-
-                    using (TextReader reader = new StringReader(response.Content.ToString()))
-                    {
-                        result = (EsIDResponse)serializer.Deserialize(reader);
-                    }
-
-                }
-
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     throw new ApplicationException(await response.Content.ReadAsStringAsync());
                 }
 
-                return await response.Content.ReadAsStringAsync();
+                var serializer = new XmlSerializer(typeof(EsIDResponse));
+                EsIDResponse result;
+
+                string resp = await response.Content.ReadAsStringAsync();
+                using (TextReader reader = new StringReader(resp))
+                {
+                    result = (EsIDResponse)serializer.Deserialize(reader);
+                }
+
+                return result;
+            }
+        }
+
+
+        public async Task<bool> IsPropertyAvailable(long igniteId)
+        {
+            using (var data = new DataContext())
+            {
+                var property = data.Properties.FirstOrDefault(x => x.Id == igniteId);
+                if (property == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
         }
     }

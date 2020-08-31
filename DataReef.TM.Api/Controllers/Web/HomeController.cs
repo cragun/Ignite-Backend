@@ -199,7 +199,7 @@ namespace DataReef.TM.Api.Controllers.Web
             {
                 try
                 {
-                    _authService.Value.CompletePasswordReset(model.Guid, model.Password);
+                    _authService.Value.CompletePasswordReset(model.Guid, model.Password , "");
                     return RedirectToAction("Success", new { id = 2 });
                 }
                 catch (Exception ex)

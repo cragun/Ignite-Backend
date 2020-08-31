@@ -20,7 +20,12 @@ using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
 using System.Net.Http;
 using System.Configuration;
+
+using RestSharp;
 using System.Net;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.IO;
 
 namespace DataReef.TM.Services.Services
@@ -185,45 +190,7 @@ namespace DataReef.TM.Services.Services
 
                 return true;
             }
-        }
-
-        public string SendNotificationFromFirebaseCloud(string message, string device, string title)
-        {
-            try
-            {
-                var result = "-1";
-                string ServerKey = ConfigurationManager.AppSettings["Firebase.ServerKey"];
-
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://fcm.googleapis.com/fcm/send");
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Headers.Add("Authorization:key=" + ServerKey);
-                httpWebRequest.Method = "POST";
-
-                httpWebRequest.UseDefaultCredentials = true;
-                httpWebRequest.PreAuthenticate = true;
-                httpWebRequest.Credentials = CredentialCache.DefaultCredentials;
-
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    string json = "{\"to\": [" + device + "],\"data\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"}}";
-                    streamWriter.Write(json);
-                    streamWriter.Flush();
-                }
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    result = streamReader.ReadToEnd();
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
+        } 
     }
 }
 
