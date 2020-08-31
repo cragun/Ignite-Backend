@@ -24,8 +24,5 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         bool MarkAsReadFromSmartboard(string notificationSmartboardID, string apiKey);
-
-        [OperationContract]
-        Task<string> SendNotificationFromFirebaseCloud(string message, string device, string title);
     }
 }

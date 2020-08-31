@@ -35,6 +35,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IUserInvitationService> _userInvitationService;
         private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly Lazy<IPushNotificationService> _pushNotificationService;
         private readonly IApiLoggingService _apiLoggingService;
         private readonly Lazy<IRepository> _repository;
 
@@ -48,6 +49,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IAssignmentService> assignmentService,
             Lazy<IUserInvitationService> userInvitationService,
             Lazy<IPersonService> personService,
+            Lazy<IPushNotificationService> pushNotificationService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             IApiLoggingService apiLoggingService) : base(logger, unitOfWorkFactory)
         {
@@ -56,6 +58,7 @@ namespace DataReef.TM.Services.Services
             _assignmentService = assignmentService;
             _userInvitationService = userInvitationService;
             _personService = personService;
+            _pushNotificationService = pushNotificationService;
             _sbAdapter = sbAdapter;
             _repository = repository;
             _apiLoggingService = apiLoggingService;
@@ -103,13 +106,13 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
                 entity.SaveResult = SaveResult.SuccessfulInsert;
 
+                var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault();
                 if (entity.ContentType == "Comment")
                 {
                     var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
                     var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
 
-                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
-                    not.Updated(SmartPrincipal.UserId, people);
+                    not.Updated(SmartPrincipal.UserId, people?.Name);
                     dc.SaveChanges();
 
                     if (not != null && proprty != null)
@@ -138,6 +141,13 @@ namespace DataReef.TM.Services.Services
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
                     }
 
+                }
+
+                //send notification 
+
+                if (!String.IsNullOrEmpty(people?.fcm_token))
+                {
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
                 }
             }
             return entity;
