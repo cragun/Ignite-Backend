@@ -72,6 +72,7 @@ namespace DataReef.TM.Api.Controllers
                 return NotFound();
             }
 
+
             List<Assignment> assignments = person.Assignments.ToList();
 
             Assignment ass = assignments.Where(aaa => aaa.TerritoryID == territoryID).FirstOrDefault();
