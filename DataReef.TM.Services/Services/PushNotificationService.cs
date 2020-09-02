@@ -27,7 +27,7 @@ namespace DataReef.TM.Services.Services
             {   
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Headers.Add("Authorization", "key=" + serverKey);
+                httpWebRequest.Headers.Add("Authorization", "key=AAAAjcK0I_g:APA91bE9yx0Ximczoh423GN5fUhOSG5XOYnLxHDJtciBdGcapueC9LhCe0xyMMJwnfY79UrZ83rPXhbQLvW_JOcbbT6xNy_P7U96YKfQXB_U2Zr5Um58Dk0TglI_pvRghEoll5AqfN94");
                 httpWebRequest.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
