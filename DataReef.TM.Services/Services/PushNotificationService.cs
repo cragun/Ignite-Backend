@@ -44,7 +44,7 @@ namespace DataReef.TM.Services.Services
                     result = streamReader.ReadToEnd();
                 }
 
-                return result;
+                return "success";
             }
             catch (Exception ex)
             {
