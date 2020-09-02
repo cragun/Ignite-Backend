@@ -1041,6 +1041,7 @@ namespace DataReef.TM.Services.Services
                     signedDocuments.Add(agreementSignedDocument);
                 }
 
+
                 var attachmentPDFs = new List<Tuple<byte[], string>>();
                 signedDocuments?
                         .ForEach(d =>
