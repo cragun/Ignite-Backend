@@ -38,12 +38,13 @@ namespace DataReef.TM.Services.Services
                 }
 
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var result = "-1";
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
-                   var result = streamReader.ReadToEnd();
+                    result = streamReader.ReadToEnd();
                 }
 
-                return "success";
+                return result;
             }
             catch (Exception ex)
             {
