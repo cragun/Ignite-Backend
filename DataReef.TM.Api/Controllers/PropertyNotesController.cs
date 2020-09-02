@@ -290,12 +290,12 @@ namespace DataReef.TM.Api.Controllers
         }
 
          
-        [Route("send")]
+        [Route("send/notification")]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IHttpActionResult> SendNotification(string fcm_token)
+        public async Task<IHttpActionResult> SendNotification(Person people)
         {
-            var result = _propertyNoteService.SendNotification(fcm_token);
+            var result = _propertyNoteService.SendNotification(people.fcm_token);
             return Ok(result);
         }
 
