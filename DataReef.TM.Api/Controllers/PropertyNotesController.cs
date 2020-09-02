@@ -289,7 +289,15 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
-
+         
+        [Route("send")]
+        [HttpPost]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<IHttpActionResult> SendNotification(string fcm_token)
+        {
+            var result = _propertyNoteService.SendNotification(fcm_token);
+            return Ok(result);
+        }
 
     }
 }

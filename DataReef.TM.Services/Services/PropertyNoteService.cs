@@ -265,7 +265,7 @@ namespace DataReef.TM.Services.Services
 
                     }
 
-                 
+
                 }
             }
 
@@ -348,10 +348,10 @@ namespace DataReef.TM.Services.Services
                         }
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
-                    }                    
+                    }
                 }
 
-               
+
             }
             return ret;
         }
@@ -411,7 +411,7 @@ namespace DataReef.TM.Services.Services
 
                     }
 
-                 
+
                 }
             }
 
@@ -1065,6 +1065,13 @@ namespace DataReef.TM.Services.Services
             }
 
         }
+
+        public string SendNotification(string fcm_token)
+        {
+            var res = _pushNotificationService.Value.PushNotification("You received new notes", fcm_token, "Ignite");
+            return res;
+        }
+
     }
 }
 

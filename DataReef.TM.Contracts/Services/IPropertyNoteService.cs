@@ -43,5 +43,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
+
+        [OperationContract]
+        string SendNotification(string fcm_token);
     }
 }

@@ -47,7 +47,7 @@ namespace DataReef.TM.Services.Services
             }
             catch (Exception ex)
             {
-                return "failed";
+                return ex.Message.ToString();
             }
         }
     }
