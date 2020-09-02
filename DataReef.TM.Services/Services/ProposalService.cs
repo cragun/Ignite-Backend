@@ -921,7 +921,6 @@ namespace DataReef.TM.Services.Services
             var ouid = contractorIdSettings.FirstOrDefault().OUID;
             return GetProposalUrlForOUID(ouid, propososalDataGuid);
         }
-
         private List<Tuple<string, string>> GetProposalUrlForOUID(Guid ouid, Guid propososalDataGuid)
         {
             var templateDefaultUrl = $"{_templateDefaultUrl}{propososalDataGuid}";
