@@ -304,13 +304,14 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
+                var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault();
+
                 if (entity.ContentType == "Comment")
                 {
                     var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
                     var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
 
-                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
-                    not.Updated(SmartPrincipal.UserId, people);
+                    not.Updated(SmartPrincipal.UserId, people?.Name);
                     dc.SaveChanges();
 
                     if (not != null && proprty != null)
@@ -338,6 +339,13 @@ namespace DataReef.TM.Services.Services
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
                     }                    
                 }
+
+                //send notification 
+
+                if (!String.IsNullOrEmpty(people?.fcm_token))
+                {
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
+                }
             }
             return ret;
         }
@@ -354,13 +362,14 @@ namespace DataReef.TM.Services.Services
                 foreach (var entity in entities)
                 {
 
+                    var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault();
+
                     if (entity.ContentType == "Comment")
                     {
                         var not = dc.PropertyNotes.Where(x => x.Guid == entity.ParentID).FirstOrDefault();
                         var proprty = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == not.PropertyID);
 
-                        var people = dc.People.Where(x => x.Guid == SmartPrincipal.UserId).FirstOrDefault()?.Name;
-                        not.Updated(SmartPrincipal.UserId, people);
+                        not.Updated(SmartPrincipal.UserId, people?.Name);
                         dc.SaveChanges();
 
                         if (not != null && proprty != null)
@@ -386,6 +395,13 @@ namespace DataReef.TM.Services.Services
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
                         }
 
+                    }
+
+                    //send notification 
+
+                    if (!String.IsNullOrEmpty(people?.fcm_token))
+                    {
+                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
                     }
                 }
             }
