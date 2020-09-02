@@ -122,6 +122,14 @@ namespace DataReef.TM.Services.Services
                 }
 
 
+                //send notification 
+
+                if (!String.IsNullOrEmpty(people?.fcm_token))
+                {
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
+                }
+
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -143,12 +151,6 @@ namespace DataReef.TM.Services.Services
 
                 }
 
-                //send notification 
-
-                if (!String.IsNullOrEmpty(people?.fcm_token))
-                {
-                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
-                }
             }
             return entity;
         }
@@ -177,6 +179,13 @@ namespace DataReef.TM.Services.Services
                 }
 
 
+                //send notification 
+
+                if (!String.IsNullOrEmpty(people?.fcm_token))
+                {
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
+                }
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -198,12 +207,6 @@ namespace DataReef.TM.Services.Services
 
                 }
 
-                //send notification 
-
-                if (!String.IsNullOrEmpty(people?.fcm_token))
-                {
-                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
-                }
             }
             return ret;
         }
@@ -235,6 +238,12 @@ namespace DataReef.TM.Services.Services
                         }
                     }
 
+                    //send notification 
+
+                    if (!String.IsNullOrEmpty(people?.fcm_token))
+                    {
+                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
+                    }
 
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
@@ -256,12 +265,7 @@ namespace DataReef.TM.Services.Services
 
                     }
 
-                    //send notification 
-
-                    if (!String.IsNullOrEmpty(people?.fcm_token))
-                    {
-                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
-                    }
+                 
                 }
             }
 
@@ -320,6 +324,13 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
+                //send notification 
+
+                if (!String.IsNullOrEmpty(people?.fcm_token))
+                {
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
+                }
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -340,12 +351,7 @@ namespace DataReef.TM.Services.Services
                     }                    
                 }
 
-                //send notification 
-
-                if (!String.IsNullOrEmpty(people?.fcm_token))
-                {
-                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
-                }
+               
             }
             return ret;
         }
@@ -377,6 +383,14 @@ namespace DataReef.TM.Services.Services
                             NotifyComment(not.PersonID, not, proprty, dc);
                         }
                     }
+
+                    //send notification 
+
+                    if (!String.IsNullOrEmpty(people?.fcm_token))
+                    {
+                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
+                    }
+
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
                     {
@@ -397,12 +411,7 @@ namespace DataReef.TM.Services.Services
 
                     }
 
-                    //send notification 
-
-                    if (!String.IsNullOrEmpty(people?.fcm_token))
-                    {
-                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite");
-                    }
+                 
                 }
             }
 
