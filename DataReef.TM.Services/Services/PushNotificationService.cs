@@ -31,7 +31,7 @@ namespace DataReef.TM.Services.Services
 
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    string json = "{\"to\": \"" + token + "\",\"notification\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"},\"priority\":10}";
+                    string json = "{\"to\": \"" + "cCgFluq1nE9QmEhmwJcPQI:APA91bEiWuHQbmgATcf2KBfCM37O3OeLPZyV9WOZrDT8i0w7f0KG4f_funNkTH-jCyFnBUW3N5eseDw5grZwfBEi4LoNBNwlmRf_w40z_qAqIYLlXqQLYhEdODm9M7X93oMchCKIIt9C" + "\",\"notification\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"},\"priority\":10}";
                     streamWriter.Write(json);
                     streamWriter.Flush();
                 }
@@ -43,9 +43,7 @@ namespace DataReef.TM.Services.Services
                     result = streamReader.ReadToEnd();
                 }
 
-                return "succesccsdsdsSDSDSDSD";
-
-
+                return result;
             }
             catch (Exception ex)
             {
