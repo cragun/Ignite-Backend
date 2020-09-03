@@ -2495,5 +2495,92 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public string Getproposalpdftest(string s)
+        {
+            Guid id = Guid.Parse("F56985B9-4660-4EBF-9979-1CDD22146F6E");
+            using (var dataContext = new DataContext())
+            {
+                var data = dataContext
+                            .ProposalData
+                            .FirstOrDefault(pd => pd.Guid == id);
+
+                if (data == null)
+                {
+                    throw new ApplicationException("Could not find Proposal Data!");
+                }
+
+                var proposal = dataContext
+                                .Proposal
+                                .Include(x => x.Property)
+                                .Include(x => x.Property.Territory)
+                                .FirstOrDefault(x => x.Guid == data.ProposalID);
+                if (proposal == null)
+                {
+                    throw new ApplicationException("Could not find the proposal");
+                }
+
+                List<SignedDocumentDTO> signedDocuments = new List<SignedDocumentDTO>();
+
+                //add the agreement
+                var contractorID = data.ContractorID;
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                if (signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
+                {
+                    var agreementSignedDocument = GetSignedAgreementUrl(contractorID, data.Guid, ouSettings);
+                    signedDocuments.Add(agreementSignedDocument);
+                }
+
+                var attachmentPDFs = new List<Tuple<byte[], string>>();
+                signedDocuments?
+                        .ForEach(d =>
+                        {
+                            d.Description = $"{d.Name}";
+                            d.ProposalDataID = id;
+
+                            if (d.Url.Contains("?webview=1"))
+                            {
+                                d.Url = d.Url.Replace("?webview=1", string.Empty);
+                            }
+
+                            if (d.Url.Contains("&webview=1"))
+                            {
+                                d.Url = d.Url.Replace("&webview=1", string.Empty);
+                            }
+
+                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
+
+                            d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
+                                 new BlobModel
+                                 {
+                                     Content = pdfContent,
+                                     ContentType = "application/pdf"
+                                 }, BlobAccessRights.PublicRead);                            
+
+                            attachmentPDFs.Add(new Tuple<byte[], string>(pdfContent, $"{d.Description}.pdf"));
+                        });
+
+               
+
+                var documentsLinks = string.Join("<br/>", signedDocuments.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for <a/>"));
+
+                Task.Factory.StartNew(() =>
+                {
+                    List<System.Net.Mail.Attachment> attachments = null;
+                    if (attachmentPDFs.Count > 0)
+                    {
+                        attachments = attachmentPDFs.Select(pdf => new System.Net.Mail.Attachment(new MemoryStream(pdf.Item1), pdf.Item2))
+                                        .ToList();
+                    }
+
+                    var body = $"You will find the Installation Agreement for using the link below: <br/> <br/> {documentsLinks} <br/>";
+                    var to = "hevin.android@gmail.com";
+
+                    Mail.Library.SendEmail(to, null, $"Installation Agreement for ", body, true, attachments);
+                });
+            }
+
+            return "send";
+        }
+
     }
 }

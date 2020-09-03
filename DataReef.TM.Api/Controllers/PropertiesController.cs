@@ -131,6 +131,7 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+
         [Route("{propertyID:guid}/inquiries/{personID:guid}")]
         [ResponseType(typeof(ICollection<Inquiry>))]
         [HttpGet]
