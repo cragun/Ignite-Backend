@@ -108,5 +108,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         int GetProposalCount(Guid PropertyID);
 
+        [OperationContract]
+        string Getproposalpdftest(string s);
+
     }
 }

@@ -2495,5 +2495,14 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
+        public string Getproposalpdftest(string s)
+        {
+            var pdfContent = _utilServices.Value.GetPDF(s);
+            return pdfContent.ToString();
+        }
+
+        
+
     }
 }

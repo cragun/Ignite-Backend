@@ -89,6 +89,13 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = count.ToString() });
         }
 
+        [HttpGet, Route("proposalpdftest")]
+        public async Task<IHttpActionResult> Getproposalpdftest()
+        {
+            var cnt = _proposalService.Getproposalpdftest("http://ignite-proposals.s3-website-us-west-2.amazonaws.com/trismart-solar/install/e818b944-13b0-41df-9e5d-01e9fd9063ae?webview=1");
+            return Ok(cnt);
+        }
+
         [Route("{proposalDataId}/sign/document")]
         [HttpPost]
         [ResponseType(typeof(Proposal))]
