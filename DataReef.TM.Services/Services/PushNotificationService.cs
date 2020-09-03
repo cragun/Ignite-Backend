@@ -10,7 +10,6 @@ using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Text;
-using Firebase;
 
 namespace DataReef.TM.Services.Services
 {
