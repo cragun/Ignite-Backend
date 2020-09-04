@@ -41,7 +41,8 @@ namespace DataReef.TM.Services.Services
                             body = message,
                             title,
                             badge = 1,
-                            sound = "default"
+                            sound = "default",
+                            priority = 10
                         },
                         data = new
                         {
@@ -50,8 +51,7 @@ namespace DataReef.TM.Services.Services
                             type
                         }
                     };
-
-                    string json = "{\"to\": \"" + token + "\",\"notification\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"},\"priority\":10,\"data\": {\"message\": \"20% deal today!!\",}}";
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
                     streamWriter.Write(json);
                     streamWriter.Flush();
                 }
