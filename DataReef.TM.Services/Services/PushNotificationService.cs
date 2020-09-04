@@ -1,6 +1,7 @@
 ﻿using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -17,11 +18,11 @@ namespace DataReef.TM.Services.Services
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     public class PushNotificationService : IPushNotificationService
     {
-        private static readonly string serverKey = ConfigurationManager.AppSettings["Firebase.ServerKey"]; 
-        private static readonly string url = "https://fcm.googleapis.com/fcm/send"; 
+        private static readonly string serverKey = ConfigurationManager.AppSettings["Firebase.ServerKey"];
+        private static readonly string url = "https://fcm.googleapis.com/fcm/send";
 
-        public string PushNotification(string message, string token, string title)
-        { 
+        public string PushNotification(string message, string token, string title, Notification obj, string type)
+        {
             try
             {
 
@@ -32,7 +33,25 @@ namespace DataReef.TM.Services.Services
 
                 using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    string json = "{\"to\": \"" + token + "\",\"notification\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"},\"priority\":10}";
+                    var data = new
+                    {
+                        to = token,
+                        notification = new
+                        {
+                            body = message,
+                            title,
+                            badge = 1,
+                            sound = "default"
+                        },
+                        data = new
+                        {
+                            obj.PropertyID,
+                            obj.NoteID,
+                            type
+                        }
+                    };
+
+                    string json = "{\"to\": \"" + token + "\",\"notification\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"},\"priority\":10,\"data\": {\"message\": \"20% deal today!!\",}}";
                     streamWriter.Write(json);
                     streamWriter.Flush();
                 }
