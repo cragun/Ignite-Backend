@@ -48,7 +48,7 @@ namespace DataReef.TM.Services.Services
                         {
                             obj.PropertyID,
                             obj.NoteID,
-                            type
+                            EntityType = type
                         }
                     };
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(data);

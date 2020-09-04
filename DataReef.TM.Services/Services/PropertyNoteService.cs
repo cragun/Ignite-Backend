@@ -130,7 +130,7 @@ namespace DataReef.TM.Services.Services
 
                 if (!String.IsNullOrEmpty(people?.fcm_token))
                 {
-                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Property");
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Notes");
                 }
 
 
@@ -191,7 +191,7 @@ namespace DataReef.TM.Services.Services
 
                 if (!String.IsNullOrEmpty(people?.fcm_token))
                 {
-                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Property");
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Notes");
                 }
 
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
@@ -254,7 +254,7 @@ namespace DataReef.TM.Services.Services
 
                     if (!String.IsNullOrEmpty(people?.fcm_token))
                     {
-                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Property");
+                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Notes");
                     }
 
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
@@ -344,7 +344,7 @@ namespace DataReef.TM.Services.Services
 
                 if (!String.IsNullOrEmpty(people?.fcm_token))
                 {
-                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Property");
+                    _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Notes");
                 }
 
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
@@ -408,7 +408,7 @@ namespace DataReef.TM.Services.Services
 
                     if (!String.IsNullOrEmpty(people?.fcm_token))
                     {
-                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Property");
+                        _pushNotificationService.Value.PushNotification("You received new notes", people.fcm_token, "Ignite", notification, "Notes");
                     }
 
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
