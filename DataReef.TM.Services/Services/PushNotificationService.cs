@@ -51,6 +51,7 @@ namespace DataReef.TM.Services.Services
                             EntityType = type
                         }
                     };
+
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
                     streamWriter.Write(json);
                     streamWriter.Flush();
