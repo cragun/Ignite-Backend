@@ -738,6 +738,7 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
+
             if (notifications?.Any() == true)
             {
                 dataContext.Notifications.AddRange(notifications);
