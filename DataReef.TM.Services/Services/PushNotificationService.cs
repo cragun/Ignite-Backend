@@ -54,6 +54,7 @@ namespace DataReef.TM.Services.Services
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
                     streamWriter.Write(json);
                     streamWriter.Flush();
+
                 }
 
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
