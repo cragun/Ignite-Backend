@@ -61,7 +61,14 @@ namespace DataReef.TM.Api.Controllers
         {            
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }
-        
+
+        [Route("updatePPW/{cashPPW:double}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateCashPPW(double cashPPW)
+        {
+            _financePlanDefinitionService.Value.UpdateCashPPW(cashPPW);
+            return Ok();
+        }
 
         //private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
 

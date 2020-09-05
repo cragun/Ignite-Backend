@@ -156,6 +156,20 @@ namespace DataReef.TM.Services
         {
             return _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
         }
+
+        public void UpdateCashPPW(double cashPPW)
+        {
+            using (var dc = new DataContext())
+            {
+                var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
+                if (financePlan != null)
+                {
+                    financePlan.PPW = cashPPW;
+                    dc.SaveChanges();
+                }
+            }
+        }
+
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())
@@ -189,11 +203,6 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                //var proposal = dc.Proposal.Where(x => x.PropertyID == propertyID && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
-                                //var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
-                                //var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
-
-                                //  string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
                                 string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }

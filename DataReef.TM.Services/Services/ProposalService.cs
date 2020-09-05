@@ -97,8 +97,7 @@ namespace DataReef.TM.Services.Services
                 var ret = Get(entity.Guid, @"SolarSystem.AdderItems,SolarSystem.PowerConsumption,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions.ObstructionPoints,SolarSystem.SystemProduction.Months,SolarSystem.FinancePlans.Documents,Tariff");
                 if (ret != null)
                 {
-                    ret.SaveResult = proposal.SaveResult;
-
+                    ret.SaveResult = proposal.SaveResult;                
                     if (ret.SaveResult.Success)
                     {
                         Guid? ouid = null;
