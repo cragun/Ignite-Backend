@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataReef.TM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -12,6 +13,6 @@ namespace DataReef.TM.Contracts.Services
     public interface IPushNotificationService
     {
         [OperationContract]
-        string PushNotification(string token, string message , string title);
+        string PushNotification(string token, string message , string title , Notification obj, string type);
     }
 }
