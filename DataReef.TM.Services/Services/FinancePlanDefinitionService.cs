@@ -157,13 +157,14 @@ namespace DataReef.TM.Services
             return _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
         }
 
-        public void UpdateCashPPW(double cashPPW)
+        public void UpdateCashPPW(double cashPPW, double lenderFee)
         {
             using (var dc = new DataContext())
             {
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
                 if (financePlan != null)
                 {
+                    financePlan.LenderFee = lenderFee;
                     financePlan.PPW = cashPPW;
                     dc.SaveChanges();
                 }

@@ -62,11 +62,11 @@ namespace DataReef.TM.Api.Controllers
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }
 
-        [Route("updatePPW/{cashPPW:double}")]
+        [Route("updatePPW/{cashPPW:double}/{lenderFee:double}")]
         [HttpPost]
-        public async Task<IHttpActionResult> UpdateCashPPW(double cashPPW)
+        public async Task<IHttpActionResult> UpdateCashPPW(double cashPPW, double lenderFee)
         {
-            _financePlanDefinitionService.Value.UpdateCashPPW(cashPPW);
+            _financePlanDefinitionService.Value.UpdateCashPPW(cashPPW, lenderFee);
             return Ok();
         }
 
