@@ -53,8 +53,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok(_financePlanDefinitionService.Value.Sunlightsendloandocs(proposalId));
         }
 
-
-
         [Route("{financePlanDefinitionId:guid}/{propertyId:guid}/creditcheckurls")]
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
@@ -62,7 +60,6 @@ namespace DataReef.TM.Api.Controllers
         {            
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }
-
 
         [Route("updatePPW")]
         [HttpPost]
