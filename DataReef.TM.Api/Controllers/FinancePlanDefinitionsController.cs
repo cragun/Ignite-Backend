@@ -64,9 +64,9 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [Route("updatePPW/{cashPPW:double}/{lenderFee:double}")]
+        [Route("updatePPW")]
         [HttpPost]
-        public async Task<IHttpActionResult> UpdateCashPPW(double cashPPW, double lenderFee)
+        public async Task<IHttpActionResult> UpdateCashPPW(double? cashPPW = null, double? lenderFee = null)
         {
             _financePlanDefinitionService.Value.UpdateCashPPW(cashPPW, lenderFee);
             return Ok();

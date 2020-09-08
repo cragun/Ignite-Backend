@@ -423,11 +423,19 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
 
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+
+            try
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response, url, null, integrationData.ApiKey);
+            }
+            catch (Exception)
+            {
+            }
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
         public SBGetDocument GetOuDocumentType(Guid ouid)
-        {  
+        {
             EnsureInitialized(ouid);
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -457,7 +465,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             var url = $"/apis/document_tabs_and_types/{encryptedAPIkey}";
 
             var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
-                return JsonConvert.DeserializeObject<SBGetDocument>(response);
+            return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
         public void SBActiveDeactiveUser(bool IsActive, string sbid)

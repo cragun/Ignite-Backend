@@ -157,17 +157,26 @@ namespace DataReef.TM.Services
             return _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
         }
 
-        public void UpdateCashPPW(double cashPPW, double lenderFee)
+        public void UpdateCashPPW(double? cashPPW, double? lenderFee)
         {
             using (var dc = new DataContext())
             {
-                var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
-                if (financePlan != null)
+                if (cashPPW != null)
                 {
-                    financePlan.LenderFee = lenderFee;
-                    financePlan.PPW = cashPPW;
+                    var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
+                    if (financePlan != null)
+                    {
+                        financePlan.PPW = cashPPW;
+                        dc.SaveChanges();
+                    }
+                }
+
+                if (lenderFee != null)
+                {
+                    dc.FinancePlaneDefinitions.Where(y => !y.Name.Contains("Cash") && !y.Name.Contains("Sunnova")).ToList().ForEach(c => c.LenderFee = lenderFee);
                     dc.SaveChanges();
                 }
+
             }
         }
 
