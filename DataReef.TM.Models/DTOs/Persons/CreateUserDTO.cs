@@ -19,5 +19,9 @@ namespace DataReef.TM.Models.DTOs.Persons
         public string LastName { get; set; }
 
         public Guid RoleID { get; set; }
+
+        public string ID { get; set; }
+
+        public string[] apikey { get; set; }
     }
 }

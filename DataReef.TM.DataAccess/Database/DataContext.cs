@@ -56,6 +56,7 @@ namespace DataReef.TM.DataAccess.Database
 
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<FavouriteTerritory> FavouriteTerritories { get; set; }
+        public DbSet<FavouriteOu> FavouriteOus { get; set; }
         public DbSet<AppointmentFavouritePerson> AppointmentFavouritePersons { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Authentication> Authentications { get; set; }

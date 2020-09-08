@@ -14,6 +14,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.Accounting;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Blobs;
+using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Services;
@@ -353,7 +354,7 @@ namespace DataReef.Application.Services
                             AuthenticationToken token = new AuthenticationToken();
                             token.Audience = "tm";
                             token.ClientSecret = "asdfjkl;qweruipo";
-                            token.Expiration = System.DateTime.UtcNow.AddDays(expirationDays).ToUnixTime();
+                            token.Expiration = DateTime.UtcNow.AddDays(expirationDays).ToUnixTime();
                             token.UserID = c.UserID;
                             if (aa != null) token.AccountID = aa.AccountID;
 
@@ -370,7 +371,7 @@ namespace DataReef.Application.Services
                                     });
                                     dataContext.SaveChanges();
                                 }
-                            });                           
+                            });
 
 
                             var pbi = new PBI_ActiveUser
@@ -400,8 +401,8 @@ namespace DataReef.Application.Services
 
         public bool updateUser(bool value, Guid userId)
         {
-                using (DataContext dc = new DataContext())
-                {
+            using (DataContext dc = new DataContext())
+            {
                 var person = dc
                      .People
                      .SingleOrDefault(p => p.Guid == userId);
@@ -441,12 +442,12 @@ namespace DataReef.Application.Services
             {
                 var isSuperAdmin = dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId && oa.OURole.RoleType == OURoleType.SuperAdmin).ToList();
 
-                if(isSuperAdmin.Count == 0)
+                if (isSuperAdmin.Count == 0)
                 {
                     throw new ArgumentException("Super-Admin can access only.");
                 }
 
-                var credentials = dc 
+                var credentials = dc
                                 .Credentials
                                 .Include(cred => cred.User.Person.PersonSettings)
                                 .Include(cred => cred.User.UserDevices)
@@ -819,5 +820,291 @@ namespace DataReef.Application.Services
                 return ctx.People.FirstOrDefault(p => p.Guid == SmartPrincipal.UserId)?.Name;
             }
         }
+
+        public SaveResult CreateUpdateUserFromSB(CreateUserDTO newUser, string[] apikey)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
+                if (isExist != null)
+                {
+                    using (var transaction = dc.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            if (isExist.IsDeleted == true)
+                            {
+                                return new SaveResult { Success = false, SuccessMessage = "Please activate user" };
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.FirstName))
+                            {
+                                isExist.FirstName = newUser.FirstName;
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.LastName))
+                            {
+                                isExist.LastName = newUser.LastName;
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.FirstName) && !String.IsNullOrEmpty(newUser.LastName))
+                            {
+                                isExist.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.EmailAddress))
+                            {
+                                isExist.EmailAddressString = newUser.EmailAddress;
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.PhoneNumber))
+                            {
+                                var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                                if (isExistPhoneNumber != null)
+                                {
+                                    isExistPhoneNumber.Number = newUser.PhoneNumber;
+                                }
+                            }
+
+                            if (!String.IsNullOrEmpty(newUser.Password))
+                            {
+                                var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                                if (isExistCredentials != null)
+                                {
+                                    isExistCredentials.UserName = newUser.EmailAddress;
+                                    isExistCredentials.PasswordRaw = newUser.Password;
+                                    isExistCredentials.PerformHash();
+                                }
+                            }
+
+                            var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
+                            dc.OUAssociations.RemoveRange(OUAssociations);
+
+                            string not_avail = "";
+
+                            foreach (var item in apikey)
+                            {
+                                var ouSetting = dc.OUSettings.Where(x => x.Name == SolarTrackerResources.SelectedSettingName).ToList()
+                              .FirstOrDefault(x =>
+                              {
+                                  var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
+                                  return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                              });
+
+                                if (ouSetting == null)
+                                {
+                                    not_avail += item + ",";
+                                }
+                                else
+                                {
+                                    //check to see if the user is already part of the OU
+                                    var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExist.Guid && oua.OUID == ouSetting.OUID);
+                                    if (organizationalUnitAssociation == null)
+                                    {
+                                        var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                        if (Ou != null)
+                                        {
+                                            var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                            //add the OU association and the Role to that Association
+                                            organizationalUnitAssociation = new OUAssociation
+                                            {
+                                                OUID = ouSetting.OUID,
+                                                PersonID = isExist.Guid,
+                                                OURoleID = newUser.RoleID,
+                                                RoleType = role.RoleType
+                                            };
+                                            dc.OUAssociations.Add(organizationalUnitAssociation);
+                                        }
+                                    }
+                                }
+                            }
+
+                            dc.SaveChanges();
+                            transaction.Commit();
+                            if (!String.IsNullOrEmpty(not_avail))
+                            {
+                                not_avail = not_avail.TrimEnd(',');
+                            }
+
+                            return new SaveResult { Success = true, SuccessMessage = "User updated successfully", Exception = not_avail };
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+                else
+                {
+                    using (var transaction = dc.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            //see if a user exists for this emaiAddress
+                            var credential = dc.Credentials
+                                        .Include(cred => cred.User)
+                                        .Include(cred => cred.User.Person)
+                                        .FirstOrDefault(cc => cc.UserName == newUser.EmailAddress);
+
+                            Person person = null;
+                            User user = null;
+                            Guid accountID = System.Guid.Empty;
+
+                            if (credential == null)
+                            {
+                                person = new Person
+                                {
+                                    Guid = Guid.NewGuid(),
+                                    FirstName = newUser.FirstName,
+                                    LastName = newUser.LastName,
+                                    EmailAddressString = newUser.EmailAddress,
+                                    SmartBoardID = newUser.ID,
+                                    Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName)
+                                };
+
+                                if (!string.IsNullOrEmpty(newUser.PhoneNumber))
+                                {
+                                    person.PhoneNumbers = new List<PhoneNumber> { new PhoneNumber
+                        {
+                            PersonID = person.Guid,
+                            Number = newUser.PhoneNumber,
+                            PhoneType = PhoneType.Mobile
+                        }};
+                                }
+                                dc.People.Add(person);
+
+                                user = new User
+                                {
+                                    Guid = person.Guid,
+                                    PersonID = person.Guid,
+                                    Person = person,
+                                    NumberOfDevicesAllowed = MaxNumberOfDevicesPerUser
+                                };
+                                dc.Users.Add(user);
+
+                                var tokenLedger = new TokenLedger
+                                {
+                                    Name = person.Name,
+                                    UserID = person.Guid,
+                                    PersonID = person.Guid,
+                                    IsPrimary = true
+                                };
+                                dc.TokenLedgers.Add(tokenLedger);
+
+                                credential = new Credential
+                                {
+                                    UserName = newUser.EmailAddress,
+                                    PasswordRaw = newUser.Password,
+                                    UserID = person.Guid,
+                                    PersonID = person.Guid,
+                                };
+                                credential.PerformHash();
+                                dc.Credentials.Add(credential);
+
+                            }
+                            else
+                            {
+                                person = credential.User.Person;
+                                user = credential.User;
+
+                                if (person != null) person.IsDeleted = false;
+                            }
+
+                            string not_avail = "";
+                            foreach (var item in apikey)
+                            {
+                                var ouSetting = dc.OUSettings.Where(x => x.Name == SolarTrackerResources.SelectedSettingName).ToList()
+                              .FirstOrDefault(x =>
+                              {
+                                  var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
+                                  return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                              });
+
+                                if (ouSetting == null)
+                                {
+                                    not_avail += item + ",";
+                                }
+                                else
+                                {
+                                    //check to see if the user is already part of the OU
+                                    var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == ouSetting.OUID);
+                                    if (organizationalUnitAssociation == null)
+                                    {
+                                        var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                        if (Ou != null)
+                                        {
+                                            var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                            //add the OU association and the Role to that Association
+                                            organizationalUnitAssociation = new OUAssociation
+                                            {
+                                                OUID = ouSetting.OUID,
+                                                PersonID = person.Guid,
+                                                OURoleID = newUser.RoleID,
+                                                RoleType = role.RoleType
+                                            };
+                                            dc.OUAssociations.Add(organizationalUnitAssociation);
+                                        }
+                                    }
+                                }
+                            }
+
+                            try
+                            {
+                                // Your code...
+                                // Could also be before try if you know the exception occurs in SaveChanges
+
+                                dc.SaveChanges();
+
+                                //  Register user into MailChimp if he is not already
+                                try
+                                {
+                                    _mailChimpAdapter.Value.RegisterUser(newUser.EmailAddress);
+                                }
+                                catch { }
+                            }
+                            catch (DbEntityValidationException e)
+                            {
+                                logger.Error("Create User", e);
+
+                                foreach (var eve in e.EntityValidationErrors)
+                                {
+                                    foreach (var ve in eve.ValidationErrors)
+                                    {
+                                        Console.WriteLine("- Property: \"{0}\", Value: \"{1}\", Error: \"{2}\"",
+                                            ve.PropertyName,
+                                            eve.Entry.CurrentValues.GetValue<object>(ve.PropertyName),
+                                            ve.ErrorMessage);
+                                    }
+                                }
+                                throw;
+                            }
+
+                            var authenticationToken = new AuthenticationToken
+                            {
+                                UserID = user.Guid
+                            };
+
+                            transaction.Commit();
+
+                            if (!String.IsNullOrEmpty(not_avail))
+                            {
+                                not_avail = not_avail.TrimEnd(',');
+                            }
+
+                            return new SaveResult { Success = true, SuccessMessage = "User created successfully", Exception = not_avail };
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

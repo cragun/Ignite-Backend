@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
+using System.Configuration;
+using System.Net.Http;
 
 namespace DataReef.TM.Services.Services
 {
@@ -180,6 +182,30 @@ namespace DataReef.TM.Services.Services
                 }
 
                 return true;
+            }
+        }
+
+        public async Task<bool> SendPushNotificationAsync(string message, string device, string title)
+        {
+            try
+            {
+                string ServerKey = ConfigurationManager.AppSettings["Firebase.ServerKey"];
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send");
+                request.Headers.TryAddWithoutValidation("Authorization", "key=" + ServerKey);
+
+                string json = "{\"to\": [" + device + "],\"data\": {\"title\": \"" + title + "\",\"body\": \"" + message + "\"}}";
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage result;
+
+                using (var client = new HttpClient())
+                {
+                    result = await client.SendAsync(request);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }

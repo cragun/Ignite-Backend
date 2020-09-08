@@ -4207,6 +4207,11 @@
             Unspecified error occured. 
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.FavouriteOu.PersonID">
+            <summary>
+            Guid of the person assigned a Ou
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.FavouriteTerritory.PersonID">
             <summary>
             Guid of the person assigned a territory

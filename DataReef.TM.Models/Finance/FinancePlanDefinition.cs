@@ -54,6 +54,12 @@ namespace DataReef.TM.Models.Finance
         [DataMember]
         public string Description { get; set; }
 
+        [DataMember]
+        public double? LenderFee { get; set; }
+
+        [DataMember]
+        public double? PPW { get; set; }
+
         /// <summary>
         /// This property is used for third party integrations.
         /// </summary>

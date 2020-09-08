@@ -1,4 +1,5 @@
 ﻿using DataReef.Core;
+using DataReef.Core.Classes;
 using DataReef.TM.Api.Bootstrap;
 using DataReef.TM.Api.Classes;
 using DataReef.TM.Contracts.Auth;
@@ -14,6 +15,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -311,9 +313,28 @@ namespace DataReef.TM.Api.Controllers
               return Ok<Jwt>(EncodeToken(authToken));
           }
 
-          #region Private
+        /// <summary>
+        /// Creates a new user from smart board
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost, Route("createuser/smartboard")]
+        [AllowAnonymous]
+        [ResponseType(typeof(SaveResult))]
+        public SaveResult CreateUserFromSB([FromBody]CreateUserDTO user)
+        {
+            if (user == null)
+            {
+                return new SaveResult { Success = false, ExceptionMessage = "request data can not null" };
+            }
 
-          private Jwt EncodeToken(AuthenticationToken token)
+            var ret = authService.CreateUpdateUserFromSB(user, user.apikey);
+            return ret;
+        }
+
+        #region Private
+
+        private Jwt EncodeToken(AuthenticationToken token)
           {
               string tokenJson = JsonConvert.SerializeObject(token);
               var cert = DataReef.TM.Api.Security.Certificates.Certificate.Get();

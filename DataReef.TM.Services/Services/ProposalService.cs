@@ -1793,6 +1793,12 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public SBGetDocument GetOuDocumentType(Guid ouid)
+        {
+            var response = _solarSalesTrackerAdapter.Value.GetOuDocumentType(ouid);
+            return response;
+        }
+
         public List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request)
         {
             var result = new List<ProposalMediaItem>();

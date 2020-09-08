@@ -375,15 +375,40 @@ namespace DataReef.TM.Services.Services
             OU ou = base.Get(uniqueId, getInclude, exclude, fields, deletedItems);
             ou = OUBuilder(ou, include, exclude, fields, includeAncestors, deletedItems);
 
-            if (ou.Children != null)
+            using (var context = new DataContext())
             {
-                foreach (var child in ou.Children)
-                {
-                    PopulateOUSummary(child);
-                }
-            }
+                var favouriteOus = context.FavouriteOus.Where(f => f.PersonID == SmartPrincipal.UserId).ToList();
+                var favourite = favouriteOus?.FirstOrDefault(s => s.OUID == ou.Guid);
+                if (favourite != null)
+                    ou.IsFavourite = true;
+                else
+                    ou.IsFavourite = false;
 
-            return ou;
+                if (ou.Children != null)
+                {
+                    foreach (var child in ou.Children)
+                    {
+                        var favouriteChild = favouriteOus?.FirstOrDefault(s => s.OUID == child.Guid);
+                        if (favouriteChild != null)
+                            child.IsFavourite = true;
+                        else
+                            child.IsFavourite = false;
+
+                        PopulateOUSummary(child);
+                    }
+                }
+
+                return ou;
+            }
+            //if (ou.Children != null)
+            //{
+            //    foreach (var child in ou.Children)
+            //    {
+            //        PopulateOUSummary(child);
+            //    }
+            //}
+
+            //return ou;
         }
 
         public IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey)
@@ -1618,6 +1643,8 @@ namespace DataReef.TM.Services.Services
                                         Name = sp.Name,
                                         FlowType = sp.Provider.ProposalFlowType,
                                         DefaultDealerFee = sp.DealerFee,
+                                        DefaultLenderFee = sp.LenderFee,
+                                        PPW = sp.PPW,
                                         IntegrationProvider = sp.IntegrationProvider,
                                         MetaData = sp.MetaDataJSON,
                                     })
@@ -2308,7 +2335,48 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        /// <summary>
+        /// This method insert Ou as a Favorite 
+        /// </summary>
+        public FavouriteOu InsertFavouriteOu(Guid ouID, Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteOu = dc.FavouriteOus.FirstOrDefault(x => x.PersonID == personID && x.OUID == ouID);
 
+                if (FavouriteOu != null)
+                    throw new ApplicationException("Already Favourited");
+
+                var ou = new FavouriteOu
+                {
+                    OUID = ouID,
+                    PersonID = personID,
+                    CreatedByID = SmartPrincipal.UserId
+                };
+
+                dc.FavouriteOus.Add(ou);
+                dc.SaveChanges();
+
+                return ou;
+            }
+        }
+
+        /// <summary>
+        /// This method remove Ou as a Favorite 
+        /// </summary>
+        public void RemoveFavouriteOu(Guid ouID, Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteOu = dc.FavouriteOus.FirstOrDefault(x => x.PersonID == personID && x.OUID == ouID);
+
+                if (FavouriteOu == null)
+                    throw new ApplicationException("OU not found");
+
+                dc.FavouriteOus.Remove(FavouriteOu);
+                dc.SaveChanges();
+            }
+        }
 
 
 

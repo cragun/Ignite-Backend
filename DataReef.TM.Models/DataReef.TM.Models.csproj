@@ -356,6 +356,7 @@
     <Compile Include="EpcStatus.cs" />
     <Compile Include="Extensions\DataViewsExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
+    <Compile Include="FavouriteOu.cs" />
     <Compile Include="FavouriteTerritory.cs" />
     <Compile Include="FinancialIntegration\AdapterRequest.cs" />
     <Compile Include="FinancialIntegration\LoanPal\LoanPalAddressModel.cs" />
