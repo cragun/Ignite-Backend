@@ -1804,13 +1804,11 @@ namespace DataReef.TM.Services.Services
                 apilog.ResponseContentBody = request.Name;
                 apilog.RequestContentBody = request.Content.ToString();
 
-
                 using (var dc = new DataContext())
                 {
                     dc.ApiLogEntries.Add(apilog);
                     dc.SaveChanges();
                 }
-
 
                 string resp = "";
                 using (var dataContext = new DataContext())
