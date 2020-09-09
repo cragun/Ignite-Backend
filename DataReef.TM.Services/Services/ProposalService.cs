@@ -1787,7 +1787,7 @@ namespace DataReef.TM.Services.Services
         {
             try
             {
-                var json = new JavaScriptSerializer().Serialize(request);
+               // var json = new JavaScriptSerializer().Serialize(request);
 
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
@@ -1802,7 +1802,7 @@ namespace DataReef.TM.Services.Services
                 apilog.RequestTimestamp = DateTime.UtcNow;
                 apilog.RequestUri = request.ToString();
                 apilog.ResponseContentBody = request.Name;
-                apilog.RequestContentBody = json;
+                apilog.RequestContentBody = request.Content.ToString();
 
 
                 using (var dc = new DataContext())
