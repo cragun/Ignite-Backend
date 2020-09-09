@@ -465,6 +465,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             var url = $"/apis/document_tabs_and_types/{encryptedAPIkey}";
 
             var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+
+            try
+            {
+                SaveRequest(null, response, url, null, integrationData.ApiKey);
+            }
+            catch (Exception)
+            {
+            }
+
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 

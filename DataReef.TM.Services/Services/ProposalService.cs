@@ -1787,6 +1787,30 @@ namespace DataReef.TM.Services.Services
         {
             try
             {
+                var json = new JavaScriptSerializer().Serialize(request);
+
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = SmartPrincipal.UserId.ToString();
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "UploadProposalDoc";
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = request.ToString();
+                apilog.ResponseContentBody = request.Name;
+                apilog.RequestContentBody = json;
+
+                using (var dc = new DataContext())
+                {
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+                }
+
+
                 string resp = "";
                 using (var dataContext = new DataContext())
                 {
