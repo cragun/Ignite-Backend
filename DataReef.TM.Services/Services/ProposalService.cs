@@ -1804,6 +1804,7 @@ namespace DataReef.TM.Services.Services
                 apilog.ResponseContentBody = request.Name;
                 apilog.RequestContentBody = json;
 
+
                 using (var dc = new DataContext())
                 {
                     dc.ApiLogEntries.Add(apilog);
