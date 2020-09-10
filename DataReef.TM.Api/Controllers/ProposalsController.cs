@@ -49,6 +49,7 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
+
         [Route("generate/proposal")]
         [HttpPost]
         [ResponseType(typeof(CreateProposalDataResponse))]
