@@ -634,6 +634,43 @@ namespace DataReef.TM.Services.Services
 
             base.ProcessApiWebHooks(ret.Guid, ApiObjectType.Organization, EventDomain.Organization, EventAction.Created, ret.Guid);
 
+            //insert master territory
+
+            var territory = new Territory
+            {
+                Name = entity.Name + " - All",
+                OUID = entity.Guid,
+                CreatedByID = SmartPrincipal.UserId,
+                CreatedByName = SmartPrincipal.UserName,
+                WellKnownText = entity.WellKnownText,
+                CentroidLat = entity.CentroidLat,
+                CentroidLon = entity.CentroidLon,
+                Radius = entity.Radius,
+                ShapesVersion = entity.ShapesVersion,
+                Version = entity.Version
+            };
+
+            List<TerritoryShape> tShape = new List<TerritoryShape>();
+            foreach (var item in entity.Shapes)
+            {
+                tShape.Add(new TerritoryShape
+                {
+                    Radius = item.Radius,
+                    ResidentCount = item.ResidentCount,
+                    Name = item.Name,
+                    CentroidLat = item.CentroidLat,
+                    WellKnownText = item.WellKnownText,
+                    CentroidLon = item.CentroidLon,
+                    ParentID = item.ParentID,
+                    ShapeID = item.ShapeID,
+                    ShapeTypeID = item.ShapeTypeID,
+                    IsDeleted = item.IsDeleted
+                });
+            }
+
+            territory.Shapes = tShape;
+            _territoryService.Insert(territory);
+
             return ret;
         }
 
