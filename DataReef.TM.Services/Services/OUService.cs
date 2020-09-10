@@ -649,12 +649,12 @@ namespace DataReef.TM.Services.Services
                 ShapesVersion = entity.ShapesVersion,
                 Version = entity.Version
             };
-             
-            List<TerritoryShape> tShape = new List<TerritoryShape>();
 
+            List<TerritoryShape> tShape = new List<TerritoryShape>();
             foreach (var item in entity.Shapes)
-            { 
-                tShape.Add(new TerritoryShape {
+            {
+                tShape.Add(new TerritoryShape
+                {
                     Radius = item.Radius,
                     ResidentCount = item.ResidentCount,
                     Name = item.Name,
