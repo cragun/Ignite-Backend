@@ -1783,7 +1783,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request)
+        public string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request, string basestr)
         {
             try
             {
@@ -1798,7 +1798,7 @@ namespace DataReef.TM.Services.Services
                 apilog.RequestRouteData = "";
                 apilog.RequestIpAddress = "";
                 apilog.RequestMethod = "";
-                apilog.RequestHeaders = "";
+                apilog.RequestHeaders = basestr;
                 apilog.RequestTimestamp = DateTime.UtcNow;
                 apilog.RequestUri = request.ToString();
                 apilog.ResponseContentBody = request.Name;
@@ -1838,7 +1838,6 @@ namespace DataReef.TM.Services.Services
 
                             new BlobModel
                             {
-
                                 Content = request.Content,
                                 ContentType = request.ContentType,
                             }, BlobAccessRights.Private);
