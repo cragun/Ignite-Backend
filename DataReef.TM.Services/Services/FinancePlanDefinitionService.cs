@@ -173,7 +173,8 @@ namespace DataReef.TM.Services
 
                 if (lenderFee != null)
                 {
-                    dc.FinancePlaneDefinitions.Where(y => !y.Name.Contains("Cash") && !y.Name.Contains("Sunnova")).ToList().ForEach(c => c.LenderFee = lenderFee);
+                    //dc.FinancePlaneDefinitions.Where(y => !y.Name.Contains("Cash") && !y.Name.Contains("Sunnova")).ToList().ForEach(c => c.LenderFee = lenderFee);
+                    dc.FinancePlaneDefinitions.Where(y => !y.Name.Contains("Sunnova")).ToList().ForEach(c => c.LenderFee = lenderFee);
                     dc.SaveChanges();
                 }
 
