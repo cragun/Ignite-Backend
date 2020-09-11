@@ -924,6 +924,7 @@ namespace DataReef.TM.Services.Services
         //}
 
 
+
         private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID)
         {
             Task.Factory.StartNew(() =>
