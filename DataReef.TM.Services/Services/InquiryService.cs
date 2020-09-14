@@ -504,9 +504,9 @@ namespace DataReef.TM.Services.Services
                                 var opprtunityDataList = dc.Appointments.Where(i => i.IsDeleted == false && i.GoogleEventID != null &&
                                                            i.AssigneeID == personId && !CappPropertyids.Contains(i.PropertyID))
                                                 .Select(i => new { Guid = i.Guid, AssigneeID = i.AssigneeID, StartDate = i.StartDate }).ToList();
-
+                                 
                                 if (opprtunityDataList != null)
-                                {
+                                {  
                                     inquiryStatistics.Add(new InquiryStatisticsForPerson
                                     {
                                         PersonId = personId,
@@ -515,7 +515,7 @@ namespace DataReef.TM.Services.Services
                                         {
                                             AllTime = opprtunityDataList.Count(),
                                             ThisYear = opprtunityDataList.Count(id => id.StartDate >= dates.YearStart),
-                                            ThisMonth = opprtunityDataList.Count(id => id.StartDate >= dates.MonthStart),
+                                            ThisMonth = opprtunityDataList.Count(id => id.StartDate >= dates.MonthStart && id.StartDate <= dates.MonthEnd),
                                             ThisWeek = opprtunityDataList.Count(id => id.StartDate.Date >= dates.CurrentWeekStart),
                                             Today = opprtunityDataList.Count(id => id.StartDate >= dates.TodayStart),
                                             SpecifiedDay = specifiedDay.HasValue ? opprtunityDataList.Count(id => id.StartDate >= dates.SpecifiedStart.Value && id.StartDate < dates.SpecifiedEnd.Value) : 0,
@@ -863,6 +863,7 @@ namespace DataReef.TM.Services.Services
         internal DateTime CurrentWeekStart { get; set; }
         internal DateTime YearStart { get; set; }
         internal DateTime MonthStart { get; set; }
+        internal DateTime MonthEnd { get; set; }
         internal DateTime TodayStart { get; set; }
         internal DateTime QuaterStart { get; set; }
         internal DateTime? SpecifiedStart { get; set; }
@@ -884,6 +885,7 @@ namespace DataReef.TM.Services.Services
 
             YearStart = new DateTime(deviceDate.Year, 1, 1).Add(offset);
             MonthStart = new DateTime(deviceDate.Year, deviceDate.Month, 1).Add(offset);
+            MonthEnd = new DateTime(deviceDate.Year, deviceDate.Month, DateTime.DaysInMonth(deviceDate.Year, deviceDate.Month)).Add(offset);
 
             TodayStart = deviceDate.Add(offset);
 

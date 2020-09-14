@@ -205,6 +205,7 @@ namespace DataReef.TM.Services
 
             using (var context = new DataContext())
             {
+                var ousQuery = context.OUs.FirstOrDefault(t => t.Guid == ouid);
                 var ouTerritoriesQuery = context.Territories.Where(t => t.OUID == ouid);
 
                 if (personID.HasValue)
@@ -233,7 +234,7 @@ namespace DataReef.TM.Services
                 }
 
                 var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
-                foreach (var territory in ouTerritories)
+                foreach (var territory in ouTerritories.ToList())
                 {
                     var favourite = favouriteTerritories?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
 
@@ -241,6 +242,11 @@ namespace DataReef.TM.Services
                         territory.IsFavourite = true;
                     else
                         territory.IsFavourite = false;
+
+                    if (territory.Status == TerritoryStatus.Master && ousQuery.IsTerritoryAdd == false)
+                    {
+                        ouTerritories.Remove(territory);
+                    }
                 }
 
 

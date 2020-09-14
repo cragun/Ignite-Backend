@@ -2369,83 +2369,149 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
             }
         }
+
+        public string InsertMasterTerritory()
+        {
+
+            using (var dc = new DataContext())
+            {
+                using (var transaction = dc.Database.BeginTransaction())
+                {
+                    try
+                    { 
+                        var Ous = dc.OUs.Include(a => a.Shapes).ToList();
+
+                        foreach (var entity in Ous)
+                        {
+                            //insert master territory
+
+                            var territory = new Territory
+                            {
+                                Name = entity.Name + " - ALL",
+                                OUID = entity.Guid,
+                                CreatedByID = SmartPrincipal.UserId,
+                                CreatedByName = SmartPrincipal.UserName,
+                                WellKnownText = entity.WellKnownText,
+                                CentroidLat = entity.CentroidLat,
+                                CentroidLon = entity.CentroidLon,
+                                Radius = entity.Radius,
+                                ShapesVersion = entity.ShapesVersion,
+                                Version = entity.Version,
+                                Status = TerritoryStatus.Master //Master Territory
+                            };
+
+                            List<TerritoryShape> tShape = new List<TerritoryShape>();
+                            foreach (var item in entity.Shapes)
+                            {
+                                tShape.Add(new TerritoryShape
+                                {
+                                    Radius = item.Radius,
+                                    ResidentCount = item.ResidentCount,
+                                    Name = item.Name,
+                                    CentroidLat = item.CentroidLat,
+                                    WellKnownText = item.WellKnownText,
+                                    CentroidLon = item.CentroidLon,
+                                    ParentID = item.ParentID,
+                                    ShapeID = item.ShapeID,
+                                    ShapeTypeID = item.ShapeTypeID,
+                                    IsDeleted = item.IsDeleted
+                                });
+                            }
+
+                            territory.Shapes = tShape;
+                            _territoryService.Insert(territory);
+
+                        }
+
+                        transaction.Commit();
+
+                        return "success";
+
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        //public void UpdateFinancing()
+        //{
+        //    using (var dc = new DataContext())
+        //    {
+        //        var ouIDs = dc
+        //                    .OUFinanceAssociations
+        //                    .Select(oua => oua.OUID)
+        //                    .Distinct()
+        //                    .ToList();
+
+        //        var plans = dc
+        //                    .OUFinanceAssociations
+        //                    .ToList();
+
+        //        var settings = dc
+        //                    .OUSettings
+        //                    .Where(ous => ouIDs.Contains(ous.Guid) && ous.Name == OUSetting.Financing_PlansOrder)
+        //                    .ToList();
+
+        //        var cashPlanId = dc
+        //                    .FinancePlaneDefinitions
+        //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Cash)
+        //                    .Guid;
+        //        var mortgagePlanId = dc
+        //                    .FinancePlaneDefinitions
+        //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Mortgage)
+        //                    .Guid;
+
+        //        var existingOUSettings = dc
+        //                    .OUSettings
+        //                    .Where(ous => ouIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options)
+        //                    .ToList();
+
+        //        var newOUSettings = new List<OUSetting>();
+
+        //        foreach (var id in ouIDs)
+        //        {
+        //            var ouSetting = settings
+        //                                .FirstOrDefault(s => s.OUID == id);
+        //            List<Guid> enabledPlans = null;
+
+        //            if (ouSetting != null)
+        //            {
+        //                try
+        //                {
+        //                    enabledPlans = JsonConvert.DeserializeObject<List<Guid>>(ouSetting.Value);
+        //                }
+        //                catch (Exception)
+        //                { }
+        //            }
+        //            var ouPlanIds = plans
+        //                        .Where(p => p.OUID == id)
+        //                        .Select(p => p.FinancePlanDefinitionID)
+        //                        .ToList();
+
+        //            var ouPlans = new HashSet<Guid>(ouPlanIds);
+        //            ouPlans.Add(cashPlanId);
+        //            ouPlans.Add(mortgagePlanId);
+
+        //            var data = ouPlans
+        //                    .Select(
+        //                    (p, idx) => new FinancingSettingsDataView(p, (enabledPlans == null || enabledPlans?.Count == 0) || (enabledPlans?.Count > 0 && enabledPlans?.Contains(p) == true), idx, p))
+        //                    .ToList();
+
+        //            var value = JsonConvert.SerializeObject(data);
+
+        //            existingOUSettings.HandleSetting(newOUSettings, OUSetting.Financing_Options, value, id, _auditService, OUSettingGroupType.DealerSettings);
+        //        }
+
+        //        if (newOUSettings.Count > 0)
+        //        {
+        //            dc.OUSettings.AddRange(newOUSettings);
+        //        }
+        //        dc.SaveChanges();
+        //    }
+        //}
     }
-
-    //public void UpdateFinancing()
-    //{
-    //    using (var dc = new DataContext())
-    //    {
-    //        var ouIDs = dc
-    //                    .OUFinanceAssociations
-    //                    .Select(oua => oua.OUID)
-    //                    .Distinct()
-    //                    .ToList();
-
-    //        var plans = dc
-    //                    .OUFinanceAssociations
-    //                    .ToList();
-
-    //        var settings = dc
-    //                    .OUSettings
-    //                    .Where(ous => ouIDs.Contains(ous.Guid) && ous.Name == OUSetting.Financing_PlansOrder)
-    //                    .ToList();
-
-    //        var cashPlanId = dc
-    //                    .FinancePlaneDefinitions
-    //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Cash)
-    //                    .Guid;
-    //        var mortgagePlanId = dc
-    //                    .FinancePlaneDefinitions
-    //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Mortgage)
-    //                    .Guid;
-
-    //        var existingOUSettings = dc
-    //                    .OUSettings
-    //                    .Where(ous => ouIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options)
-    //                    .ToList();
-
-    //        var newOUSettings = new List<OUSetting>();
-
-    //        foreach (var id in ouIDs)
-    //        {
-    //            var ouSetting = settings
-    //                                .FirstOrDefault(s => s.OUID == id);
-    //            List<Guid> enabledPlans = null;
-
-    //            if (ouSetting != null)
-    //            {
-    //                try
-    //                {
-    //                    enabledPlans = JsonConvert.DeserializeObject<List<Guid>>(ouSetting.Value);
-    //                }
-    //                catch (Exception)
-    //                { }
-    //            }
-    //            var ouPlanIds = plans
-    //                        .Where(p => p.OUID == id)
-    //                        .Select(p => p.FinancePlanDefinitionID)
-    //                        .ToList();
-
-    //            var ouPlans = new HashSet<Guid>(ouPlanIds);
-    //            ouPlans.Add(cashPlanId);
-    //            ouPlans.Add(mortgagePlanId);
-
-    //            var data = ouPlans
-    //                    .Select(
-    //                    (p, idx) => new FinancingSettingsDataView(p, (enabledPlans == null || enabledPlans?.Count == 0) || (enabledPlans?.Count > 0 && enabledPlans?.Contains(p) == true), idx, p))
-    //                    .ToList();
-
-    //            var value = JsonConvert.SerializeObject(data);
-
-    //            existingOUSettings.HandleSetting(newOUSettings, OUSetting.Financing_Options, value, id, _auditService, OUSettingGroupType.DealerSettings);
-    //        }
-
-    //        if (newOUSettings.Count > 0)
-    //        {
-    //            dc.OUSettings.AddRange(newOUSettings);
-    //        }
-    //        dc.SaveChanges();
-    //    }
-    //}
 }
-

@@ -593,6 +593,13 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
 
+        [HttpPost]
+        [Route("addMasterTerritory")]
+        public async Task<IHttpActionResult> InsertMasterTerritory()
+        {
+            var res = ouService.InsertMasterTerritory();
+            return Ok(new GenericResponse<string> { Response = res });
+        }
 
         [HttpPost]
         public override async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
