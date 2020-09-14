@@ -209,6 +209,7 @@ namespace DataReef.TM.Services
                             //var personKpiDates = kpiDatesForKpi.Where(id => id.PersonID == personId).ToList();
                             var personKpiDates = kpiDates.Where(id => id.PersonID == personId  && col.IncludedPersonKpis.Contains(id.Kpi)).ToList();
 
+
                             if(personKpiDates.Count > 0)
                             {
                                 kpiStatistics.Add(new InquiryStatisticsForPerson
