@@ -1783,32 +1783,30 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request, string basestr)
+        public string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request)
         {
             try
             {
-               // var json = new JavaScriptSerializer().Serialize(request);
+            //    ApiLogEntry apilog = new ApiLogEntry();
+            //    apilog.Id = Guid.NewGuid();
+            //    apilog.User = SmartPrincipal.UserId.ToString();
+            //    apilog.Machine = Environment.MachineName;
+            //    apilog.RequestContentType = "UploadProposalDoc";
+            //    apilog.RequestRouteTemplate = "";
+            //    apilog.RequestRouteData = "";
+            //    apilog.RequestIpAddress = "";
+            //    apilog.RequestMethod = "";
+            //    apilog.RequestHeaders = basestr;
+            //    apilog.RequestTimestamp = DateTime.UtcNow;
+            //    apilog.RequestUri = request.ToString();
+            //    apilog.ResponseContentBody = request.Name;
+            //    apilog.RequestContentBody = request.Content.ToString();
 
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "UploadProposalDoc";
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "";
-                apilog.RequestHeaders = basestr;
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = request.ToString();
-                apilog.ResponseContentBody = request.Name;
-                apilog.RequestContentBody = request.Content.ToString();
-
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
+            //    using (var dc = new DataContext())
+            //    {
+            //        dc.ApiLogEntries.Add(apilog);
+            //        dc.SaveChanges();
+            //    }
 
                 string resp = "";
                 using (var dataContext = new DataContext())
