@@ -580,8 +580,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
             var url = $"/apis/add_document/{encryptedAPIkey}";
-
-            //var request = new SBAddDocument(proposal)
             var request = new SBAddDocument
             {
                 Document = new DocumentModel
