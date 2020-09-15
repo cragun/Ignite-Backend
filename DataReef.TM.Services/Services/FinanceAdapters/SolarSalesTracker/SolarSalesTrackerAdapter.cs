@@ -379,7 +379,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
         }
 
-        public SBGetDocument GetProposalDocuments(Property property)
+        public SBGetDocument GetProposalDocuments(Property property, int typeid)
         {
             var ouid = property?.Territory?.OUID;
             if (!ouid.HasValue)
@@ -412,7 +412,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
-            var url = $"/apis/get_lead_documents/{encryptedAPIkey}";
+            var url = $"/apis/get_lead_documents/{encryptedAPIkey}/{typeid}";
 
             var request = new SstRequest
             {

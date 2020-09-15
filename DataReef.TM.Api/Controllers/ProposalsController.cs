@@ -210,12 +210,12 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [Route("{propertyID:guid}/getDocuments")]
+        [Route("{propertyID:guid}/getDocuments/{typeid}")]
         [HttpPost]
         [ResponseType(typeof(SBGetDocument))]
-        public async Task<IHttpActionResult> GetDocuments(Guid propertyID)
+        public async Task<IHttpActionResult> GetDocuments(Guid propertyID, int typeid)
         { 
-            var response = _proposalService.GetDocuments(propertyID);
+            var response = _proposalService.GetDocuments(propertyID, typeid);
             return Ok(response);
         }
 

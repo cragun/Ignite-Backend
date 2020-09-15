@@ -46,7 +46,7 @@ namespace DataReef.TM.Contracts.Services
         SBGetDocument GetOuDocumentType(Guid proposalID);
 
         [OperationContract]
-        SBGetDocument GetDocuments(Guid propertID);
+        SBGetDocument GetDocuments(Guid propertID, int typeid);
 
         [OperationContract]
         List<DocumentDataLink> GetAllProposalDocuments(Guid proposalID);
