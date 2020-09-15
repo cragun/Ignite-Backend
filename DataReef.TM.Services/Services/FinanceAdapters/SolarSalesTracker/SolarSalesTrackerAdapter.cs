@@ -323,7 +323,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 ?.Data
                 ?.SMARTBoard;
 
-            // no SST/SB settings for this OU. bail
+            // no SST/SB settings for this OU. 
             if (integrationData == null)
             {
                 return new SBIntegrationLoginModel { Message = "No SmartBOARD integration settings found!" };
@@ -380,7 +380,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
         }
 
 
-        public SBGetDocument GetProposalDocuments(Property property, int typeid)
+        public SBGetDocument GetProposalDocuments(Property property)
         {
             var ouid = property?.Territory?.OUID;
             if (!ouid.HasValue)
@@ -413,7 +413,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
-            var url = $"/apis/get_lead_documents/{encryptedAPIkey}/{typeid}";
+            var url = $"/apis/get_lead_documents/{encryptedAPIkey}";
 
             var request = new SstRequest
             {

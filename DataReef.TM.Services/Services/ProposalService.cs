@@ -1856,7 +1856,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SBGetDocument GetDocuments(Guid propertyID, int typeid)
+        public SBGetDocument GetDocuments(Guid propertyID)
         {
             string resp = "";
             using (var dataContext = new DataContext())
@@ -1868,7 +1868,7 @@ namespace DataReef.TM.Services.Services
                     throw new ApplicationException("Please Add Property Data");
                 }
 
-                var response = _solarSalesTrackerAdapter.Value.GetProposalDocuments(property, typeid);
+                var response = _solarSalesTrackerAdapter.Value.GetProposalDocuments(property);
                 return response;
             }
         }

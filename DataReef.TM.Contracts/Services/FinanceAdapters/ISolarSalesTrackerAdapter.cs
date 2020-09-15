@@ -34,7 +34,7 @@ namespace DataReef.TM.Contracts.Services
         void UploadDocumentItem(Property property, string documentTypeId, ProposalMediaItem proposalDoc);
 
         [OperationContract]
-        SBGetDocument GetProposalDocuments(Property property, int typeid);
+        SBGetDocument GetProposalDocuments(Property property);
 
         [OperationContract]
         SBGetDocument GetOuDocumentType(Guid ouid);
