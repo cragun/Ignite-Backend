@@ -1031,6 +1031,7 @@ namespace DataReef.TM.Services.Services
                     catch (Exception) { }
                 }
 
+
                 //add the agreement
                 var contractorID = request.ContractorID ?? data.ContractorID;
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
