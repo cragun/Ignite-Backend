@@ -587,8 +587,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 Document = new DocumentModel
                 {
                     AssociatedId = proposal?.Property?.Id,
-                    DocumentName = proposalDoc.Name,
-                    DocumentUrl = proposalDoc.PDFUrl,
+                    DocumentName = proposalDoc.Name + ".pdf",
+                   // DocumentUrl = proposalDoc.PDFUrl,
+                    DocumentUrl = proposalDoc.Url,
                     DocumentTypeId = documentTypeId,
                     Email = email,
                     Lon = proposal?.Lon,
