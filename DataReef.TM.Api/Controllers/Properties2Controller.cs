@@ -101,6 +101,38 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
+
+        [HttpGet]
+        [Route("propertybag/{propertyID:guid}")]
+        public async Task<IHttpActionResult> PropertyBagsbyID(Guid propertyID)
+        {
+            if (propertyID == Guid.Empty)
+                return BadRequest($"Invalid {nameof(propertyID)}");
+
+            var response = _propertyServiceFactory().PropertyBagsbyID(propertyID);
+
+
+            string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
+
+            var rd = response.PropertyBag.ToList();
+            List<Models.Geo.Field> propbags = new List<Models.Geo.Field>();
+            foreach (string propname in queryString.Split(','))
+            {
+                var propbg = rd.Where(x => x.DisplayName == propname).FirstOrDefault();
+
+                if (propbg != null)
+                {
+                    propbags.Add(propbg);
+                }
+            }
+
+            var temp = propbags;
+            propbags.AddRange(rd.Except(temp).ToList());
+            response.PropertyBag = propbags;
+
+            return Ok(response);
+        }
+
         [HttpPost]
         [ResponseType(typeof(ICollection<Property>))]
         [Route("wkt")]

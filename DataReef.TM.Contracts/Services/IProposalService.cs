@@ -61,7 +61,7 @@ namespace DataReef.TM.Contracts.Services
         BlobModel GetProposalMediaItemContent(Guid proposalMediaID, bool thumb = false);
 
         [OperationContract]
-        string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request, string basestr);
+        string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request);
 
         [OperationContract]
         List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request);

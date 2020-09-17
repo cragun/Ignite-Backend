@@ -323,7 +323,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 ?.Data
                 ?.SMARTBoard;
 
-            // no SST/SB settings for this OU. bail
+            // no SST/SB settings for this OU. 
             if (integrationData == null)
             {
                 return new SBIntegrationLoginModel { Message = "No SmartBOARD integration settings found!" };
@@ -580,15 +580,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
             var url = $"/apis/add_document/{encryptedAPIkey}";
-
-            //var request = new SBAddDocument(proposal)
             var request = new SBAddDocument
             {
                 Document = new DocumentModel
                 {
                     AssociatedId = proposal?.Property?.Id,
-                    DocumentName = proposalDoc.Name,
-                    DocumentUrl = proposalDoc.PDFUrl,
+                    DocumentName = proposalDoc.Name + ".pdf",
+                   // DocumentUrl = proposalDoc.PDFUrl,
+                    DocumentUrl = proposalDoc.Url,
                     DocumentTypeId = documentTypeId,
                     Email = email,
                     Lon = proposal?.Lon,

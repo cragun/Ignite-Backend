@@ -237,11 +237,10 @@ namespace DataReef.TM.Api.Controllers
                 var PicFile = HttpContext.Current.Request.Files["file"];
 
                 Byte[] fileData = null;
-                string base64String = "";
                 using (var binaryReader = new System.IO.BinaryReader(PicFile.InputStream))
                 {
                     fileData = binaryReader.ReadBytes((Int32)PicFile.ContentLength);
-                    base64String = Convert.ToBase64String(fileData, 0, fileData.Length);
+                   // base64String = Convert.ToBase64String(fileData, 0, fileData.Length);
                 }
 
                 if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
@@ -254,7 +253,7 @@ namespace DataReef.TM.Api.Controllers
                         Name = PicFile.FileName
                     };
 
-                    str = _proposalService.UploadProposalDoc(propertyID, DocId, request, base64String);
+                    str = _proposalService.UploadProposalDoc(propertyID, DocId, request);
 
                     //string picname = System.IO.Path.GetFileNameWithoutExtension(PicFile.FileName);
                     // return Ok(picname);

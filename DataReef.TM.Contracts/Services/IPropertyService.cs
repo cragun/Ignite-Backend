@@ -51,6 +51,9 @@ namespace DataReef.TM.Contracts.Services
         Property SyncProperty(Guid propertyID, string include = "");
 
         [OperationContract]
+        Property PropertyBagsbyID(Guid propertyID);
+
+        [OperationContract]
         SolarTariff GetTariffByGenabilityProviderAccountID(string id);
 
         [OperationContract]

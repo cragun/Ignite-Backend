@@ -1031,6 +1031,7 @@ namespace DataReef.TM.Services.Services
                     catch (Exception) { }
                 }
 
+
                 //add the agreement
                 var contractorID = request.ContractorID ?? data.ContractorID;
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
@@ -1081,9 +1082,9 @@ namespace DataReef.TM.Services.Services
                     : JsonConvert.DeserializeObject<List<SignedDocumentDTO>>(proposal.SignedDocumentsJSON);
                 proposalDocuments.AddRange(signedDocuments);
 
-                proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
+                proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);                
 
-                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Installation Agreement"));
 
                 // update territory DateLastModified
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
@@ -1783,32 +1784,30 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request, string basestr)
+        public string UploadProposalDoc(Guid propertyID, string DocId, ProposalMediaUploadRequest request)
         {
             try
             {
-               // var json = new JavaScriptSerializer().Serialize(request);
+            //    ApiLogEntry apilog = new ApiLogEntry();
+            //    apilog.Id = Guid.NewGuid();
+            //    apilog.User = SmartPrincipal.UserId.ToString();
+            //    apilog.Machine = Environment.MachineName;
+            //    apilog.RequestContentType = "UploadProposalDoc";
+            //    apilog.RequestRouteTemplate = "";
+            //    apilog.RequestRouteData = "";
+            //    apilog.RequestIpAddress = "";
+            //    apilog.RequestMethod = "";
+            //    apilog.RequestHeaders = basestr;
+            //    apilog.RequestTimestamp = DateTime.UtcNow;
+            //    apilog.RequestUri = request.ToString();
+            //    apilog.ResponseContentBody = request.Name;
+            //    apilog.RequestContentBody = request.Content.ToString();
 
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "UploadProposalDoc";
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "";
-                apilog.RequestHeaders = basestr;
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = request.ToString();
-                apilog.ResponseContentBody = request.Name;
-                apilog.RequestContentBody = request.Content.ToString();
-
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
+            //    using (var dc = new DataContext())
+            //    {
+            //        dc.ApiLogEntries.Add(apilog);
+            //        dc.SaveChanges();
+            //    }
 
                 string resp = "";
                 using (var dataContext = new DataContext())
