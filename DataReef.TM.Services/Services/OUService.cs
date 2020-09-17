@@ -913,7 +913,40 @@ namespace DataReef.TM.Services.Services
                                 .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
                                 .ToList();
 
-                return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+                var matchingSettings = dc
+            .OUSettings?
+            .Where(x => x.Name == SolarTrackerResources.SelectedSettingName)?
+            .ToList();
+
+                if (matchingSettings.Any() != true)
+                {
+                    return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+                }
+
+                Guid? rootOUID = null;
+                foreach (var setting in matchingSettings)
+                {
+                    var sbSetting = setting?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                    .Data?
+                                    .SMARTBoard;
+                    if (sbSetting?.ApiKey == apikey)
+                    {
+                        rootOUID = setting.OUID;
+                        break;
+                    }
+                }
+
+                var data = dc.OUs.FirstOrDefault(x => x.Guid == rootOUID);
+
+                if (data == null)
+                {
+                    throw new Exception("Ou with the specified Frenchise not found.");
+                }
+
+                return allAncestorIDs.Where(x => x.Name.Contains(data.Name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+
+                //return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
             }
         }
 
@@ -2378,7 +2411,7 @@ namespace DataReef.TM.Services.Services
                 using (var transaction = dc.Database.BeginTransaction())
                 {
                     try
-                    { 
+                    {
                         var Ous = dc.OUs.Include(a => a.Shapes).ToList();
 
                         foreach (var entity in Ous)
