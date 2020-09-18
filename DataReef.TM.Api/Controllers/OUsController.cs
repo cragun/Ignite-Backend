@@ -255,6 +255,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IEnumerable<SBOU>> GetOusList(SBOU request)
         { 
             return ouService.GetOusList(request.Name);
+
         }
 
         /// <summary>
