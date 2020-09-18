@@ -249,16 +249,12 @@ namespace DataReef.TM.Api.Controllers
         /// <summary>
         /// Get method used by SmartBoard to retrieve all OUs which have no apikey
         /// </summary>
-        [HttpGet, Route("getOusList/{apikey}")]
+        [HttpPost, Route("getOusList")]
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(IEnumerable<SBOU>))]
-        public async Task<IEnumerable<SBOU>> GetOusList(string apikey)
-        {
-
-            bool checkTime = CryptographyHelper.checkTime(apikey);
-            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
-
-            return ouService.GetOusList(DecyptApiKey);
+        public async Task<IEnumerable<SBOU>> GetOusList(SBOU request)
+        { 
+            return ouService.GetOusList(request.Name);
         }
 
         /// <summary>

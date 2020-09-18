@@ -646,7 +646,7 @@
             <param name="settingName"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOusList(System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOusList(DataReef.TM.Models.DTOs.OUs.SBOU)">
             <summary>
             Get method used by SmartBoard to retrieve all OUs which have no apikey
             </summary>
