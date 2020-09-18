@@ -136,7 +136,7 @@ namespace DataReef.TM.Services.Services
                 using (var dc = new DataContext())
                 {
                     bool imageWasCached = false;
-                    hiResImg = _geoBridge.GetHiResImageByLatLon(lat, lon);
+                   // hiResImg = _geoBridge.GetHiResImageByLatLon(lat, lon);
 
                     if (hiResImg == null)
                     {
@@ -173,7 +173,7 @@ namespace DataReef.TM.Services.Services
                             CreatedBy = SmartPrincipal.UserId
                         };
 
-                        _geoBridge.SaveHiResImage(hiResImg);
+                       // _geoBridge.SaveHiResImage(hiResImg);
 
 
 

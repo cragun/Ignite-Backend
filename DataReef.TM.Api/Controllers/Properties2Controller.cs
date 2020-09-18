@@ -56,7 +56,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetPropertiesSearch(Guid territoryid, string searchvalue)
         {
             if (string.IsNullOrEmpty(searchvalue))
-                return BadRequest($"Invalid searchvalue.");
+                return BadRequest($"Invalid searchvalue.");    
 
             var response = _propertyServiceFactory().GetPropertiesSearch(territoryid, searchvalue);
 
