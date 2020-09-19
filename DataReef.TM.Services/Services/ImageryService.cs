@@ -62,7 +62,7 @@ namespace DataReef.TM.Services.Services
             var results = _eagleViewService.GetLinksForLatLon(lat, lon);
             var ret = results.Select(r => r.OrientationString).ToList();
             return ret;
-        }        
+        }
 
 
         public BlobModel PurchaseHighResImageAtCoordinates(Guid propertyID, double top, double left, double bottom, double right, string direction)
@@ -137,7 +137,7 @@ namespace DataReef.TM.Services.Services
                 using (var dc = new DataContext())
                 {
                     bool imageWasCached = false;
-                   // hiResImg = _geoBridge.GetHiResImageByLatLon(lat, lon);
+                    hiResImg = _geoBridge.GetHiResImageByLatLon(lat, lon);
 
                     if (hiResImg == null)
                     {
@@ -174,7 +174,7 @@ namespace DataReef.TM.Services.Services
                             CreatedBy = SmartPrincipal.UserId
                         };
 
-                       // _geoBridge.SaveHiResImage(hiResImg);
+                         _geoBridge.SaveHiResImage(hiResImg);
 
 
 
