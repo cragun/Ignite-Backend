@@ -131,6 +131,7 @@ namespace DataReef.TM.Services.Services
             var searchResults = _eagleViewService.GetLinksForLatLon(lat, lon);
             SearchResult result = searchResults.FirstOrDefault(sr => sr.OrientationString == direction);
 
+
             if (result != null)
             {
                 // first check to see if the lat/lon exists in an existing cached image
