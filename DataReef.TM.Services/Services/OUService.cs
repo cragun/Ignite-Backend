@@ -608,6 +608,7 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
+            entity.IsTerritoryAdd = true;
             OU ou = base.Insert(entity);
 
             string include = string.Empty;
