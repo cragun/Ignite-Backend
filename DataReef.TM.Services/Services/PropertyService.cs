@@ -314,6 +314,7 @@ namespace DataReef.TM.Services.Services
                 {
                     try
                     {
+
                         var needToUpdateSB = false;
                         Property oldProp = null;
                         using (var dc = new DataContext())
