@@ -98,47 +98,47 @@ namespace DataReef.TM.Services
         public int GetloantermID(string planname)
         {
             var list = new List<KeyValuePair<string, int>>();
-            list.Add(new KeyValuePair<string, int>("LoanPal 7 / 2.99%", 23));
-            list.Add(new KeyValuePair<string, int>("LoanPal 10 / 2.99%", 4));
-            list.Add(new KeyValuePair<string, int>("LoanPal 12 / 2.99%", 21));
-            list.Add(new KeyValuePair<string, int>("LoanPal 20 / 2.99%", 8));
-            list.Add(new KeyValuePair<string, int>("LoanPal 25 / 2.99%", 22));
+            list.Add(new KeyValuePair<string, int>("LoanPal 7 Year / 2.99%", 23));
+            list.Add(new KeyValuePair<string, int>("LoanPal 10 Year / 2.99%", 4));
+            list.Add(new KeyValuePair<string, int>("LoanPal 12 Year / 2.99%", 21));
+            list.Add(new KeyValuePair<string, int>("LoanPal 20 Year / 2.99%", 8));
+            list.Add(new KeyValuePair<string, int>("LoanPal 25 Year / 2.99%", 22));
 
-            list.Add(new KeyValuePair<string, int>("LoanPal 7 / 3.49%", 24));
-            list.Add(new KeyValuePair<string, int>("LoanPal 10 / 3.49%", 30));
-            list.Add(new KeyValuePair<string, int>("LoanPal 12 / 3.49%", 34));
-            list.Add(new KeyValuePair<string, int>("LoanPal 15 / 3.49%", 7));
+            list.Add(new KeyValuePair<string, int>("LoanPal 7 Year / 3.49%", 24));
+            list.Add(new KeyValuePair<string, int>("LoanPal 10 Year / 3.49%", 30));
+            list.Add(new KeyValuePair<string, int>("LoanPal 12 Year / 3.49%", 34));
+            list.Add(new KeyValuePair<string, int>("LoanPal 15 Year / 3.49%", 7));
 
-            list.Add(new KeyValuePair<string, int>("LoanPal 7 / 3.99%", 25));
-            list.Add(new KeyValuePair<string, int>("LoanPal 10 / 3.99%", 1));
-            list.Add(new KeyValuePair<string, int>("LoanPal 12 / 3.99%", 15));
-            list.Add(new KeyValuePair<string, int>("LoanPal 15 / 3.99%", 36));
-            list.Add(new KeyValuePair<string, int>("LoanPal 20 / 3.99%", 3));
-            list.Add(new KeyValuePair<string, int>("LoanPal 25 / 3.99%", 9));
+            list.Add(new KeyValuePair<string, int>("LoanPal 7 Year / 3.99%", 25));
+            list.Add(new KeyValuePair<string, int>("LoanPal 10 Year / 3.99%", 1));
+            list.Add(new KeyValuePair<string, int>("LoanPal 12 Year / 3.99%", 15));
+            list.Add(new KeyValuePair<string, int>("LoanPal 15 Year / 3.99%", 36));
+            list.Add(new KeyValuePair<string, int>("LoanPal 20 Year / 3.99%", 3));
+            list.Add(new KeyValuePair<string, int>("LoanPal 25 Year / 3.99%", 9));
 
-            list.Add(new KeyValuePair<string, int>("LoanPal 12 / 4.49%", 35));
-            list.Add(new KeyValuePair<string, int>("LoanPal 15 / 4.49%", 37));
-            list.Add(new KeyValuePair<string, int>("LoanPal 20 / 4.49%", 39));
-            list.Add(new KeyValuePair<string, int>("LoanPal 25 / 4.49%", 10));
+            list.Add(new KeyValuePair<string, int>("LoanPal 12 Year / 4.49%", 35));
+            list.Add(new KeyValuePair<string, int>("LoanPal 15 Year / 4.49%", 37));
+            list.Add(new KeyValuePair<string, int>("LoanPal 20 Year / 4.49%", 39));
+            list.Add(new KeyValuePair<string, int>("LoanPal 25 Year / 4.49%", 10));
 
 
-            list.Add(new KeyValuePair<string, int>("LoanPal 7 / 4.99%", 26));
-            list.Add(new KeyValuePair<string, int>("LoanPal 10 / 4.99%", 5));
-            list.Add(new KeyValuePair<string, int>("LoanPal 15 / 4.99%", 38));
-            list.Add(new KeyValuePair<string, int>("LoanPal 20 / 4.99%", 2));
-            list.Add(new KeyValuePair<string, int>("LoanPal 25 / 4.99%", 11));
+            list.Add(new KeyValuePair<string, int>("LoanPal 7 Year / 4.99%", 26));
+            list.Add(new KeyValuePair<string, int>("LoanPal 10 Year / 4.99%", 5));
+            list.Add(new KeyValuePair<string, int>("LoanPal 15 Year / 4.99%", 38));
+            list.Add(new KeyValuePair<string, int>("LoanPal 20 Year / 4.99%", 2));
+            list.Add(new KeyValuePair<string, int>("LoanPal 25 Year / 4.99%", 11));
 
-            list.Add(new KeyValuePair<string, int>("LoanPal 7 / 5.99%", 27));
-            list.Add(new KeyValuePair<string, int>("LoanPal 10 / 5.99%", 31));
-            list.Add(new KeyValuePair<string, int>("LoanPal 20 / 5.99%", 6));
-            list.Add(new KeyValuePair<string, int>("LoanPal 25 / 5.99%", 12));
+            list.Add(new KeyValuePair<string, int>("LoanPal 7 Year / 5.99%", 27));
+            list.Add(new KeyValuePair<string, int>("LoanPal 10 Year / 5.99%", 31));
+            list.Add(new KeyValuePair<string, int>("LoanPal 20 Year / 5.99%", 6));
+            list.Add(new KeyValuePair<string, int>("LoanPal 25 Year / 5.99%", 12));
 
-            list.Add(new KeyValuePair<string, int>("LoanPal 7 / 6.99%", 28));
-            list.Add(new KeyValuePair<string, int>("LoanPal 10 / 6.99%", 32));
-            list.Add(new KeyValuePair<string, int>("LoanPal 25 / 6.99%", 13));
+            list.Add(new KeyValuePair<string, int>("LoanPal 7 Year / 6.99%", 28));
+            list.Add(new KeyValuePair<string, int>("LoanPal 10 Year / 6.99%", 32));
+            list.Add(new KeyValuePair<string, int>("LoanPal 25 Year / 6.99%", 13));
 
-            list.Add(new KeyValuePair<string, int>("LoanPal 7 / 7.99%", 29));
-            list.Add(new KeyValuePair<string, int>("LoanPal 10 / 7.99%", 33));
+            list.Add(new KeyValuePair<string, int>("LoanPal 7 Year / 7.99%", 29));
+            list.Add(new KeyValuePair<string, int>("LoanPal 10 Year / 7.99%", 33));
 
 
             int id = list.Where(x => x.Key == planname).FirstOrDefault().Value;
