@@ -295,6 +295,7 @@ namespace DataReef.TM.Services.Services
                                 ThisQuarter = inquiryDatesForIncludedDispositions.Count(id => id.DateCreated >= dates.QuaterStart),
                                 RangeDay = (StartRangeDay.HasValue && EndRangeDay.HasValue) ? inquiryDatesForIncludedDispositions.Count(id => id.DateCreated >= StartRangeDay && id.DateCreated < EndRangeDay) : 0,
                             },
+
                             People = new InquiryStatisticsByDate
                             {
                                 AllTime = inquiryDatesForIncludedDispositions.GroupBy(id => id.PersonID).Count(),
