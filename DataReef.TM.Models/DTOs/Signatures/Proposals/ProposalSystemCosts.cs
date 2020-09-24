@@ -107,6 +107,8 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         public Guid Guid { get; set; }
         public string Description { get; set; }
         public double Quantity { get; set; }
+        public bool AllowsQuantitySelection { get; set; }
+        
         public string UnitPriceDescription => RecurrenceType == AdderItemRecurrenceType.OneTime ? Label : $"{Label} x {RecurrencePeriod} {RecurrenceTypeLabel}";
         public double? UnitPriceValue { get; set; }
         [JsonIgnore]
@@ -128,7 +130,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         private double FlatCost => !UnitPriceValue.HasValue
                                 ? 0
                                 : RateType == AdderItemRateType.Flat
-                                    ? Quantity * UnitPriceValue.Value
+                                     ? Quantity * UnitPriceValue.Value
                                     : RateType == AdderItemRateType.PerKw
                                         ? SystemSizeInKW * Quantity * UnitPriceValue.Value
                                           : SystemSize * Quantity * UnitPriceValue.Value;
@@ -161,6 +163,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
             UnitPriceValue = roundAmounts ? Math.Round((double)adder.Cost) : (double)adder.Cost;
             RateType = adder.RateType;
             SystemSize = systemSize;
+            AllowsQuantitySelection = Convert.ToBoolean(adder.AllowsQuantitySelection);
             RecurrenceType = adder.RecurrenceType;
             RecurrenceStart = adder.RecurrenceStart;
             RecurrencePeriod = adder.RecurrencePeriod;
