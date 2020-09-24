@@ -54,8 +54,6 @@ namespace DataReef.TM.Api.Controllers
             this.associationService = associationService;
         }
 
-
-
         [HttpGet]
         [ResponseType(typeof(ICollection<OU>))]
         [Route("roots")]
