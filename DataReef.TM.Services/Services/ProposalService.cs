@@ -1046,9 +1046,9 @@ namespace DataReef.TM.Services.Services
                 proposalDocuments.AddRange(signedDocuments);
 
                 proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
-
-                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Proposal"));
                 
+                _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Installation Agreement"));
+
                 // update territory DateLastModified
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
 

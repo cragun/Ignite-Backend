@@ -340,34 +340,34 @@ namespace DataReef.TM.Services.Services
                         entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
 
-                        #region for Dan Dyer
-                        if (entity.Id == 1075882)
-                        {
+                        //#region for Dan Dyer
+                        //if (entity.Id == 1075882)
+                        //{
 
-                            var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(entity);
+                        //    var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(entity);
 
-                            ApiLogEntry apilog = new ApiLogEntry();
-                            apilog.Id = Guid.NewGuid();
-                            apilog.User = SmartPrincipal.UserId.ToString();
-                            apilog.Machine = Environment.MachineName;
-                            apilog.RequestContentType = "1075882";
-                            apilog.RequestRouteTemplate = "";
-                            apilog.RequestRouteData = "";
-                            apilog.RequestIpAddress = "";
-                            apilog.RequestMethod = "";
-                            apilog.RequestHeaders = "";
-                            apilog.RequestTimestamp = DateTime.UtcNow;
-                            apilog.RequestUri = "";
-                            apilog.ResponseContentBody = "";
-                            apilog.RequestContentBody = json != null ? json : "";
+                        //    ApiLogEntry apilog = new ApiLogEntry();
+                        //    apilog.Id = Guid.NewGuid();
+                        //    apilog.User = SmartPrincipal.UserId.ToString();
+                        //    apilog.Machine = Environment.MachineName;
+                        //    apilog.RequestContentType = "1075882";
+                        //    apilog.RequestRouteTemplate = "";
+                        //    apilog.RequestRouteData = "";
+                        //    apilog.RequestIpAddress = "";
+                        //    apilog.RequestMethod = "";
+                        //    apilog.RequestHeaders = "";
+                        //    apilog.RequestTimestamp = DateTime.UtcNow;
+                        //    apilog.RequestUri = "";
+                        //    apilog.ResponseContentBody = "";
+                        //    apilog.RequestContentBody = json != null ? json : "";
 
-                            using (var dc = new DataContext())
-                            {
-                                dc.ApiLogEntries.Add(apilog);
-                                dc.SaveChanges();
-                            }
-                        }
-                        #endregion for Dan Dyer
+                        //    using (var dc = new DataContext())
+                        //    {
+                        //        dc.ApiLogEntries.Add(apilog);
+                        //        dc.SaveChanges();
+                        //    }
+                        //}
+                        //#endregion for Dan Dyer
 
                         // remove property bags
                         dataContext
