@@ -596,7 +596,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 }
             };
 
-            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
+            var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.POST);
 
             try
             {
