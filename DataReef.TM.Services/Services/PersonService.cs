@@ -856,7 +856,7 @@ namespace DataReef.TM.Services
                     }
                 }
 
-                //multiple dispositions query
+                //multiple dispositions queries
                 if (request.DispositionsQuery?.Any() == true)
                 {
                     if (request.DispositionsQuery?.Any(x => x == "Appointments") == true)

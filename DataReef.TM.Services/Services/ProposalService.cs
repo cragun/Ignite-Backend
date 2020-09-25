@@ -1622,7 +1622,6 @@ namespace DataReef.TM.Services.Services
                     throw new ApplicationException("Proposal data does not exist!");
                 }
 
-
                 var contractorSetting = dataContext
                                 .OUSettings
                                 .Include(ous => ous.OU)
@@ -2372,6 +2371,42 @@ namespace DataReef.TM.Services.Services
 
                 adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
                 dataContext.AdderItems.Add(adderItem);
+                dataContext.SaveChanges();
+
+                //update Finance Plan
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                } 
+
+                var proposal = dataContext.Proposal.Include(p => p.SolarSystem.AdderItems)
+                                          .FirstOrDefault(p => p.Guid == existingFinancePlan.SolarSystemID);
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                if (adderItem.Type == AdderItemType.Adder)
+                {
+                    result.Adders.Add(adderItem);
+                } 
+
+                if (adderItem.Type == AdderItemType.Incentive)
+                {
+                    Incentive incentive = new Incentive();
+                    incentive.Quantity = Convert.ToDecimal(adderItem.Quantity);
+                    incentive.RecurrencePeriod = adderItem.RecurrencePeriod;
+                    incentive.IsRebate = Convert.ToBoolean(adderItem.IsRebate);
+                    incentive.DynamicSettingsJSON = adderItem.DynamicSettingsJSON;
+                    incentive.RecurrenceType = adderItem.RecurrenceType;
+                    incentive.Name = adderItem.Name;
+                    incentive.RecurrenceStart = adderItem.RecurrenceStart;
+                    incentive.Cost = adderItem.Cost;
+                    incentive.RateType = adderItem.RateType;
+                    incentive.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC; 
+                     
+                    result.Incentives.Add(incentive);
+                }
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 dataContext.SaveChanges();
 
                 if (existingProposal.UsesNoSQLAggregatedData == true)
