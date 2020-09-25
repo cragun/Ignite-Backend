@@ -166,6 +166,7 @@ namespace DataReef.TM.Services
                                 string loanpalurl = "??lname=" + property.GetMainOccupant().LastName + "&fname=" + property.GetMainOccupant().FirstName + "&street=" + property.Address1 + "&city=" + property.City + "&state=" + property.State + "&zip=" + property.ZipCode + "&email=" + property.GetMainEmailAddress() + "&phone=" + property.GetMainPhoneNumber()?.Replace("-", "") + "&srfn=" + salesperson.FirstName + "&srln=" + salesperson.LastName + "&sre=" + salesperson.EmailAddressString + "&loanterm=" + GetloantermID(financePlan.Name).ToString()
                                     //+ "&cost=" + property.Name + "&refnum=" + property.Name 
                                     + "&language=english";
+
                                 loanpalurl = loanpalurl.Replace(" ", "%20");
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{loanpaldata}", loanpalurl ?? string.Empty);
                             }
