@@ -2380,9 +2380,6 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Plan not found");
                 } 
 
-                var proposal = dataContext.Proposal.Include(p => p.SolarSystem.AdderItems)
-                                          .FirstOrDefault(p => p.Guid == existingFinancePlan.SolarSystemID);
-
                 var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
                 if (adderItem.Type == AdderItemType.Adder)
                 {
