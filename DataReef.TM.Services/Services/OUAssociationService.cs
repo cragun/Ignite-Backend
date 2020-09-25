@@ -96,11 +96,18 @@ namespace DataReef.TM.Services.Services
                     {
 
                         association.OU.Settings = OUSettingService.GetOuSettings(association.OUID);
+                        
                     }
 
                     if (association.OU.RootOrganization != null && includes.Contains("OU.RootOrganization.Settings", StringComparer.InvariantCultureIgnoreCase))
                     {
                         association.OU.RootOrganization.Settings = OUSettingService.GetOuSettings(association.OU.RootOrganization.Guid);
+                     }
+
+                    using (DataContext dc = new DataContext())
+                    {
+                        var leftmenusetting = dc.OUSettings.Where(x => x.Name == "Legion.LeftMenu.WebViewItems" && x.IsDeleted == false).FirstOrDefault();
+                        association.OU.Settings.Add(leftmenusetting);
                     }
                 }
             }

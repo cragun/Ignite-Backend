@@ -110,6 +110,23 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public ProposalCreditStatus CreditStatus { get; set; }
 
+
+
+        [DataMember]
+        public double ProductionKWH { get; set; }
+
+        [DataMember]
+        public double ProductionKWHpercentage { get; set; }
+
+        [DataMember]
+        public bool IsManual { get; set; }
+
+        [DataMember]
+        public double SystemSize { get; set; }
+
+
+
+
         #region Navigation properties
 
         [ForeignKey("PropertyID")]
