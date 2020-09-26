@@ -2460,7 +2460,6 @@ namespace DataReef.TM.Services.Services
                 existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 dataContext.SaveChanges();
 
-
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
