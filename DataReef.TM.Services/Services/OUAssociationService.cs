@@ -111,6 +111,7 @@ namespace DataReef.TM.Services.Services
                             var leftmenusetting = dc.OUSettings.Where(x => x.Name == "Legion.LeftMenu.WebViewItems" && x.IsDeleted == false).FirstOrDefault();
                             association.OU.Settings.Add(leftmenusetting);
                         }
+
                     }
                     
                 }
