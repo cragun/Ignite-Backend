@@ -1,6 +1,7 @@
 ﻿using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.Enums;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +10,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     public class Incentive
     {
 
+        public Guid Guid { get; set; }
         public bool IsRebate { get; set; }
         public bool IsAppliedBeforeITC { get; set; }
         public AdderItemRateType RateType { get; set; }
