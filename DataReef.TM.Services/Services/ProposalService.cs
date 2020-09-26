@@ -2473,13 +2473,19 @@ namespace DataReef.TM.Services.Services
                 if (adderItem.Type == AdderItemType.Adder)
                 {
                     var adder = result.Adders.FirstOrDefault(a => a.Guid == adderItem.Guid);
-                    adder.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                    if (adder != null)
+                    {
+                        adder.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                    }
                 }
 
                 if (adderItem.Type == AdderItemType.Incentive)
                 {
-                    var adder = result.Incentives.FirstOrDefault(a => a.Guid == adderItem.Guid);
-                    adder.Quantity = adderItem.Quantity == 0 ? 1 : Convert.ToDecimal(adderItem.Quantity);
+                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.Cost == adderItem.Cost);
+                    if (incentive != null)
+                    {
+                        incentive.Quantity = adderItem.Quantity == 0 ? 1 : Convert.ToDecimal(adderItem.Quantity);
+                    }
                 }
 
                 existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
@@ -2551,7 +2557,7 @@ namespace DataReef.TM.Services.Services
 
                 if (adderItem.Type == AdderItemType.Incentive)
                 {
-                    var incentive = result.Incentives.FirstOrDefault(a => a.Guid == adderItem.Guid);
+                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.Cost == adderItem.Cost);
                     if (incentive != null)
                     {
                         result.Incentives.Remove(incentive);
