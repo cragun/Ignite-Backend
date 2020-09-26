@@ -31,6 +31,13 @@ namespace DataReef.TM.Models.DTOs.Signatures
         public Guid TemplateID { get; set; }
 
         public bool? IsPaidBySalesPerson { get; set; }
+        public bool? IsRebate { get; set; }
+        public bool IsAppliedBeforeITC { get; set; }
+        public bool? AllowsQuantitySelection { get; set; }
+        public bool IsSolarThermal { get; set; }
+        public string DynamicSettingsJSON { get; set; }
+        public bool? ApplyDealerFee { get; set; }
+
 
         public string Description { get; set; }
 
@@ -58,29 +65,28 @@ namespace DataReef.TM.Models.DTOs.Signatures
             ret.RateType = Enum.GetName(typeof(Enums.AdderItemRateType), item.RateType);
             ret.ReducesConsumption = item.ReducesUsage;
             ret.TemplateID = item.TemplateID;
-            ret.FinancingFee = item.FinancingFee;            
+            ret.FinancingFee = item.FinancingFee;
 
             return ret;
         }
 
-
-        public AdderItem ToDbModel(Guid solarSystemID)
+        public static AdderItem ToDbModel(AdderDataView item, Guid solarSystemID)
         {
             AdderItem ret = new Models.Solar.AdderItem();
-            ret.Name = this.Name;
-            ret.Guid = this.AdderId == Guid.Empty ? Guid.NewGuid() : this.AdderId;
-            ret.Type = (Enums.AdderItemType)Enum.Parse(typeof(Enums.AdderItemType), this.AdderType);
-            ret.AddToSystemCost = this.AddToSystemCost;
-            ret.UsageReductionAmount = this.ConsumptionReductionAmount;
-            ret.UsageReductionType = (Enums.AdderItemReducedAmountType)Enum.Parse(typeof(Enums.AdderItemReducedAmountType), this.ConsumptionReductionType);
-            ret.Cost = this.Cost ?? 0;
-            ret.Description = this.Description;
-            ret.IsCalculatedPerRoofPlane = this.IsCalculatedPerRoofPlane;
-            ret.CanBePaidForByRep = this.IsPaidBySalesPerson;
-            ret.Quantity = this.Quantity ?? 1;
-            ret.RateType = (Enums.AdderItemRateType)Enum.Parse(typeof(Enums.AdderItemRateType), this.RateType);
-            ret.ReducesUsage = this.ReducesConsumption;
-            ret.TemplateID = this.TemplateID;
+            ret.Name = item.Name;
+            ret.Guid = item.AdderId == Guid.Empty ? Guid.NewGuid() : item.AdderId;
+            ret.Type = (Enums.AdderItemType)Enum.Parse(typeof(Enums.AdderItemType), item.AdderType);
+            ret.AddToSystemCost = item.AddToSystemCost;
+            ret.UsageReductionAmount = item.ConsumptionReductionAmount;
+            ret.UsageReductionType = (Enums.AdderItemReducedAmountType)Enum.Parse(typeof(Enums.AdderItemReducedAmountType), item.ConsumptionReductionType);
+            ret.Cost = item.Cost ?? 0;
+            ret.Description = item.Description;
+            ret.IsCalculatedPerRoofPlane = item.IsCalculatedPerRoofPlane;
+            ret.CanBePaidForByRep = item.IsPaidBySalesPerson;
+            ret.Quantity = item.Quantity ?? 1;
+            ret.RateType = (Enums.AdderItemRateType)Enum.Parse(typeof(Enums.AdderItemRateType), item.RateType);
+            ret.ReducesUsage = item.ReducesConsumption;
+            ret.TemplateID = item.TemplateID;
             ret.Version = 1;
             ret.CreatedByID = SmartPrincipal.UserId;
             ret.CreatedByName = "Api User";
@@ -91,7 +97,13 @@ namespace DataReef.TM.Models.DTOs.Signatures
             ret.LastModifiedByName = ret.CreatedByName;
             ret.SolarSystemID = solarSystemID;
             ret.TenantID = 0;
-            ret.FinancingFee = this.FinancingFee;            
+            ret.FinancingFee = item.FinancingFee;
+            ret.IsRebate = item.IsRebate;
+            ret.IsAppliedBeforeITC = item.IsAppliedBeforeITC;
+            ret.AllowsQuantitySelection = item.AllowsQuantitySelection;
+            ret.IsSolarThermal = item.IsSolarThermal;
+            ret.DynamicSettingsJSON = item.DynamicSettingsJSON;
+            ret.ApplyDealerFee = item.ApplyDealerFee;
 
             return ret;
         }

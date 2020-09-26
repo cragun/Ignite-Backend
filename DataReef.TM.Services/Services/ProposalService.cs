@@ -2382,13 +2382,39 @@ namespace DataReef.TM.Services.Services
                 var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
                 if (adderItem.Type == AdderItemType.Adder)
                 {
-                    result.Adders.Add(adderItem);
+                    var adder = new AdderDataView();
+
+                    adder.AdderId = adderItem.Guid;
+                    adder.Name = adderItem.Name;
+                    adder.AdderType = Enum.GetName(adderItem.Type.GetType(), adderItem.Type);
+                    adder.AddToSystemCost = adderItem.AddToSystemCost;
+                    adder.ConsumptionReductionAmount = adderItem.UsageReductionAmount;
+                    adder.ConsumptionReductionType = Enum.GetName(adderItem.UsageReductionType.GetType(), adderItem.UsageReductionType);
+                    adder.Cost = adderItem.Cost;
+                    adder.Description = adderItem.Description;
+                    adder.IsCalculatedPerRoofPlane = adderItem.IsCalculatedPerRoofPlane;
+                    adder.IsPaidBySalesPerson = adderItem.CanBePaidForByRep;
+                    adder.Quantity = adderItem.Quantity;
+                    adder.RateType = Enum.GetName(adderItem.RateType.GetType(), adderItem.RateType);
+                    adder.ReducesConsumption = adderItem.ReducesUsage;
+                    adder.TemplateID = adderItem.TemplateID;
+                    adder.FinancingFee = adderItem.FinancingFee;
+                    adder.IsRebate = adderItem.IsRebate;
+                    adder.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC;
+                    adder.AllowsQuantitySelection = adderItem.AllowsQuantitySelection;
+                    adder.IsSolarThermal = adderItem.IsSolarThermal;
+                    adder.DynamicSettingsJSON = adderItem.DynamicSettingsJSON;
+                    adder.ApplyDealerFee = adderItem.ApplyDealerFee;
+
+                    var adderObj = AdderDataView.ToDbModel(adder , existingProposal.ProposalID);
+
+                    result.Adders.Add(adderObj);
                 }
 
                 if (adderItem.Type == AdderItemType.Incentive)
                 {
                     Incentive incentive = new Incentive();
-                    incentive.Guid = Guid.NewGuid();
+                    incentive.Guid = adderItem.Guid;
                     incentive.Quantity = Convert.ToDecimal(adderItem.Quantity);
                     incentive.RecurrencePeriod = adderItem.RecurrencePeriod;
                     incentive.IsRebate = Convert.ToBoolean(adderItem.IsRebate);
@@ -2405,7 +2431,7 @@ namespace DataReef.TM.Services.Services
 
                 existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 dataContext.SaveChanges();
-
+                
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
@@ -2542,7 +2568,7 @@ namespace DataReef.TM.Services.Services
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
                 }
             }
-        }
+        } 
 
         public void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan)
         {
