@@ -97,7 +97,7 @@ namespace DataReef.TM.Services.Services
                 var ret = Get(entity.Guid, @"SolarSystem.AdderItems,SolarSystem.PowerConsumption,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions.ObstructionPoints,SolarSystem.SystemProduction.Months,SolarSystem.FinancePlans.Documents,Tariff");
                 if (ret != null)
                 {
-                    ret.SaveResult = proposal.SaveResult;                
+                    ret.SaveResult = proposal.SaveResult;
                     if (ret.SaveResult.Success)
                     {
                         Guid? ouid = null;
@@ -1082,7 +1082,7 @@ namespace DataReef.TM.Services.Services
                     : JsonConvert.DeserializeObject<List<SignedDocumentDTO>>(proposal.SignedDocumentsJSON);
                 proposalDocuments.AddRange(signedDocuments);
 
-                proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);                
+                proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
 
                 _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Installation Agreement"));
 
@@ -1787,26 +1787,26 @@ namespace DataReef.TM.Services.Services
         {
             try
             {
-            //    ApiLogEntry apilog = new ApiLogEntry();
-            //    apilog.Id = Guid.NewGuid();
-            //    apilog.User = SmartPrincipal.UserId.ToString();
-            //    apilog.Machine = Environment.MachineName;
-            //    apilog.RequestContentType = "UploadProposalDoc";
-            //    apilog.RequestRouteTemplate = "";
-            //    apilog.RequestRouteData = "";
-            //    apilog.RequestIpAddress = "";
-            //    apilog.RequestMethod = "";
-            //    apilog.RequestHeaders = basestr;
-            //    apilog.RequestTimestamp = DateTime.UtcNow;
-            //    apilog.RequestUri = request.ToString();
-            //    apilog.ResponseContentBody = request.Name;
-            //    apilog.RequestContentBody = request.Content.ToString();
+                //    ApiLogEntry apilog = new ApiLogEntry();
+                //    apilog.Id = Guid.NewGuid();
+                //    apilog.User = SmartPrincipal.UserId.ToString();
+                //    apilog.Machine = Environment.MachineName;
+                //    apilog.RequestContentType = "UploadProposalDoc";
+                //    apilog.RequestRouteTemplate = "";
+                //    apilog.RequestRouteData = "";
+                //    apilog.RequestIpAddress = "";
+                //    apilog.RequestMethod = "";
+                //    apilog.RequestHeaders = basestr;
+                //    apilog.RequestTimestamp = DateTime.UtcNow;
+                //    apilog.RequestUri = request.ToString();
+                //    apilog.ResponseContentBody = request.Name;
+                //    apilog.RequestContentBody = request.Content.ToString();
 
-            //    using (var dc = new DataContext())
-            //    {
-            //        dc.ApiLogEntries.Add(apilog);
-            //        dc.SaveChanges();
-            //    }
+                //    using (var dc = new DataContext())
+                //    {
+                //        dc.ApiLogEntries.Add(apilog);
+                //        dc.SaveChanges();
+                //    }
 
                 string resp = "";
                 using (var dataContext = new DataContext())
@@ -2371,24 +2371,24 @@ namespace DataReef.TM.Services.Services
 
                 adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
                 dataContext.AdderItems.Add(adderItem);
-                dataContext.SaveChanges();
 
                 //update Finance Plan 
                 var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
                 if (existingFinancePlan == null)
                 {
                     throw new Exception("Plan not found");
-                } 
+                }
 
                 var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
                 if (adderItem.Type == AdderItemType.Adder)
                 {
                     result.Adders.Add(adderItem);
-                } 
+                }
 
                 if (adderItem.Type == AdderItemType.Incentive)
                 {
                     Incentive incentive = new Incentive();
+                    incentive.Guid = Guid.NewGuid();
                     incentive.Quantity = Convert.ToDecimal(adderItem.Quantity);
                     incentive.RecurrencePeriod = adderItem.RecurrencePeriod;
                     incentive.IsRebate = Convert.ToBoolean(adderItem.IsRebate);
@@ -2398,8 +2398,8 @@ namespace DataReef.TM.Services.Services
                     incentive.RecurrenceStart = adderItem.RecurrenceStart;
                     incentive.Cost = adderItem.Cost;
                     incentive.RateType = adderItem.RateType;
-                    incentive.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC; 
-                     
+                    incentive.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC;
+
                     result.Incentives.Add(incentive);
                 }
 
@@ -2435,7 +2435,31 @@ namespace DataReef.TM.Services.Services
                 }
 
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+             
+
+                //update Finance Plan 
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                if (adderItem.Type == AdderItemType.Adder)
+                {
+                    var adder = result.Adders.FirstOrDefault(a => a.Guid == adderItem.Guid);
+                    adder.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                }
+
+                if (adderItem.Type == AdderItemType.Incentive)
+                {
+                    var adder = result.Incentives.FirstOrDefault(a => a.Guid == adderItem.Guid);
+                    adder.Quantity = adderItem.Quantity == 0 ? 1 : Convert.ToDecimal(adderItem.Quantity);
+                }
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 dataContext.SaveChanges();
+
 
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
@@ -2469,22 +2493,50 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteAddersIncentives(Guid adderID, Guid ProposalID)
+        public void DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
                 dataContext
                .AdderItems
-               .Where(pc => pc.Guid == adderID)
+               .Where(pc => pc.Guid == adderItem.Guid)
                .Delete();
-
-                dataContext.SaveChanges();
 
                 var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
                 if (existingProposal == null)
                 {
                     throw new Exception("Data Not Found");
                 }
+
+                //update Finance Plan 
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                if (adderItem.Type == AdderItemType.Adder)
+                {
+                    var adder = result.Adders.FirstOrDefault(a => a.Guid == adderItem.Guid);
+                    if (adder != null)
+                    {
+                        result.Adders.Remove(adder);
+                    }
+                }
+
+                if (adderItem.Type == AdderItemType.Incentive)
+                {
+                    var incentive = result.Incentives.FirstOrDefault(a => a.Guid == adderItem.Guid);
+                    if (incentive != null)
+                    {
+                        result.Incentives.Remove(incentive);
+                    }
+                }
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
+                dataContext.SaveChanges();
+
 
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
@@ -2607,12 +2659,12 @@ namespace DataReef.TM.Services.Services
                                  {
                                      Content = pdfContent,
                                      ContentType = "application/pdf"
-                                 }, BlobAccessRights.PublicRead);                            
+                                 }, BlobAccessRights.PublicRead);
 
                             attachmentPDFs.Add(new Tuple<byte[], string>(pdfContent, $"{d.Description}.pdf"));
                         });
 
-               
+
 
                 var documentsLinks = string.Join("<br/>", signedDocuments.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for <a/>"));
 

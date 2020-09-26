@@ -439,11 +439,11 @@ namespace DataReef.TM.Api.Controllers
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
-        [Route("DeleteAddersIncentives/{adderID}/{ProposalID}")]
+        [Route("DeleteAddersIncentives/{ProposalID}")]
         [HttpPost]
-        public async Task<IHttpActionResult> DeleteAddersIncentives(Guid adderID,Guid ProposalID)
+        public async Task<IHttpActionResult> DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
-            _proposalService.DeleteAddersIncentives(adderID, ProposalID);
+            _proposalService.DeleteAddersIncentives(adderItem, ProposalID);
             return Ok();
         }
 
