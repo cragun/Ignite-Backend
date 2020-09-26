@@ -2462,7 +2462,7 @@ namespace DataReef.TM.Services.Services
 
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
 
-                //update Finance Plan 
+                //update Finance Plan  
                 var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
                 if (existingFinancePlan == null)
                 {
