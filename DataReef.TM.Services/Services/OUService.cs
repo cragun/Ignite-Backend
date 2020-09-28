@@ -918,7 +918,7 @@ namespace DataReef.TM.Services.Services
                                 .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
                                 .ToList();
 
-              //  return allAncestorIDs.Where(x => x.Name.Contains(name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+                //  return allAncestorIDs.Where(x => x.Name.Contains(name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
                 return allAncestorIDs.Where(x => x.Name.Contains(apikeyouid.OU.Name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
 
                 //return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
@@ -1452,6 +1452,81 @@ namespace DataReef.TM.Services.Services
         {
             using (var dataContext = new DataContext())
             {
+                // get all ancestor OUIDs (including ouid)
+                var allAncestorIDs = dataContext
+                                .Database
+                                .SqlQuery<Guid>($"select * from OUTreeUP('{ouid}')")
+                                .ToList();
+
+                // get Financing Options OU Settings for all ancestors
+                var allOUSettings = dataContext
+                                .OUSettings
+                                .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
+                                .ToList()
+                                .OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID))
+                                .ToList();
+
+                // convert ousettings to a dictionary of OUID : FinancingSettingDataView List
+                var financingOptions = allOUSettings
+                                        .Select(s => new { ouid = s.OUID, setts = s.GetValue<List<FinancingSettingsDataView>>() })
+                                        .Where(s => s.setts?.Count > 0)
+                                        .ToList();
+
+                List<FinancePlanDefinition> result = null;
+
+                // if non of the ancestors (including current OU) have a Financing Option setting
+                // we return all the finance plans
+                if (allOUSettings == null || allOUSettings?.Count == 0)
+                {
+                    result = _financePlanDefinitionService
+                                .List(itemsPerPage: 3000, include: include, exclude: exclude, fields: fields)
+                                .ToList();
+                }
+                else
+                {
+                    var finOptions = financingOptions.FirstOrDefault();
+
+                    var planIds = finOptions
+                                    .setts
+                                    .Where(s => finOptions.ouid == ouid
+                                                || (finOptions.ouid != ouid
+                                                     && s.GetIsEnabled())
+                                           )
+                                    .Select(fo => fo.PlanID)
+                                    .ToList();
+
+                    result = _financePlanDefinitionService.GetMany(planIds, include, exclude, fields).ToList();
+                }
+
+                //var settings = _settingsService.Value.GetSettings(ouid, null);
+
+                //var ids = settings.GetByKey<List<Guid>>(OUSetting.Financing_PlansOrder) ?? new List<Guid>();
+                //result = _financePlanDefinitionService.GetMany(ids, include, exclude, fields).ToList();
+
+                // when including Provider, the service automatically adds FinancePlanDefinitions.
+                // We remove it below so API could nicely serialize the response
+                foreach (var item in result)
+                {
+                    if (item.Provider != null)
+                    {
+                        item.Provider.FinancePlanDefinitions = null;
+                    }
+                }
+                return result.OrderBy(a => a.Name).ToList();
+            }
+        }
+
+        public ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
+        {
+            using (var dataContext = new DataContext())
+            {
+                var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalid);
+                Guid? ouid = Guid.Empty;
+                if (proposal != null)
+                {
+                    ouid = proposal.OUID;
+                }
+
                 // get all ancestor OUIDs (including ouid)
                 var allAncestorIDs = dataContext
                                 .Database

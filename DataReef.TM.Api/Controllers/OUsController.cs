@@ -124,11 +124,11 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [ResponseType(typeof(ICollection<FinancePlanDefinition>))]
-        [Route("{ouID:guid}/financeplandefinitions/proposal")]
+        [Route("{proposalid:guid}/financeplandefinitions/proposal")]
         [AllowAnonymous,InjectAuthPrincipal]
-        public async Task<IHttpActionResult> GetFinancePlanDefinitionsProposal(Guid ouID, string include = "", string exclude = "", string fields = "")
+        public async Task<IHttpActionResult> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
         {
-            var result = ouService.GetFinancePlanDefinitions(ouID, include, exclude, fields);
+            var result = ouService.GetFinancePlanDefinitionsProposal(proposalid, include, exclude, fields);
             return Ok(result);
         }
 

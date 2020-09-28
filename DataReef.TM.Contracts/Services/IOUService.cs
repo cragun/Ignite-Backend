@@ -82,6 +82,9 @@ namespace DataReef.TM.Contracts.Services
         ICollection<FinancePlanDefinition> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
+        ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "");
+
+        [OperationContract]
         OU GetByShapesVersion(Guid ouid, ICollection<OuShapeVersion> ouShapeVersions, bool deletedItems = false, string include = "");
 
         [OperationContract]
