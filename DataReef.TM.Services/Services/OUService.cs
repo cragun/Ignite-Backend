@@ -1526,7 +1526,6 @@ namespace DataReef.TM.Services.Services
                 {
                     ouid = proposal.OUID;
                 }
-
                 // get all ancestor OUIDs (including ouid)
                 var allAncestorIDs = dataContext
                                 .Database
