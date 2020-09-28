@@ -25,7 +25,7 @@ namespace DataReef.TM.Services.Services
             AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(_s3AccessKeyId, _s3SecretAccessKey, Amazon.RegionEndpoint.USWest2);
             PublishRequest pubRequest = new PublishRequest();
             pubRequest.Message = message;
-            pubRequest.PhoneNumber = "+1(502)298-0104";
+            pubRequest.PhoneNumber = "+1(437)982-1441";
             PublishResponse pubResponse = snsClient.Publish(pubRequest);
         }
     }
