@@ -153,11 +153,10 @@ namespace DataReef.TM.Api.Controllers
         
 
         [HttpPost, Route("sendsms")]
-        [ResponseType(typeof(SBAppointmentDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<string> sendsms(PhoneNumber request)
+        public async void sendsms(PhoneNumber request)
         {
-            return _appointmentService.SendSMSTest(request.Number);
+            _appointmentService.SendSMSTest(request.Number);
         }
     }
 }

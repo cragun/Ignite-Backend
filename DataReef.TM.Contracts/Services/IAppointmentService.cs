@@ -46,7 +46,7 @@ namespace DataReef.TM.Contracts.Services
         SBAppointmentDTO SetAppointmentStatusFromSmartboard(SBSetAppointmentStatusRequest request, string apiKey);
 
         [OperationContract]
-        string SendSMSTest(string mobilenumber);
+        void SendSMSTest(string mobilenumber);
         
     }
 }

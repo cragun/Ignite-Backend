@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
-
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     public class SmsService : ISmsService
@@ -20,15 +19,13 @@ namespace DataReef.TM.Services.Services
         private static readonly string _s3AccessKeyId = ConfigurationManager.AppSettings["AWS_S3_AccessKeyID"];
         private static readonly string _s3SecretAccessKey = ConfigurationManager.AppSettings["AWS_S3_SecretAccessKey"];
 
-
-        public string SendSms(string message, string mobileNumber)
+        public void SendSms(string message, string mobileNumber)
         {
             AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(_s3AccessKeyId, _s3SecretAccessKey, Amazon.RegionEndpoint.USWest2);
             PublishRequest pubRequest = new PublishRequest();
             pubRequest.Message = message;
             pubRequest.PhoneNumber = mobileNumber;
             PublishResponse pubResponse = snsClient.Publish(pubRequest);
-            return pubResponse.ToString();
         }
     }
 }
