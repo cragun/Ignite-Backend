@@ -36,8 +36,6 @@ namespace DataReef.TM.Api.Controllers
             _propertyAttachmentServiceFactory = propertyAttachmentServiceFactory;
         }
 
-
-
         /// <summary>
         /// / Gets all Territories regardless of Lat - Long, for a property
         /// </summary>
