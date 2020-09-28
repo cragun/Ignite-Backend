@@ -686,5 +686,13 @@ namespace DataReef.TM.Services
                 }
             }
         }
+
+        public string SendSMSTest(string mobile_number)
+        {
+           var data = _smsService
+                .Value
+                .SendSms("New Appointment is created!", mobile_number);
+            return data.ToString();
+        }
     }
 }

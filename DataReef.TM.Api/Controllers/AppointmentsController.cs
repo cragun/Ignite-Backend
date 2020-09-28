@@ -150,6 +150,13 @@ namespace DataReef.TM.Api.Controllers
         {
             return _appointmentService.SetAppointmentStatusFromSmartboard(request, apiKey);
         }
-    }
 
+        [HttpPost, Route("sendsms")]
+        [ResponseType(typeof(SBAppointmentDTO))]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<string> sendsms(PhoneNumber request)
+        {
+            return _appointmentService.SendSMSTest(request.Number);
+        }
+    }
 }

@@ -21,13 +21,14 @@ namespace DataReef.TM.Services.Services
         private static readonly string _s3SecretAccessKey = ConfigurationManager.AppSettings["AWS_S3_SecretAccessKey"];
 
 
-        public void SendSms(string message, string mobileNumber)
+        public string SendSms(string message, string mobileNumber)
         {
             AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(_s3AccessKeyId, _s3SecretAccessKey, Amazon.RegionEndpoint.USWest2);
             PublishRequest pubRequest = new PublishRequest();
             pubRequest.Message = message;
-            pubRequest.PhoneNumber = "+1(437)982-1441";
+            pubRequest.PhoneNumber = mobileNumber;
             PublishResponse pubResponse = snsClient.Publish(pubRequest);
+            return pubResponse.ToString();
         }
     }
 }
