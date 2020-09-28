@@ -20,6 +20,7 @@ namespace DataReef.TM.Services.Services
         private static readonly string _s3AccessKeyId = ConfigurationManager.AppSettings["AWS_S3_AccessKeyID"];
         private static readonly string _s3SecretAccessKey = ConfigurationManager.AppSettings["AWS_S3_SecretAccessKey"];
 
+
         public void SendSms(string message, string mobileNumber)
         {
             AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(_s3AccessKeyId, _s3SecretAccessKey, Amazon.RegionEndpoint.USWest2);
