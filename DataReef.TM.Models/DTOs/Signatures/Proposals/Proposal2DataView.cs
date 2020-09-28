@@ -68,7 +68,6 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
             Financing = new ProposalFinancing();
         }
 
-
         public Proposal2DataView(ProposalDVConstructor param, bool roundAmounts = false)
         {
             Guid = param.Data.Guid;
