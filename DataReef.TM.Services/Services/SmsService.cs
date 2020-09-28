@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
+
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     public class SmsService : ISmsService
