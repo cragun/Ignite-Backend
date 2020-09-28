@@ -517,5 +517,24 @@ namespace DataReef.TM.Api.Controllers
 
             return JsonConvert.DeserializeObject<T>(value);
         }
+
+
+        public override async Task<ICollection<Proposal>> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        {
+            var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);     
+            if(results.Count == 0)
+            {
+                results = new List<Proposal>();
+                Proposal pro = new Proposal();
+                pro.ProductionKWH = 0;
+                pro.ProductionKWHpercentage = 0;
+                pro.IsManual = false;
+                pro.SystemSize = 0;
+
+                results.Add(pro);
+                return results;
+            }
+            return results;
+        }
     }
 }
