@@ -2479,7 +2479,7 @@ namespace DataReef.TM.Services.Services
                     if (adder != null)
                     {
                         adder.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
-                        adder.Cost = Convert.ToDecimal(cost.Cost);
+                        //adder.Cost = Convert.ToDecimal(cost.Cost);
                     }
                 }
 
@@ -2489,7 +2489,7 @@ namespace DataReef.TM.Services.Services
                     if (incentive != null)
                     {
                         incentive.Quantity = adderItem.Quantity == 0 ? 1 : Convert.ToDecimal(adderItem.Quantity);
-                        incentive.Cost = incentive.GetTotal(result.SystemSize);
+                        //incentive.Cost = incentive.GetGrandTotal(result.SystemSize);
                     }
                 }
 
