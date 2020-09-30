@@ -186,6 +186,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
         public void fetchProduct(Projects data, string token)
         {
+            try
+            {
+
+            
             SunlightProducts req = new SunlightProducts();
             Products product = new Products();
 
@@ -213,7 +217,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             {
                 throw new ApplicationException("Sorry, there seems to be a problem, Error 390. No products found. Please contact Sunlight Financial at (888) 850-3359 for assistance.");
             }
-
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
         }
 
         //  public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
