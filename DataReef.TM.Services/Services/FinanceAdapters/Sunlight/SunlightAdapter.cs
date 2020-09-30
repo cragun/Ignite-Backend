@@ -206,6 +206,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("SFAccessToken", "Bearer " + token);
 
+
                 var JSON = JsonConvert.SerializeObject(request);
 
                 ApiLogEntry apilog = new ApiLogEntry();
