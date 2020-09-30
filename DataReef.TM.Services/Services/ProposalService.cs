@@ -2475,11 +2475,9 @@ namespace DataReef.TM.Services.Services
                 if (adderItem.Type == AdderItemType.Adder)
                 {
                     var adder = result.Adders.FirstOrDefault(a => a.Guid == adderItem.Guid);
-                    var cost = new SystemCostItem(adder, Convert.ToInt32(result.SystemSize) , false);
                     if (adder != null)
                     {
                         adder.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
-                        //adder.Cost = Convert.ToDecimal(cost.Cost);
                     }
                 }
 
@@ -2489,7 +2487,6 @@ namespace DataReef.TM.Services.Services
                     if (incentive != null)
                     {
                         incentive.Quantity = adderItem.Quantity == 0 ? 1 : Convert.ToDecimal(adderItem.Quantity);
-                        //incentive.Cost = incentive.GetGrandTotal(result.SystemSize);
                     }
                 }
 
