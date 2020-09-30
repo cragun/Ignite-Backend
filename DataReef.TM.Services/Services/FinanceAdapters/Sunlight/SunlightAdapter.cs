@@ -188,8 +188,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         {
             try
             {
-
-
                 SunlightProducts req = new SunlightProducts();
                 Products product = new Products();
 
@@ -207,6 +205,29 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("SFAccessToken", "Bearer " + token);
+
+                var JSON = JsonConvert.SerializeObject(request);
+
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = JSON;
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "Error";
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = "";
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = "";
+
+                using (var dc = new DataContext())
+                {
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+                }
 
                 var response = client.Execute(request);
 
