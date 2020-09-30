@@ -26,12 +26,19 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
     [Service(typeof(ISunlightAdapter))]
     public class SunlightAdapter : ISunlightAdapter
     {
-        private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
-        private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Username"];
-        private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Password"];
-        private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
-        private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
-        private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
+        //private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
+        //private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Username"];
+        //private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Password"];
+        //private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
+        //private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
+        //private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
+
+        private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.url"];
+        private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Auth.Username"];
+        private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Auth.Password"];
+        private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Username"];
+        private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Password"];
+        private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Frame.Url"];
 
         private RestClient client
         {
