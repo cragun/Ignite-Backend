@@ -189,36 +189,36 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             try
             {
 
-            
-            SunlightProducts req = new SunlightProducts();
-            Products product = new Products();
 
-            product.loanType = "Single";
-            product.term = data.term;
-            product.apr = data.apr;
-            product.isACH = true;
-            product.stateName = data.installStateName;
+                SunlightProducts req = new SunlightProducts();
+                Products product = new Products();
 
-            req.products = new List<Products>();
-            req.products.Add(product);
+                product.loanType = "Single";
+                product.term = data.term;
+                product.apr = data.apr;
+                product.isACH = true;
+                product.stateName = data.installStateName;
 
-            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
-            var request = new RestRequest($"/product/fetchproducts/", Method.POST);
-            request.AddJsonBody(req);
-            request.AddHeader("Authorization", "Basic " + svcCredentials);
-            request.AddHeader("SFAccessToken", "Bearer " + token);
+                req.products = new List<Products>();
+                req.products.Add(product);
 
-            var response = client.Execute(request);
+                string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+                var request = new RestRequest($"/product/fetchproducts/", Method.POST);
+                request.AddJsonBody(req);
+                request.AddHeader("Authorization", "Basic " + svcCredentials);
+                request.AddHeader("SFAccessToken", "Bearer " + token);
 
-            var content = response.Content;
-            var ret = JsonConvert.DeserializeObject<SunlightProducts>(content);
+                var response = client.Execute(request);
 
-            if (!ret.returnCode.Equals("200"))
-            {
-                throw new ApplicationException("Sorry, there seems to be a problem, Error 390. No products found. Please contact Sunlight Financial at (888) 850-3359 for assistance.");
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<SunlightProducts>(content);
+
+                if (!ret.returnCode.Equals("200"))
+                {
+                    throw new ApplicationException("Sorry, there seems to be a problem, Error 390. No products found. Please contact Sunlight Financial at (888) 850-3359 for assistance.");
+                }
             }
-            }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ApplicationException(ex.Message);
             }
@@ -227,8 +227,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         //  public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         {
-            //try
-            //{
+            try
+            {
             using (var dc = new DataContext())
             {
                 var proposal = dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
@@ -310,20 +310,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     hashId = Uri.EscapeDataString(hashId);
                 }
 
-
-                string frame = FrameUrl.Replace("{tokenid}", token)
-                                       .Replace("{hashid}", "&pid=" + hashId);
-
-
-
-
+                string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + hashId);
                 return frame;
             }
-            //}
-            //catch (Exception ex)
-            //{
-            //    return ex.Message;
-            //}
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
         }
 
 
@@ -375,11 +369,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                         fianacepln.SunlightReqJson = ReqJson;
                         fianacepln.SunlightResponseJson = content;
                         db.SaveChanges();
-                    }                    
+                    }
 
                     if (ret.returnCode != "200")
                     {
-                        var error =  JsonConvert.DeserializeObject<SunlightError>(content);
+                        var error = JsonConvert.DeserializeObject<SunlightError>(content);
                         snresponse.returnCode = error.returnCode;
                         snresponse.projectstatus = error.error?.FirstOrDefault()?.errorMessage;
                     }
@@ -454,7 +448,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     }
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-                   // string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
+                    // string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
                     if (ret.returnCode != "200")
                     {
                         var error = JsonConvert.DeserializeObject<SunlightError>(content);
