@@ -2454,7 +2454,6 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Data Not Found");
                 }
 
-
                 var existingadderItem = dataContext.AdderItems.FirstOrDefault(i => i.Guid == adderItem.Guid);
 
                 if (existingadderItem == null)
