@@ -5299,6 +5299,11 @@
             Collection of OUAssociations
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.OU.FavouriteOus">
+            <summary>
+            Favorite territory assigned to this person
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.OU.Account">
             <summary>
             The account that owns the OU

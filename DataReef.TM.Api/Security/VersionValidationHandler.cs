@@ -65,7 +65,6 @@ namespace DataReef.TM.Api.Security
         }
 
 
-
         public VersionValidationHandler(ILogger logger, IAppSettingService appSettingService)
         {
             _logger = logger;

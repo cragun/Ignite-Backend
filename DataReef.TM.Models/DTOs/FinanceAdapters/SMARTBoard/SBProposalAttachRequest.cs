@@ -22,7 +22,6 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public SBLeadModel Lead { get; set; }
         public SBLeadKwhModel LeadKwh { get; set; }
         public SBProposalModel Proposal { get; set; }
-      //  public Contract contract { get; set; }
         public SBProposalDataModel ProjectData { get; set; }
         public SBEnergyUtilityModel EnergyUsage { get; set; }
         public SBUsageModel MonthlyUsage { get; set; }
@@ -34,7 +33,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         //{
         //   Document = new DocumentModel();
         //}
-
+        
         public DocumentModel Document { get; set; }
     }
 
@@ -78,7 +77,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
     }
 
-    public class SBProposalModel
+        public class SBProposalModel
     {
         [JsonProperty("name")]
         public string Name { get; set; }

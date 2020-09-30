@@ -7,6 +7,7 @@ using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
@@ -42,7 +43,7 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<CRMLeadSource> CRMGetAvailableLeadSources(Guid ouid);
-        
+
 
         [OperationContract]
         PaginatedResult<Property> CRMGetProperties(CRMFilterRequest request);
@@ -61,7 +62,7 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string SendEmailSummarytoCustomer(Guid propertyID, string summary);
-        
+
 
         [OperationContract]
         string GetSurveyUrl(Guid personID, Guid propertyID);
@@ -73,21 +74,19 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<Person> personDetails(Guid ouid, DateTime date);
 
         [OperationContract]
-        List<Guid> RemoveDeactivePeople(IEnumerable<Guid> uniqueIds);
-
-        [OperationContract]
         IEnumerable<PersonOffboard> OuassociationRoleName(Guid personid);
 
         [OperationContract]
         void SBDeactivate(Guid personid);
 
         [OperationContract]
-        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string date, string type);
+        Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string date , string type);
 
         [OperationContract]
         AppointmentFavouritePerson InsertFavoritePerson(Guid FavouritePersonID);
 
         [OperationContract]
         void RemoveFavoritePerson(Guid FavouritePersonID);
+
     }
 }

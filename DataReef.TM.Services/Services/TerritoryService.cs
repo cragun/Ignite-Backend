@@ -137,7 +137,7 @@ namespace DataReef.TM.Services
 
                 result = _inquiryService.Value.GetInquiryStatisticsForOrganizationTerritories(new List<Guid> { territoryId }, reportSettings.ReportItems, specifiedDay).ToList();
             }
-            
+
             return result;
         }
 
@@ -205,6 +205,7 @@ namespace DataReef.TM.Services
 
             using (var context = new DataContext())
             {
+                var ousQuery = context.OUs.FirstOrDefault(t => t.Guid == ouid);
                 var ouTerritoriesQuery = context.Territories.Where(t => t.OUID == ouid);
 
                 if (personID.HasValue)
@@ -213,7 +214,6 @@ namespace DataReef.TM.Services
                     {
                         ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
                     }
-
                 }
 
                 AssignIncludes(include, ref ouTerritoriesQuery);
@@ -231,7 +231,7 @@ namespace DataReef.TM.Services
                 }
 
                 var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
-                foreach (var territory in ouTerritories)
+                foreach (var territory in ouTerritories.ToList())
                 {
                     var favourite = favouriteTerritories?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
 
@@ -239,7 +239,13 @@ namespace DataReef.TM.Services
                         territory.IsFavourite = true;
                     else
                         territory.IsFavourite = false;
+
+                    if (territory.Status == TerritoryStatus.Master && ousQuery.IsTerritoryAdd == false)
+                    {
+                        ouTerritories.Remove(territory);
+                    }
                 }
+
 
                 if (territoryShapeVersions != null)
                 {
@@ -258,7 +264,7 @@ namespace DataReef.TM.Services
                         if (territory.ShapesVersion == territoryShape?.Version)
                             territory.WellKnownText = null;
                     }
-                }               
+                }
 
                 //ouTerritories = PopulateTerritoriesSummary(ouTerritories).Result.ToList();
 

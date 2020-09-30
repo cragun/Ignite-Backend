@@ -190,7 +190,7 @@ public static class ModelExtensions
         return data
                 .FirstOrDefault(d => d.Key == key)
                 .Value;
-    }    
+    }
 
     internal static ActiveUserDTO HighestRole(this IGrouping<Guid, ActiveUserDTO> data)
     {

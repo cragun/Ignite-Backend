@@ -8,6 +8,7 @@ using DataReef.TM.Models.Solar;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using System.Threading.Tasks;
+using DataReef.TM.Models;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -50,6 +51,9 @@ namespace DataReef.TM.Contracts.Services
         Property SyncProperty(Guid propertyID, string include = "");
 
         [OperationContract]
+        Property PropertyBagsbyID(Guid propertyID);
+
+        [OperationContract]
         SolarTariff GetTariffByGenabilityProviderAccountID(string id);
 
         [OperationContract]
@@ -66,6 +70,12 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request);
+
+        [OperationContract]
+        Task<EsIDResponse> GetEsidByAddress(Guid propertyid);
+
+        [OperationContract]
+        Task<bool> IsPropertyAvailable(long igniteId);
 
     }
 }

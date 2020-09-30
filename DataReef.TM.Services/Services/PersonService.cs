@@ -260,7 +260,6 @@ namespace DataReef.TM.Services
                     RecipientEmailAddress = person.EmailAddressString,
                     DownloadURL = ConfigurationManager.AppSettings["LegionDownloadURL"]
                 };
-
                 Mail.Library.SendUserReactivationEmail(template);
 
                 //  register to MailChimp
@@ -341,7 +340,7 @@ namespace DataReef.TM.Services
 
                 uow.SaveChanges();
 
-                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();                    
+                credentials = uow.Get<Credential>().Where(c => c.UserID == uniqueId).ToList();
             }
 
             //  unregister user from MailChimp
@@ -356,7 +355,7 @@ namespace DataReef.TM.Services
             {
             }
 
-            var result = base.Delete(uniqueId);            
+            var result = base.Delete(uniqueId);
             return result;
         }
 
@@ -769,7 +768,7 @@ namespace DataReef.TM.Services
                 {
                     Task.Factory.StartNew(() =>
                     {
-                        Mail.Library.SendEmail(email, string.Empty, $"Proposal Summary Data", mailbody, true);                        
+                        Mail.Library.SendEmail(email, string.Empty, $"Proposal Summary Data", mailbody, true);
                     });
                 }
                 return summary;
@@ -779,18 +778,13 @@ namespace DataReef.TM.Services
 
         public PaginatedResult<Property> CRMGetProperties(CRMFilterRequest request)
         {
-            var rootGuids = _ouService
-                                .Value
-                                .ListRootGuidsForPerson(SmartPrincipal.UserId);
+            var rootGuids = _ouService.Value.ListRootGuidsForPerson(SmartPrincipal.UserId);
 
             var ouIds = new List<Guid>();
 
             foreach (var guid in rootGuids)
             {
-                ouIds.AddRange(_ouService
-                                .Value
-                                .GetOUAndChildrenGuids(guid)
-                                .ToList());
+                ouIds.AddRange(_ouService.Value.GetOUAndChildrenGuids(guid).ToList());
             }
 
             //ou filter
@@ -804,22 +798,15 @@ namespace DataReef.TM.Services
                 {
                     return PaginatedResult<Property>.GetDefault(request.PageIndex, request.PageSize);
                 }
-
             }
             else
             {
-                ouIds = ouIds
-                        .Distinct()
-                        .ToList();
+                ouIds = ouIds.Distinct().ToList();
             }
-
-
 
             using (var uow = UnitOfWorkFactory())
             {
-                var propertiesQuery = uow
-                            .Get<Property>()
-                            .Where(p => ouIds.Contains(p.Territory.OUID));
+                var propertiesQuery = uow.Get<Property>().Where(p => ouIds.Contains(p.Territory.OUID));
 
                 if (request.TerritoryIds?.Any() == true)
                 {
@@ -841,9 +828,7 @@ namespace DataReef.TM.Services
 
                     using (var dataContext = new DataContext())
                     {
-                        var propIds = dataContext
-                                .Properties
-                                .SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query OR Name like @query", paramValue.ToArray())
+                        var propIds = dataContext.Properties.SqlQuery($"SELECT * From Properties WHERE CONTAINS(Name, '{ parameters}') OR Address1 like @query OR Name like @query", paramValue.ToArray())
                                 .Select(p => p.Guid)
                                 .ToList();
 
@@ -862,18 +847,16 @@ namespace DataReef.TM.Services
                         case "Appointments":
                             if (request.HasInclude(nameof(Property.Appointments)))
                             {
-                                propertiesQuery = propertiesQuery
-                                            .Where(p => p.Appointments.Any(app => app.CreatedByID == SmartPrincipal.UserId && !app.IsDeleted));
+                                propertiesQuery = propertiesQuery.Where(p => p.Appointments.Any(app => app.CreatedByID == SmartPrincipal.UserId && !app.IsDeleted));
                             }
                             break;
                         default:
-                            propertiesQuery = propertiesQuery
-                                            .Where(p => p.LatestDisposition == request.Disposition);
+                            propertiesQuery = propertiesQuery.Where(p => p.LatestDisposition == request.Disposition);
                             break;
                     }
                 }
 
-                //multiple dispositions query
+                //multiple dispositions queries
                 if (request.DispositionsQuery?.Any() == true)
                 {
                     if (request.DispositionsQuery?.Any(x => x == "Appointments") == true)
@@ -892,7 +875,7 @@ namespace DataReef.TM.Services
 
                     if (request.DispositionsQuery?.Any(x => !customDispositionsList.Contains(x)) == true)
                     {
-                       // propertiesQuery = propertiesQuery.Where(p => p.Inquiries.Any(i => request.DispositionsQuery.Contains(i.Disposition)));
+                        //propertiesQuery = propertiesQuery.Where(p => p.Inquiries.Any(i => request.DispositionsQuery.Contains(i.Disposition)));
                         propertiesQuery = propertiesQuery.Where(p => request.DispositionsQuery.Contains(p.LatestDisposition));
                     }
                 }
@@ -959,12 +942,11 @@ namespace DataReef.TM.Services
                     propertiesQuery = propertiesQuery.OrderByDescending(p => p.DateCreated);
                 }
 
-                var result = propertiesQuery
-                                    .Skip(request.PageIndex * request.PageSize)
+                var result = propertiesQuery.Skip(request.PageIndex * request.PageSize)
                                     .Take(request.PageSize)
                                     .ToList();
 
-              //if (result?.Any() == true)
+                //if (result?.Any() == true)
                 //{
                 //    foreach (var prop in result)
                 //    {
@@ -990,6 +972,7 @@ namespace DataReef.TM.Services
                 //        ou.Settings = OUSettingService.GetOuSettings(ou.Guid);
                 //    }
                 //}
+
                 return new PaginatedResult<Property>
                 {
                     Data = result,
@@ -1078,10 +1061,9 @@ namespace DataReef.TM.Services
                     person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
                 }
             }
-            if(person == null) { person = new PersonClockTime(); };
+            if (person == null) { person = new PersonClockTime(); };
             return person;
-        } 
-
+        }
 
         public IEnumerable<Person> personDetails(Guid ouid, DateTime date)
         {
@@ -1093,11 +1075,11 @@ namespace DataReef.TM.Services
                 var result = new List<Person>();
                 foreach (var person in peoples)
                 {
-                    if(person.AssignedAppointments != null)
+                    if (person.AssignedAppointments != null)
                     {
                         person.AssignedAppointments = person.AssignedAppointments.Where(x => x.StartDate.Date == date.Date).ToList();
                     }
-                    
+
                     if (result.Any(r => r.Guid == person.Guid))
                     {
                         continue;
@@ -1108,8 +1090,6 @@ namespace DataReef.TM.Services
 
             }
         }
-
-
 
         private string ReplaceTokens(string source, Property property)
         {
@@ -1141,49 +1121,8 @@ namespace DataReef.TM.Services
             }
         }
 
-        public List<Guid> RemoveDeactivePeople(IEnumerable<Guid> uniqueIds)
-        {
-            List<Guid> filterList = new List<Guid>();
-            using (DataContext dc = new DataContext())
-            {
-                var people = dc
-                    .People
-                    .Where(p => uniqueIds.Contains(p.Guid) && p.IsDeleted == false)
-                    .Include(p=>p.OUAssociations)
-                    .ToList();
 
-                var personIDs = people.Select(p => p.Guid).ToList();
 
-                foreach (var personId in personIDs)
-                {
-                    var roleType = OURoleType.None;
-                    var person = people.FirstOrDefault(p => p.Guid == personId);
-
-                    if (person != null)
-                    {
-                        person.OUAssociations.ToList().ForEach(ouAssociation => { roleType = roleType | ouAssociation.RoleType; });
-                    }
-                    if (roleType.Equals(OURoleType.Member) || roleType.Equals(OURoleType.PhotosManager) || roleType.Equals(OURoleType.FranchiseManager))
-                    {
-                        filterList.Add(person.Guid);
-                    }
-                 }
-            }
-            return filterList;
-
-        }
-
-        //public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid)
-        //{
-        //    using (DataContext dc = new DataContext())
-        //    {
-        //        var OUAssociationIds = dc.OUAssociations?.Where(oua => oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted && !oua.Person.IsDeleted).Select(oua => oua.PersonID).Distinct().ToList();
-
-        //        var people = dc.People.Include(y => y.AssignedAppointments).Include(y => y.PhoneNumbers).Include(y => y.PersonSettings).Where(peo => OUAssociationIds.Contains(peo.Guid)).ToList();
-
-        //        return people;
-        //    }
-        //}
         public async Task<IEnumerable<Person>> CalendarPageAppointMentsByOuid(Guid ouid, string CurrentDate, string type)
         {
             try
@@ -1198,14 +1137,14 @@ namespace DataReef.TM.Services
                                             select oua.PersonID).Distinct().ToList();
 
                     var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
-                        .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
-                        .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
-                        .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted))
-                        .ToList();
+                    .IncludeOptimized(yt => yt.PersonSettings.Where(y => !y.IsDeleted))
+                    .IncludeOptimized(ut => ut.PhoneNumbers.Where(u => !u.IsDeleted))
+                    .IncludeOptimized(pt => pt.AssignedAppointments.Where(i => ((i.DateCreated >= dt && i.DateCreated < dtt) || (i.StartDate >= dt && i.StartDate < dtt)) && !i.IsDeleted))
+                    .ToList();
 
                     var favouritePeopleIds = (from oua in dc.AppointmentFavouritePersons
-                                              where oua.PersonID == SmartPrincipal.UserId
-                                              select oua.FavouritePersonID).Distinct().ToList();
+                                           where oua.PersonID == SmartPrincipal.UserId
+                                           select oua.FavouritePersonID).Distinct().ToList();
                     foreach (var item in peoples)
                     {
                         item.IsFavourite = favouritePeopleIds.Contains(item.Guid);
@@ -1222,9 +1161,7 @@ namespace DataReef.TM.Services
             {
                 return null;
             }
-
         }
-
 
         /// <summary>
         /// This method insert Person as a Favorite 

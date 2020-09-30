@@ -20,6 +20,7 @@ namespace DataReef.TM.Models.DTOs.OUs
 
         [DataMember]
         public string ParentTree { get; set; }
+        
 
     }
     [DataContract]
@@ -61,7 +62,7 @@ namespace DataReef.TM.Models.DTOs.OUs
 
         public SBOUDTO(OU ouObject, bool includeChildren = true)
         {
-            if (ouObject != null)
+            if(ouObject != null)
             {
                 Guid = ouObject.Guid;
                 Name = ouObject.Name;
@@ -77,7 +78,7 @@ namespace DataReef.TM.Models.DTOs.OUs
                         ?.Select(c => new SBOUDTO(c, false));
                 }
 
-                if (ouObject.Territories?.Any() == true)
+                if(ouObject.Territories?.Any() == true)
                 {
                     Territories = ouObject
                         ?.Territories
@@ -85,7 +86,7 @@ namespace DataReef.TM.Models.DTOs.OUs
                         ?.Select(t => new SBTerritoryDTO(t));
                 }
             }
-
+            
         }
     }
 }

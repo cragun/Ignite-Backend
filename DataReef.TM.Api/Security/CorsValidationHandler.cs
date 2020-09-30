@@ -43,7 +43,7 @@ namespace DataReef.TM.Api.Security
             response = await ((request.Method == HttpMethod.Options) ? Task.FromResult(response) : base.SendAsync(request, cancellationToken));
             response.Headers.Add(AccessControlAlloHeadersKey, "Authorization, DataReef-FullVersion, Content-Type, Cache-Control, X-Requested-With");
             response.Headers.Add(AccessControlAllowOriginKey, requestOrigin);
-            response.Headers.Add(AccessControlAllowMethodsKey, "PATCH, POST, GET, OPTIONS, DELETE");
+            response.Headers.Add(AccessControlAllowMethodsKey, "PATCH, POST, GET, OPTIONS,DELETE");
 
             return response;
         }

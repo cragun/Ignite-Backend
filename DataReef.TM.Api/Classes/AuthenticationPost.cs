@@ -14,6 +14,7 @@ namespace DataReef.TM.Api.Classes
 
         public string ClientID { get; set; }
 
+        public string fcm_token { get; set; }
 
     }
 }

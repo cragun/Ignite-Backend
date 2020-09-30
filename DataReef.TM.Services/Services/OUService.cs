@@ -400,15 +400,6 @@ namespace DataReef.TM.Services.Services
 
                 return ou;
             }
-            //if (ou.Children != null)
-            //{
-            //    foreach (var child in ou.Children)
-            //    {
-            //        PopulateOUSummary(child);
-            //    }
-            //}
-
-            //return ou;
         }
 
         public IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey)
@@ -617,6 +608,7 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
+            entity.IsTerritoryAdd = true;
             OU ou = base.Insert(entity);
 
             string include = string.Empty;
@@ -642,6 +634,43 @@ namespace DataReef.TM.Services.Services
             }
 
             base.ProcessApiWebHooks(ret.Guid, ApiObjectType.Organization, EventDomain.Organization, EventAction.Created, ret.Guid);
+
+            //insert master territory
+
+            var territory = new Territory
+            {
+                Name = entity.Name + " - All",
+                OUID = entity.Guid,
+                CreatedByID = SmartPrincipal.UserId,
+                CreatedByName = SmartPrincipal.UserName,
+                WellKnownText = entity.WellKnownText,
+                CentroidLat = entity.CentroidLat,
+                CentroidLon = entity.CentroidLon,
+                Radius = entity.Radius,
+                ShapesVersion = entity.ShapesVersion,
+                Version = entity.Version
+            };
+
+            List<TerritoryShape> tShape = new List<TerritoryShape>();
+            foreach (var item in entity.Shapes)
+            {
+                tShape.Add(new TerritoryShape
+                {
+                    Radius = item.Radius,
+                    ResidentCount = item.ResidentCount,
+                    Name = item.Name,
+                    CentroidLat = item.CentroidLat,
+                    WellKnownText = item.WellKnownText,
+                    CentroidLon = item.CentroidLon,
+                    ParentID = item.ParentID,
+                    ShapeID = item.ShapeID,
+                    ShapeTypeID = item.ShapeTypeID,
+                    IsDeleted = item.IsDeleted
+                });
+            }
+
+            territory.Shapes = tShape;
+            _territoryService.Insert(territory);
 
             return ret;
         }
@@ -782,6 +811,7 @@ namespace DataReef.TM.Services.Services
             return results;
         }
 
+
         public override SaveResult Activate(Guid uniqueId)
         {
             var results = ActivateMany(new Guid[] { uniqueId });
@@ -874,54 +904,28 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
-        //public IEnumerable<SBOU> GetOusList(string apikey)
-        //{
-        //    using (var dc = new DataContext())
-        //    {
-        //        List<OU> result = new List<OU>();
 
-        //        var OUList = dc
-        //            .OUs?
-        //            .Where(o => o.IsDeleted == false)
-        //            .ToList();
-
-        //        var selectedList = dc
-        //               .OUSettings
-        //               .Where(os => os.Name == SolarTrackerResources.SelectedSettingName)
-        //               .Select(os => os.OUID)
-        //               .ToList();
-
-
-        //        foreach (var ou in OUList)
-        //        {
-        //            var finalList = selectedList.Contains(ou.Guid).ToString();
-        //            if (finalList.Equals("False"))
-        //            {
-        //                result.Add(ou);
-        //            }
-        //        }
-
-        //        return result.Select(x => new SBOU
-        //        {
-        //            OUID = x.Guid,
-        //            Name = x.Name
-        //        });
-
-        //    }
-        //}
-
-        public IEnumerable<SBOU> GetOusList(string apikey)
+        public IEnumerable<SBOU> GetOusList(string name)
         {
+
             using (var dc = new DataContext())
             {
+                //var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains("79b0899a1d7182d5879b9fc3a5cc7449") && y.Name == "Integrations.Options.Selected").FirstOrDefault();
+                var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains(name) && y.Name == "Integrations.Options.Selected").FirstOrDefault();
+
                 var allAncestorIDs = dc
                                 .Database
                                 .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
                                 .ToList();
 
-                return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+                //  return allAncestorIDs.Where(x => x.Name.Contains(name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+                return allAncestorIDs.Where(x => x.Name.Contains(apikeyouid.OU.Name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+
+                //return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+
             }
         }
+
 
         public string InsertApikeyForOU(SBOUID request, string apikey)
         {
@@ -1448,6 +1452,80 @@ namespace DataReef.TM.Services.Services
         {
             using (var dataContext = new DataContext())
             {
+                // get all ancestor OUIDs (including ouid)
+                var allAncestorIDs = dataContext
+                                .Database
+                                .SqlQuery<Guid>($"select * from OUTreeUP('{ouid}')")
+                                .ToList();
+
+                // get Financing Options OU Settings for all ancestors
+                var allOUSettings = dataContext
+                                .OUSettings
+                                .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
+                                .ToList()
+                                .OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID))
+                                .ToList();
+
+                // convert ousettings to a dictionary of OUID : FinancingSettingDataView List
+                var financingOptions = allOUSettings
+                                        .Select(s => new { ouid = s.OUID, setts = s.GetValue<List<FinancingSettingsDataView>>() })
+                                        .Where(s => s.setts?.Count > 0)
+                                        .ToList();
+
+                List<FinancePlanDefinition> result = null;
+
+                // if non of the ancestors (including current OU) have a Financing Option setting
+                // we return all the finance plans
+                if (allOUSettings == null || allOUSettings?.Count == 0)
+                {
+                    result = _financePlanDefinitionService
+                                .List(itemsPerPage: 3000, include: include, exclude: exclude, fields: fields)
+                                .ToList();
+                }
+                else
+                {
+                    var finOptions = financingOptions.FirstOrDefault();
+
+                    var planIds = finOptions
+                                    .setts
+                                    .Where(s => finOptions.ouid == ouid
+                                                || (finOptions.ouid != ouid
+                                                     && s.GetIsEnabled())
+                                           )
+                                    .Select(fo => fo.PlanID)
+                                    .ToList();
+
+                    result = _financePlanDefinitionService.GetMany(planIds, include, exclude, fields).ToList();
+                }
+
+                //var settings = _settingsService.Value.GetSettings(ouid, null);
+
+                //var ids = settings.GetByKey<List<Guid>>(OUSetting.Financing_PlansOrder) ?? new List<Guid>();
+                //result = _financePlanDefinitionService.GetMany(ids, include, exclude, fields).ToList();
+
+                // when including Provider, the service automatically adds FinancePlanDefinitions.
+                // We remove it below so API could nicely serialize the response
+                foreach (var item in result)
+                {
+                    if (item.Provider != null)
+                    {
+                        item.Provider.FinancePlanDefinitions = null;
+                    }
+                }
+                return result.OrderBy(a => a.Name).ToList();
+            }
+        }
+
+        public ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
+        {
+            using (var dataContext = new DataContext())
+            {
+                var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalid);
+                Guid? ouid = Guid.Empty;
+                if (proposal != null)
+                {
+                    ouid = proposal.OUID;
+                }
                 // get all ancestor OUIDs (including ouid)
                 var allAncestorIDs = dataContext
                                 .Database
@@ -2186,9 +2264,6 @@ namespace DataReef.TM.Services.Services
             return sbSettings.ApiKey;
         }
 
-
-
-
         public IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
         {
             Lat = Lat == null ? 0 : Lat;
@@ -2378,7 +2453,72 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public string InsertMasterTerritory()
+        {
 
+            using (var dc = new DataContext())
+            {
+                using (var transaction = dc.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var Ous = dc.OUs.Include(a => a.Shapes).ToList();
+
+                        foreach (var entity in Ous)
+                        {
+                            //insert master territory
+
+                            var territory = new Territory
+                            {
+                                Name = entity.Name + " - ALL",
+                                OUID = entity.Guid,
+                                CreatedByID = SmartPrincipal.UserId,
+                                CreatedByName = SmartPrincipal.UserName,
+                                WellKnownText = entity.WellKnownText,
+                                CentroidLat = entity.CentroidLat,
+                                CentroidLon = entity.CentroidLon,
+                                Radius = entity.Radius,
+                                ShapesVersion = entity.ShapesVersion,
+                                Version = entity.Version,
+                                Status = TerritoryStatus.Master //Master Territory
+                            };
+
+                            List<TerritoryShape> tShape = new List<TerritoryShape>();
+                            foreach (var item in entity.Shapes)
+                            {
+                                tShape.Add(new TerritoryShape
+                                {
+                                    Radius = item.Radius,
+                                    ResidentCount = item.ResidentCount,
+                                    Name = item.Name,
+                                    CentroidLat = item.CentroidLat,
+                                    WellKnownText = item.WellKnownText,
+                                    CentroidLon = item.CentroidLon,
+                                    ParentID = item.ParentID,
+                                    ShapeID = item.ShapeID,
+                                    ShapeTypeID = item.ShapeTypeID,
+                                    IsDeleted = item.IsDeleted
+                                });
+                            }
+
+                            territory.Shapes = tShape;
+                            _territoryService.Insert(territory);
+
+                        }
+
+                        transaction.Commit();
+
+                        return "success";
+
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+        }
 
         //public void UpdateFinancing()
         //{
@@ -2458,4 +2598,3 @@ namespace DataReef.TM.Services.Services
         //}
     }
 }
-

@@ -64,9 +64,9 @@ namespace DataReef.TM.Api.Controllers.Web
             }
 
             string customUrl = string.Format("{0}{1}?{2}", Constants.CustomURL, stringAction, query.ToString().EscapeEmail());
-            if(customUrl.Contains("noteID"))
+            if (customUrl.Contains("noteID"))
             {
-                customUrl = string.Format("{0}{1}", Constants.CustomURL, query.ToString().EscapeEmail()).Replace("%3f","?");
+                customUrl = string.Format("{0}{1}", Constants.CustomURL, query.ToString().EscapeEmail()).Replace("%3f", "?");
             }
             return View("Redirect", (object)customUrl);
         }
@@ -105,7 +105,6 @@ namespace DataReef.TM.Api.Controllers.Web
                     return RedirectToAction("Success", new { id = 1 });
                 }
             }
-
             return View("UserRegistration", model?.ToRegistration());
         }
 
@@ -200,7 +199,7 @@ namespace DataReef.TM.Api.Controllers.Web
             {
                 try
                 {
-                    _authService.Value.CompletePasswordReset(model.Guid, model.Password);
+                    _authService.Value.CompletePasswordReset(model.Guid, model.Password , "");
                     return RedirectToAction("Success", new { id = 2 });
                 }
                 catch (Exception ex)

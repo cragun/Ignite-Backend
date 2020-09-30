@@ -1,4 +1,4 @@
-﻿    using DataReef.TM.Models.DataViews.Geo;
+﻿using DataReef.TM.Models.DataViews.Geo;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -175,7 +175,7 @@ namespace DataReef.TM.Models.DTOs.Signatures
         public string ThumbContentURL { get; set; }
 
     }
-
+    
     public class DocType
     {
         [DataMember]
@@ -185,4 +185,5 @@ namespace DataReef.TM.Models.DTOs.Signatures
         public string Name { get; set; }
 
     }
+
 }

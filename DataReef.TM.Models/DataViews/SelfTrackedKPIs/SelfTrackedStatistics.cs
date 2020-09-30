@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataReef.TM.Models.DataViews.Inquiries;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;

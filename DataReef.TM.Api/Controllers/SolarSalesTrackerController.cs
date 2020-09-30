@@ -26,13 +26,13 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpPost, AllowAnonymous, Route("proposal/attach/echo")]
-        public async Task<SBProposalAttachRequest>  AttachProposalEcho(SBProposalAttachRequest req)
+        public async Task<SBProposalAttachRequest> AttachProposalEcho(SBProposalAttachRequest req)
         {
             return req;
         }
 
         [HttpPost, AllowAnonymous, Route("lead/submit/echo")]
-        public async Task<SBLeadCreateRequest>  SubmitLeadEcho(SBLeadCreateRequest req)
+        public async Task<SBLeadCreateRequest> SubmitLeadEcho(SBLeadCreateRequest req)
         {
             return req;
         }

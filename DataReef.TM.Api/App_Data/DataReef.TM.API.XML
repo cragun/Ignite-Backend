@@ -646,7 +646,7 @@
             <param name="settingName"></param>
             <returns></returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOusList(System.String)">
+        <member name="M:DataReef.TM.Api.Controllers.OUsController.GetOusList(DataReef.TM.Models.DTOs.OUs.SBOU)">
             <summary>
             Get method used by SmartBoard to retrieve all OUs which have no apikey
             </summary>
@@ -740,6 +740,20 @@
             </summary>
             <param name="propertyID"></param>
             <param name="apiKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetEsidByAddressPropertyid(System.Guid)">
+            <summary>
+            / Gets all Territories regardless of Lat - Long, for a property
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.IsPropertyAvailable(System.Int64)">
+            <summary>
+            / Check Is Property available or not
+            </summary>
+            <param name="igniteId"></param>
             <returns></returns>
         </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetInquiriesForProperty(System.Guid)">

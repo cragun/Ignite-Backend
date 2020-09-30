@@ -88,7 +88,7 @@ namespace DataReef.TM.Contracts.Services
         List<KeyValue> GetAddersIncentives(Guid ProposalID);
 
         [OperationContract]
-        SystemCostItem AddAddersIncentives(AdderItem adderItem,Guid ProposalID);
+        SystemCostItem AddAddersIncentives(AdderItem adderItem, Guid ProposalID);
 
         [OperationContract]
         SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID);
@@ -97,12 +97,16 @@ namespace DataReef.TM.Contracts.Services
         void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID);
 
         [OperationContract]
-        void DeleteAddersIncentives(Guid adderID, Guid ProposalID);
+        void DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID);
 
         [OperationContract]
         void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan);
 
         [OperationContract]
         int GetProposalCount(Guid PropertyID);
+
+        [OperationContract]
+        string Getproposalpdftest(string s);
+
     }
 }

@@ -45,6 +45,12 @@ namespace DataReef.TM.Models
         [DataMember]
         public string SmartBoardID { get; set; }
 
+        [NotMapped]
+        public Guid NoteID { get; set; }
+
+        [NotMapped]
+        public Guid PropertyID { get; set; }
+
         #endregion
 
         #region Navigation Properties

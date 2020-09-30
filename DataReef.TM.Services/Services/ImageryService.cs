@@ -62,7 +62,7 @@ namespace DataReef.TM.Services.Services
             var results = _eagleViewService.GetLinksForLatLon(lat, lon);
             var ret = results.Select(r => r.OrientationString).ToList();
             return ret;
-        }        
+        }
 
 
         public BlobModel PurchaseHighResImageAtCoordinates(Guid propertyID, double top, double left, double bottom, double right, string direction)
@@ -101,6 +101,7 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
+
                 #region Tokenology
 
                 // 1 image = .25 cents = 1 Token
@@ -129,6 +130,7 @@ namespace DataReef.TM.Services.Services
 
             var searchResults = _eagleViewService.GetLinksForLatLon(lat, lon);
             SearchResult result = searchResults.FirstOrDefault(sr => sr.OrientationString == direction);
+
 
             if (result != null)
             {
@@ -173,7 +175,7 @@ namespace DataReef.TM.Services.Services
                             CreatedBy = SmartPrincipal.UserId
                         };
 
-                        _geoBridge.SaveHiResImage(hiResImg);
+                         _geoBridge.SaveHiResImage(hiResImg);
 
 
 

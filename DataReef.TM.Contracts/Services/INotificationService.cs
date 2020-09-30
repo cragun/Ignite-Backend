@@ -2,10 +2,6 @@
 using DataReef.TM.Models;
 using System.Collections.Generic;
 using System;
-using DataReef.TM.Models.Commerce;
-using DataReef.TM.Models.DTOs.Commerce;
-using DataReef.TM.Models.DTOs.Common;
-using DataReef.TM.Models.DTOs;
 
 namespace DataReef.TM.Contracts.Services
 {

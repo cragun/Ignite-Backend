@@ -45,7 +45,18 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         public ICollection<string> Tags { get; set; }
 
         public bool? UsageCollected { get; set; }
+
         public string ExcludeProposalJSON { get; set; }
+
+
+       
+        public double ProductionKWH { get; set; }
+    
+        public double ProductionKWHpercentage { get; set; }
+ 
+        public bool IsManual { get; set; }
+        
+        public double SystemSize { get; set; }
 
 
         public Proposal2DataView()
@@ -63,6 +74,11 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
             ProposalID = param.Proposal.Guid;
             SignedDate = param.Data.SignatureDate;
             UsageCollected = param.Proposal.Property.UsageCollected;
+            ProductionKWH = param.Proposal.ProductionKWH;
+            ProductionKWHpercentage = param.Proposal.ProductionKWHpercentage;
+            IsManual = param.Proposal.IsManual;
+            SystemSize = param.Proposal.SystemSize;
+
             ExcludeProposalJSON = param.Data.excludeProposalJSON ?? "[]";
             if (!string.IsNullOrEmpty(param.Proposal?.SignedDocumentsJSON))
             {

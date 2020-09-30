@@ -10,7 +10,6 @@ using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.Solar;
-using GoogleMaps.LocationServices;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -39,15 +38,17 @@ namespace DataReef.TM.Api.Controllers
             _proposalService = dataService;
             _personService = personService;
         }
-        
+
         [AllowAnonymous]
         [InjectAuthPrincipal]
         [Route("data/{proposalDataId}/{utilityInflationRate=null}")]
         [HttpGet]
         public async Task<Proposal2DataView> GetProposalData(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
         {
-            return _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts); ;
+            var response =  _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts);
+            return response;
         }
+
 
         [Route("generate/proposal")]
         [HttpPost]
@@ -89,6 +90,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = count.ToString() });
         }
 
+        [HttpGet, Route("proposalpdftest")]
+        public async Task<IHttpActionResult> Getproposalpdftest()
+        {
+            var cnt = _proposalService.Getproposalpdftest("http://ignite-proposals.s3-website-us-west-2.amazonaws.com/trismart-solar/install/e818b944-13b0-41df-9e5d-01e9fd9063ae?webview=1");
+            return Ok(cnt);
+        }
+
+
         [Route("{proposalDataId}/sign/document")]
         [HttpPost]
         [ResponseType(typeof(Proposal))]
@@ -109,6 +118,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
+
         [Route("{proposalDataId}/sign/proposal")]
         [HttpPost]
         [ResponseType(typeof(Proposal))]
@@ -120,16 +130,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
-        //[Route("{proposalId}/uploadDocument")]
-        //[HttpPost]
-        //[ResponseType(typeof(Proposal))]
-        //public async Task<IHttpActionResult> UploadDocument(Guid proposalId)
-        //{
-        //    var request = await GetProposalRequest();
-
-        //    _proposalService.UploadDocument(proposalId, request);
-        //    return Ok();
-        //}
 
         [Route("Documents/getType")]
         [HttpGet]
@@ -190,7 +190,7 @@ namespace DataReef.TM.Api.Controllers
         {
             return Ok(_proposalService.GetProposalMediaItemsAsShareableLinks(proposalID));
         }
-
+        
 
         [Route("media/{proposalMediaId:guid}/{thumb}")]
         [ResponseType(typeof(byte[]))]
@@ -209,11 +209,12 @@ namespace DataReef.TM.Api.Controllers
             return response;
         }
 
+
         [Route("{propertyID:guid}/getDocuments")]
         [HttpPost]
         [ResponseType(typeof(SBGetDocument))]
         public async Task<IHttpActionResult> GetDocuments(Guid propertyID)
-        {
+        { 
             var response = _proposalService.GetDocuments(propertyID);
             return Ok(response);
         }
@@ -235,20 +236,20 @@ namespace DataReef.TM.Api.Controllers
             {
                 var PicFile = HttpContext.Current.Request.Files["file"];
 
-                byte[] fileData = null;
-                using (var binaryReader = new BinaryReader(PicFile.InputStream))
+                Byte[] fileData = null;
+                using (var binaryReader = new System.IO.BinaryReader(PicFile.InputStream))
                 {
-                    fileData = binaryReader.ReadBytes(PicFile.ContentLength);
+                    fileData = binaryReader.ReadBytes((Int32)PicFile.ContentLength);
+                   // base64String = Convert.ToBase64String(fileData, 0, fileData.Length);
                 }
-
 
                 if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
                 {
                     var request = new ProposalMediaUploadRequest
                     {
-                        // Content = PicFile.Content.ReadAsByteArrayAsync(),
                         Content = fileData,
                         ContentType = PicFile.ContentType,
+                        MediaItemType = Models.Enums.ProposalMediaItemType.Document,
                         Name = PicFile.FileName
                     };
 
@@ -259,7 +260,7 @@ namespace DataReef.TM.Api.Controllers
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Ok(ex.Message);
             }
@@ -402,20 +403,19 @@ namespace DataReef.TM.Api.Controllers
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
-        [Route("DeleteAddersIncentives/{adderID}/{ProposalID}")]
+        [Route("DeleteAddersIncentives/{ProposalID}")]
         [HttpPost]
-        public async Task<IHttpActionResult> DeleteAddersIncentives(Guid adderID,Guid ProposalID)
+        public async Task<IHttpActionResult> DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
-            _proposalService.DeleteAddersIncentives(adderID, ProposalID);
+            _proposalService.DeleteAddersIncentives(adderItem, ProposalID);
             return Ok();
         }
-
 
         [AllowAnonymous]
         [Route("UpdateProposalFinancePlan/{ProposalID}")]
         [InjectAuthPrincipal]
         [HttpPost]
-        public async Task<IHttpActionResult> UpdateProposalFinancePlan([FromUri]Guid ProposalID, FinancePlan plan)
+        public async Task<IHttpActionResult> UpdateProposalFinancePlan([FromUri]Guid ProposalID,FinancePlan plan)
         {
             _proposalService.UpdateProposalFinancePlan(ProposalID, plan);
             return Ok();
@@ -480,6 +480,25 @@ namespace DataReef.TM.Api.Controllers
             }
 
             return JsonConvert.DeserializeObject<T>(value);
+        }
+
+
+        public override async Task<ICollection<Proposal>> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
+        {
+            var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);     
+            if(results.Count == 0)
+            {
+                results = new List<Proposal>();
+                Proposal pro = new Proposal();
+                pro.ProductionKWH = 0;
+                pro.ProductionKWHpercentage = 0;
+                pro.IsManual = false;
+                pro.SystemSize = 0;
+
+                results.Add(pro);
+                return results;
+            }
+            return results;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
 
         public string returnCode { get; set; }
-        public List<Error> error { get; set; }
+        public List<Error> error { get; set; }        
     }
     public class Error
     {

@@ -18,8 +18,15 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
-using System.Configuration;
 using System.Net.Http;
+using System.Configuration;
+
+using RestSharp;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.IO;
 
 namespace DataReef.TM.Services.Services
 {
@@ -54,22 +61,22 @@ namespace DataReef.TM.Services.Services
                 });
 
                 dc.SaveChanges();
-                
+
                 return dc.Notifications.Where(x => !x.IsDeleted && x.PersonID == personID).OrderByDescending(x => x.DateCreated).Skip(pageNumber * itemsPerPage).Take(itemsPerPage).ToList();
             }
         }
 
         public IEnumerable<Notification> GetNotificationsForPerson(Guid personID, IgniteNotificationSeenStatus? status = null, int pageNumber = 0, int itemsPerPage = 10)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var query = dc.Notifications.Where(x => !x.IsDeleted && x.PersonID == personID);
-                if(status.HasValue)
+                if (status.HasValue)
                 {
                     query = query.Where(x => x.Status == status.Value);
                 }
-                
-                
+
+
                 return query
                     .GroupBy(x => x.Value)
                     .Select(g => g.OrderByDescending(x => x.DateCreated).FirstOrDefault())
@@ -81,10 +88,10 @@ namespace DataReef.TM.Services.Services
 
         public int CountUnreadNotifications(Guid personID)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var person = dc.People.Include(x => x.PersonSettings).FirstOrDefault(x => x.Guid == personID);
-                if(person == null)
+                if (person == null)
                 {
                     return 0;
                 }
@@ -99,11 +106,11 @@ namespace DataReef.TM.Services.Services
 
                 if (!string.IsNullOrEmpty(lastReadDate?.Value))
                 {
-                    if(DateTime.TryParse(lastReadDate?.Value, out var dateLastChecked))
+                    if (DateTime.TryParse(lastReadDate?.Value, out var dateLastChecked))
                     {
                         query = query.Where(x => x.DateCreated >= dateLastChecked);
                     }
-                    
+
                 }
 
                 return query.Count();
@@ -112,10 +119,10 @@ namespace DataReef.TM.Services.Services
 
         public Notification MarkAsRead(Guid notificationID)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var notification = dc.Notifications.FirstOrDefault(x => !x.IsDeleted && x.Guid == notificationID);
-                if(notification == null)
+                if (notification == null)
                 {
                     return null;
                 }
@@ -127,14 +134,14 @@ namespace DataReef.TM.Services.Services
                 if (notification.Value.HasValue)
                 {
                     var propertyNote = dc.PropertyNotes.Include(x => x.Property).Include(x => x.Property.Territory).FirstOrDefault(x => x.Guid == notification.Value);
-                    if(propertyNote != null && propertyNote?.Property?.Territory?.OUID != null)
+                    if (propertyNote != null && propertyNote?.Property?.Territory?.OUID != null)
                     {
                         //call smartboard to mark their notification as dismissed as well
                         _sbAdapter.Value.DismissNotification(propertyNote.Property.Territory.OUID, notification.SmartBoardID);
                     }
-                    
+
                 }
-                
+
 
                 dc.SaveChanges();
 
@@ -168,7 +175,7 @@ namespace DataReef.TM.Services.Services
 
                         if (sbSettings?.ApiKey != apiKey)
                         {
-                            throw new Exception("Please send Valid Apikey base on LeadId.");
+                            throw new Exception("ApiKey is not found");
                         }
 
 

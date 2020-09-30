@@ -354,6 +354,7 @@
     <Compile Include="Enums\SmartBOARD\SBRedirectType.cs" />
     <Compile Include="Enums\VelocifyRequestSourceType.cs" />
     <Compile Include="EpcStatus.cs" />
+    <Compile Include="EsIDResponse.cs" />
     <Compile Include="Extensions\DataViewsExtensions.cs" />
     <Compile Include="Extensions\ModelExtensions.cs" />
     <Compile Include="FavouriteOu.cs" />

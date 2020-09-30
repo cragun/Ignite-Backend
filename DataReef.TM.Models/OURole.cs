@@ -64,6 +64,7 @@ namespace DataReef.TM.Models
             LastModifiedByName = modifiedByName;
         }
 
+
         public bool ShouldSerializeOUAssociations() { return false; }
 
         public bool IsGreaterThanOrEqual(OURole role)

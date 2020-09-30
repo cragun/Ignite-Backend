@@ -18,7 +18,7 @@ namespace DataReef.TM.Models
 
         [DataMember]
         public Guid OUID { get; set; }
-
+     
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace DataReef.TM.Models
         [ForeignKey("OUID")]
         [DataMember]
         public OU OU { get; set; }
-
+     
 
         #endregion
 
@@ -45,8 +45,8 @@ namespace DataReef.TM.Models
                 return;
             }
 
-            Person = FilterEntity(Person, newInclusionPath);
-            OU = FilterEntity(OU, newInclusionPath);
+            Person      = FilterEntity(Person,      newInclusionPath);
+            OU = FilterEntity(OU,   newInclusionPath);
 
         }
 

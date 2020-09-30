@@ -32,7 +32,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [Route("ous/{ouid:guid}")]
-        public async Task<ICollection<Layer>>  ListByOUID(Guid ouid)
+        public async Task<ICollection<Layer>> ListByOUID(Guid ouid)
         {
             return this.layerService.GetLayersForOU(ouid, false);
         }

@@ -82,6 +82,9 @@ namespace DataReef.TM.Contracts.Services
         ICollection<FinancePlanDefinition> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
+        ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "");
+
+        [OperationContract]
         OU GetByShapesVersion(Guid ouid, ICollection<OuShapeVersion> ouShapeVersions, bool deletedItems = false, string include = "");
 
         [OperationContract]
@@ -140,9 +143,10 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string GetApikeyByOU(Guid ouid);
-        
+
+       
         [OperationContract]
-        IEnumerable<SBOU> GetOusList(string apikey);
+        IEnumerable<SBOU> GetOusList(string name);
 
         [OperationContract]
         string InsertApikeyForOU(SBOUID request, string apikey);
@@ -173,5 +177,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         void RemoveFavouriteOu(Guid ouId, Guid personID);
+
+        [OperationContract]
+        string InsertMasterTerritory();
     }
 }

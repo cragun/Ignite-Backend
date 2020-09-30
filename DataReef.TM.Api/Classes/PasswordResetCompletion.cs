@@ -10,5 +10,6 @@ namespace DataReef.TM.Api.Classes
         public Guid ResetGuid { get; set; }
 
         public string NewPassword { get; set; }
+        public string fcm_token { get; set; }
     }
 }

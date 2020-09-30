@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DataReef.TM.Models.DTOs.Signatures;
+using DataReef.TM.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using DataReef.TM.Models.DTOs.Signatures;
 
 namespace DataReef.TM.Models.DTOs.Properties
 {

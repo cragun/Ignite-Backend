@@ -141,35 +141,35 @@ namespace DataReef.TM.Services
                     yield break;
                 }
 
-                foreach(var app in property.Appointments.Where(a => !a.IsDeleted))
+                foreach (var app in property.Appointments.Where(a => !a.IsDeleted))
                 {
                     yield return new SBAppointmentDTO(app);
                 }
-                
+
             }
             yield break;
         }
 
         public SBAppointmentDTO InsertNewAppointment(SBCreateAppointmentRequest request, string apiKey)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 // get creator and assignee in the same call to avoid going to the db twice
                 var people = dc
                     .People
-                    .Where(x => 
-                        !x.IsDeleted && 
-                        (x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase) 
+                    .Where(x =>
+                        !x.IsDeleted &&
+                        (x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase)
                             || x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase)));
 
                 var creator = dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.CreatedByID, StringComparison.InvariantCultureIgnoreCase));
-                
+
                 if (creator == null)
                 {
                     throw new Exception("No account linked to the specified CreatedByID");
                 }
                 var assignee = dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(request.AssignedToID, StringComparison.InvariantCultureIgnoreCase));
-                
+
                 if (assignee == null)
                 {
                     throw new Exception("No account linked to the specified AssignedToID");
@@ -229,7 +229,7 @@ namespace DataReef.TM.Services
                 var appointment = dc
                     .Appointments
                     .FirstOrDefault(x => !x.IsDeleted && x.Guid == appointmentID);
-                if(appointment == null)
+                if (appointment == null)
                 {
                     throw new Exception("Appointment not found");
                 }
@@ -271,7 +271,7 @@ namespace DataReef.TM.Services
                 }
 
                 var propertyID = property?.Guid ?? appointment.PropertyID;
-                
+
                 //we validate the token
                 var sbSettings = _ouSettingsService
                                     .Value
@@ -284,7 +284,6 @@ namespace DataReef.TM.Services
                 {
                     throw new Exception("Please send Valid Apikey base on LeadId.");
                 }
-
 
                 appointment.PropertyID = property?.Guid ?? appointment.PropertyID;
                 appointment.StartDate = request.StartDate ?? appointment.StartDate;
@@ -317,7 +316,7 @@ namespace DataReef.TM.Services
                 }
 
                 var propertyID = appointment.PropertyID;
-                
+
                 //we validate the token
                 var sbSettings = _ouSettingsService
                                     .Value
@@ -353,12 +352,12 @@ namespace DataReef.TM.Services
                 }
 
                 // we validate the token
-                 var sbSettings = _ouSettingsService
-                                     .Value
-                                     .GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(appointment.PropertyID, SolarTrackerResources.SelectedSettingName)?
-                                     .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
-                                     .Data?
-                                     .SMARTBoard;
+                var sbSettings = _ouSettingsService
+                                    .Value
+                                    .GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(appointment.PropertyID, SolarTrackerResources.SelectedSettingName)?
+                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                    .Data?
+                                    .SMARTBoard;
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
@@ -381,7 +380,7 @@ namespace DataReef.TM.Services
                     .Get<Person>()
                     .Include(x => x.AssignedAppointments)
                     .FirstOrDefault(x => !x.IsDeleted && x.SmartBoardID.Equals(smartboardUserId, StringComparison.InvariantCultureIgnoreCase));
-                
+
                 if (person == null)
                 {
                     yield break;
@@ -389,24 +388,24 @@ namespace DataReef.TM.Services
 
                 // validate apiKey
                 var userOus = _ouService.Value.ListAllForPerson(person.Guid);
-                if(userOus?.Any() != true)
+                if (userOus?.Any() != true)
                 {
                     yield break;
                 }
 
 
                 var userOUSettings = _ouSettingsService.Value.GetOuSettingsMany(userOus.Select(o => o.Guid))?.SelectMany(x => x.Value);
-                if(userOUSettings?.Any(x => x.Name == SolarTrackerResources.IncomingApiKeySettingName && x.Value == apiKey) != true)
-                {
-                    yield break;
-                }
-                
-                if(person?.AssignedAppointments?.Any(x => !x.IsDeleted) != true)
+                if (userOUSettings?.Any(x => x.Name == SolarTrackerResources.IncomingApiKeySettingName && x.Value == apiKey) != true)
                 {
                     yield break;
                 }
 
-                foreach(var app in person.AssignedAppointments.Where(x => !x.IsDeleted))
+                if (person?.AssignedAppointments?.Any(x => !x.IsDeleted) != true)
+                {
+                    yield break;
+                }
+
+                foreach (var app in person.AssignedAppointments.Where(x => !x.IsDeleted))
                 {
                     yield return new SBAppointmentDTO(app);
                 }
@@ -441,16 +440,16 @@ namespace DataReef.TM.Services
 
                 foreach (var prop in properties)
                 {
-                    if(prop.Appointments?.Any(x => !x.IsDeleted) != true)
+                    if (prop.Appointments?.Any(x => !x.IsDeleted) != true)
                     {
                         continue;
                     }
 
-                    foreach(var app in prop.Appointments.Where(a => !a.IsDeleted))
+                    foreach (var app in prop.Appointments.Where(a => !a.IsDeleted))
                     {
                         yield return new SBAppointmentDTO(app);
                     }
-                    
+
                 }
 
             }
@@ -460,7 +459,7 @@ namespace DataReef.TM.Services
 
 
 
-        public ICollection<Person> GetMembersWithAppointment(OUMembersRequest request, Guid ouID, string apiKey ,DateTime date)
+        public ICollection<Person> GetMembersWithAppointment(OUMembersRequest request, Guid ouID, string apiKey, DateTime date)
         {
             using (var uow = UnitOfWorkFactory())
             {
@@ -686,6 +685,13 @@ namespace DataReef.TM.Services
                     });
                 }
             }
+        }
+
+        public void SendSMSTest(string mobile_number)
+        {
+            _smsService
+                .Value
+                .SendSms("New Appointment is created!", mobile_number);
         }
     }
 }

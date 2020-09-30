@@ -19,6 +19,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
         [JsonProperty("user_id")]
         public string UserId { get; set; }
+
         //public SBProposalDataModel ProjectDetails { get; set; }
         //[JsonProperty("HOA")]
         //public HOAModel HOA { get; set; }
@@ -195,7 +196,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             EventDate = (appointment?.StartDate)?.ToString("yyyy-MM-dd");
             StartTime = (appointment?.StartDate)?.ToString("hh:mm tt");
             EndTime = (appointment?.EndDate)?.ToString("hh:mm tt");
-            SBAppointmentType = appointment.AppointmentType.ToString();
+            SBAppointmentType = appointment?.AppointmentType.ToString();
         }
 
         [JsonProperty("associated_id")]

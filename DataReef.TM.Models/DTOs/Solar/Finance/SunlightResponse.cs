@@ -10,6 +10,6 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
 
         public string returnCode { get; set; }
-        public string projectstatus { get; set; }
+        public string projectstatus { get; set; }        
     }
 }

@@ -25,18 +25,26 @@ using DataReef.TM.Services.InternalServices.Geo;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using EntityFramework.Extensions;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using Property = DataReef.TM.Models.Property;
 using PropertyAttribute = DataReef.TM.Models.PropertyAttribute;
+
 
 namespace DataReef.TM.Services.Services
 {
@@ -53,9 +61,24 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<ITerritoryService> _territoryService;
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
-        private readonly Lazy<ISmsService> _smsService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
+        private readonly Lazy<ISmsService> _smsService;
 
+        private static string BaseURL = "http://www.esiids.com/cgi-bin/esiids_xml.cgi?";
+
+        private RestClient _client;
+        private RestClient Client
+        {
+            get
+            {
+
+                if (_client == null)
+                {
+                    _client = new RestClient(BaseURL);
+                }
+                return _client;
+            }
+        }
         public PropertyService(ILogger logger,
             IGeoProvider geoProvider,
             Func<IGeographyBridge> geographyBridgeFactory,
@@ -156,6 +179,7 @@ namespace DataReef.TM.Services.Services
 
             return ret;
         }
+
 
         public override Property Insert(Property entity)
         {
@@ -295,6 +319,7 @@ namespace DataReef.TM.Services.Services
             {
                 _deviceService.Value.PushToSubscribers<Territory, Property>(prop.TerritoryID.ToString(), prop.Guid.ToString(), DataAction.Insert, alert: $"Property {prop.Name} has been created!");
             });
+
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             return prop;
         }
@@ -314,7 +339,6 @@ namespace DataReef.TM.Services.Services
                 {
                     try
                     {
-
                         var needToUpdateSB = false;
                         Property oldProp = null;
                         using (var dc = new DataContext())
@@ -340,41 +364,11 @@ namespace DataReef.TM.Services.Services
 
                         entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
-
-                        //#region for Dan Dyer
-                        //if (entity.Id == 1075882)
-                        //{
-
-                        //    var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(entity);
-
-                        //    ApiLogEntry apilog = new ApiLogEntry();
-                        //    apilog.Id = Guid.NewGuid();
-                        //    apilog.User = SmartPrincipal.UserId.ToString();
-                        //    apilog.Machine = Environment.MachineName;
-                        //    apilog.RequestContentType = "1075882";
-                        //    apilog.RequestRouteTemplate = "";
-                        //    apilog.RequestRouteData = "";
-                        //    apilog.RequestIpAddress = "";
-                        //    apilog.RequestMethod = "";
-                        //    apilog.RequestHeaders = "";
-                        //    apilog.RequestTimestamp = DateTime.UtcNow;
-                        //    apilog.RequestUri = "";
-                        //    apilog.ResponseContentBody = "";
-                        //    apilog.RequestContentBody = json != null ? json : "";
-
-                        //    using (var dc = new DataContext())
-                        //    {
-                        //        dc.ApiLogEntries.Add(apilog);
-                        //        dc.SaveChanges();
-                        //    }
-                        //}
-                        //#endregion for Dan Dyer
-
                         // remove property bags
                         dataContext
-                                    .Fields
-                                    .Where(f => f.PropertyId == entity.Guid)
-                                    .Delete();
+                                .Fields
+                                .Where(f => f.PropertyId == entity.Guid)
+                                .Delete();
 
                         // remove occupants property bags
                         var occupantIds = dataContext
@@ -447,6 +441,7 @@ namespace DataReef.TM.Services.Services
 
                             _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
                         }
+
                         // handle new inquiries
                         var newInquiries = entity
                                                 .Inquiries?
@@ -477,7 +472,7 @@ namespace DataReef.TM.Services.Services
                             _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
                         });
 
-                        // if (needToUpdateSB && !pushedToSB)
+                        //if (needToUpdateSB && !pushedToSB)
                         if (needToUpdateSB)
                         {
                             bool IsdispositionChanged = false;
@@ -1338,6 +1333,23 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
+        public Property PropertyBagsbyID(Guid propertyID)
+        {
+            if (propertyID == Guid.Empty)
+                throw new ArgumentException($"Invalid {nameof(propertyID)}");
+
+            using (var db = new DataContext())
+            {
+                var property =  db.Properties.Include(p => p.PropertyBag).FirstOrDefault(p => p.Guid == propertyID);
+
+                if (property == null)
+                    throw new ApplicationException("Invalid property");
+
+                return property;
+            }
+        }
+
         public SolarTariff GetTariffByGenabilityProviderAccountID(string id)
         {
             using (var uow = UnitOfWorkFactory())
@@ -1384,9 +1396,6 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
-
-
         public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
         {
             using (var dc = new DataContext())
@@ -1408,7 +1417,6 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("No user found with the specified ID");
                 }
-
                 if (Request.DispositionTypeId != null && Request.DispositionTypeId > 0)
                 {
                     if (Request.DispositionTypeId != property.DispositionTypeId)
@@ -1442,7 +1450,6 @@ namespace DataReef.TM.Services.Services
 
                     }
                 }
-
 
                 var mainOccupant = property.GetMainOccupant();
                 if (mainOccupant != null)
@@ -1489,6 +1496,116 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public static string SerializeObject(object obj)
+        {
+            System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(obj.GetType());
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                serializer.Serialize(ms, obj);
+                ms.Position = 0;
+                xmlDoc.Load(ms);
+                return xmlDoc.InnerXml;
+            }
+        }
 
+        public static string SerializeObject<T>(T dataObject)
+        {
+            if (dataObject == null)
+            {
+                return string.Empty;
+            }
+            try
+            {
+                using (StringWriter stringWriter = new System.IO.StringWriter())
+                {
+                    var serializer = new XmlSerializer(typeof(T));
+                    serializer.Serialize(stringWriter, dataObject);
+                    return stringWriter.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return string.Empty;
+            }
+        }
+
+        public static T DeserializeObject<T>(string xml)
+             where T : new()
+        {
+            if (string.IsNullOrEmpty(xml))
+            {
+                return new T();
+            }
+            try
+            {
+                using (var stringReader = new StringReader(xml))
+                {
+                    var serializer = new XmlSerializer(typeof(T));
+                    return (T)serializer.Deserialize(stringReader);
+                }
+            }
+            catch (Exception ex)
+            {
+                //LogHelper.Error(typeof(T), "Failed to serialize xml to object: " + xml, ex);
+                return new T();
+            }
+        }
+
+        public async Task<EsIDResponse> GetEsidByAddress(Guid propertyid)
+        {
+
+            string Esidurl = System.Configuration.ConfigurationManager.AppSettings["EsIdUrl"];
+            string Esidparams = System.Configuration.ConfigurationManager.AppSettings["EsIdParams"];
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(Esidurl);
+
+                using (var dataContext = new DataContext())
+                {
+                    var propty = dataContext.Properties.Where(x => x.Guid == propertyid).FirstOrDefault();
+                    string address = propty != null ? propty.Address1 : "";
+                    string zipcode = propty != null ? propty.ZipCode : "";
+                    Esidparams = Esidparams.Replace("{address}", address).ToString();
+                    Esidparams = Esidparams.Replace("{zip}", zipcode).ToString();
+                    Esidparams = Esidparams.Replace("%26", "&").ToString();
+                }
+                HttpResponseMessage response = await client.GetAsync(Esidparams);
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    throw new ApplicationException(await response.Content.ReadAsStringAsync());
+                }
+
+                var serializer = new XmlSerializer(typeof(EsIDResponse));
+                EsIDResponse result;
+
+                string resp = await response.Content.ReadAsStringAsync();
+                using (TextReader reader = new StringReader(resp))
+                {
+                    result = (EsIDResponse)serializer.Deserialize(reader);
+                }
+
+                return result;
+            }
+        }
+
+
+        public async Task<bool> IsPropertyAvailable(long igniteId)
+        {
+            using (var data = new DataContext())
+            {
+                var property = data.Properties.FirstOrDefault(x => x.Id == igniteId);
+                if (property == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace DataReef.TM.Services
         private readonly Lazy<IBlobService> _blobService;
         private readonly Lazy<IPersonSettingService> _personSettingService;
 
-        public PersonKPIService(ILogger logger, 
+        public PersonKPIService(ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IBlobService> blobService,
             Lazy<IPersonSettingService> personSettingService) : base(logger, unitOfWorkFactory)
@@ -57,7 +57,7 @@ namespace DataReef.TM.Services
         {
             var uniqueImgIdentifier = Guid.NewGuid();
             var originalImageBytes = Convert.FromBase64String(screenshotBase64);
-            
+
             using (var ms = new MemoryStream(originalImageBytes))
             {
                 var img = System.Drawing.Image.FromStream(ms);
@@ -67,6 +67,7 @@ namespace DataReef.TM.Services
                 return _blobService.Value.UploadByNameGetFileUrl(imageName, new BlobModel { Content = originalImageBytes, ContentType = img.RawFormat.GetMimeType() }, BlobAccessRights.PublicRead);
             }
         }
+
 
         public void ResetKPIs(DateTime date)
         {
@@ -180,7 +181,7 @@ namespace DataReef.TM.Services
                     reportItems = reportItems.Where(x => x.IncludedPersonKpis != null).ToList();
                     foreach (var repItem in reportItems)
                     {
-                        if(repItem.IncludedPersonKpis?.Any() == true)
+                        if (repItem.IncludedPersonKpis?.Any() == true)
                         {
                             searchKpis.UnionWith(repItem.IncludedPersonKpis);
                         }
@@ -207,6 +208,7 @@ namespace DataReef.TM.Services
 
                             //var personKpiDates = kpiDatesForKpi.Where(id => id.PersonID == personId).ToList();
                             var personKpiDates = kpiDates.Where(id => id.PersonID == personId  && col.IncludedPersonKpis.Contains(id.Kpi)).ToList();
+
 
                             if(personKpiDates.Count > 0)
                             {

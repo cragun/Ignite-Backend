@@ -21,6 +21,7 @@ using System.Data.Entity;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 
@@ -38,7 +39,6 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
         private readonly Lazy<IAuthenticationService> _authService;
         private readonly Lazy<IOUSettingService> _ouSettingsService;
         private readonly Lazy<IPersonService> _personService;
-
         public PropertyAttachmentService(ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IBlobService> blobService,
@@ -1061,15 +1061,15 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                 item = Update(item);
             }
 
-
-            var propertyattech = base.Get(item.Guid, "Items");
+            
+                var propertyattech = base.Get(item.Guid, "Items");
 
             //var propertyattechitm = propertyattech.Items.Where();
 
             var attachitm = propertyattech?.Items?.Where(i => i.SectionID == "s-0" && i.ItemID == "t-10")?.FirstOrDefault();
 
             uploadImageRequest.PropertyAttachmentID = item.Guid;
-            if (attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
+            if(attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
             uploadImageRequest.SectionID = "s-0";
             uploadImageRequest.ItemID = "t-10";
             //uploadImageRequest.ImagesWithNotes = ;

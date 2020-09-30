@@ -36,8 +36,6 @@ namespace DataReef.TM.Api.Controllers
             _propertyAttachmentServiceFactory = propertyAttachmentServiceFactory;
         }
 
-
-
         /// <summary>
         /// / Gets all Territories regardless of Lat - Long, for a property
         /// </summary>
@@ -60,6 +58,47 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// / Gets all Territories regardless of Lat - Long, for a property
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <returns></returns>
+        [Route("GetEsid/{propertyID:guid}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetEsidByAddressPropertyid(Guid propertyID)
+        {
+            try
+            {
+                var result = await propertyService.GetEsidByAddress(propertyID);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// / Check Is Property available or not
+        /// </summary>
+        /// <param name="igniteId"></param>
+        /// <returns></returns>
+        [Route("IsPropertyAvailable/{igniteId}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> IsPropertyAvailable(long igniteId)
+        {
+            try
+            {
+                var result = await propertyService.IsPropertyAvailable(igniteId);
+                //return Ok(result);
+                return Json(new { result = result });
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
 
 
 
@@ -89,6 +128,7 @@ namespace DataReef.TM.Api.Controllers
                 throw;
             }
         }
+
 
         [Route("{propertyID:guid}/inquiries/{personID:guid}")]
         [ResponseType(typeof(ICollection<Inquiry>))]
@@ -139,6 +179,7 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok(powerConsumptions);
         }
+
 
         /// <summary>
         /// Get method used by SmartBoard to retrieve all the attachments for a property

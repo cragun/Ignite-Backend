@@ -16,6 +16,7 @@ using DataReef.TM.Contracts.Faults;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DataViews.Geo;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -48,6 +49,8 @@ namespace DataReef.TM.Api.Controllers
             var ret = _propertyService.GetTerritoryPropertiesByStatusPaged(territoryID, disposition, propertyNameSearch, pageIndex, itemsPerPage, include, exclude);
             return Ok<ICollection<Property>>(ret);
         }
+
+
 
         [HttpGet]
         [ResponseType(typeof(ICollection<Property>))]
@@ -109,11 +112,10 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("getbyshapesversion")]
-        [ResponseType(typeof(ICollection<Territory>))]
+        [ResponseType(typeof(List<Territory>))]
         public async Task<IHttpActionResult> GetByShapesVersion([FromBody]ICollection<TerritoryShapeVersion> shapesVersion, Guid ouid, Guid? personID = null, bool deletedItems = false, string include = "")
         {
             var territories = _territoryService.GetByShapesVersion(ouid, personID, shapesVersion, deletedItems, include).ToList();
-
             return Ok(territories);
         }
 
@@ -122,7 +124,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(Territory))]
         public async Task<IHttpActionResult> SetArchivedStatus(Guid territoryID, [FromBody]GenericRequest<bool> request)
         {
-            if(request == null)
+            if (request == null)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }

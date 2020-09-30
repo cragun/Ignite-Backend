@@ -22,7 +22,7 @@ namespace DataReef.TM.Models
         [DataMember]
         public bool isFavourite { get; set; }
 
-
+     
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace DataReef.TM.Models
         [ForeignKey("TerritoryID")]
         [DataMember]
         public Territory Territory { get; set; }
-
+     
 
         #endregion
 

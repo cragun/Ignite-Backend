@@ -27,7 +27,7 @@ namespace DataReef.TM.Api.Controllers
     [RoutePrefix("api/v1/notifications")]
     public class NotificationsController : EntityCrudController<Notification>
     {
-        private readonly INotificationService _notificationService;
+        private readonly INotificationService _notificationService; 
 
         public NotificationsController(INotificationService notificationService,
                                     ILogger logger)
@@ -35,7 +35,6 @@ namespace DataReef.TM.Api.Controllers
         {
             this._notificationService = notificationService;
         }
-
 
 
         /// <summary>
@@ -70,6 +69,7 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok(result);
         }
+
 
         /// <summary>
         /// Mark Notification as read

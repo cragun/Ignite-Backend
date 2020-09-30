@@ -15,6 +15,11 @@ using DataReef.TM.Models.DataViews.Financing;
 using DataReef.Core.Infrastructure.Authorization;
 using System.Text;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
+using DataReef.TM.Models.DTOs.Signatures.Proposals;
+using DataReef.TM.Services.Services.ProposalAddons.TriSMART;
+using DataReef.TM.Services.Services.ProposalAddons.TriSMART.Models;
+using DataReef.Engines.FinancialEngine.Loan;
+using Newtonsoft.Json;
 
 namespace DataReef.TM.Services
 {
@@ -24,9 +29,20 @@ namespace DataReef.TM.Services
     {
 
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
+        private readonly Lazy<IFinancingCalculator> _loanCalculator;
+        private readonly Lazy<IOUSettingService> _ouSettingService;
 
-        public FinancePlanDefinitionService(ILogger logger, Func<IUnitOfWork> unitOfWorkFactory, Lazy<ISunlightAdapter> sunlightAdapter
-            ) : base(logger, unitOfWorkFactory) { _sunlightAdapter = sunlightAdapter; }
+        public FinancePlanDefinitionService(ILogger logger,
+            Func<IUnitOfWork> unitOfWorkFactory,
+            Lazy<IFinancingCalculator> loanCalculator,
+            Lazy<IOUSettingService> ouSettingService,
+            Lazy<ISunlightAdapter> sunlightAdapter
+            ) : base(logger, unitOfWorkFactory)
+        {
+            _sunlightAdapter = sunlightAdapter;
+            _loanCalculator = loanCalculator;
+            _ouSettingService = ouSettingService;
+        }
 
         public override ICollection<FinancePlanDefinition> GetMany(IEnumerable<Guid> uniqueIds, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
@@ -130,6 +146,7 @@ namespace DataReef.TM.Services
             return id;
         }
 
+
         public SunlightResponse GetSunlightloanstatus(Guid proposalId)
         {
             return _sunlightAdapter.Value.GetSunlightloanstatus(proposalId);
@@ -140,11 +157,36 @@ namespace DataReef.TM.Services
             return _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
         }
 
+        public void UpdateCashPPW(double? cashPPW, double? lenderFee)
+        {
+            using (var dc = new DataContext())
+            {
+                if (cashPPW != null)
+                {
+                    var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
+                    if (financePlan != null)
+                    {
+                        financePlan.PPW = cashPPW;
+                        dc.SaveChanges();
+                    }
+                }
+
+                if (lenderFee != null)
+                {
+                    //dc.FinancePlaneDefinitions.Where(y => !y.Name.Contains("Cash") && !y.Name.Contains("Sunnova")).ToList().ForEach(c => c.LenderFee = lenderFee);
+                    dc.FinancePlaneDefinitions.Where(y => !y.Name.Contains("Sunnova")).ToList().ForEach(c => c.LenderFee = lenderFee);
+                    dc.SaveChanges();
+                }
+
+            }
+        }
+
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())
             {
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
+
                 if (financePlan != null)
                 {
                     var property = dc.Properties.Include("PropertyBag").FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
@@ -166,23 +208,16 @@ namespace DataReef.TM.Services
                                 string loanpalurl = "??lname=" + property.GetMainOccupant().LastName + "&fname=" + property.GetMainOccupant().FirstName + "&street=" + property.Address1 + "&city=" + property.City + "&state=" + property.State + "&zip=" + property.ZipCode + "&email=" + property.GetMainEmailAddress() + "&phone=" + property.GetMainPhoneNumber()?.Replace("-", "") + "&srfn=" + salesperson.FirstName + "&srln=" + salesperson.LastName + "&sre=" + salesperson.EmailAddressString + "&loanterm=" + GetloantermID(financePlan.Name).ToString()
                                     //+ "&cost=" + property.Name + "&refnum=" + property.Name 
                                     + "&language=english";
-
                                 loanpalurl = loanpalurl.Replace(" ", "%20");
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{loanpaldata}", loanpalurl ?? string.Empty);
                             }
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                //var proposal = dc.Proposal.Where(x => x.PropertyID == propertyID && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
-                                //var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).Select(y => y.ResponseJSON).FirstOrDefault();
-                                //var response = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan);
-
-                                //  string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, response.AmountFinanced.ToString());
                                 string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
                         }
-
                         return creditCheckUrls;
                     }
                 }

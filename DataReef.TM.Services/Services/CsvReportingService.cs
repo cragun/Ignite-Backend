@@ -41,7 +41,7 @@ namespace DataReef.TM.Services
             _propertyService = propertyService;
         }
 
-       public byte[] GenerateOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay, ReportingPeriod reportingPeriod)
+        public byte[] GenerateOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay, ReportingPeriod reportingPeriod)
         {
             //var reportRows = _reportingServices.Value.GetOrganizationSelfTrackedReport(startOUID, specifiedDay).ToList();
 

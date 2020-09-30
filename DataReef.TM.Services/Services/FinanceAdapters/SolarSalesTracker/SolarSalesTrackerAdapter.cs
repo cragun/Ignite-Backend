@@ -22,6 +22,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Auth.Helpers;
+using DataReef.TM.Models.DTOs.Signatures;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 {
@@ -300,6 +301,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return response;
         }
 
+
         public SBIntegrationLoginModel GetSBToken(Guid ouid)
         {
             EnsureInitialized(ouid);
@@ -321,7 +323,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 ?.Data
                 ?.SMARTBoard;
 
-            // no SST/SB settings for this OU. bail
+            // no SST/SB settings for this OU. 
             if (integrationData == null)
             {
                 return new SBIntegrationLoginModel { Message = "No SmartBOARD integration settings found!" };
@@ -351,10 +353,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 try
                 {
                     //update the user's SmartBoard ID
-                    using(var dc = new DataContext())
+                    using (var dc = new DataContext())
                     {
                         var currentPerson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
-                        if(currentPerson != null)
+                        if (currentPerson != null)
                         {
                             currentPerson.SmartBoardID = response?.User?.Id ?? currentPerson.SmartBoardID;
                             currentPerson.Updated();
@@ -429,7 +431,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             catch (Exception)
             {
             }
-
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
@@ -476,7 +477,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
-        public void SBActiveDeactiveUser(bool IsActive,string sbid)
+        public void SBActiveDeactiveUser(bool IsActive, string sbid)
         {
 
             using (DataContext dc = new DataContext())
@@ -488,7 +489,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         .ToList();
 
                 var ouid = ret.FirstOrDefault().Guid;
-               
+
                 EnsureInitialized(ouid);
 
                 var integrationSettings = new IntegrationOptionSettings
@@ -511,13 +512,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     ?.SMARTBoard;
                 if (integrationData == null)
                 {
-                    return ;
+                    return;
                 }
 
                 string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
-                
+
                 var apiMethod = IsActive ? "deactivate_user" : "activate_user";
-            
+
                 var url = $"/apis/{apiMethod}/{encryptedAPIkey}";
 
                 var request = new SBLeadCreateRequest
@@ -566,39 +567,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 })
                 ?.Data
                 ?.SMARTBoard;
-            //    if (integrationData == null)
-            //    {
-            //        return;
-            //    }
-
-            //    string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
-
-            //    var url = $"/apis/attach_contract/{encryptedAPIkey}";
-
-            //    var request = new SBProposalAttachRequest(proposal)
-            //    {
-            //        contract = new Contract
-            //        { 
-            //                Name = proposalDoc.Name,
-            //                Body = "",
-            //                ExtraContent="",
-            //                Type="pdf"
-            //        }
-            //    };
-            //    SubmitProposal(integrationData, request, ouid.Value);
-
-            //    var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
-
-            //    try
-            //    {
-            //        SaveRequest(null, response, url, null, integrationData.ApiKey);
-            //    }
-            //    catch (Exception)
-            //    {
-            //    }
-
-            //}
-
             if (integrationData == null)
             {
                 return;
@@ -636,6 +604,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             catch (Exception)
             {
             }
+
         }
 
         public void UploadDocumentItem(Property property, string documentTypeId, ProposalMediaItem proposalDoc)
@@ -695,7 +664,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 }
             };
 
-           // var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.GET);
             var response = MakeRequest(ouid.Value, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer(), method: Method.POST);
 
             try
@@ -707,9 +675,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
         }
-
-
-
         public SstResponse AttachProposal(Proposal proposal, Guid proposalDataId, SignedDocumentDTO proposalDoc)
         {
             var ouid = proposal?.Property?.Territory?.OUID;
@@ -768,21 +733,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                     Lead = new SBLeadModel(proposal?.Property, dealer),
                     Proposal = new SBProposalModel
-                    { 
-
-                        //CustomerName =(proposal?.Property.Name).Replace(" ", ""),
-                        //ModuleQty= ProjectData?.ModuleCount.ToString(),
-                        //PanelBrand = (ProjectData?.ModuleModel).Replace(" ", ""),
-                        //PanelSize = ProjectData?.ModuleSize.ToString(),
-                        //SystemSize= ProjectData?.SystemSize + "kW",
-                        //Lender= (proposalDoc?.ProviderName).Replace(" ", ""),
-                        //TermInYears = proposalDoc?.Year.ToString(),
-                        //Apr = proposalDoc?.Apr.ToString(),
-                        //Year= proposalData?.SignatureDate?.Year.ToString(),
-                        //Month= proposalData?.SignatureDate?.Month.ToString(),
-                        //Day= proposalData?.SignatureDate?.Day.ToString(),
-                        //Hour= proposalData?.SignatureDate?.Hour.ToString(),
-                        //Minute= proposalData?.SignatureDate?.Minute.ToString(),
+                    {
 
                         Name = (proposal?.Property.Name + "_" +
                                  ProjectData?.ModuleCount + "_" +
@@ -804,7 +755,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     },
                     ProjectData = ProjectData,
                 };
-               return SubmitProposal(integrationData, request, ouid.Value);
+                return SubmitProposal(integrationData, request, ouid.Value);
             }
 
 
@@ -895,14 +846,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return null;
             }
 
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
                 var people = dc.People.Where(x => x.Guid == createdByID || x.Guid == taggedID).ToList();
 
                 var createdBySmartboardID = people.FirstOrDefault(x => x.Guid == createdByID)?.SmartBoardID;
                 var taggedSmartboardID = people.FirstOrDefault(x => x.Guid == taggedID)?.SmartBoardID;
 
-                if(!string.IsNullOrEmpty(createdBySmartboardID) && !string.IsNullOrEmpty(taggedSmartboardID))
+                if (!string.IsNullOrEmpty(createdBySmartboardID) && !string.IsNullOrEmpty(taggedSmartboardID))
                 {
                     SetSSTSettings(integrationData);
 
@@ -1019,6 +970,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
             }
+
             return JsonConvert.DeserializeObject<SstResponse>(response);
         }
     }

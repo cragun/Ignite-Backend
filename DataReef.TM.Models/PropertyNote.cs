@@ -39,7 +39,7 @@ namespace DataReef.TM.Models
 
         [DataMember]
         public string ContentType { get; set; }
-        
+
         #endregion
 
         #region Navigation

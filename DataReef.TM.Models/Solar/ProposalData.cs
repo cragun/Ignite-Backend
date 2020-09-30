@@ -61,9 +61,6 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public string excludeProposalJSON { get; set; }
 
-
-
-
         #region Computed Properties
 
         [NotMapped]

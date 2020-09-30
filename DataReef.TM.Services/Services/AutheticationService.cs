@@ -67,7 +67,7 @@ namespace DataReef.Application.Services
             _appSettingService = appSettingService;
         }
 
-        public AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword)
+        public AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword, string fcm_token)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace DataReef.Application.Services
                     throw new ApplicationException("Invalid Password (Old Password) ");
                 }
 
-                AuthenticationToken token = this.Authenticate(userName, newPassword);
+                AuthenticationToken token = this.Authenticate(userName, newPassword , fcm_token);
                 return token;
 
             }
@@ -116,7 +116,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public AuthenticationToken CompletePasswordReset(Guid resetGuid, string newPassword)
+        public AuthenticationToken CompletePasswordReset(Guid resetGuid, string newPassword , string fcm_token)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace DataReef.Application.Services
                 reset.PasswordWasReset = true;
                 _resetService.Value.Update(reset);
 
-                AuthenticationToken token = this.Authenticate(reset.EmailAddress, newPassword);
+                AuthenticationToken token = this.Authenticate(reset.EmailAddress, newPassword, fcm_token);
                 return token;
 
             }
@@ -222,7 +222,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public AuthenticationToken Authenticate(string userName, string password)
+        public AuthenticationToken Authenticate(string userName, string password , string fcm_token)
         {
             using (DataContext dc = new DataContext())
             {
@@ -304,6 +304,10 @@ namespace DataReef.Application.Services
                                 if (per != null)
                                 {
                                     per.LastLoginDate = DateTime.UtcNow;
+                                    if (!String.IsNullOrEmpty(fcm_token))
+                                    {
+                                        per.fcm_token = fcm_token;
+                                    }
                                     db.SaveChanges();
                                 }
                             }
@@ -354,7 +358,7 @@ namespace DataReef.Application.Services
                             AuthenticationToken token = new AuthenticationToken();
                             token.Audience = "tm";
                             token.ClientSecret = "asdfjkl;qweruipo";
-                            token.Expiration = DateTime.UtcNow.AddDays(expirationDays).ToUnixTime();
+                            token.Expiration = System.DateTime.UtcNow.AddDays(expirationDays).ToUnixTime();
                             token.UserID = c.UserID;
                             if (aa != null) token.AccountID = aa.AccountID;
 
@@ -936,7 +940,7 @@ namespace DataReef.Application.Services
                         }
                     }
                 }
-                else
+                else 
                 {
                     using (var transaction = dc.Database.BeginTransaction())
                     {
@@ -1048,7 +1052,7 @@ namespace DataReef.Application.Services
                                             dc.OUAssociations.Add(organizationalUnitAssociation);
                                         }
                                     }
-                                }
+                                }    
                             }
 
                             try
@@ -1105,6 +1109,5 @@ namespace DataReef.Application.Services
                 }
             }
         }
-
     }
 }

@@ -43,7 +43,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet, Route("sb/lead/{propertyID}/{apiKey}")]
         [ResponseType(typeof(IEnumerable<SBAppointmentDTO>))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IEnumerable<SBAppointmentDTO>>  GetAppointmentsForProperty(long propertyID, string apiKey)
+        public async Task<IEnumerable<SBAppointmentDTO>> GetAppointmentsForProperty(long propertyID, string apiKey)
         {
             return _appointmentService.GetSmartboardAppointmentsForPropertyID(propertyID, apiKey);
         }
@@ -150,6 +150,13 @@ namespace DataReef.TM.Api.Controllers
         {
             return _appointmentService.SetAppointmentStatusFromSmartboard(request, apiKey);
         }
-    }
+        
 
+        [HttpPost, Route("sendsms")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async void sendsms(PhoneNumber request)
+        {
+            _appointmentService.SendSMSTest(request.Number);
+        }
+    }
 }

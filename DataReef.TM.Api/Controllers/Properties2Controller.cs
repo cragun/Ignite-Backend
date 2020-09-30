@@ -16,6 +16,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using DataReef.Auth.Helpers;
 using System.Threading.Tasks;
+using DataReef.TM.Models.PropertyAttachments;
 using System.Web;
 
 namespace DataReef.TM.Api.Controllers
@@ -55,13 +56,19 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetPropertiesSearch(Guid territoryid, string searchvalue)
         {
             if (string.IsNullOrEmpty(searchvalue))
-                return BadRequest($"Invalid searchvalue.");
+                return BadRequest($"Invalid searchvalue.");    
 
             var response = _propertyServiceFactory().GetPropertiesSearch(territoryid, searchvalue);
 
             return Ok(response);
         }
 
+        public object GetPropertyValue(object car, string propertyName)
+        {
+            return car.GetType().GetProperties()
+               .Single(pi => pi.Name == propertyName)
+               .GetValue(car, null);
+        }
 
         [HttpGet]
         [Route("sync/{propertyID:guid}")]
@@ -71,6 +78,57 @@ namespace DataReef.TM.Api.Controllers
                 return BadRequest($"Invalid {nameof(propertyID)}");
 
             var response = _propertyServiceFactory().SyncProperty(propertyID, include);
+
+
+            string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
+
+            var rd = response.PropertyBag.ToList();
+            List<Models.Geo.Field> propbags = new List<Models.Geo.Field>();
+            foreach (string propname in queryString.Split(','))
+            {
+                var propbg = rd.Where(x => x.DisplayName == propname).FirstOrDefault();
+
+                if(propbg != null)
+                {
+                    propbags.Add(propbg);
+                }
+            }
+
+            var temp = propbags;
+            propbags.AddRange(rd.Except(temp).ToList());
+            response.PropertyBag = propbags;            
+
+            return Ok(response);
+        }
+
+
+        [HttpGet]
+        [Route("propertybag/{propertyID:guid}")]
+        public async Task<IHttpActionResult> PropertyBagsbyID(Guid propertyID)
+        {
+            if (propertyID == Guid.Empty)
+                return BadRequest($"Invalid {nameof(propertyID)}");
+
+            var response = _propertyServiceFactory().PropertyBagsbyID(propertyID);
+
+
+            string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
+
+            var rd = response.PropertyBag.ToList();
+            List<Models.Geo.Field> propbags = new List<Models.Geo.Field>();
+            foreach (string propname in queryString.Split(','))
+            {
+                var propbg = rd.Where(x => x.DisplayName == propname).FirstOrDefault();
+
+                if (propbg != null)
+                {
+                    propbags.Add(propbg);
+                }
+            }
+
+            var temp = propbags;
+            propbags.AddRange(rd.Except(temp).ToList());
+            response.PropertyBag = propbags;
 
             return Ok(response);
         }
@@ -290,6 +348,8 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok(result);
         }
+
+
 
         [HttpPost]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]

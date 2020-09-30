@@ -12,6 +12,10 @@ using DataReef.TM.Api.Classes.Requests;
 using System.Web.Http.Description;
 using DataReef.TM.Models.DataViews.Financing;
 using System.Threading.Tasks;
+using DataReef.TM.Services;
+using DataReef.TM.Services.Services.FinanceAdapters.Sunlight;
+using System.Text;
+using RestSharp;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -42,7 +46,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok(_financePlanDefinitionService.Value.GetSunlightloanstatus(proposalId));
         }
 
-
         [Route("{proposalid:guid}/Sunlightsendloandocs")]
         [HttpGet]
         public async Task<IHttpActionResult> Sunlightsendloandocs(Guid proposalId)
@@ -54,9 +57,27 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
         public async Task<IHttpActionResult> GetPropertyCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID)
-        {
+        {            
             return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }
+
+        [Route("updatePPW")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateCashPPW(double? cashPPW = null, double? lenderFee = null)
+        {
+            _financePlanDefinitionService.Value.UpdateCashPPW(cashPPW, lenderFee);
+            return Ok();
+        }
+
+        //private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
+
+        //private RestClient client
+        //{
+        //    get
+        //    {
+        //        return new RestClient(url);
+        //    }
+        //}
 
         #region Forbidden methods
 

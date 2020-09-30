@@ -40,6 +40,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace DataReef.TM.Services.Services
 {
@@ -97,7 +98,6 @@ namespace DataReef.TM.Services.Services
                 if (ret != null)
                 {
                     ret.SaveResult = proposal.SaveResult;
-
                     if (ret.SaveResult.Success)
                     {
                         Guid? ouid = null;
@@ -156,6 +156,7 @@ namespace DataReef.TM.Services.Services
 
         public override Proposal Update(Proposal entity)
         {
+
             if (entity == null)
             {
                 return null;
@@ -163,7 +164,15 @@ namespace DataReef.TM.Services.Services
 
             if (entity.SolarSystem != null)
             {
-                entity.SolarSystem.ValidateSystemValid();
+                try
+                {
+                    entity.SolarSystem.ValidateSystemValid();
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException(ex.Message);
+                }
+
             }
 
             var newRoofPlanes = (entity
@@ -885,7 +894,6 @@ namespace DataReef.TM.Services.Services
             var ouid = contractorIdSettings.FirstOrDefault().OUID;
             return GetProposalUrlForOUID(ouid, propososalDataGuid);
         }
-
         private List<Tuple<string, string>> GetProposalUrlForOUID(Guid ouid, Guid propososalDataGuid)
         {
             var templateDefaultUrl = $"{_templateDefaultUrl}{propososalDataGuid}";
@@ -1046,7 +1054,7 @@ namespace DataReef.TM.Services.Services
                 proposalDocuments.AddRange(signedDocuments);
 
                 proposal.SignedDocumentsJSON = JsonConvert.SerializeObject(proposalDocuments);
-                
+
                 _solarSalesTrackerAdapter.Value.SignAgreement(proposal, "2", signedDocuments?.FirstOrDefault(d => d.Name == "Installation Agreement"));
 
                 // update territory DateLastModified
@@ -1255,7 +1263,6 @@ namespace DataReef.TM.Services.Services
                         .ForEach(d =>
                         {
 
-
                             d.ProviderName = FinanceProvider?.Name;
                             d.Apr = apr;
                             d.Year = year;
@@ -1268,7 +1275,6 @@ namespace DataReef.TM.Services.Services
                                 d.EnergyBillUrl = data.UserInputLinks?.FirstOrDefault(lnk => lnk.Type == UserInputDataType.EnergyBill)?.ContentURL;
                             }
 
-                            //var pdfContent = _utilServices.Value.GetPDF(d.Url);
                             var pdfContent = _utilServices.Value.GetPDF(d.Name == "Proposal" ? d.Url + "?customizeproposal=1" : d.Url);
 
                             d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
@@ -1296,8 +1302,7 @@ namespace DataReef.TM.Services.Services
                 {
                 }
 
-                // Push the proposal to SST
-                // _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
+                // Push the proposal to SB
                 var response = _solarSalesTrackerAdapter.Value.AttachProposal(proposal, proposalDataId, documentUrls?.FirstOrDefault(d => d.Name == "Proposal"));
                 if (response != null && response.Message.Type.Equals("error"))
                 {
@@ -1560,7 +1565,6 @@ namespace DataReef.TM.Services.Services
                     throw new ApplicationException("Proposal data does not exist!");
                 }
 
-
                 var contractorSetting = dataContext
                                 .OUSettings
                                 .Include(ous => ous.OU)
@@ -1733,36 +1737,34 @@ namespace DataReef.TM.Services.Services
 
                     if (property == null)
                     {
-                        resp = "Could not find property Data!";
+                        resp = "Please Add Property Data!";
                         return resp;
 
                     }
                     ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
 
-                   // using (var uow = UnitOfWorkFactory())
-                   // {
+                    //using (var uow = UnitOfWorkFactory())
+                    //{
 
-                        proposalMediaItem = new ProposalMediaItem
-                        {
+                    proposalMediaItem = new ProposalMediaItem
+                    {
+                        ProposalID = property.Guid,
+                        MimeType = request.ContentType,
+                        MediaItemType = request.MediaItemType,
+                        Name = request.Name
+                    };
+                    string thumbUrl = proposalMediaItem.BuildUrl();
+                    var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
 
-                            ProposalID = property.Guid,
-                            MimeType = request.ContentType,
-                            MediaItemType = request.MediaItemType,
-                            Name = request.Name
-                        };
-                        string thumbUrl = proposalMediaItem.BuildUrl();
-                        var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
-
-                                new BlobModel
-                                {
-
-                                    Content = request.Content,
-                                    ContentType = request.ContentType,
-                                }, BlobAccessRights.Private);
-                        proposalMediaItem.Url = docUrl;
-                     //   uow.Add(proposalMediaItem);
-                      //  uow.SaveChanges();
-                   // }
+                            new BlobModel
+                            {
+                                Content = request.Content,
+                                ContentType = request.ContentType,
+                            }, BlobAccessRights.Private);
+                    proposalMediaItem.Url = docUrl;
+                    //uow.Add(proposalMediaItem);
+                    //uow.SaveChanges();
+                    //  }
                     _solarSalesTrackerAdapter.Value.UploadDocumentItem(property, DocId, proposalMediaItem);
                     resp = "success";
                     return resp;
@@ -2104,7 +2106,6 @@ namespace DataReef.TM.Services.Services
         }
         public List<DocType> GetDocumentType()
         {
-
             List<DocType> typeList = new List<DocType>();
 
             typeList.Add(new DocType() { Id = 1, Name = "Proposal" });
@@ -2183,8 +2184,67 @@ namespace DataReef.TM.Services.Services
 
                 adderItem = AdderItem.ToDbModel(adderItem, existingProposal.ProposalID);
                 dataContext.AdderItems.Add(adderItem);
-                dataContext.SaveChanges();
 
+                //update Finance Plan 
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                if (adderItem.Type == AdderItemType.Adder)
+                {
+                    var adder = new AdderDataView();
+
+                    adder.AdderId = adderItem.Guid;
+                    adder.Name = adderItem.Name;
+                    adder.AdderType = Enum.GetName(adderItem.Type.GetType(), adderItem.Type);
+                    adder.AddToSystemCost = adderItem.AddToSystemCost;
+                    adder.ConsumptionReductionAmount = adderItem.UsageReductionAmount;
+                    adder.ConsumptionReductionType = Enum.GetName(adderItem.UsageReductionType.GetType(), adderItem.UsageReductionType);
+                    adder.Cost = adderItem.Cost;
+                    adder.Description = adderItem.Description;
+                    adder.IsCalculatedPerRoofPlane = adderItem.IsCalculatedPerRoofPlane;
+                    adder.IsPaidBySalesPerson = adderItem.CanBePaidForByRep;
+                    adder.Quantity = adderItem.Quantity;
+                    adder.RateType = Enum.GetName(adderItem.RateType.GetType(), adderItem.RateType);
+                    adder.ReducesConsumption = adderItem.ReducesUsage;
+                    adder.TemplateID = adderItem.TemplateID;
+                    adder.FinancingFee = adderItem.FinancingFee;
+                    adder.IsRebate = adderItem.IsRebate;
+                    adder.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC;
+                    adder.AllowsQuantitySelection = adderItem.AllowsQuantitySelection;
+                    adder.IsSolarThermal = adderItem.IsSolarThermal;
+                    adder.DynamicSettingsJSON = adderItem.DynamicSettingsJSON;
+                    adder.ApplyDealerFee = adderItem.ApplyDealerFee;
+
+                    var adderObj = AdderDataView.ToDbModel(adder , existingProposal.ProposalID);
+
+                    result.Adders.Add(adderObj);
+                }
+
+                if (adderItem.Type == AdderItemType.Incentive)
+                {
+                    Incentive incentive = new Incentive();
+                    incentive.Guid = adderItem.Guid;
+                    incentive.Quantity = Convert.ToDecimal(adderItem.Quantity);
+                    incentive.RecurrencePeriod = adderItem.RecurrencePeriod;
+                    incentive.IsRebate = Convert.ToBoolean(adderItem.IsRebate);
+                    incentive.DynamicSettingsJSON = adderItem.DynamicSettingsJSON;
+                    incentive.RecurrenceType = adderItem.RecurrenceType;
+                    incentive.Name = adderItem.Name;
+                    incentive.RecurrenceStart = adderItem.RecurrenceStart;
+                    incentive.Cost = adderItem.Cost;
+                    incentive.RateType = adderItem.RateType;
+                    incentive.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC;
+
+                    result.Incentives.Add(incentive);
+                }
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
+                dataContext.SaveChanges();
+                
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
@@ -2213,6 +2273,34 @@ namespace DataReef.TM.Services.Services
                 }
 
                 existingadderItem.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+
+                //update Finance Plan  
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                if (adderItem.Type == AdderItemType.Adder)
+                {
+                    var adder = result.Adders.FirstOrDefault(a => a.Guid == adderItem.Guid);
+                    if (adder != null)
+                    {
+                        adder.Quantity = adderItem.Quantity == 0 ? 1 : adderItem.Quantity;
+                    }
+                }
+
+                if (adderItem.Type == AdderItemType.Incentive)
+                {
+                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.Cost == adderItem.Cost);
+                    if (incentive != null)
+                    {
+                        incentive.Quantity = adderItem.Quantity == 0 ? 1 : Convert.ToDecimal(adderItem.Quantity);
+                    }
+                }
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 dataContext.SaveChanges();
 
                 if (existingProposal.UsesNoSQLAggregatedData == true)
@@ -2247,16 +2335,14 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void DeleteAddersIncentives(Guid adderID,Guid ProposalID)
+        public void DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
                 dataContext
                .AdderItems
-               .Where(pc => pc.Guid == adderID)
+               .Where(pc => pc.Guid == adderItem.Guid)
                .Delete();
-
-                dataContext.SaveChanges();
 
                 var existingProposal = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
                 if (existingProposal == null)
@@ -2264,12 +2350,42 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("Data Not Found");
                 }
 
+                //update Finance Plan 
+                var existingFinancePlan = dataContext.FinancePlans.FirstOrDefault(i => i.Guid == existingProposal.FinancePlanID);
+                if (existingFinancePlan == null)
+                {
+                    throw new Exception("Plan not found");
+                }
+
+                var result = JsonConvert.DeserializeObject<LoanRequest>(existingFinancePlan.RequestJSON);
+                if (adderItem.Type == AdderItemType.Adder)
+                {
+                    var adder = result.Adders.FirstOrDefault(a => a.Guid == adderItem.Guid);
+                    if (adder != null)
+                    {
+                        result.Adders.Remove(adder);
+                    }
+                }
+
+                if (adderItem.Type == AdderItemType.Incentive)
+                {
+                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.Cost == adderItem.Cost);
+                    if (incentive != null)
+                    {
+                        result.Incentives.Remove(incentive);
+                    }
+                }
+
+                existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
+                dataContext.SaveChanges();
+
+
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
                 }
             }
-        }
+        } 
 
         public void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan)
         {
@@ -2324,5 +2440,93 @@ namespace DataReef.TM.Services.Services
                 return count;
             }
         }
+
+        public string Getproposalpdftest(string s)
+        {
+            Guid id = Guid.Parse("F56985B9-4660-4EBF-9979-1CDD22146F6E");
+            using (var dataContext = new DataContext())
+            {
+                var data = dataContext
+                            .ProposalData
+                            .FirstOrDefault(pd => pd.Guid == id);
+
+                if (data == null)
+                {
+                    throw new ApplicationException("Could not find Proposal Data!");
+                }
+
+                var proposal = dataContext
+                                .Proposal
+                                .Include(x => x.Property)
+                                .Include(x => x.Property.Territory)
+                                .FirstOrDefault(x => x.Guid == data.ProposalID);
+                if (proposal == null)
+                {
+                    throw new ApplicationException("Could not find the proposal");
+                }
+
+                List<SignedDocumentDTO> signedDocuments = new List<SignedDocumentDTO>();
+
+                //add the agreement
+                var contractorID = data.ContractorID;
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                if (signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
+                {
+                    var agreementSignedDocument = GetSignedAgreementUrl(contractorID, data.Guid, ouSettings);
+                    signedDocuments.Add(agreementSignedDocument);
+                }
+
+                var attachmentPDFs = new List<Tuple<byte[], string>>();
+                signedDocuments?
+                        .ForEach(d =>
+                        {
+                            d.Description = $"{d.Name}";
+                            d.ProposalDataID = id;
+
+                            if (d.Url.Contains("?webview=1"))
+                            {
+                                d.Url = d.Url.Replace("?webview=1", string.Empty);
+                            }
+
+                            if (d.Url.Contains("&webview=1"))
+                            {
+                                d.Url = d.Url.Replace("&webview=1", string.Empty);
+                            }
+
+                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
+
+                            d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
+                                 new BlobModel
+                                 {
+                                     Content = pdfContent,
+                                     ContentType = "application/pdf"
+                                 }, BlobAccessRights.PublicRead);
+
+                            attachmentPDFs.Add(new Tuple<byte[], string>(pdfContent, $"{d.Description}.pdf"));
+                        });
+
+
+
+                var documentsLinks = string.Join("<br/>", signedDocuments.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for <a/>"));
+
+                Task.Factory.StartNew(() =>
+                {
+                    List<System.Net.Mail.Attachment> attachments = null;
+                    if (attachmentPDFs.Count > 0)
+                    {
+                        attachments = attachmentPDFs.Select(pdf => new System.Net.Mail.Attachment(new MemoryStream(pdf.Item1), pdf.Item2))
+                                        .ToList();
+                    }
+
+                    var body = $"You will find the Installation Agreement for using the link below: <br/> <br/> {documentsLinks} <br/>";
+                    var to = "hevin.android@gmail.com";
+
+                    Mail.Library.SendEmail(to, null, $"Installation Agreement for ", body, true, attachments);
+                });
+            }
+
+            return "send";
+        }
+
     }
 }

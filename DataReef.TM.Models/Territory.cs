@@ -19,6 +19,9 @@ namespace DataReef.TM.Models
 
         [EnumMember]
         Closed,
+
+        [EnumMember]
+        Master,
     }
 
     [DataContract]

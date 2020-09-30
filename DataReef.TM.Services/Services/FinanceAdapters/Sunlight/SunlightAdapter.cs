@@ -360,11 +360,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                         fianacepln.SunlightReqJson = ReqJson;
                         fianacepln.SunlightResponseJson = content;
                         db.SaveChanges();
-                    }
+                    }                    
 
                     if (ret.returnCode != "200")
                     {
-                        var error = JsonConvert.DeserializeObject<SunlightError>(content);
+                        var error =  JsonConvert.DeserializeObject<SunlightError>(content);
                         snresponse.returnCode = error.returnCode;
                         snresponse.projectstatus = error.error?.FirstOrDefault()?.errorMessage;
                     }
@@ -439,7 +439,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     }
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-                    // string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
+                   // string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
                     if (ret.returnCode != "200")
                     {
                         var error = JsonConvert.DeserializeObject<SunlightError>(content);

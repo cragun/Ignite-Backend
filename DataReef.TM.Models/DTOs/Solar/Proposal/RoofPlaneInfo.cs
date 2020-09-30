@@ -24,6 +24,8 @@ namespace DataReef.TM.Models.DTOs.Solar.Proposal
         /// ArrayOffset in percentage
         /// </summary>
         public int ArrayOffset { get; set; }
+
+
         public int Tilt { get; set; }
 
         public int Azimuth { get; set; }

@@ -54,6 +54,7 @@ namespace DataReef.TM.Api.Controllers
             this.associationService = associationService;
         }
 
+
         [HttpGet]
         [ResponseType(typeof(ICollection<OU>))]
         [Route("roots")]
@@ -123,11 +124,11 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpGet]
         [ResponseType(typeof(ICollection<FinancePlanDefinition>))]
-        [Route("{ouID:guid}/financeplandefinitions/proposal")]
-        [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IHttpActionResult> GetFinancePlanDefinitionsProposal(Guid ouID, string include = "", string exclude = "", string fields = "")
+        [Route("{proposalid:guid}/financeplandefinitions/proposal")]
+        [AllowAnonymous,InjectAuthPrincipal]
+        public async Task<IHttpActionResult> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
         {
-            var result = ouService.GetFinancePlanDefinitions(ouID, include, exclude, fields);
+            var result = ouService.GetFinancePlanDefinitionsProposal(proposalid, include, exclude, fields);
             return Ok(result);
         }
 
@@ -244,21 +245,16 @@ namespace DataReef.TM.Api.Controllers
             return Ok();
         }
 
-
-
-
         /// <summary>
         /// Get method used by SmartBoard to retrieve all OUs which have no apikey
         /// </summary>
-        [HttpGet, Route("getOusList/{apikey}")]
+        [HttpPost, Route("getOusList")]
         [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(IEnumerable<SBOU>))]
-        public async Task<IEnumerable<SBOU>> GetOusList(string apikey)
-        {
-            bool checkTime = CryptographyHelper.checkTime(apikey);
-            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
+        public async Task<IEnumerable<SBOU>> GetOusList(SBOU request)
+        { 
+            return ouService.GetOusList(request.Name);
 
-            return ouService.GetOusList(DecyptApiKey);
         }
 
         /// <summary>
@@ -386,6 +382,7 @@ namespace DataReef.TM.Api.Controllers
 
         // api/v1/ous/sbzapierOus?Address=&City=&State=&Country=&Zip=
         // api/v1/ous/sbzapierOus?Address=Rue du Cornet 6&City=VERVIERS&State=null&Country=Belgium&Zip=B-4800
+        // /api/v1/ous/sbzapierOus?Address=ROSS PRAIRIE RD&City=FAYETTEVILLE&State=Texas&Country=&Zip=78940
         public async Task<IHttpActionResult> GetzapierOus(string Address, string City, string State, string Country, string Zip)
         {
             try
@@ -401,7 +398,7 @@ namespace DataReef.TM.Api.Controllers
                 zapierou.ouslist = ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
                 return Ok(zapierou);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
                 throw;
             }
@@ -523,7 +520,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> UpdateOuRolesPermission(List<OURole> roles)
         {
-            var response = ouService.UpdateOuRolesPermission(roles);
+           var response = ouService.UpdateOuRolesPermission(roles);
             return Ok(new GenericResponse<bool> { Response = response });
         }
 
@@ -545,12 +542,12 @@ namespace DataReef.TM.Api.Controllers
             return Ok();
         }
 
-
+        
         [HttpGet]
         [Route("getourole/{roleID}")]
         public async Task<IHttpActionResult> GetOURole(Guid? roleID)
         {
-            return Ok(ouService.GetOuRoleByID(roleID));
+                return Ok(ouService.GetOuRoleByID(roleID));
         }
 
         [HttpPatch]
@@ -593,12 +590,20 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
 
+        [HttpPost]
+        [Route("addMasterTerritory")]
+        public async Task<IHttpActionResult> InsertMasterTerritory()
+        {
+            var res = ouService.InsertMasterTerritory();
+            return Ok(new GenericResponse<string> { Response = res });
+        }
 
         [HttpPost]
         public override async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
         {
             return await base.ActivateByGuid(guid);
         }
+
 
         public override async Task<OU> Post(OU item)
         {

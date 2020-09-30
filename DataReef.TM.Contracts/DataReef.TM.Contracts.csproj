@@ -112,6 +112,7 @@
     <Compile Include="Services\IPropertyPowerConsumptionService.cs" />
     <Compile Include="Services\IPropertySurveyService.cs" />
     <Compile Include="Services\IProposalIntegrationAuditService.cs" />
+    <Compile Include="Services\IPushNotificationService.cs" />
     <Compile Include="Services\IPushSubscriptionService.cs" />
     <Compile Include="Services\ISmsService.cs" />
     <Compile Include="Services\ISpruceGenDocsRequestService.cs" />

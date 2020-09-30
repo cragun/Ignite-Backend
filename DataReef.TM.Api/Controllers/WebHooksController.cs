@@ -62,7 +62,7 @@ namespace DataReef.TM.Api.Controllers
             //  sync property attributes from Geo with TM
             try
             {
-                await Task.Factory.StartNew(() => _propertyServiceFactory().SyncPrescreenBatchPropertiesAttributes(prescreenBatchId));
+              await Task.Factory.StartNew(() => _propertyServiceFactory().SyncPrescreenBatchPropertiesAttributes(prescreenBatchId));
             }
             catch (Exception)
             {
@@ -89,7 +89,7 @@ namespace DataReef.TM.Api.Controllers
             //  sync property attributes from Geo with TM
             try
             {
-                await Task.Factory.StartNew(() =>
+              await  Task.Factory.StartNew(() =>
                 {
                     _propertyServiceFactory().SyncInstantPrescreenPropertyAttributes(prescreenInstantId);
                     // TODO: send a push notification once the service is in place
@@ -109,7 +109,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> OrderWorkflowCompleted([FromBody] dynamic body)
         {
 
-            await Task.Factory.StartNew(() =>
+          await  Task.Factory.StartNew(() =>
             {
 
                 string json = Convert.ToString(body);

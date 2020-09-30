@@ -233,6 +233,7 @@ namespace DataReef.TM.Models.Solar
             }
             return IsCalculatedPerRoofPlane;
         }
+
         public static AdderItem ToDbModel(AdderItem item,Guid solarSystemID)
         {
             AdderItem ret = new AdderItem();
@@ -249,6 +250,5 @@ namespace DataReef.TM.Models.Solar
             ret.FinancingFee = item.FinancingFee ?? 0;
             return ret;
         }
-
     }
 }

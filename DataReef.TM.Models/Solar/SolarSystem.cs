@@ -92,7 +92,6 @@ namespace DataReef.TM.Models.Solar
             }            
         }
 
-
         public string GetEquipmentInfo()
         {
             string result = "";
