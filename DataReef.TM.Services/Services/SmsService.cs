@@ -26,6 +26,7 @@ namespace DataReef.TM.Services.Services
             PublishRequest pubRequest = new PublishRequest();
             pubRequest.Message = message;
 
+
             if (!mobileNumber.Contains("+1"))
             {
                 mobileNumber = "+1" + mobileNumber;
