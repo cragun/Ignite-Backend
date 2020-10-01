@@ -635,7 +635,8 @@ namespace DataReef.Application.Services
                         FirstName = newUser.FirstName,
                         LastName = newUser.LastName,
                         EmailAddressString = userInvitation.EmailAddress,
-                        Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName)
+                        Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName),
+                        StartDate = System.DateTime.UtcNow
                     };
                     if (!string.IsNullOrEmpty(phoneNumber))
                     {

@@ -291,10 +291,29 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 req.projects.Add(project);
 
                 string token = GetSunlightToken();
-                //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
+                    //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
+                    ApiLogEntry apilog = new ApiLogEntry();
+                    apilog.Id = Guid.NewGuid();
+                    apilog.User = "";
+                    apilog.Machine = Environment.MachineName;
+                    apilog.RequestContentType = "sunlighttoken";
+                    apilog.RequestRouteTemplate = "";
+                    apilog.RequestRouteData = "";
+                    apilog.RequestIpAddress = "";
+                    apilog.RequestMethod = "";
+                    apilog.RequestHeaders = "";
+                    apilog.RequestTimestamp = DateTime.UtcNow;
+                    apilog.RequestUri = token;
+                    apilog.ResponseContentBody = "";
+                    apilog.RequestContentBody = "";
 
-                fetchProduct(project, token);
+                    using (var db = new DataContext())
+                    {
+                        db.ApiLogEntries.Add(apilog);
+                        db.SaveChanges();
+                    }
+                    fetchProduct(project, token);
 
 
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
@@ -322,7 +341,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     db.SaveChanges();
                 }
 
-
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
 
                 token = Uri.EscapeDataString(token);
@@ -338,7 +356,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(ex.Message);
+                throw new ApplicationException(ex.Message + "===" + ex.InnerException.Message);
             }
         }
 
