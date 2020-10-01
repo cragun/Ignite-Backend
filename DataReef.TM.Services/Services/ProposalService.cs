@@ -2238,7 +2238,8 @@ namespace DataReef.TM.Services.Services
                     incentive.Cost = adderItem.Cost;
                     incentive.RateType = adderItem.RateType;
                     incentive.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC;
-
+                    incentive.AllowsQuantitySelection = Convert.ToBoolean(adderItem.AllowsQuantitySelection);
+                    
                     result.Incentives.Add(incentive);
                 }
 
@@ -2293,7 +2294,7 @@ namespace DataReef.TM.Services.Services
 
                 if (adderItem.Type == AdderItemType.Incentive)
                 {
-                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.Cost == adderItem.Cost);
+                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.IsRebate == adderItem.IsRebate);
                     if (incentive != null)
                     {
                         incentive.Quantity = adderItem.Quantity == 0 ? 1 : Convert.ToDecimal(adderItem.Quantity);
@@ -2369,7 +2370,7 @@ namespace DataReef.TM.Services.Services
 
                 if (adderItem.Type == AdderItemType.Incentive)
                 {
-                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.Cost == adderItem.Cost);
+                    var incentive = result.Incentives.FirstOrDefault(a => a.Name == adderItem.Name && a.IsRebate == adderItem.IsRebate);
                     if (incentive != null)
                     {
                         result.Incentives.Remove(incentive);

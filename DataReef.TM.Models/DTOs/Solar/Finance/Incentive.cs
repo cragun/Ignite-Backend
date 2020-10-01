@@ -21,6 +21,8 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public decimal Cost { get; set; }
         public string DynamicSettingsJSON { get; set; }
         public string Name { get; set; }
+        public bool AllowsQuantitySelection { get; set; }
+        public int AdderType { get; set; }
 
         private int StartMonth => RecurrenceType == AdderItemRecurrenceType.OneTime
             ? 0
