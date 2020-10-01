@@ -1424,8 +1424,8 @@ namespace DataReef.TM.Services.Services
                         var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
                         var to = disableSendingToCustomer ? salesRepEmailAddress : $"{salesRepEmailAddress};{homeOwnerEmailAddress}";
 
-                        //Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
-                        Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                        //Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
                 //var isSolarSalesTrackerEnabled = ouSettings.GetValue<SSTSettings>(SolarTrackerResources.SettingName)?.Enabled?.IsTrue() == true;
