@@ -587,7 +587,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     AssociatedId = proposal?.Property?.Id,
                     DocumentName = proposalDoc.Name,
                     DocumentUrl = proposalDoc.PDFUrl,
-                   // DocumentUrl = proposalDoc.Url,
                     DocumentTypeId = documentTypeId,
                     Email = email,
                     Lon = proposal?.Lon,
@@ -756,33 +755,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     },
                     ProjectData = ProjectData,
                 };
-
-
-                //var json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(request);
-                //if (json != null)
-                //{
-                //    ApiLogEntry apilog = new ApiLogEntry();
-                //    apilog.Id = Guid.NewGuid();
-                //    apilog.User = "/sign/proposal/SubmitProposal";
-                //    apilog.Machine = Environment.MachineName;
-                //    apilog.RequestContentType = "";
-                //    apilog.RequestRouteTemplate = "";
-                //    apilog.RequestRouteData = "";
-                //    apilog.RequestIpAddress = "";
-                //    apilog.RequestMethod = "";
-                //    apilog.RequestHeaders = "";
-                //    apilog.RequestTimestamp = DateTime.UtcNow;
-                //    apilog.RequestUri = "";
-                //    apilog.ResponseContentBody = "";
-                //    apilog.RequestContentBody = json;
-
-                //    using (var dc = new DataContext())
-                //    {
-                //        dc.ApiLogEntries.Add(apilog);
-                //        dc.SaveChanges();
-                //    }
-                //}
-
                 return SubmitProposal(integrationData, request, ouid.Value);
             }
 

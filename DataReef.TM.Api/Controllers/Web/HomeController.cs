@@ -94,17 +94,20 @@ namespace DataReef.TM.Api.Controllers.Web
                 {
                     model.Username = invitation.EmailAddress;
                 }
+
+                var isUserexist = _authService.Value.CheckUserExist(invitation.EmailAddress);
+                if (isUserexist)
+                {
+                    var response = _authService.Value.CreateUser(model.ToNewUser());
+                    if (response.ClientSecret != null)
+                    {
+                        return RedirectToAction("Success", new { id = 1 });
+                    }
+                }
+
             }
 
-            var isUserexist = _authService.Value.CheckUserExist(invitation.EmailAddress);
-            if (isUserexist)
-            {
-                var response = _authService.Value.CreateUser(model.ToNewUser());
-                if (response.ClientSecret != null)
-                {
-                    return RedirectToAction("Success", new { id = 1 });
-                }
-            }
+           
             return View("UserRegistration", model?.ToRegistration());
         }
 

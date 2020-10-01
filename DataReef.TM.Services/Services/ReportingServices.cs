@@ -136,25 +136,9 @@ namespace DataReef.TM.Services
                         ouSettings
                         ?.FirstOrDefault(s => s.Name == OUSetting.OU_Reporting_Settings)
                         ?.GetValue<OUReportingSettings>();
-            
 
             var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct().ToList();
-
-            // var peopleIdsWithOuAss = _personService.Value.GetMany(peopleIds, "OUAssociations", "", "", true).Where(p => !repExclusionList.Contains(p.Guid)).ToList();
-
-            //// var DeactivepeopleIds = peopleIdsWithOuAss.Select(i => i.Guid).Distinct().ToList();
-
-            // var people = peopleIdsWithOuAss.Where(x => x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).ToList();
-
-            // foreach (var personId in peopleIds)
-            // {
-            //     var person = peopleIdsWithOuAss.Where(x => x.Guid == personId && x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager))).FirstOrDefault();
-
-            //     if (person == null)
-            //     {
-            //         continue;
-            //     }
 
             var peopleIdsWithOuAss = _personService.Value.GetMany(peopleIds, "OUAssociations", "", "", true).Where(p => !repExclusionList.Contains(p.Guid)).ToList();
 
@@ -168,18 +152,18 @@ namespace DataReef.TM.Services
                 }
 
                 var reportRow = NormalizeSalesRepresentativeReportRow(
-                        personId,
-                        person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???",
-                        person != null ? person.IsDeleted : false,
-                        inquiryStatistics.Where(i => i.PersonId == personId).ToList(),
-                        reportSettings,
-                        proptype);
+                    personId,
+                    person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???",
+                    person != null ? person.IsDeleted : false,
+                    inquiryStatistics.Where(i => i.PersonId == personId).ToList(),
+                    reportSettings,
+                    proptype);
 
-                    if (reportRow.InquiryStatistics.Count() > 0)
-                    {
-                        results.Add(reportRow);
-                    }
-                
+                if (reportRow.InquiryStatistics.Count() > 0)
+                {
+                    results.Add(reportRow);
+                }
+
             }
             return results;
         }

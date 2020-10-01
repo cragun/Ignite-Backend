@@ -121,7 +121,7 @@ namespace DataReef.TM.Services
             var result = new List<InquiryStatisticsForOrganization>();
 
             var territory = Get(territoryId);
-            if (territory != null)
+            if(territory != null)
             {
                 //if no settings are supplied, try to get them from the db for the ou
                 if (reportSettings == null)
@@ -210,8 +210,6 @@ namespace DataReef.TM.Services
 
                 if (personID.HasValue)
                 {
-                    //if (!context.OUAssociations.Any(ou => ou.PersonID == personID && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
-
                     if (!context.OUAssociations.Any(ou => ou.PersonID == personID && ou.OUID == ouid && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
                     {
                         ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
@@ -221,7 +219,6 @@ namespace DataReef.TM.Services
                 AssignIncludes(include, ref ouTerritoriesQuery);
                 ouTerritoriesQuery = ApplyDeletedFilter(deletedItems, ouTerritoriesQuery);
                 var ouTerritories = ouTerritoriesQuery.ToList();
-
 
                 if (!personID.HasValue)
                 {
@@ -267,7 +264,6 @@ namespace DataReef.TM.Services
                         if (territory.ShapesVersion == territoryShape?.Version)
                             territory.WellKnownText = null;
                     }
-
                 }
 
                 //ouTerritories = PopulateTerritoriesSummary(ouTerritories).Result.ToList();

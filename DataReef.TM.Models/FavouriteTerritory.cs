@@ -49,8 +49,8 @@ namespace DataReef.TM.Models
                 return;
             }
 
-            Person      = FilterEntity(Person,      newInclusionPath);
-            Territory   = FilterEntity(Territory,   newInclusionPath);
+            Person = FilterEntity(Person, newInclusionPath);
+            Territory = FilterEntity(Territory, newInclusionPath);
 
         }
 
