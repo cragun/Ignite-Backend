@@ -291,6 +291,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 req.projects.Add(project);
 
                 string token = GetSunlightToken();
+
                     //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
                     //ApiLogEntry apilog = new ApiLogEntry();
