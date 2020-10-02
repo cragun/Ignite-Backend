@@ -24,6 +24,13 @@ namespace DataReef.TM.Services.Services
             AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(_s3AccessKeyId, _s3SecretAccessKey, Amazon.RegionEndpoint.USWest2);
             PublishRequest pubRequest = new PublishRequest();
             pubRequest.Message = message;
+
+
+            if (!mobileNumber.Contains("+1"))
+            {
+                mobileNumber = "+1" + mobileNumber;
+            }
+
             pubRequest.PhoneNumber = mobileNumber;
             PublishResponse pubResponse = snsClient.Publish(pubRequest);
         }

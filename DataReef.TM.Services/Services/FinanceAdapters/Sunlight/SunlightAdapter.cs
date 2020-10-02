@@ -207,28 +207,28 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddHeader("SFAccessToken", "Bearer " + token);
 
 
-                var JSON = JsonConvert.SerializeObject(request);
+                //var JSON = JsonConvert.SerializeObject(request);
 
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = JSON;
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "Error";
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = "";
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = "";
+                //ApiLogEntry apilog = new ApiLogEntry();
+                //apilog.Id = Guid.NewGuid();
+                //apilog.User = JSON;
+                //apilog.Machine = Environment.MachineName;
+                //apilog.RequestContentType = "Error";
+                //apilog.RequestRouteTemplate = "";
+                //apilog.RequestRouteData = "";
+                //apilog.RequestIpAddress = "";
+                //apilog.RequestMethod = "";
+                //apilog.RequestHeaders = "";
+                //apilog.RequestTimestamp = DateTime.UtcNow;
+                //apilog.RequestUri = "";
+                //apilog.ResponseContentBody = "";
+                //apilog.RequestContentBody = "";
 
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
+                //using (var dc = new DataContext())
+                //{
+                //    dc.ApiLogEntries.Add(apilog);
+                //    dc.SaveChanges();
+                //}
 
                 var response = client.Execute(request);
 
@@ -293,26 +293,26 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 string token = GetSunlightToken();
                     //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
-                    ApiLogEntry apilog = new ApiLogEntry();
-                    apilog.Id = Guid.NewGuid();
-                    apilog.User = "";
-                    apilog.Machine = Environment.MachineName;
-                    apilog.RequestContentType = "sunlighttoken";
-                    apilog.RequestRouteTemplate = "";
-                    apilog.RequestRouteData = "";
-                    apilog.RequestIpAddress = "";
-                    apilog.RequestMethod = "";
-                    apilog.RequestHeaders = "";
-                    apilog.RequestTimestamp = DateTime.UtcNow;
-                    apilog.RequestUri = token;
-                    apilog.ResponseContentBody = "";
-                    apilog.RequestContentBody = "";
+                    //ApiLogEntry apilog = new ApiLogEntry();
+                    //apilog.Id = Guid.NewGuid();
+                    //apilog.User = "";
+                    //apilog.Machine = Environment.MachineName;
+                    //apilog.RequestContentType = "sunlighttoken";
+                    //apilog.RequestRouteTemplate = "";
+                    //apilog.RequestRouteData = "";
+                    //apilog.RequestIpAddress = "";
+                    //apilog.RequestMethod = "";
+                    //apilog.RequestHeaders = "";
+                    //apilog.RequestTimestamp = DateTime.UtcNow;
+                    //apilog.RequestUri = token;
+                    //apilog.ResponseContentBody = "";
+                    //apilog.RequestContentBody = "";
 
-                    using (var db = new DataContext())
-                    {
-                        db.ApiLogEntries.Add(apilog);
-                        db.SaveChanges();
-                    }
+                    //using (var db = new DataContext())
+                    //{
+                    //    db.ApiLogEntries.Add(apilog);
+                    //    db.SaveChanges();
+                    //}
                     fetchProduct(project, token);
 
 
@@ -359,10 +359,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 throw new ApplicationException(ex.Message + "===" + ex.InnerException.Message);
             }
         }
-
-
-
-
 
         public SunlightResponse GetSunlightloanstatus(Guid proposal)
         {
