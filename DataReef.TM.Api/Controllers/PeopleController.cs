@@ -5,6 +5,7 @@ using DataReef.TM.Api.Classes;
 using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Api.Classes.ViewModels;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.Inquiries;
@@ -448,26 +449,7 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [Route("sunnova/calback")]
-        [HttpPost]
-        public async Task<IHttpActionResult> SunnovaCallBackApi([FromBody] dynamic body, string request = null)
-        {
-            string json = Convert.ToString(body);
-            JObject jo = JObject.Parse(json);
-
-            //var ret = currentLocationService.GetLatestLocations(request.Request);
-            return Ok();
-        }
-
-        [AllowAnonymous]
-        [Route("sunnova/calback")]
-        [HttpGet]
-        public async Task<IHttpActionResult> SunnovaCallBackApiGet(string request)
-        {
-            //var ret = currentLocationService.GetLatestLocations(request.Request);
-            return Ok();
-        }
+   
 
     }
 }

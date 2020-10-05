@@ -1,4 +1,8 @@
-﻿using DataReef.TM.Contracts.Services;
+﻿using DataReef.Core.Infrastructure.Authorization;
+using DataReef.TM.Contracts.Services;
+using DataReef.TM.DataAccess.Database;
+using DataReef.TM.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -50,6 +54,67 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> CheckHealth()
         {
             return Ok();
+        }
+
+        [AllowAnonymous]
+        [Route("sunnova/calback")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SunnovaCallBackApi([FromBody] dynamic body, string request = null)
+        {
+            string json = Convert.ToString(body);
+            JObject jo = JObject.Parse(json);
+
+            ApiLogEntry apilog = new ApiLogEntry();
+            apilog.Id = Guid.NewGuid();
+            apilog.User = SmartPrincipal.UserId.ToString();
+            apilog.Machine = Environment.MachineName;
+            apilog.RequestContentType = "SunnovaCallBackApi";
+            apilog.RequestRouteTemplate = "";
+            apilog.RequestRouteData = "";
+            apilog.RequestIpAddress = "";
+            apilog.RequestMethod = "";
+            apilog.RequestHeaders = "";
+            apilog.RequestTimestamp = DateTime.UtcNow;
+            apilog.RequestUri = "SunnovaCallBackApi";
+            apilog.ResponseContentBody = "";
+            apilog.RequestContentBody = json;
+
+            using (var dc = new DataContext())
+            {
+                dc.ApiLogEntries.Add(apilog);
+                dc.SaveChanges();
+            }
+
+            return Ok(true);
+        }
+
+        [AllowAnonymous]
+        [Route("sunnova/calback")]
+        [HttpGet]
+        public async Task<IHttpActionResult> SunnovaCallBackApiGet(string request = null)
+        {
+            ApiLogEntry apilog = new ApiLogEntry();
+            apilog.Id = Guid.NewGuid();
+            apilog.User = SmartPrincipal.UserId.ToString();
+            apilog.Machine = Environment.MachineName;
+            apilog.RequestContentType = "SunnovaCallBackApiGet";
+            apilog.RequestRouteTemplate = "";
+            apilog.RequestRouteData = "";
+            apilog.RequestIpAddress = "";
+            apilog.RequestMethod = "";
+            apilog.RequestHeaders = "";
+            apilog.RequestTimestamp = DateTime.UtcNow;
+            apilog.RequestUri = "SunnovaCallBackApiGet";
+            apilog.ResponseContentBody = "";
+            apilog.RequestContentBody = request;
+
+            using (var dc = new DataContext())
+            {
+                dc.ApiLogEntries.Add(apilog);
+                dc.SaveChanges();
+            }
+
+            return Ok(true);
         }
     }
 }
