@@ -104,9 +104,7 @@ namespace DataReef.TM.Api.Controllers.Web
                         return RedirectToAction("Success", new { id = 1 });
                     }
                 }
-
             }
-
            
             return View("UserRegistration", model?.ToRegistration());
         }

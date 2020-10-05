@@ -13,6 +13,7 @@ using DataReef.TM.Models.DTOs.Inquiries;
 using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Reporting.Settings;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,7 +88,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("{personID:guid}/image")]
         [HttpGet]
-        public async Task<HttpResponseMessage>  GetImage(string personID)
+        public async Task<HttpResponseMessage> GetImage(string personID)
         {
             try
             {
@@ -115,7 +116,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("mine")]
         [HttpPost]
         [ResponseType(typeof(List<Person>))]
-        public async Task<IHttpActionResult>  GetMine(OUMembersRequest request)
+        public async Task<IHttpActionResult> GetMine(OUMembersRequest request)
         {
             var ret = peopleService.GetMine(request);
             return Ok(ret);
@@ -209,7 +210,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("{personID:guid}/settings/{group?}")]
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
-        public async Task<IHttpActionResult> SetAllSettings([FromUri]Guid personID, [FromBody]Dictionary<string, ValueTypePair<SettingValueType, string>> data, [FromUri]PersonSettingGroupType? group = null)
+        public async Task<IHttpActionResult> SetAllSettings([FromUri] Guid personID, [FromBody] Dictionary<string, ValueTypePair<SettingValueType, string>> data, [FromUri] PersonSettingGroupType? group = null)
         {
             settingsService.SetSettings(personID, group, data);
             return Ok();
@@ -320,7 +321,7 @@ namespace DataReef.TM.Api.Controllers
 
         [Route("deleteuser/{guid}")]
         [HttpPost]
-        public async Task<HttpResponseMessage>  DeleteUserByGuid(Guid guid)
+        public async Task<HttpResponseMessage> DeleteUserByGuid(Guid guid)
         {
             var ret = base.DeleteByGuid(guid);
             peopleService.SBDeactivate(guid);
@@ -333,7 +334,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         [ResponseType(typeof(Person))]
         [AllowAnonymous]
-        public async Task<IHttpActionResult>  personDetails(Guid ouid, DateTime date)
+        public async Task<IHttpActionResult> personDetails(Guid ouid, DateTime date)
         {
 
             var person = peopleService.personDetails(ouid, date);
@@ -342,7 +343,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [HttpGet] 
+        [HttpGet]
         [Route("ouassociation/{personid}")]
         [ResponseType(typeof(ICollection<PersonOffboard>))]
         public async Task<IHttpActionResult> GetOuassociationRoleName(Guid personid)
@@ -355,9 +356,9 @@ namespace DataReef.TM.Api.Controllers
         //[Route("CalenderApp/{ouid}/{date}")]
         [Route("CalenderApp/{ouid}")]
         [ResponseType(typeof(IEnumerable<Person>))]
-        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate ,string type)
+        public async Task<IEnumerable<Person>> GetCalendarPageAppointMents(Guid ouid, string CurrentDate, string type)
         {
-            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid, CurrentDate , type);
+            var persn = await peopleService.CalendarPageAppointMentsByOuid(ouid, CurrentDate, type);
             return persn;
         }
 
@@ -378,12 +379,12 @@ namespace DataReef.TM.Api.Controllers
         }
 
         public override async Task<IEnumerable<Person>> GetMany(string delimitedStringOfGuids, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
-        {            
+        {
             include = include + ",OUAssociations";
-            var personuser =  await base.GetMany(delimitedStringOfGuids, include, exclude, fields, true);
+            var personuser = await base.GetMany(delimitedStringOfGuids, include, exclude, fields, true);
             var list = personuser.Where(x => x.IsDeleted == false).ToList();
-             list = list.Where(x => x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).ToList();
-          //  list = list.Where(x => x.AssignedAppointments.Count > 0).ToList();
+            list = list.Where(x => x.OUAssociations.Any(y => (y.RoleType == OURoleType.Member || y.RoleType == OURoleType.Manager) && y.IsDeleted == false)).ToList();
+            //  list = list.Where(x => x.AssignedAppointments.Count > 0).ToList();
             return list;
         }
 
@@ -429,12 +430,12 @@ namespace DataReef.TM.Api.Controllers
 
             return await base.Put(item);
         }
-        
-            /// <summary>
-            /// Invalidate cache for OUsController GET methods.
-            /// </summary>
-            public void OUsControllerCacheInvalidation()
-            {
+
+        /// <summary>
+        /// Invalidate cache for OUsController GET methods.
+        /// </summary>
+        public void OUsControllerCacheInvalidation()
+        {
             var cache = Configuration.CacheOutputConfiguration().GetCacheOutputProvider(Request);
             string controllerName = typeof(OUsController).FullName;
 
@@ -446,5 +447,27 @@ namespace DataReef.TM.Api.Controllers
                 }
             }
         }
+
+        [AllowAnonymous]
+        [Route("sunnova/calback")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SunnovaCallBackApi([FromBody] dynamic body, string request = null)
+        {
+            string json = Convert.ToString(body);
+            JObject jo = JObject.Parse(json);
+
+            //var ret = currentLocationService.GetLatestLocations(request.Request);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [Route("sunnova/calback")]
+        [HttpGet]
+        public async Task<IHttpActionResult> SunnovaCallBackApiGet(string request)
+        {
+            //var ret = currentLocationService.GetLatestLocations(request.Request);
+            return Ok();
+        }
+
     }
 }
