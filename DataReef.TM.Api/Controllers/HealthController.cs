@@ -88,6 +88,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(true);
         }
 
+
         [AllowAnonymous]
         [Route("sunnova/calback")]
         [HttpGet]
