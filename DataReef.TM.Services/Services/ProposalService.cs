@@ -587,7 +587,6 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
-
         public string GetAgreementForProposal(Guid proposalID)
         {
             using (var dataContext = new DataContext())
@@ -617,31 +616,6 @@ namespace DataReef.TM.Services.Services
 
         public CreateProposalDataResponse CreateProposalData(DocumentSignRequest request)
         {
-            //var json = new JavaScriptSerializer().Serialize(request);
-            //if (json != null)
-            //{
-            //    ApiLogEntry apilog = new ApiLogEntry();
-            //    apilog.Id = Guid.NewGuid();
-            //    apilog.User = "/CreateProposalData/service";
-            //    apilog.Machine = Environment.MachineName;
-            //    apilog.RequestContentType = "";
-            //    apilog.RequestRouteTemplate = "";
-            //    apilog.RequestRouteData = "";
-            //    apilog.RequestIpAddress = "";
-            //    apilog.RequestMethod = "";
-            //    apilog.RequestHeaders = "";
-            //    apilog.RequestTimestamp = DateTime.UtcNow;
-            //    apilog.RequestUri = "";
-            //    apilog.ResponseContentBody = "";
-            //    apilog.RequestContentBody = json;
-
-            //    using (var dc = new DataContext())
-            //    {
-            //        dc.ApiLogEntries.Add(apilog);
-            //        dc.SaveChanges();
-            //    }
-            //}
-
             using (var dataContext = new DataContext())
             {
                 var financePlan = dataContext
@@ -954,7 +928,6 @@ namespace DataReef.TM.Services.Services
             return result;
         }
 
-
         public Proposal SignAgreement(Guid proposalDataId, DocumentSignRequest request)
         {
             using (var dataContext = new DataContext())
@@ -1031,16 +1004,14 @@ namespace DataReef.TM.Services.Services
                     catch (Exception) { }
                 }
 
-
                 //add the agreement
                 var contractorID = request.ContractorID ?? data.ContractorID;
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
-                if (signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
+                if(signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
                 {
                     var agreementSignedDocument = GetSignedAgreementUrl(contractorID, data.Guid, ouSettings);
                     signedDocuments.Add(agreementSignedDocument);
                 }
-
 
                 var attachmentPDFs = new List<Tuple<byte[], string>>();
                 signedDocuments?
@@ -1156,34 +1127,8 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
         public Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request)
         {
-            //var json = new JavaScriptSerializer().Serialize(request);
-            //if (json != null)
-            //{
-            //    ApiLogEntry apilog = new ApiLogEntry();
-            //    apilog.Id = Guid.NewGuid();
-            //    apilog.User = "/sign/proposal/service";
-            //    apilog.Machine = Environment.MachineName;
-            //    apilog.RequestContentType = "";
-            //    apilog.RequestRouteTemplate = "";
-            //    apilog.RequestRouteData = "";
-            //    apilog.RequestIpAddress = "";
-            //    apilog.RequestMethod = "";
-            //    apilog.RequestHeaders = "";
-            //    apilog.RequestTimestamp = DateTime.UtcNow;
-            //    apilog.RequestUri = "";
-            //    apilog.ResponseContentBody = "";
-            //    apilog.RequestContentBody = json;
-
-            //    using (var dc = new DataContext())
-            //    {
-            //        dc.ApiLogEntries.Add(apilog);
-            //        dc.SaveChanges();
-            //    }
-            //}
-
             using (var dataContext = new DataContext())
             {
                 var data = dataContext
@@ -1364,7 +1309,6 @@ namespace DataReef.TM.Services.Services
                     proposal.SBProposalError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                 }
 
-
                 var pbi = new PBI_ProposalSigned
                 {
                     ProposalID = proposal.Guid,
@@ -1425,7 +1369,6 @@ namespace DataReef.TM.Services.Services
                         var to = disableSendingToCustomer ? salesRepEmailAddress : $"{salesRepEmailAddress};{homeOwnerEmailAddress}";
 
                         Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
-                        //Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
                 //var isSolarSalesTrackerEnabled = ouSettings.GetValue<SSTSettings>(SolarTrackerResources.SettingName)?.Enabled?.IsTrue() == true;
@@ -1787,27 +1730,6 @@ namespace DataReef.TM.Services.Services
         {
             try
             {
-                //    ApiLogEntry apilog = new ApiLogEntry();
-                //    apilog.Id = Guid.NewGuid();
-                //    apilog.User = SmartPrincipal.UserId.ToString();
-                //    apilog.Machine = Environment.MachineName;
-                //    apilog.RequestContentType = "UploadProposalDoc";
-                //    apilog.RequestRouteTemplate = "";
-                //    apilog.RequestRouteData = "";
-                //    apilog.RequestIpAddress = "";
-                //    apilog.RequestMethod = "";
-                //    apilog.RequestHeaders = basestr;
-                //    apilog.RequestTimestamp = DateTime.UtcNow;
-                //    apilog.RequestUri = request.ToString();
-                //    apilog.ResponseContentBody = request.Name;
-                //    apilog.RequestContentBody = request.Content.ToString();
-
-                //    using (var dc = new DataContext())
-                //    {
-                //        dc.ApiLogEntries.Add(apilog);
-                //        dc.SaveChanges();
-                //    }
-
                 string resp = "";
                 using (var dataContext = new DataContext())
                 {
@@ -1878,110 +1800,6 @@ namespace DataReef.TM.Services.Services
             var response = _solarSalesTrackerAdapter.Value.GetOuDocumentType(ouid);
             return response;
         }
-
-
-        //public List<ProposalMediaItem> UploadProposalDocumentItem(Guid propertyID, string DocId, List<ProposalMediaUploadRequest> request)
-        //{
-        //    var json = JsonConvert.SerializeObject(request);
-
-        //    ApiLogEntry apilog = new ApiLogEntry();
-
-        //    if (json != null)
-        //    {
-        //        apilog.Id = Guid.NewGuid();
-        //        apilog.User = SmartPrincipal.UserId.ToString();
-        //        apilog.Machine = Environment.MachineName;
-        //        apilog.RequestContentType = propertyID.ToString();
-        //        apilog.RequestRouteTemplate = "";
-        //        apilog.RequestRouteData = "";
-        //        apilog.RequestIpAddress = "";
-        //        apilog.RequestMethod = "UploadProposalMediaItem";
-        //        apilog.RequestHeaders = "";
-        //        apilog.RequestTimestamp = DateTime.UtcNow;
-        //        apilog.RequestUri = json.ToString();
-        //        apilog.ResponseContentBody = "";
-        //        apilog.RequestContentBody = "";
-
-        //        using (var dc = new DataContext())
-        //        {
-        //            dc.ApiLogEntries.Add(apilog);
-        //            dc.SaveChanges();
-        //        }
-        //    }
-
-        //    var result = new List<ProposalMediaItem>();
-
-        //    using (var dataContext = new DataContext())
-        //    {
-        //        var data = dataContext
-        //                    .Proposal
-        //                    .FirstOrDefault(pd => pd.PropertyID == propertyID);
-
-
-        //        if (data == null)
-        //        {
-        //            throw new ApplicationException("Could not find Proposal Data!");
-        //        }
-
-        //        ProposalMediaItem proposalMediaItem = new ProposalMediaItem();
-        //        using (var uow = UnitOfWorkFactory())
-        //        {
-        //            foreach (var item in request)
-        //            {
-        //                proposalMediaItem = new ProposalMediaItem
-        //                {
-        //                    ProposalID = data.Guid,
-        //                    Notes = item.Notes,
-        //                    MimeType = item.ContentType,
-        //                    MediaItemType = item.MediaItemType,
-        //                    Name = item.Name
-        //                };
-
-        //                string thumbUrl = proposalMediaItem.BuildUrl();
-
-        //                var docUrl = _blobService.Value.UploadByNameGetFileUrl(thumbUrl,
-        //                        new BlobModel
-        //                        {
-        //                            Content = item.Content,
-        //                            ContentType = item.ContentType,
-        //                        }, BlobAccessRights.Private);
-
-        //                proposalMediaItem.Url = docUrl;
-
-        //                uow.Add(proposalMediaItem);
-
-        //                result.Add(proposalMediaItem);
-        //            }
-        //            uow.SaveChanges();
-
-        //        }
-
-        //        var proposalData = dataContext
-        //                   .ProposalData
-        //                   .FirstOrDefault(pd => pd.ProposalID == data.Guid);
-
-        //        var financePlan = dataContext
-        //                            .FinancePlans
-        //                            .Include(fp => fp.SolarSystem.PowerConsumption)
-        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Territory)
-        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Appointments)
-        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Assignee))
-        //                            .Include(fp => fp.SolarSystem.Proposal.Property.Appointments.Select(prop => prop.Creator))
-        //                            .FirstOrDefault(fp => fp.SolarSystemID == data.Guid);
-
-        //        if (financePlan == null)
-        //        {
-        //            throw new ApplicationException("Could not find Proposal Data!");
-        //        }
-
-        //        var proposal = financePlan.SolarSystem.Proposal;
-
-        //        _solarSalesTrackerAdapter.Value.UploadDocumentItem(proposal, DocId, proposalMediaItem);
-
-        //        return result;
-        //    }
-        //}
-
 
         public List<ProposalMediaItem> UploadProposalMediaItem(Guid proposalID, List<ProposalMediaUploadRequest> request)
         {
@@ -2285,12 +2103,7 @@ namespace DataReef.TM.Services.Services
                 uow.SaveChanges();
                 uow.Dispose();
             }
-
-
-
         }
-
-
         public List<DocType> GetDocumentType()
         {
             List<DocType> typeList = new List<DocType>();
@@ -2443,8 +2256,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
-        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID)
+        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem,Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2620,7 +2432,6 @@ namespace DataReef.TM.Services.Services
 
             }
         }
-
         public int GetProposalCount(Guid PropertyID)
         {
             using (var dc = new DataContext())

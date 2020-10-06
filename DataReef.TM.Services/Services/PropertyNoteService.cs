@@ -408,24 +408,6 @@ namespace DataReef.TM.Services.Services
 
         public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
-            //ApiLogEntry apilog = new ApiLogEntry
-            //{
-            //    Id = Guid.NewGuid(),
-            //    RequestMethod = "CreateNoteFromSmartboardtocheck",
-            //    RequestTimestamp = DateTime.UtcNow,
-            //    User = noteRequest.Guid != null ? noteRequest.Guid.HasValue.ToString() : "",
-            //    Machine = noteRequest.PropertyID != null ? noteRequest.PropertyID.ToString() : "",
-            //    RequestContentType = noteRequest.IgniteID != null ? noteRequest.IgniteID.ToString() : "",
-            //    RequestRouteTemplate = noteRequest.LeadID != null ? noteRequest.LeadID.ToString() : "",
-            //    RequestRouteData = noteRequest.Content != null ? noteRequest.Content.ToString() : "",
-            //    RequestIpAddress = noteRequest.UserID != null ? noteRequest.UserID.ToString() : "",
-            //    RequestHeaders = noteRequest.Email != null ? noteRequest.Email.ToString() : "",
-            //    RequestUri = noteRequest.DateCreated != null ? noteRequest.DateCreated.ToString() : "",
-            //    RequestContentBody = SmartPrincipal.UserId != null ? SmartPrincipal.UserId.ToString() : ""
-            //};
-
-            //_apiLoggingService.LogToDatabase(apilog);
-
             using (var dc = new DataContext())
             {
                 //first get the property

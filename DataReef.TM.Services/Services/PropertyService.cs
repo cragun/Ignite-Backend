@@ -426,21 +426,29 @@ namespace DataReef.TM.Services.Services
                                                 .Where(ap => ap.IsNew == true)?
                                                 .ToList();
 
+                        var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
+
                         if (newAppointments?.Any() == true)
                         {
                             var fstAppoint = newAppointments.FirstOrDefault();
                             if (fstAppoint?.SendSmsToCust == true)
                             {
-                                _smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
+                                //_smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
+                                _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + fstAppoint.StartDate.Date.ToShortDateString() + " at " + fstAppoint.StartDate.Date.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r", entity.GetMainPhoneNumber());
+
                             }
                             else if (fstAppoint?.SendSmsToEC == true)
                             {
-                                var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
-                                _smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
+
+                                _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + fstAppoint.StartDate.Date.ToShortDateString() + " at " + fstAppoint.StartDate.Date.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r", creator?.PhoneNumbers.FirstOrDefault()?.Number);
+
+                                //_smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
+
                             }
 
                             _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
                         }
+
 
                         // handle new inquiries
                         var newInquiries = entity

@@ -34,7 +34,7 @@ namespace DataReef.TM.Api
                 responseBody = await result.Content.ReadAsStringAsync();
             }
 
-            if (request.RequestUri.ToString().ToLowerInvariant().Contains(("/uploadDocument").ToLowerInvariant()))
+            if (request.RequestUri.ToString().ToLowerInvariant().Contains(("sunnova/calback").ToLowerInvariant()))
             {
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();

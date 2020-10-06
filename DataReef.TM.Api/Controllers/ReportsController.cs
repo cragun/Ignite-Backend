@@ -25,16 +25,6 @@ namespace DataReef.TM.Api.Controllers
             _ouservice = ouservice;
         }
 
-        [HttpGet]
-        [Route("test")]
-        public async Task<IHttpActionResult> test(Guid prid)
-        {
-            var ou = _ouservice.ListRootGuidsForPerson(prid);
-            return Ok(ou);
-
-        }
-
-
         /// <summary>
         /// Gets the data needed for the specified report
         /// </summary>

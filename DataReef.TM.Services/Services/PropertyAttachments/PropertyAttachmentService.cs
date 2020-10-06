@@ -39,9 +39,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
         private readonly Lazy<IAuthenticationService> _authService;
         private readonly Lazy<IOUSettingService> _ouSettingsService;
         private readonly Lazy<IPersonService> _personService;
-        // private readonly IDataService<PropertyAttachment> _dataService;
-        public PropertyAttachmentService(  //IDataService<PropertyAttachment> dataService, 
-            ILogger logger,
+        public PropertyAttachmentService(ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IBlobService> blobService,
             Lazy<IAuthenticationService> authService,
@@ -1038,7 +1036,6 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             return model;
         }
 
-        // 
         public PropertyAttachmentItemDTO UploadUtilityBillImage(Guid PropertyId, UploadImageToPropertyAttachmentRequest uploadImageRequest)
         {
 

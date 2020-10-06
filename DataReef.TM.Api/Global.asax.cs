@@ -3,6 +3,7 @@ using DataReef.Core.Infrastructure.Bootstrap;
 using DataReef.Core.Infrastructure.Unity;
 using DataReef.Integrations.Spruce.DTOs;
 using DataReef.TM.Api.Bootstrap;
+using DataReef.TM.Api.Classes.ScheduledTask;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
 using DataReef.TM.Models.Commerce;
@@ -60,6 +61,8 @@ namespace DataReef.TM.Api
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
 
             System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
+            JobScheduler.Start();
 
             //GlobalConfiguration.Configuration.MessageHandlers.Add(new ApiLogHandler());
 

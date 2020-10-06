@@ -47,7 +47,7 @@ namespace DataReef.TM.Api.Controllers
         //[HttpGet]
         //[AllowAnonymous]
         //[InjectAuthPrincipal]
-        //public IHttpActionResult GetSB(Guid proposalDataID)
+        //public async Task<IHttpActionResult> GetSB(Guid proposalDataID)
         //{
         //    var data = _sstAdapter.Value.BuildProposalDataModel(proposalDataID);
         //    return Ok(data);

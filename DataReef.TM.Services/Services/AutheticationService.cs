@@ -635,8 +635,9 @@ namespace DataReef.Application.Services
                         FirstName = newUser.FirstName,
                         LastName = newUser.LastName,
                         EmailAddressString = userInvitation.EmailAddress,
-                        Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName)
-                    };
+                        Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName),
+                        StartDate = System.DateTime.UtcNow
+                };
                     if (!string.IsNullOrEmpty(phoneNumber))
                     {
                         person.PhoneNumbers = new List<PhoneNumber> { new PhoneNumber
@@ -880,7 +881,7 @@ namespace DataReef.Application.Services
                                     isExistCredentials.PerformHash();
                                 }
                             }
-                            
+
                             var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
                             dc.OUAssociations.RemoveRange(OUAssociations);
 

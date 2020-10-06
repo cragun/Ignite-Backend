@@ -33,9 +33,6 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Proposal SignProposal(Guid proposalDataId, DocumentSignRequest request);
 
-        //[OperationContract]
-        //List<ProposalMediaItem> UploadProposalDocumentItem(Guid proposalId,string DocId, List<ProposalMediaUploadRequest> request);
-
         [OperationContract]
         void UpdateProposalDataJSON(Guid proposalDataId, string proposalDataJSON);
 

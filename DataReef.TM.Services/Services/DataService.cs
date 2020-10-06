@@ -47,7 +47,6 @@ namespace DataReef.TM.Services
                     setQuery = setQuery.OrderBy(i => i.Name).Skip((pageNumber - 1) * itemsPerPage).Take(itemsPerPage);
                 }
 
-                var str = setQuery.ToString();
                 IList<T> returnData = setQuery.ToList();
 
                 if (!deletedItems)
