@@ -431,6 +431,7 @@ namespace DataReef.TM.Services.Services
                         if (newAppointments?.Any() == true)
                         {
                             var fstAppoint = newAppointments.FirstOrDefault();
+
                             if (fstAppoint?.SendSmsToCust == true)
                             {
                                 //_smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
