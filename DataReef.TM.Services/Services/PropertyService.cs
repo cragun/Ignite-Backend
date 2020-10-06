@@ -446,7 +446,6 @@ namespace DataReef.TM.Services.Services
                                  fstAppoint.StartDate.Year + "/" + fstAppoint.StartDate.Month + "/" + fstAppoint.StartDate.Day, creator?.PhoneNumbers.FirstOrDefault()?.Number);
 
                                 //_smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
-
                             }
 
                             _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
