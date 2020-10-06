@@ -451,7 +451,6 @@ namespace DataReef.TM.Services.Services
                             _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
                         }
 
-
                         // handle new inquiries
                         var newInquiries = entity
                                                 .Inquiries?
