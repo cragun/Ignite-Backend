@@ -1369,6 +1369,7 @@ namespace DataReef.TM.Services.Services
                         var to = disableSendingToCustomer ? salesRepEmailAddress : $"{salesRepEmailAddress};{homeOwnerEmailAddress}";
 
                         Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+
                     });
                 }
                 //var isSolarSalesTrackerEnabled = ouSettings.GetValue<SSTSettings>(SolarTrackerResources.SettingName)?.Enabled?.IsTrue() == true;
