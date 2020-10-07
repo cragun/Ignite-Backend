@@ -11,10 +11,13 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
 
         public decimal TotalCost { get; set; }
         public decimal FedTaxCredit { get; set; }
-        public Dictionary<string, decimal> StdRebates { get; set; }
-        public Dictionary<string, decimal> SmartRebates { get; set; }
-        public Dictionary<string, decimal> SmarterRebates { get; set; }
+        //public Dictionary<string, decimal> StdRebates { get; set; }
+        //public Dictionary<string, decimal> SmartRebates { get; set; }
+        //public Dictionary<string, decimal> SmarterRebates { get; set; }
         public decimal NetCost { get; set; }
+        public List<Incentive> StdRebates { get; set; }
+        public List<Incentive> SmartRebates { get; set; }
+        public List<Incentive> SmarterRebates { get; set; }
 
         public ProposalForecast()
         { }

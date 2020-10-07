@@ -276,6 +276,7 @@
     <Compile Include="Services\ProposalAddons\TriSMART\Models\TriSmartConstructor.cs" />
     <Compile Include="Services\ProposalAddons\TriSMART\TrismartProposalEnhancement.cs" />
     <Compile Include="Services\ProposalIntegrationAuditService.cs" />
+    <Compile Include="Services\PushNotificationService.cs" />
     <Compile Include="Services\PushSubscriptionService.cs" />
     <Compile Include="Services\SmsService.cs" />
     <Compile Include="Services\SpruceGenDocsRequestService.cs" />

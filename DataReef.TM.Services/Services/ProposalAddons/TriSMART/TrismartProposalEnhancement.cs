@@ -221,9 +221,43 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
                 proposal.ForecastScenario.TotalCost = (decimal)proposal.SystemCosts.Total;
 
-                proposal.ForecastScenario.StdRebates = stdIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(stdRequest.SystemSize));
-                proposal.ForecastScenario.SmartRebates = smartIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smartRequest.SystemSize));
-                proposal.ForecastScenario.SmarterRebates = smarterIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smarterRequest.SystemSize));
+                //proposal.ForecastScenario.StdRebates = stdIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(stdRequest.SystemSize));
+                //proposal.ForecastScenario.SmartRebates = smartIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smartRequest.SystemSize));
+                //proposal.ForecastScenario.SmarterRebates = smarterIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smarterRequest.SystemSize));
+
+
+                proposal.ForecastScenario.StdRebates = stdIncentives.Select(a => new Incentive
+                {
+                    Guid = a.Guid,
+                    Name = a.Name,
+                    Cost = a.GetGrandTotal(smartRequest.SystemSize),
+                    Quantity = a.Quantity,
+                    IsRebate = a.IsRebate,
+                    AllowsQuantitySelection = a.AllowsQuantitySelection,
+                    AdderType = a.AdderType
+                }).ToList();
+
+                proposal.ForecastScenario.SmartRebates = smartIncentives.Select(a => new Incentive
+                {
+                    Guid = a.Guid,
+                    Name = a.Name,
+                    Cost = a.GetGrandTotal(smartRequest.SystemSize),
+                    Quantity = a.Quantity,
+                    IsRebate = a.IsRebate,
+                    AllowsQuantitySelection = a.AllowsQuantitySelection
+                }).ToList();
+
+                proposal.ForecastScenario.SmarterRebates = smarterIncentives.Select(a => new Incentive
+                {
+                    Guid = a.Guid,
+                    Name = a.Name,
+                    Cost = a.GetGrandTotal(smartRequest.SystemSize),
+                    Quantity = a.Quantity,
+                    IsRebate = a.IsRebate,
+                    AllowsQuantitySelection = a.AllowsQuantitySelection
+                }).ToList(); ;
+
+
                 // There are scenarios when there are incentives/rebates that apply before the ITC is calculated
                 // to capture that, we'll use the smarter option for ITC (FederalTaxIncentive)
                 proposal.ForecastScenario.FedTaxCredit = smarterRequest.FederalTaxIncentive;
