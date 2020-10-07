@@ -25,7 +25,6 @@ namespace DataReef.TM.Services.Services
         {
             try
             {
-
                 var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Headers.Add("Authorization", "key=" + serverKey);
