@@ -1,21 +1,16 @@
 ﻿using DataReef.Core.Infrastructure.Authorization;
-using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using Quartz;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Data.Entity;
 using DataReef.Core;
-using System.Data.Entity.Validation;
 
 namespace DataReef.TM.Api.Classes.ScheduledTask
 {
-    public class Jobclass : Quartz.IJob
+    public class Jobclass : IJob
     {
-        public void Execute(Quartz.IJobExecutionContext context)
+        public void Execute(IJobExecutionContext context)
         {
             ApiLogEntry apilog = new ApiLogEntry();
             apilog.Id = Guid.NewGuid();
@@ -29,7 +24,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                 dc.SaveChanges();
 
                 var loginday = dc.AppSettings.FirstOrDefault(a => a.Key == Constants.LoginDays);
-                int logindays = loginday != null ? Convert.ToInt32(loginday.Value) : 0; 
+                int logindays = loginday != null ? Convert.ToInt32(loginday.Value) : 0;
 
                 try
                 {
