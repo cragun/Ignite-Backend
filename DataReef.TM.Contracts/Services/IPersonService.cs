@@ -88,5 +88,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         void RemoveFavoritePerson(Guid FavouritePersonID);
 
+        [OperationContract]
+        Person Updateactivity(Person prsn);
+
     }
 }
