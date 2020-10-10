@@ -449,7 +449,16 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-   
+
+        [HttpPost]
+        [Route("Updateactivity")]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> Updateactivity(Person prsn)
+        {
+            var result = peopleService.Updateactivity(prsn);
+            return Ok(result);
+        }
+
 
     }
 }

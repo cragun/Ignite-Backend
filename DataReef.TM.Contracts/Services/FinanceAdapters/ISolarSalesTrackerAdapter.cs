@@ -56,5 +56,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string DismissNotification(Guid ouid, string smartboardNotificationID);
+
+        [OperationContract]
+        void SBUpdateactivityUser(string SmartBoardID , string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid);
     }
 }

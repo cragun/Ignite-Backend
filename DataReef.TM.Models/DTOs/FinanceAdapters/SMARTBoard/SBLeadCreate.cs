@@ -2,6 +2,7 @@
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.Solar;
 using Newtonsoft.Json;
+using System;
 using System.Linq;
 
 namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
@@ -456,4 +457,20 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         [JsonProperty("dec_billing")]
         public decimal Bill12 { get; set; }
     }
+
+    public class SBActivityUserModel
+    {
+        [JsonProperty("user_id")]
+        public string UserId { get; set; }
+
+        [JsonProperty("activity_name")]
+        public string ActivityName { get; set; }
+
+        [JsonProperty("build_version")]
+        public string BuildVersion { get; set; }
+
+        [JsonProperty("lastactivity_date")]
+        public DateTime? LastActivityDate { get; set; }
+    }
+
 }

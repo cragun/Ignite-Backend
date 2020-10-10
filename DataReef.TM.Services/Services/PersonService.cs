@@ -97,8 +97,53 @@ namespace DataReef.TM.Services
             //}
 
             return ret;
+        }
+
+
+
+        public Person Updateactivity(Person prsn)
+        {
+            if(prsn.SmartBoardID != null)
+            {
+                using (DataContext dc = new DataContext())
+                {
+                    var person = dc.People.SingleOrDefault(p => (p.SmartBoardID == prsn.SmartBoardID) && p.IsDeleted == false);
+                    if (person == null)
+                    {
+                        throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                    }
+
+                    person.ActivityName = prsn.ActivityName;
+                    person.BuildVersion = prsn.BuildVersion;
+                    person.LastActivityDate = prsn.LastActivityDate;
+
+                    var ret = base.Update(person);
+                    return ret;
+                }
+            }
+
+
+            if (prsn.Guid != null)
+            {
+                var prsndetails = Get(prsn.Guid);
+                prsndetails.ActivityName = prsn.ActivityName;
+                prsndetails.BuildVersion = prsn.BuildVersion;
+                prsndetails.LastActivityDate = prsn.LastActivityDate;
+
+                var ret = base.Update(prsndetails);
+
+                if (!string.IsNullOrEmpty(prsndetails.SmartBoardID))
+                {
+                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName , prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid);
+                }
+               
+                return ret;
+            }
+
+            return prsn;
 
         }
+
 
         public override ICollection<Person> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
         {

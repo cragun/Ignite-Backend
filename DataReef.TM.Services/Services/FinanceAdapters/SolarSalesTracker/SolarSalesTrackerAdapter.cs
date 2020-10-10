@@ -973,5 +973,72 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             return JsonConvert.DeserializeObject<SstResponse>(response);
         }
+
+
+        public void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid)
+        {
+
+            using (DataContext dc = new DataContext())
+            {
+                var ret = dc
+                        .Database
+                        .SqlQuery<OU>("exec proc_OUsForPerson {0}", prsnid)
+                        .Where(o => !o.IsArchived)
+                        .ToList();
+
+                var ouid = ret.FirstOrDefault().Guid;
+
+                EnsureInitialized(ouid);
+
+                var integrationSettings = new IntegrationOptionSettings
+                {
+                    Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                    SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+                };
+
+                var integrationData =
+                    integrationSettings
+                    ?.SelectedIntegrations
+                    ?.FirstOrDefault(x =>
+                    {
+                        var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                        return matchingOption?.Type == IntegrationType.SMARTBoard;
+                    })
+                    ?.Data
+                    ?.SMARTBoard;
+                if (integrationData == null)
+                {
+                    return;
+                }
+
+                string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+
+
+                var url = $"/apis/Updateactivity/{encryptedAPIkey}";
+
+                var request = new SBActivityUserModel
+                {
+                    UserId = SmartBoardID,
+                    ActivityName = ActivityName,
+                    BuildVersion = BuildVersion,
+                    LastActivityDate = LastActivityDate
+                };
+
+                var response = MakeRequest(ouid, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+
+                try
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, integrationData.ApiKey);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+        }
+
     }
 }
