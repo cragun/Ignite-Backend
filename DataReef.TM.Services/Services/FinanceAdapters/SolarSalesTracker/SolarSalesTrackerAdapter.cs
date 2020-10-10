@@ -977,7 +977,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         public void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid)
         {
-
             using (DataContext dc = new DataContext())
             {
                 var ret = dc
