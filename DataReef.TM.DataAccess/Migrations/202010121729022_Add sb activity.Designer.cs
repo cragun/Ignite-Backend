@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Addproductionfield : IMigrationMetadata
+    public sealed partial class Addsbactivity : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Addproductionfield));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Addsbactivity));
         
         string IMigrationMetadata.Id
         {
-            get { return "202009251844424_Add production field"; }
+            get { return "202010121729022_Add sb activity"; }
         }
         
         string IMigrationMetadata.Source

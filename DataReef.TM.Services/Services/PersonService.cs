@@ -113,9 +113,9 @@ namespace DataReef.TM.Services
                         throw new ArgumentException("Couldn't find the person among the deleted ones!");
                     }
 
-                    person.ActivityName = prsn.ActivityName;
+                    person.SBActivityName = prsn.SBActivityName;
                     person.BuildVersion = prsn.BuildVersion;
-                    person.LastActivityDate = prsn.LastActivityDate;
+                    person.SBLastActivityDate = prsn.SBLastActivityDate;
 
                     var ret = base.Update(person);
                     return ret;

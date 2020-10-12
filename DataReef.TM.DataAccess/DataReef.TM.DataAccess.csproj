@@ -1243,25 +1243,9 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202008240503126_Add stage migration.cs" />
-    <Compile Include="Migrations\202008240503126_Add stage migration.Designer.cs">
-      <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008271307442_Add StartDate in person .cs" />
-    <Compile Include="Migrations\202008271307442_Add StartDate in person .Designer.cs">
-      <DependentUpon>202008271307442_Add StartDate in person .cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008281234001_AddFcmToken.cs" />
-    <Compile Include="Migrations\202008281234001_AddFcmToken.Designer.cs">
-      <DependentUpon>202008281234001_AddFcmToken.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202008281249100_Remove startdate from user.cs" />
-    <Compile Include="Migrations\202008281249100_Remove startdate from user.Designer.cs">
-      <DependentUpon>202008281249100_Remove startdate from user.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202009251844424_Add production field.cs" />
-    <Compile Include="Migrations\202009251844424_Add production field.Designer.cs">
-      <DependentUpon>202009251844424_Add production field.cs</DependentUpon>
+    <Compile Include="Migrations\202010121729022_Add sb activity.cs" />
+    <Compile Include="Migrations\202010121729022_Add sb activity.Designer.cs">
+      <DependentUpon>202010121729022_Add sb activity.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2155,20 +2139,8 @@
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008240503126_Add stage migration.resx">
-      <DependentUpon>202008240503126_Add stage migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008271307442_Add StartDate in person .resx">
-      <DependentUpon>202008271307442_Add StartDate in person .cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008281234001_AddFcmToken.resx">
-      <DependentUpon>202008281234001_AddFcmToken.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202008281249100_Remove startdate from user.resx">
-      <DependentUpon>202008281249100_Remove startdate from user.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202009251844424_Add production field.resx">
-      <DependentUpon>202009251844424_Add production field.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202010121729022_Add sb activity.resx">
+      <DependentUpon>202010121729022_Add sb activity.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
