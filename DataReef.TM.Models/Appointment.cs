@@ -55,6 +55,9 @@ namespace DataReef.TM.Models
         public string MeterID { get; set; }
 
         [DataMember]
+        public string ESID { get; set; }
+
+        [DataMember]
         [StringLength(250)]
         public string TimeZone { get; set; }
 
