@@ -910,18 +910,18 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
-                //var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains("79b0899a1d7182d5879b9fc3a5cc7449") && y.Name == "Integrations.Options.Selected").FirstOrDefault();
-                var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains(name) && y.Name == "Integrations.Options.Selected").FirstOrDefault();
+                var allAncestorIDs = dc.Database.SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)").ToList();
+                
 
-                var allAncestorIDs = dc
-                                .Database
-                                .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
-                                .ToList();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains(name) && y.Name == "Integrations.Options.Selected").FirstOrDefault();
+                    string searchname = apikeyouid != null ? apikeyouid.OU.Name : "";
+                    allAncestorIDs = allAncestorIDs.Where(x => x.Name.Contains(searchname)).ToList();
+                }
 
-                //  return allAncestorIDs.Where(x => x.Name.Contains(name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
-                return allAncestorIDs.Where(x => x.Name.Contains(apikeyouid.OU.Name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
-
-                //return allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+                allAncestorIDs = allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name).ToList();
+                return allAncestorIDs;
 
             }
         }

@@ -1178,7 +1178,7 @@ namespace DataReef.TM.Services
                     DateTime dt = Convert.ToDateTime(CurrentDate);
                     DateTime dtt = dt.AddDays(1);
                     var OUAssociationIds = (from oua in dc.OUAssociations
-                                            where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager)) && !oua.IsDeleted && !oua.Person.IsDeleted
+                                            where oua.OUID == ouid && ((oua.RoleType == OURoleType.Member || oua.RoleType == OURoleType.Manager || oua.RoleType == OURoleType.SuperAdmin)) && !oua.IsDeleted && !oua.Person.IsDeleted
                                             select oua.PersonID).Distinct().ToList();
 
                     var peoples = dc.People.Where(peo => OUAssociationIds.Contains(peo.Guid) && !peo.IsDeleted)
@@ -1233,6 +1233,7 @@ namespace DataReef.TM.Services
                 return person;
             }
         }
+
 
         /// <summary>
         /// This method remove Person as a Favorite 
