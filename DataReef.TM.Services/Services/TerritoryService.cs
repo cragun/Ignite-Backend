@@ -656,5 +656,14 @@ namespace DataReef.TM.Services
                 dc.SaveChanges();
             }
         }
+
+        public List<FavouriteTerritory> FavouriteTerritoriesList(Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteTerritories = dc.FavouriteTerritories.Where(x => x.PersonID == personID).ToList();
+                return FavouriteTerritories;
+            }
+        }
     }
 }

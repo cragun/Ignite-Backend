@@ -17,6 +17,7 @@ using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DataViews.Geo;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using DataReef.Core.Infrastructure.Authorization;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -148,6 +149,16 @@ namespace DataReef.TM.Api.Controllers
         {
             _territoryService.RemoveFavoriteTerritory(request.TerritoryID, request.PersonID);
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
+        }
+
+        [HttpPost]
+        [Route("FavouriteTerritories")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        [ResponseType(typeof(List<FavouriteTerritory>))]
+        public async Task<IHttpActionResult> FavouriteTerritoriesList(FavouriteOu request)
+        {
+            var territoriesList = _territoryService.FavouriteTerritoriesList(request.PersonID);
+            return Ok(territoriesList);
         }
 
         protected override string PrepareEntityForNavigationPropertiesAttachment(Territory entity)
