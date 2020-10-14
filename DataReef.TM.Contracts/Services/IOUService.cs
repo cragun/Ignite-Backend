@@ -181,6 +181,7 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         List<FavouriteOu> FavouriteOusList(Guid personID);
 
+
         [OperationContract]
         string InsertMasterTerritory();
     }
