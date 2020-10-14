@@ -19,5 +19,6 @@ namespace DataReef.TM.Models.DTOs.Inquiries
         public int? SBTypeId { get; set; }
         //public int Quota { get; set; }
         //public int Commitments { get; set; }
+
     }
 }
