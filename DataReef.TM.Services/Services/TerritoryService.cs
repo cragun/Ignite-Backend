@@ -657,6 +657,7 @@ namespace DataReef.TM.Services
             }
         }
 
+
         public List<FavouriteTerritory> FavouriteTerritoriesList(Guid personID)
         {
             using (var dc = new DataContext())
