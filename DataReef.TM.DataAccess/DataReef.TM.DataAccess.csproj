@@ -1251,6 +1251,10 @@
     <Compile Include="Migrations\202010131340147_Added ESID.Designer.cs">
       <DependentUpon>202010131340147_Added ESID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010151119462_Add newmexicodata table.cs" />
+    <Compile Include="Migrations\202010151119462_Add newmexicodata table.Designer.cs">
+      <DependentUpon>202010151119462_Add newmexicodata table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2148,6 +2152,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010131340147_Added ESID.resx">
       <DependentUpon>202010131340147_Added ESID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010151119462_Add newmexicodata table.resx">
+      <DependentUpon>202010151119462_Add newmexicodata table.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
