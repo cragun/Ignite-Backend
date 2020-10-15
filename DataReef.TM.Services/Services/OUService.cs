@@ -2463,11 +2463,11 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<Guid> FavouriteTerritoriesList(Guid personID)
+        public List<FavouriteTerritory> FavouriteTerritoriesList(Guid personID)
         {
             using (var dc = new DataContext())
             {
-                var FavouriteTerritories = dc.FavouriteTerritories.Where(x => x.PersonID == personID).Select(a => a.TerritoryID).ToList();
+                var FavouriteTerritories = dc.FavouriteTerritories.Where(x => x.PersonID == personID).ToList();
                 return FavouriteTerritories;
             }
         }
