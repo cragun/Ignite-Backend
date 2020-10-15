@@ -47,5 +47,6 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<Guid> FavouriteTerritoriesList(Guid personID);
+
     }
 }
