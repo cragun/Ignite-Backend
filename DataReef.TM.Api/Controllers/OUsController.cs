@@ -606,7 +606,7 @@ namespace DataReef.TM.Api.Controllers
                 }
             };
 
-            return Ok(ousList);
+            return Ok(response);
         }
 
 
