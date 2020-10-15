@@ -589,9 +589,8 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
 
-
         [HttpPost]
-        [Route("FavouriteOus")]
+        [Route("Favourite")]
         [AllowAnonymous, InjectAuthPrincipal] 
         public async Task<IHttpActionResult> FavouriteOusList(FavouriteOu request)
         {
