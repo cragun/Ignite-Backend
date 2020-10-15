@@ -591,11 +591,21 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("FavouriteOus")]
-        [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(List<Guid>))]
+        [AllowAnonymous, InjectAuthPrincipal] 
         public async Task<IHttpActionResult> FavouriteOusList(FavouriteOu request)
         {
             var ousList = ouService.FavouriteOusList(request.PersonID);
+            var territoriesList = ouService.FavouriteTerritoriesList(request.PersonID);
+
+            var response = new
+            {
+                Response = new
+                {
+                    FavoriteOUS = ousList,
+                    FavouriteTerritories = territoriesList
+                }
+            };
+
             return Ok(ousList);
         }
 

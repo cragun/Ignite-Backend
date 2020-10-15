@@ -911,7 +911,7 @@ namespace DataReef.TM.Services.Services
             using (var dc = new DataContext())
             {
                 var allAncestorIDs = dc.Database.SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)").ToList();
-                
+
 
                 if (!string.IsNullOrEmpty(name))
                 {
@@ -2452,15 +2452,25 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
             }
         }
-         
+
         public List<Guid> FavouriteOusList(Guid personID)
         {
             using (var dc = new DataContext())
             {
-                var FavouriteOus = dc.FavouriteOus.Where(x => x.PersonID == personID).Select(a => a.OUID).ToList(); 
-                return FavouriteOus;
+                var FavoriteOUS = dc.FavouriteOus.Where(x => x.PersonID == personID).Select(a => a.OUID).ToList();
+                 
+                return FavoriteOUS;
             }
-        } 
+        }
+
+        public List<Guid> FavouriteTerritoriesList(Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteTerritories = dc.FavouriteTerritories.Where(x => x.PersonID == personID).Select(a => a.TerritoryID).ToList();
+                return FavouriteTerritories;
+            }
+        }
 
         public string InsertMasterTerritory()
         {
