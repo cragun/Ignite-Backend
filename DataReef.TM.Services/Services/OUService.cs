@@ -2452,6 +2452,15 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
             }
         }
+         
+        public List<Guid> FavouriteOusList(Guid personID)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavouriteOus = dc.FavouriteOus.Where(x => x.PersonID == personID).Select(a => a.OUID).ToList(); 
+                return FavouriteOus;
+            }
+        } 
 
         public string InsertMasterTerritory()
         {
