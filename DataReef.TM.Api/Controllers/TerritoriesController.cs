@@ -154,7 +154,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("FavouriteTerritories")]
         [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(List<FavouriteTerritory>))]
+        [ResponseType(typeof(List<Guid>))]
         public async Task<IHttpActionResult> FavouriteTerritoriesList(FavouriteOu request)
         {
             var territoriesList = _territoryService.FavouriteTerritoriesList(request.PersonID);

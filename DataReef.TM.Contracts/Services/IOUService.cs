@@ -179,7 +179,7 @@ namespace DataReef.TM.Contracts.Services
         void RemoveFavouriteOu(Guid ouId, Guid personID);
 
         [OperationContract]
-        List<FavouriteOu> FavouriteOusList(Guid personID);
+        List<Guid> FavouriteOusList(Guid personID);
 
 
         [OperationContract]

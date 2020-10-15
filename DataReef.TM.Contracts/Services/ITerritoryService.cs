@@ -46,6 +46,6 @@ namespace DataReef.TM.Contracts.Services
         void RemoveFavoriteTerritory(Guid territoryId, Guid personID);
 
         [OperationContract]
-        List<FavouriteTerritory> FavouriteTerritoriesList(Guid personID);
+        List<Guid> FavouriteTerritoriesList(Guid personID);
     }
 }

@@ -592,7 +592,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("FavouriteOus")]
         [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(List<FavouriteOu>))]
+        [ResponseType(typeof(List<Guid>))]
         public async Task<IHttpActionResult> FavouriteOusList(FavouriteOu request)
         {
             var ousList = ouService.FavouriteOusList(request.PersonID);
