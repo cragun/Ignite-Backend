@@ -104,6 +104,7 @@
     <Compile Include="ApiKey.cs" />
     <Compile Include="ApiLogEntry.cs" />
     <Compile Include="ApiToken.cs" />
+    <Compile Include="QuotasCommitments.cs" />
     <Compile Include="Appointment.cs" />
     <Compile Include="AppointmentFavouritePerson.cs" />
     <Compile Include="EsIDResponse.cs" />
