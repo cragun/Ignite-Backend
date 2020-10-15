@@ -189,6 +189,9 @@ namespace DataReef.TM.DataAccess.Database
         // API log
         public DbSet<ApiLogEntry> ApiLogEntries { get; set; }
 
+        // New Mexico Data
+        public DbSet<NewMexicoData> NewMexicoData { get; set; }
+
         // Commerce
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
