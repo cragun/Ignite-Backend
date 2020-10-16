@@ -149,17 +149,7 @@ namespace DataReef.TM.Api.Controllers
         {
             _territoryService.RemoveFavoriteTerritory(request.TerritoryID, request.PersonID);
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
-        }
-
-        [HttpPost]
-        [Route("FavouriteTerritories")]
-        [AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(List<Guid>))]
-        public async Task<IHttpActionResult> FavouriteTerritoriesList(FavouriteOu request)
-        {
-            var territoriesList = _territoryService.FavouriteTerritoriesList(request.PersonID);
-            return Ok(territoriesList);
-        }
+        } 
 
         protected override string PrepareEntityForNavigationPropertiesAttachment(Territory entity)
         {
