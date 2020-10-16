@@ -2464,6 +2464,7 @@ namespace DataReef.TM.Services.Services
                 {
                     var ou = Get(item, "Settings,Children", deletedItems: deletedItems);
                     ou.WellKnownText = null;
+                    ou.IsFavourite = true;
                     ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();
 
                     ous.Add(ou);
@@ -2473,15 +2474,27 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<Guid> FavouriteTerritoriesList(Guid personID)
+        public List<Territory> FavouriteTerritoriesList(Guid? personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens")
         {
-            using (var dc = new DataContext())
+            using (var context = new DataContext())
             {
-                var FavouriteTerritories = dc.FavouriteTerritories.Where(x => x.PersonID == personID).Select(a => a.Guid).ToList();
-                return FavouriteTerritories;
+                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID ).ToList();
+                List<Territory> territory = new List<Territory>();
+                foreach (var item in favouriteTerritories)
+                {
+                    var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.Guid && !t.IsDeleted);
+
+                    AssignIncludes(include, ref ouTerritoriesQuery); 
+                    var ouTerritories = ouTerritoriesQuery.FirstOrDefault();
+
+                    ouTerritories.IsFavourite = true;
+
+                    territory.Add(ouTerritories);
+                }
+
+                return territory;
             }
         }
-
         public string InsertMasterTerritory()
         {
 
