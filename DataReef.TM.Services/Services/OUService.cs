@@ -2492,7 +2492,6 @@ namespace DataReef.TM.Services.Services
 
                     territory.Add(ouTerritories);
                 }
-
                 return territory; 
             }
         }
