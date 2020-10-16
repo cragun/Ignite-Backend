@@ -1058,12 +1058,14 @@ namespace DataReef.TM.Services.Services
                 foreach (var mexico in mexicodata)
                 {
                     var property = Property.FromModel(mexico);
+                    mexicoProperties.Add(property);
                 }
             }
 
-            return propertiesRequest.PropertiesRequest != null
-                ? properties.Union(newProperties).ToList()
-                : newProperties;
+            //return propertiesRequest.PropertiesRequest != null
+            //    ? properties.Union(newProperties).ToList()
+            //    : newProperties;
+            return mexicoProperties;
         }
 
 
