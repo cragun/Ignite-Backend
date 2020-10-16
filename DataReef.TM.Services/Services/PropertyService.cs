@@ -1057,6 +1057,7 @@ namespace DataReef.TM.Services.Services
                 foreach (var mexico in mexicodata)
                 {
                     var property = Property.FromModel(mexico);
+                    property.TerritoryID = propertiesRequest.TerritoryID;
                     mexicoProperties.Add(property);
                 }
             }
