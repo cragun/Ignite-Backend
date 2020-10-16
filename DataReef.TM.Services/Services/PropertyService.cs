@@ -1049,6 +1049,18 @@ namespace DataReef.TM.Services.Services
                 newProperties = geoProperties.Select(p => p.ToCoreProperty(propertiesRequest.TerritoryID)).ToList();
             }
 
+
+            var mexicoProperties = new List<Property>();
+            using (DataContext dc = new DataContext())
+            {
+               var mexicodata =  dc.NewMexicoData.ToList().Take(10);
+
+                foreach (var mexico in mexicodata)
+                {
+                    var property = Property.FromModel(mexico);
+                }
+            }
+
             return propertiesRequest.PropertiesRequest != null
                 ? properties.Union(newProperties).ToList()
                 : newProperties;

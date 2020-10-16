@@ -466,13 +466,15 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous]
         public async Task<IHttpActionResult> CheckNewMexico()
         {
-            using (StreamReader sr = new StreamReader(@"C:\Users\admi\Downloads\mexico.txt"))
+           // using (StreamReader sr = new StreamReader(@"C:\Users\admi\Downloads\mexico.txt"))
+            using (StreamReader sr = new StreamReader(@"C:\Users\admi\Downloads\September_2020NM\September_2020NM.txt"))
             {
                 string line = string.Empty;
                 while ((line = sr.ReadLine()) != null)
                 {
                     string[] authorsList = line.ToString().Split('|');
 
+                    if (authorsList[0] == "DBUSA_Household_ID") continue;
                     NewMexicoData nm = new NewMexicoData();
 
                     nm.DBUSA_Household_ID = authorsList[0];
@@ -869,7 +871,7 @@ namespace DataReef.TM.Api.Controllers
                     }
                 }
             }
-            return Ok();
+            return Ok("Done");
         }
 
 
