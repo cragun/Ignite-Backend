@@ -179,7 +179,7 @@ namespace DataReef.TM.Contracts.Services
         void RemoveFavouriteOu(Guid ouId, Guid personID);
 
         [OperationContract]
-        List<Guid> FavouriteOusList(Guid personID);
+        List<OU> FavouriteOusList(Guid personID, bool deletedItems = false);
 
         [OperationContract]
         List<Guid> FavouriteTerritoriesList(Guid personID); 

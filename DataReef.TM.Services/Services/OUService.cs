@@ -2453,13 +2453,23 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<Guid> FavouriteOusList(Guid personID)
+        public List<OU> FavouriteOusList(Guid personID, bool deletedItems = false)
         {
             using (var dc = new DataContext())
             {
                 var FavoriteOUS = dc.FavouriteOus.Where(x => x.PersonID == personID).Select(a => a.OUID).ToList();
-                 
-                return FavoriteOUS;
+
+                List<OU> ous = new List<OU>();
+                 foreach (var item in FavoriteOUS)
+                {
+                    var ou = Get(item, "Settings,Children", deletedItems: deletedItems);
+                    ou.WellKnownText = null;
+                    ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();
+
+                    ous.Add(ou);
+                }
+
+                return ous;
             }
         }
 
