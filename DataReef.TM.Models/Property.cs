@@ -246,6 +246,7 @@ namespace DataReef.TM.Models
             }
         }
 
+
         private DbGeometry _location;
         public DbGeometry Location()
         {
