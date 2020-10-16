@@ -2488,6 +2488,7 @@ namespace DataReef.TM.Services.Services
                     var ouTerritories = ouTerritoriesQuery.FirstOrDefault();
 
                     ouTerritories.IsFavourite = true;
+                    ouTerritories.shapeWKT = ouTerritories.WellKnownText;
 
                     territory.Add(ouTerritories);
                 }

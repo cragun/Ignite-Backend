@@ -110,6 +110,9 @@ namespace DataReef.TM.Models
         [NotMapped]
         public bool IsFavourite { get; set; }
 
+        [NotMapped]
+        public string shapeWKT { get; set; }
+
         #endregion
 
         #region Navigation
