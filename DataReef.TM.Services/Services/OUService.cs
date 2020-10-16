@@ -2482,7 +2482,7 @@ namespace DataReef.TM.Services.Services
                 List<Territory> territory = new List<Territory>();
                 foreach (var item in favouriteTerritories)
                 {
-                    var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.Guid && !t.IsDeleted);
+                    var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.TerritoryID && !t.IsDeleted);
 
                     AssignIncludes(include, ref ouTerritoriesQuery); 
                     var ouTerritories = ouTerritoriesQuery.FirstOrDefault();
