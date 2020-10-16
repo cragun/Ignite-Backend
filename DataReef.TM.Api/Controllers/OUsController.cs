@@ -598,6 +598,7 @@ namespace DataReef.TM.Api.Controllers
             var ousList = ouService.FavouriteOusList(request.PersonID);
             var territoriesList = ouService.FavouriteTerritoriesList(request.PersonID);
 
+
             var response = new
             {
                 Response = new
