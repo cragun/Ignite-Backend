@@ -2474,7 +2474,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<Territory> FavouriteTerritoriesList(Guid? personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens")
+        public List<Territory> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens")
         {
             using (var context = new DataContext())
             {
