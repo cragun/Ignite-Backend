@@ -50,6 +50,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(quotasCommitmentsService.GetUsersFromRoleType(request.RoleID));
         }
 
+
         //add quotas by admin
         [HttpPost, Route("addQuotas")]
         public async Task<IHttpActionResult> InsertQuotas(QuotasCommitment request)
