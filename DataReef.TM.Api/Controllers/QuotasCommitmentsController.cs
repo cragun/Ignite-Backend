@@ -66,6 +66,5 @@ namespace DataReef.TM.Api.Controllers
             return Ok(quotasCommitmentsService.GetQuotasReport());
         }
 
-
     }
 }
