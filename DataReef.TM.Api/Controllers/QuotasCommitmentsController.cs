@@ -43,7 +43,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(quotasCommitmentsService.GetQuotasType());
         }
 
-        [HttpGet, AllowAnonymous, InjectAuthPrincipal] 
+        [HttpPost, AllowAnonymous, InjectAuthPrincipal] 
         [Route("roles/users")]
         public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
         {

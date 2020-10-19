@@ -31,6 +31,12 @@ namespace DataReef.TM.Models
         [DataMember]
         public string dispositions { get; set; }
 
+        [NotMapped]
+        public string week { get; set; }
+
+        [NotMapped]
+        public int durations { get; set; }
+
         #region Navigation Properties
 
         [DataMember]
@@ -48,8 +54,7 @@ namespace DataReef.TM.Models
                 return;
             }
              
-            OURole = FilterEntity(OURole, newInclusionPath);
-
+            OURole = FilterEntity(OURole, newInclusionPath); 
         }
     }
 }
