@@ -74,17 +74,17 @@ namespace DataReef.TM.Services
 
             return entity;
         }
-
-
+         
         public List<QuotasCommitment> GetQuotasReport()
         {
             using (DataContext dc = new DataContext())
             {
                 var data = dc.QuotasCommitments.ToList();
-
-
-
-
+                foreach (var item in data)
+                {
+                    item.durations = Convert.ToInt32(item.EndDate.Subtract(item.StartDate).TotalDays);
+                    item.week = "Week";
+                }
 
                 return data;
             }

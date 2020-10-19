@@ -43,11 +43,12 @@ namespace DataReef.TM.Api.Controllers
             return Ok(quotasCommitmentsService.GetQuotasType());
         }
 
-        [HttpPost, AllowAnonymous, InjectAuthPrincipal] 
+        [HttpPost, AllowAnonymous, InjectAuthPrincipal]
         [Route("roles/users")]
         public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
         {
-            return Ok(quotasCommitmentsService.GetUsersFromRoleType(request.RoleID));
+            var ret = quotasCommitmentsService.GetUsersFromRoleType(request.RoleID);
+            return Ok(new { Response = ret });
         }
 
 
@@ -60,10 +61,11 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(List<AdminQuotas>))] 
+        [ResponseType(typeof(List<AdminQuotas>))]
         public async Task<IHttpActionResult> GetQuotasReport()
         {
-            return Ok(quotasCommitmentsService.GetQuotasReport());
+            var ret = quotasCommitmentsService.GetQuotasReport();
+            return Ok(new { Response = ret });
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.Enums;
+﻿using DataReef.TM.Models.DTOs.Inquiries;
+using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,10 +27,13 @@ namespace DataReef.TM.Models
         public DateTime StartDate { get; set; }
 
         [DataMember]
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         [DataMember]
         public string dispositions { get; set; }
+
+        [NotMapped]
+        public List<CRMDisposition> Disposition { get; set; }
 
         [NotMapped]
         public string week { get; set; }
