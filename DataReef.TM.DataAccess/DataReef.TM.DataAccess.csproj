@@ -1263,6 +1263,10 @@
     <Compile Include="Migrations\202010191211423_AddQuotasCommitment.Designer.cs">
       <DependentUpon>202010191211423_AddQuotasCommitment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010191729058_AddMigration01.cs" />
+    <Compile Include="Migrations\202010191729058_AddMigration01.Designer.cs">
+      <DependentUpon>202010191729058_AddMigration01.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2169,6 +2173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010191211423_AddQuotasCommitment.resx">
       <DependentUpon>202010191211423_AddQuotasCommitment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010191729058_AddMigration01.resx">
+      <DependentUpon>202010191729058_AddMigration01.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
