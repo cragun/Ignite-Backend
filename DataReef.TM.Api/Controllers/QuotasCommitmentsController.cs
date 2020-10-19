@@ -43,12 +43,11 @@ namespace DataReef.TM.Api.Controllers
             return Ok(quotasCommitmentsService.GetQuotasType());
         }
 
-        [HttpGet, AllowAnonymous, InjectAuthPrincipal]
-        [ResponseType(typeof(AdminQuotas))]
-        [Route("role/{roleID:guid}/users")]
-        public async Task<IHttpActionResult> GetUsersFromRoleType(Guid roleID, Guid ouID)
+        [HttpGet, AllowAnonymous, InjectAuthPrincipal] 
+        [Route("roles/users")]
+        public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
         {
-            return Ok(quotasCommitmentsService.GetUsersFromRoleType(roleID, ouID));
+            return Ok(quotasCommitmentsService.GetUsersFromRoleType(request.RoleID));
         }
 
         //add quotas by admin
@@ -59,13 +58,12 @@ namespace DataReef.TM.Api.Controllers
             return Ok(ret);
         }
 
-        //[HttpGet]
-        //[ResponseType(typeof(List<AdminQuotas>))]
-        //[Route("role/{roleID:guid}/users")]
-        //public async Task<IHttpActionResult> GetQuotasReport(Guid roleID)
-        //{
-        //    return Ok(quotasCommitmentsService.GetUsersFromRoleType(roleID));
-        //}
+        [HttpGet]
+        [ResponseType(typeof(List<AdminQuotas>))] 
+        public async Task<IHttpActionResult> GetQuotasReport()
+        {
+            return Ok(quotasCommitmentsService.GetQuotasReport());
+        }
 
 
     }

@@ -14,10 +14,12 @@ namespace DataReef.TM.Contracts.Services
         AdminQuotas GetQuotasType();
 
         [OperationContract]
-        IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid,Guid ouID);
+        IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid);
 
         [OperationContract]
-        QuotasCommitment InsertQuotas(QuotasCommitment request);
-        
+        QuotasCommitment InsertQuotas(QuotasCommitment request); 
+
+        [OperationContract]
+        List<QuotasCommitment> GetQuotasReport(); 
     }
 }

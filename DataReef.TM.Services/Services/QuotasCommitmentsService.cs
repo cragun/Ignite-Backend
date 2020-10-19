@@ -52,11 +52,11 @@ namespace DataReef.TM.Services
             return response;
         }
 
-        public IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid,Guid ouID)
+        public IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid)
         {
             using (DataContext dc = new DataContext())
             {
-                var users = dc.UserInvitations.Where(a => a.RoleID == roleid && a.OUID == ouID).ToList();
+                var users = dc.UserInvitations.Where(a => a.RoleID == roleid).ToList();
                 return users;
             }
         }
@@ -76,18 +76,13 @@ namespace DataReef.TM.Services
         }
 
 
-        //public override QuotasCommitments Insert(QuotasCommitments entity)
-        //{
-        //    entity.CreatedByID = SmartPrincipal.UserId;
-        //    var ret = base.Insert(entity);
-
-        //    if (ret == null)
-        //    {
-        //        entity.SaveResult = SaveResult.SuccessfulInsert;
-        //        return entity;
-        //    }
-
-        //    return ret;
-        //}
+        public List<QuotasCommitment> GetQuotasReport()
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var users = dc.QuotasCommitments.ToList();
+                return users;
+            }
+        }
     }
 }
