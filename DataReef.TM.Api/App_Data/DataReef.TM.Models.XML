@@ -30,614 +30,6 @@
             Navigation property for the Person
             </summary>
         </member>
-        <member name="T:DataReef.TM.Models.ApiToken">
-            <summary>
-            The User is the authentication/authorization abstraction in the API/Core
-            The User has an underlying Person
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ApiToken.IsDisabled">
-            <summary>
-            An user is and abstraction of a person that can login into the system (Employee or Parent)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ApiToken.ExpirationDate">
-            <summary>
-            UTC DateTime 
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ApiToken.ApiKeyID">
-            <summary>
-            Guid of the ApiKey object
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.FavouriteOu.PersonID">
-            <summary>
-            Guid of the person assigned a Ou
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.FavouriteTerritory.PersonID">
-            <summary>
-            Guid of the person assigned a territory
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Account">
-            <summary>
-            Accounts are paying entities.  In TM, they are the master company we sign up.  In Leap, they are the Company, or User if solo
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Account.IsDisabled">
-            <summary>
-            Disbables the Account, Its OUS and all territories 
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Account.OwnerID">
-            <summary>
-            The Guid of the Person who owns the Account
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Account.RootOUID">
-            <summary>
-            The GUID of the root ou for an account
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Account.Owner">
-            <summary>
-            The peson who owns the account
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Account.RootOU">
-            <summary>
-            The person who owns the account
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Account.Associations">
-            <summary>
-            Collection of Many to Many objects of people who have rights to the account.  Rights are granted on an OU level
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Account.OUs">
-            <summary>
-            Collection of Many to Many objects of people who have rights to the account.  Rights are granted on an OU level
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.AccountAssociation">
-            <summary>
-            Associates a person with an account.  People are global to the TM System, a Person can be in multiple accounts.  This is the many to many object
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.AccountAssociation.PersonID">
-            <summary>
-            Guid of the Person
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.AccountAssociation.AccountID">
-            <summary>
-            Guid of the Account
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenAdjustment.Amount">
-            <summary>
-            Amount in Units added or subtracted
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenAdjustment.Notes">
-            <summary>
-            Any notes for the user to reference the Expense
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenAdjustment.IsVoid">
-            <summary>
-            Void the Expense
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.Amount">
-            <summary>
-            Amount in Units spent
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.BatchPrescreenID">
-            <summary>
-            The guid of the batch prescreen that created the expense
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.InstantPrescreenID">
-            <summary>
-            The guid of the instant prescreen that created the expense
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.Notes">
-            <summary>
-            Any notes for the user to reference the Expense
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.IsVoid">
-            <summary>
-            Void the Expense
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Accounting.TokenLedger">
-            <summary>
-            TokenLedgers represent the Token Account for a User.  Each has a Balance which is the sum of purchases + transfers in - transfers out - expenses + adjustments
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.UserID">
-            <summary>
-            The Guid of the User
-            </summary>
-            
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.PersonID">
-            <summary>
-            The Guid of the Person.  Denormalized, yes
-            </summary>
-            
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.Balance">
-            <summary>
-            Virtual Field. the balance of the account
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.IsPrimary">
-            <summary>
-            A person can have multiple Ledgers, but only ONE primary ledger.  If someone transferes anything to a person, it goes to the primary ledger if otherwise unspecified
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Accounting.TokenPurchase">
-            <summary>
-            Used to record actual token purchases, real money
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Amount">
-            <summary>
-            Amount purchases in Units
-            </summary>
-            
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Price">
-            <summary>
-            Price in Dollars paid for the purchase
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Reference">
-            <summary>
-            purchase reference, such as Credit Card Reference
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.LedgerID">
-            <summary>
-            The Guid of the Ledger for which the purchase was made
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Ledger">
-            <summary>
-            The Token Ledger
-            </summary>
-            
-        </member>
-        <member name="T:DataReef.TM.Models.Accounting.TokenTransfer">
-            <summary>
-            Used to record actual token purchases, real money
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.Amount">
-            <summary>
-            Amount transfered in Units
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.Notes">
-            <summary>
-            purchase reference, such as Credit Card Reference
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.FromLedgerID">
-            <summary>
-            The Guid of the Ledger from which the transfer was made
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.ToLedgerID">
-            <summary>
-            The Guid of the Ledger to which the transfer was made
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.IsVoid">
-            <summary>
-            Void the Transaction by setting to True
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.FromLedger">
-            <summary>
-            The Token Ledger where the Transfer Came Fromm
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.ToLedger">
-            <summary>
-            The Token Ledger to where the Transfer was sent
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Address.Address1">
-            <summary>
-            Address number and street 
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Address.Address2">
-            <summary>
-            Second line of the addresses.  Not required
-            </summary>
-            
-        </member>
-        <member name="P:DataReef.TM.Models.Address.State">
-            <summary>
-            2 character street abbreviation
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Address.ZipCode">
-            <summary>
-            5 digit zip Code
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Address.PlusFour">
-            <summary>
-            Zip 4 part (US Addresses)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Address.OU">
-            <summary>
-            The Organization Unit that defined this activity
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Address.Person">
-            <summary>
-            The person of this adress
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ExecutedAgreement.PersonID">
-            <summary>
-            person ID that the agreement belongs to (ususally a child)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ExecutedAgreement.SignerID">
-            <summary>
-            PersonID of the person who is signing
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ExecutedAgreement.BlobData">
-            <summary>
-            used for sending in base64 encoded blob data.  will be stored via the blob service
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ExecutedAgreementPart.PersonID">
-            <summary>
-            person ID that the agreement belongs to (ususally a child)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ExecutedAgreementPart.SignerID">
-            <summary>
-            PersonID of the person who is signing
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.ExecutedAgreementPart.BlobData">
-            <summary>
-            used for sending in base64 encoded blob data.  will be stored via the blob service
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.AreaPurchase.PersonID">
-            <summary>
-            the guid of the person making the purchase
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.AreaPurchase.AreaID">
-            <summary>
-            the guid of the activated area
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.AreaPurchase.OUID">
-            <summary>
-            The guid of the ou that owns the zip area
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.AreaPurchase.CompletionDate">
-            <summary>
-            the date when the process completed
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Assignment">
-            <summary>
-            Assignments are Territory Associations.  The many to many between a person and a Territory
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Assignment.PersonID">
-            <summary>
-            Guid of the person assigned a territory
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Assignment.Status">
-            <summary>
-                typically a rep will want to close out a territory so that it can be reflected into their ui
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Client.IntegrationToken.UserId">
-            <summary>
-            User Id
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Client.IntegrationToken.ExpirationDate">
-            <summary>
-            UTC DateTime 
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Commerce.Order.PersonID">
-            <summary>
-            Guid of the person who owns this order
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.UserID">
-            <summary>
-            Guid of the User file
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.PersonID">
-            <summary>
-            Guid of the Person.  A bit denormalized.  No foreign key or navigation.  Navigation done thorugh UserID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.UserName">
-            <summary>
-            The username used to log in (email address)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.PasswordHashed">
-            <summary>
-            The hash
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.PasswordRaw">
-            <summary>
-            Used to reset the password.  Sent in by user in the rawformat, but never stored, rather salted and hashed, then cleared
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.Salt">
-            <summary>
-            Salt used to calculate hash
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.ExpirationDate">
-            <summary>
-            date the password expires.  null for never
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credential.RequiresPasswordChange">
-            <summary>
-            Is the user required to change password on next loginn
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Credit.PrescreenInstant">
-            <summary>
-            Stores instant prescreen request and response data
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.Status">
-            <summary>
-            All batches will begin with a pending process, then will move into Processing once the qualification server is contacted
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.CompletionDate">
-            <summary>
-            The datetime that the process completed
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.ErrorString">
-            <summary>
-            If the processed errored out ... the service should populate this error string
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.PropertyID">
-            <summary>
-            The guid of the property to be prescreened
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.Reference">
-            <summary>
-            use this for any meta data, like the name of the person who passed, or other human readable data we may wish to return
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.CreditCategory">
-            <summary>
-            The best credit category available for this specific AddressID
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Credit.PrescreenBatch">
-            <summary>
-            The batch object for running prequals.  
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.PersonID">
-            <summary>
-            The guid of the person who ran ( and is accountable ) for the batch
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.Status">
-            <summary>
-            All batches will begin with a pending process, then will move into Processing once the qualification server is contacted
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.TerritoryID">
-            <summary>
-            The guid of the territory to prescreen
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.CompletionDate">
-            <summary>
-            The datetime that the process completed
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.ErrorString">
-            <summary>
-            If the processed errored out ... the service should populate this error string
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.Details">
-            <summary>
-            The system will populate the details.  The client only submits the Batch object  with the TerritoryID
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.Credit.PrescreenDetail">
-            <summary>
-            This class stores the AddressID and the result for each item in a batch.  The actual address data is stored in the Geo server, but the AddressID included here is the reference
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.BatchID">
-            <summary>
-            The guid of the batch that this belongs to
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.AddressID">
-            <summary>
-            The guid of the Address or Location in the Geo service
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.PropertyID">
-            <summary>
-            The guid of the Property in the TM server
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.Reference">
-            <summary>
-            use this for any meta data, like the name of the person who passed, or other human readable data we may wish to return
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.CreditCategory">
-            <summary>
-            The best credit category available for this specific AddressID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.ClientAPI.RoofPlaneEditDataView.Azimuth">
-            <summary>
-            New Azimuth value
-            Will only update this Azimuth if this property is set.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.ClientAPI.RoofPlaneEditDataView.Tilt">
-            <summary>
-            New Tilt value.
-            Will only update this Tilt if this property is set.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.ClientAPI.RoofPlaneEditDataView.Shading">
-            <summary>
-            New Shading value.
-            Will only update this Shading if this property is set.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Financing.FinancePlanDataModel.SBMeta">
-            <summary>
-            SmartBOARD meta data.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Financing.FinancePlanSmartBOARDMeta.LenderID">
-            <summary>
-            SmartBOARD provided lender ID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.FirstPeriodMonths">
-            <summary>
-            Number of months for 1st period
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.ITCMonth">
-            <summary>
-            Federal tax incentives applies in this month.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.Factor01">
-            <summary>
-            Factor used for 1st period
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.Factor02">
-            <summary>
-            Factor used for 2nd period when 30% is applied to Principal
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.Factor03">
-            <summary>
-            Factor used for 2nd period when 30% is not applied to Principal.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.OnBoarding.NewOUEquipmentDataView.DefaultLosses">
-            <summary>
-            It will be a JSON (array of <see cref="T:DataReef.TM.Models.DataViews.Settings.OrgSettingDataView"/>)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Settings.FinancingSettingsDataView.Data">
-            <summary>
-            Custom data, mostly regarding 3rd party integrations, payment factors, etc.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Settings.OUEventHandlerDataView.HandlerClassFullName">
-            <summary>
-            Full name (including namespace) of the Handler class
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.Settings.OUEventHandlerConditionDataView.Operator">
-            <summary>
-            "=", "!=" for now
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.OUIDs">
-            <summary>
-            Organization Guids
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.ExcludeOUs">
-            <summary>
-            Organization Guids to exclude.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.ItemsPerPage">
-            <summary>
-            Default value is 20
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.SortOrder">
-            <summary>
-            "asc" or "desc". 
-            Default value is "asc"
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.DataViews.NewUser">
-            <summary>
-            The NewUser class is used to create a new user after verifying the users email address.  This is a data view ( special class ) and will
-            only be used for creating the new user
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.NewUser.InvitationGuid">
-            <summary>
-            The guid returned in the registration reservation process
-            </summary>
-            
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.NewUser.Password">
-            <summary>
-            The raw password (pre salted and hashed) for the user.  The system will salt, hash and clear from memory this password
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.NewUser.FirstName">
-            <summary>
-            First name of the Person
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DataViews.NewUser.LastName">
-            <summary>
-            Last Name of the Person
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.DataViews.NewUserRegistration">
-            <summary>
-            This is the class used to Pre Register the user.  The user enters his / her email address which will cause an email to be sent to that address
-            the email contains the User Registration Guid which will be subsequently used to confirm the registration and create the user
-            </summary>
-        </member>
         <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.HomeAge">
             <summary>
             Pipe delimited. e.g. min | max
@@ -4170,6 +3562,614 @@
         <member name="P:DataReef.TM.Models.DTOs.Solar.MonthlyPower.ProductionInKwh">
             <summary>
             KiloWatts produced in a month by the solar array.
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.ApiToken">
+            <summary>
+            The User is the authentication/authorization abstraction in the API/Core
+            The User has an underlying Person
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ApiToken.IsDisabled">
+            <summary>
+            An user is and abstraction of a person that can login into the system (Employee or Parent)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ApiToken.ExpirationDate">
+            <summary>
+            UTC DateTime 
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ApiToken.ApiKeyID">
+            <summary>
+            Guid of the ApiKey object
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.FavouriteOu.PersonID">
+            <summary>
+            Guid of the person assigned a Ou
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.FavouriteTerritory.PersonID">
+            <summary>
+            Guid of the person assigned a territory
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Account">
+            <summary>
+            Accounts are paying entities.  In TM, they are the master company we sign up.  In Leap, they are the Company, or User if solo
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Account.IsDisabled">
+            <summary>
+            Disbables the Account, Its OUS and all territories 
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Account.OwnerID">
+            <summary>
+            The Guid of the Person who owns the Account
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Account.RootOUID">
+            <summary>
+            The GUID of the root ou for an account
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Account.Owner">
+            <summary>
+            The peson who owns the account
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Account.RootOU">
+            <summary>
+            The person who owns the account
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Account.Associations">
+            <summary>
+            Collection of Many to Many objects of people who have rights to the account.  Rights are granted on an OU level
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Account.OUs">
+            <summary>
+            Collection of Many to Many objects of people who have rights to the account.  Rights are granted on an OU level
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.AccountAssociation">
+            <summary>
+            Associates a person with an account.  People are global to the TM System, a Person can be in multiple accounts.  This is the many to many object
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.AccountAssociation.PersonID">
+            <summary>
+            Guid of the Person
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.AccountAssociation.AccountID">
+            <summary>
+            Guid of the Account
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenAdjustment.Amount">
+            <summary>
+            Amount in Units added or subtracted
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenAdjustment.Notes">
+            <summary>
+            Any notes for the user to reference the Expense
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenAdjustment.IsVoid">
+            <summary>
+            Void the Expense
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.Amount">
+            <summary>
+            Amount in Units spent
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.BatchPrescreenID">
+            <summary>
+            The guid of the batch prescreen that created the expense
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.InstantPrescreenID">
+            <summary>
+            The guid of the instant prescreen that created the expense
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.Notes">
+            <summary>
+            Any notes for the user to reference the Expense
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenExpense.IsVoid">
+            <summary>
+            Void the Expense
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Accounting.TokenLedger">
+            <summary>
+            TokenLedgers represent the Token Account for a User.  Each has a Balance which is the sum of purchases + transfers in - transfers out - expenses + adjustments
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.UserID">
+            <summary>
+            The Guid of the User
+            </summary>
+            
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.PersonID">
+            <summary>
+            The Guid of the Person.  Denormalized, yes
+            </summary>
+            
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.Balance">
+            <summary>
+            Virtual Field. the balance of the account
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenLedger.IsPrimary">
+            <summary>
+            A person can have multiple Ledgers, but only ONE primary ledger.  If someone transferes anything to a person, it goes to the primary ledger if otherwise unspecified
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Accounting.TokenPurchase">
+            <summary>
+            Used to record actual token purchases, real money
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Amount">
+            <summary>
+            Amount purchases in Units
+            </summary>
+            
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Price">
+            <summary>
+            Price in Dollars paid for the purchase
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Reference">
+            <summary>
+            purchase reference, such as Credit Card Reference
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.LedgerID">
+            <summary>
+            The Guid of the Ledger for which the purchase was made
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenPurchase.Ledger">
+            <summary>
+            The Token Ledger
+            </summary>
+            
+        </member>
+        <member name="T:DataReef.TM.Models.Accounting.TokenTransfer">
+            <summary>
+            Used to record actual token purchases, real money
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.Amount">
+            <summary>
+            Amount transfered in Units
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.Notes">
+            <summary>
+            purchase reference, such as Credit Card Reference
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.FromLedgerID">
+            <summary>
+            The Guid of the Ledger from which the transfer was made
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.ToLedgerID">
+            <summary>
+            The Guid of the Ledger to which the transfer was made
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.IsVoid">
+            <summary>
+            Void the Transaction by setting to True
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.FromLedger">
+            <summary>
+            The Token Ledger where the Transfer Came Fromm
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Accounting.TokenTransfer.ToLedger">
+            <summary>
+            The Token Ledger to where the Transfer was sent
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Address.Address1">
+            <summary>
+            Address number and street 
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Address.Address2">
+            <summary>
+            Second line of the addresses.  Not required
+            </summary>
+            
+        </member>
+        <member name="P:DataReef.TM.Models.Address.State">
+            <summary>
+            2 character street abbreviation
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Address.ZipCode">
+            <summary>
+            5 digit zip Code
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Address.PlusFour">
+            <summary>
+            Zip 4 part (US Addresses)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Address.OU">
+            <summary>
+            The Organization Unit that defined this activity
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Address.Person">
+            <summary>
+            The person of this adress
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ExecutedAgreement.PersonID">
+            <summary>
+            person ID that the agreement belongs to (ususally a child)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ExecutedAgreement.SignerID">
+            <summary>
+            PersonID of the person who is signing
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ExecutedAgreement.BlobData">
+            <summary>
+            used for sending in base64 encoded blob data.  will be stored via the blob service
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ExecutedAgreementPart.PersonID">
+            <summary>
+            person ID that the agreement belongs to (ususally a child)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ExecutedAgreementPart.SignerID">
+            <summary>
+            PersonID of the person who is signing
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.ExecutedAgreementPart.BlobData">
+            <summary>
+            used for sending in base64 encoded blob data.  will be stored via the blob service
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.AreaPurchase.PersonID">
+            <summary>
+            the guid of the person making the purchase
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.AreaPurchase.AreaID">
+            <summary>
+            the guid of the activated area
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.AreaPurchase.OUID">
+            <summary>
+            The guid of the ou that owns the zip area
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.AreaPurchase.CompletionDate">
+            <summary>
+            the date when the process completed
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Assignment">
+            <summary>
+            Assignments are Territory Associations.  The many to many between a person and a Territory
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Assignment.PersonID">
+            <summary>
+            Guid of the person assigned a territory
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Assignment.Status">
+            <summary>
+                typically a rep will want to close out a territory so that it can be reflected into their ui
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Client.IntegrationToken.UserId">
+            <summary>
+            User Id
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Client.IntegrationToken.ExpirationDate">
+            <summary>
+            UTC DateTime 
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Commerce.Order.PersonID">
+            <summary>
+            Guid of the person who owns this order
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.UserID">
+            <summary>
+            Guid of the User file
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.PersonID">
+            <summary>
+            Guid of the Person.  A bit denormalized.  No foreign key or navigation.  Navigation done thorugh UserID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.UserName">
+            <summary>
+            The username used to log in (email address)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.PasswordHashed">
+            <summary>
+            The hash
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.PasswordRaw">
+            <summary>
+            Used to reset the password.  Sent in by user in the rawformat, but never stored, rather salted and hashed, then cleared
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.Salt">
+            <summary>
+            Salt used to calculate hash
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.ExpirationDate">
+            <summary>
+            date the password expires.  null for never
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credential.RequiresPasswordChange">
+            <summary>
+            Is the user required to change password on next loginn
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Credit.PrescreenInstant">
+            <summary>
+            Stores instant prescreen request and response data
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.Status">
+            <summary>
+            All batches will begin with a pending process, then will move into Processing once the qualification server is contacted
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.CompletionDate">
+            <summary>
+            The datetime that the process completed
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.ErrorString">
+            <summary>
+            If the processed errored out ... the service should populate this error string
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.PropertyID">
+            <summary>
+            The guid of the property to be prescreened
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.Reference">
+            <summary>
+            use this for any meta data, like the name of the person who passed, or other human readable data we may wish to return
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenInstant.CreditCategory">
+            <summary>
+            The best credit category available for this specific AddressID
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Credit.PrescreenBatch">
+            <summary>
+            The batch object for running prequals.  
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.PersonID">
+            <summary>
+            The guid of the person who ran ( and is accountable ) for the batch
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.Status">
+            <summary>
+            All batches will begin with a pending process, then will move into Processing once the qualification server is contacted
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.TerritoryID">
+            <summary>
+            The guid of the territory to prescreen
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.CompletionDate">
+            <summary>
+            The datetime that the process completed
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.ErrorString">
+            <summary>
+            If the processed errored out ... the service should populate this error string
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenBatch.Details">
+            <summary>
+            The system will populate the details.  The client only submits the Batch object  with the TerritoryID
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.Credit.PrescreenDetail">
+            <summary>
+            This class stores the AddressID and the result for each item in a batch.  The actual address data is stored in the Geo server, but the AddressID included here is the reference
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.BatchID">
+            <summary>
+            The guid of the batch that this belongs to
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.AddressID">
+            <summary>
+            The guid of the Address or Location in the Geo service
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.PropertyID">
+            <summary>
+            The guid of the Property in the TM server
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.Reference">
+            <summary>
+            use this for any meta data, like the name of the person who passed, or other human readable data we may wish to return
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Credit.PrescreenDetail.CreditCategory">
+            <summary>
+            The best credit category available for this specific AddressID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.ClientAPI.RoofPlaneEditDataView.Azimuth">
+            <summary>
+            New Azimuth value
+            Will only update this Azimuth if this property is set.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.ClientAPI.RoofPlaneEditDataView.Tilt">
+            <summary>
+            New Tilt value.
+            Will only update this Tilt if this property is set.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.ClientAPI.RoofPlaneEditDataView.Shading">
+            <summary>
+            New Shading value.
+            Will only update this Shading if this property is set.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Financing.FinancePlanDataModel.SBMeta">
+            <summary>
+            SmartBOARD meta data.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Financing.FinancePlanSmartBOARDMeta.LenderID">
+            <summary>
+            SmartBOARD provided lender ID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.FirstPeriodMonths">
+            <summary>
+            Number of months for 1st period
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.ITCMonth">
+            <summary>
+            Federal tax incentives applies in this month.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.Factor01">
+            <summary>
+            Factor used for 1st period
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.Factor02">
+            <summary>
+            Factor used for 2nd period when 30% is applied to Principal
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Financing.PaymentFactors.PaymentFactorsPlanData.Factor03">
+            <summary>
+            Factor used for 2nd period when 30% is not applied to Principal.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.OnBoarding.NewOUEquipmentDataView.DefaultLosses">
+            <summary>
+            It will be a JSON (array of <see cref="T:DataReef.TM.Models.DataViews.Settings.OrgSettingDataView"/>)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Settings.FinancingSettingsDataView.Data">
+            <summary>
+            Custom data, mostly regarding 3rd party integrations, payment factors, etc.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Settings.OUEventHandlerDataView.HandlerClassFullName">
+            <summary>
+            Full name (including namespace) of the Handler class
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.Settings.OUEventHandlerConditionDataView.Operator">
+            <summary>
+            "=", "!=" for now
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.OUIDs">
+            <summary>
+            Organization Guids
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.ExcludeOUs">
+            <summary>
+            Organization Guids to exclude.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.ItemsPerPage">
+            <summary>
+            Default value is 20
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.OUMembersRequest.SortOrder">
+            <summary>
+            "asc" or "desc". 
+            Default value is "asc"
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.DataViews.NewUser">
+            <summary>
+            The NewUser class is used to create a new user after verifying the users email address.  This is a data view ( special class ) and will
+            only be used for creating the new user
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.NewUser.InvitationGuid">
+            <summary>
+            The guid returned in the registration reservation process
+            </summary>
+            
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.NewUser.Password">
+            <summary>
+            The raw password (pre salted and hashed) for the user.  The system will salt, hash and clear from memory this password
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.NewUser.FirstName">
+            <summary>
+            First name of the Person
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DataViews.NewUser.LastName">
+            <summary>
+            Last Name of the Person
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.DataViews.NewUserRegistration">
+            <summary>
+            This is the class used to Pre Register the user.  The user enters his / her email address which will cause an email to be sent to that address
+            the email contains the User Registration Guid which will be subsequently used to confirm the registration and create the user
             </summary>
         </member>
         <member name="T:DataReef.TM.Models.Enums.ItemSyncStatus">

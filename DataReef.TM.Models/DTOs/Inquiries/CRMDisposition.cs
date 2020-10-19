@@ -17,8 +17,8 @@ namespace DataReef.TM.Models.DTOs.Inquiries
 
         public string Icon { get; set; }
         public int? SBTypeId { get; set; }
-        //public int Quota { get; set; }
-        //public int Commitments { get; set; }
+        public int Quota { get; set; }
+        public int Commitments { get; set; }
 
     }
 }

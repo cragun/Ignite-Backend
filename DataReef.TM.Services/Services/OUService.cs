@@ -2474,7 +2474,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<Territory> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens")
+        public List<Territory> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens,OU")
         {
             using (var context = new DataContext())
             {
@@ -2488,7 +2488,12 @@ namespace DataReef.TM.Services.Services
                     var ouTerritories = ouTerritoriesQuery.FirstOrDefault();
 
                     ouTerritories.IsFavourite = true;
-                    ouTerritories.shapeWKT = ouTerritories.WellKnownText;
+                    ouTerritories.shapeWKT = ouTerritories.WellKnownText; 
+
+                    if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && ouTerritories.OU != null)
+                    {
+                        OUService.PopulateOUSummary(ouTerritories.OU);
+                    }
 
                     territory.Add(ouTerritories);
                 }
