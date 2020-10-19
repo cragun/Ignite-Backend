@@ -8,7 +8,7 @@ namespace DataReef.TM.Contracts.Services
 {
     [ServiceContract]
     [ServiceKnownType("GetKnownTypes", typeof(KnownTypesProvider))]
-    public interface IQuotasCommitmentsService : IDataService<QuotasCommitments>
+    public interface IQuotasCommitmentsService : IDataService<QuotasCommitment>
     {
         [OperationContract]
         AdminQuotas GetQuotasType();
@@ -17,7 +17,7 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid,Guid ouID);
 
         [OperationContract]
-        QuotasCommitments InsertQuotas(QuotasCommitments request);
+        QuotasCommitment InsertQuotas(QuotasCommitment request);
         
     }
 }

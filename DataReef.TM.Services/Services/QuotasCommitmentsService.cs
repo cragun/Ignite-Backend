@@ -15,7 +15,7 @@ using DataReef.TM.Models.DataViews;
 
 namespace DataReef.TM.Services
 {
-    public class QuotasCommitmentsService : DataService<QuotasCommitments>, IQuotasCommitmentsService
+    public class QuotasCommitmentsService : DataService<QuotasCommitment>, IQuotasCommitmentsService
     {
         private readonly IOUService _ouService;
         private readonly IPersonService _personService;
@@ -61,7 +61,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public QuotasCommitments InsertQuotas(QuotasCommitments entity)
+        public QuotasCommitment InsertQuotas(QuotasCommitment entity)
         {
             entity.CreatedByID = SmartPrincipal.UserId;
             var ret = base.Insert(entity);

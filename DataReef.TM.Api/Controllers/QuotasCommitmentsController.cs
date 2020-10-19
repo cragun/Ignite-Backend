@@ -27,7 +27,7 @@ using DataReef.TM.Models.DTOs.QuotasCommitments;
 namespace DataReef.TM.Api.Controllers
 {
     [RoutePrefix("api/v1/quotascommitments")]
-    public class QuotasCommitmentsController : EntityCrudController<QuotasCommitments>
+    public class QuotasCommitmentsController : EntityCrudController<QuotasCommitment>
     {
         private readonly IQuotasCommitmentsService quotasCommitmentsService;
         public QuotasCommitmentsController(IQuotasCommitmentsService quotasCommitmentsService, ILogger logger) : base(quotasCommitmentsService, logger)
@@ -53,13 +53,12 @@ namespace DataReef.TM.Api.Controllers
 
         //add quotas by admin
         [HttpPost, Route("addQuotas")] 
-        public async Task<IHttpActionResult> InsertQuotas(QuotasCommitments request)
+        public async Task<IHttpActionResult> InsertQuotas(QuotasCommitment request)
         { 
             var ret = quotasCommitmentsService.InsertQuotas(request);
             return Ok(ret);
         }
-
-
+         
         //[HttpGet]
         //[ResponseType(typeof(List<AdminQuotas>))]
         //[Route("role/{roleID:guid}/users")]

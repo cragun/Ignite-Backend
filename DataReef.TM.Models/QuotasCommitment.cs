@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace DataReef.TM.Models
 {
     [Table("QuotasCommitments")]
-    public class QuotasCommitments : EntityBase
+    public class QuotasCommitment : EntityBase
     {
         [DataMember]
         public int Type { get; set; }
@@ -34,7 +34,7 @@ namespace DataReef.TM.Models
         #region Navigation Properties
 
         [DataMember]
-        [ForeignKey("OURoleID")]
+        [ForeignKey("RoleID")]
         public OURole OURole { get; set; }
          
         #endregion
