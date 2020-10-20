@@ -1050,23 +1050,23 @@ namespace DataReef.TM.Services.Services
             }
 
 
-            var mexicoProperties = new List<Property>();
-            using (DataContext dc = new DataContext())
-            {
-               var mexicodata =  dc.NewMexicoData.ToList().Take(10);
+            //var mexicoProperties = new List<Property>();
+            //using (DataContext dc = new DataContext())
+            //{
+            //   var mexicodata =  dc.NewMexicoData.ToList().Take(10);
 
-                foreach (var mexico in mexicodata)
-                {
-                    var property = Property.FromModel(mexico);
-                    property.TerritoryID = propertiesRequest.TerritoryID;
-                    mexicoProperties.Add(property);
-                }
-            }
+            //    foreach (var mexico in mexicodata)
+            //    {
+            //        var property = Property.FromModel(mexico);
+            //        property.TerritoryID = propertiesRequest.TerritoryID;
+            //        mexicoProperties.Add(property);
+            //    }
+            //}
 
-            //return propertiesRequest.PropertiesRequest != null
-            //    ? properties.Union(newProperties).ToList()
-            //    : newProperties;
-            return mexicoProperties;
+            return propertiesRequest.PropertiesRequest != null
+                ? properties.Union(newProperties).ToList()
+                : newProperties;
+           // return mexicoProperties;
         }
 
 
