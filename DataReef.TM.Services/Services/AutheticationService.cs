@@ -106,7 +106,7 @@ namespace DataReef.Application.Services
                     throw new ApplicationException("Invalid Password (Old Password) ");
                 }
 
-                AuthenticationToken token = this.Authenticate(userName, newPassword , fcm_token);
+                AuthenticationToken token = this.Authenticate(userName, newPassword, fcm_token);
                 return token;
 
             }
@@ -116,7 +116,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public AuthenticationToken CompletePasswordReset(Guid resetGuid, string newPassword , string fcm_token)
+        public AuthenticationToken CompletePasswordReset(Guid resetGuid, string newPassword, string fcm_token)
         {
             try
             {
@@ -222,7 +222,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public AuthenticationToken Authenticate(string userName, string password , string fcm_token)
+        public AuthenticationToken Authenticate(string userName, string password, string fcm_token)
         {
             using (DataContext dc = new DataContext())
             {
@@ -637,7 +637,7 @@ namespace DataReef.Application.Services
                         EmailAddressString = userInvitation.EmailAddress,
                         Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName),
                         StartDate = System.DateTime.UtcNow
-                };
+                    };
                     if (!string.IsNullOrEmpty(phoneNumber))
                     {
                         person.PhoneNumbers = new List<PhoneNumber> { new PhoneNumber
@@ -941,7 +941,7 @@ namespace DataReef.Application.Services
                         }
                     }
                 }
-                else 
+                else
                 {
                     using (var transaction = dc.Database.BeginTransaction())
                     {
@@ -966,7 +966,8 @@ namespace DataReef.Application.Services
                                     LastName = newUser.LastName,
                                     EmailAddressString = newUser.EmailAddress,
                                     SmartBoardID = newUser.ID,
-                                    Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName)
+                                    Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName),
+                                    StartDate = DateTime.UtcNow
                                 };
 
                                 if (!string.IsNullOrEmpty(newUser.PhoneNumber))
@@ -1053,7 +1054,7 @@ namespace DataReef.Application.Services
                                             dc.OUAssociations.Add(organizationalUnitAssociation);
                                         }
                                     }
-                                }    
+                                }
                             }
 
                             try
