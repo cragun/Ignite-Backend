@@ -957,6 +957,7 @@ namespace DataReef.Application.Services
                             User user = null;
                             Guid accountID = System.Guid.Empty;
 
+
                             if (credential == null)
                             {
                                 person = new Person
