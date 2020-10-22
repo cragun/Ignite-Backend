@@ -197,8 +197,7 @@ namespace GoogleMaps.LocationServices
                 Address = addressStreetNumber + " " + addressRoute + " " + addressSublocality,
                 Zip = addressPostalCode,
             };
-        }
-        
+        }               
 
 
         /// <summary>
