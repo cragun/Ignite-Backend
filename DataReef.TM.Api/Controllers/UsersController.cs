@@ -56,7 +56,6 @@ namespace DataReef.TM.Api.Controllers
 
         }
 
-
         [HttpGet]
         [ResponseType(typeof(Territory))]
         [Route("{userID:guid}/territories/{territoryID:guid}")]
