@@ -1,5 +1,6 @@
 ﻿using DataReef.Core;
 using DataReef.Core.Classes;
+using DataReef.Core.Infrastructure.Authorization;
 using DataReef.TM.Api.Bootstrap;
 using DataReef.TM.Api.Classes;
 using DataReef.TM.Contracts.Auth;
@@ -312,7 +313,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost, Route("createuser/smartboard")]
-        [AllowAnonymous]
+        [AllowAnonymous , InjectAuthPrincipal]
         [ResponseType(typeof(SaveResult))]
         public SaveResult CreateUserFromSB([FromBody]CreateUserDTO user)
         {
