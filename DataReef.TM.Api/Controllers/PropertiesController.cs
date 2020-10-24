@@ -276,7 +276,6 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-
         /// <summary>
         /// send data to sunnova website
         /// </summary>
