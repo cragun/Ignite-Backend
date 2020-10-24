@@ -94,15 +94,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             {
                 SunnovaProjects req = new SunnovaProjects();
                 
+                string number = property.GetMainPhoneNumber()?.Replace("-", "");
+                string email = property.GetMainEmailAddress();
+
                 Phone phone = new Phone();
-                phone.Number = property.GetMainPhoneNumber()?.Replace("-", "");
+                phone.Number = number == null ? "" : number;                                                                                                       
                 phone.Type = "Mobile";
 
                 Addresss addr = new Addresss();
                 addr.City = property.City;
-                addr.Country = "USA";
-                addr.Latitude = property.Latitude;
-                addr.Longitude = property.Longitude;
+                addr.Country = "USA"; 
+                addr.Latitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude)); 
+                addr.Longitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
                 addr.PostalCode = property.ZipCode;
                 addr.State = property.State;
                 addr.Street = property.Address1;
@@ -112,7 +115,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.FirstName = name.FirstName;
                 req.LastName = name.LastName;
                 req.Middle_Name = name.MiddleInitial;
-                req.Email = property.GetMainEmailAddress();
+                req.Email = email == null ? "" : email;
                 req.Phone = phone;
                 req.Address = addr;
                 req.external_id = property.ExternalID;
@@ -120,11 +123,36 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Preferred_Language = "English";
                 req.Suffix = "";
 
-                string token = GetSunnovaToken();
-                
+                //string token = GetSunnovaToken();
+                string token = "";
+
                 var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
+
+
+                var json = new JavaScriptSerializer().Serialize(req);
+
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = "testuser";
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "";
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "sunnovaleadresquest";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = "";
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = json.ToString();
+
+                using (var db = new DataContext())
+                {
+                    db.ApiLogEntries.Add(apilog); 
+                    db.SaveChanges();
+                }
 
                 var response = client.Execute(request);
 
