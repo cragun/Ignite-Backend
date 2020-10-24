@@ -30,630 +30,6 @@
             Navigation property for the Person
             </summary>
         </member>
-        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.HomeAge">
-            <summary>
-            Pipe delimited. e.g. min | max
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.SquareFootage">
-            <summary>
-            Pipe delimited. e.g. min | max
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.LengthOfResidence">
-            <summary>
-            Pipe delimited. e.g. min | max
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.EstimatedIncome">
-            <summary>
-            Pipe delimited. e.g. min | max
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Type">
-            <summary>
-            "Individual" or "Business"
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.TaxEntity">
-            <summary>
-            "Individual" or "Business"
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.SalesOwner">
-            <summary>
-            Sales owner's email
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Scheduler">
-            <summary>
-            Email address of the person who created the appointment
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Closer">
-            <summary>
-            Email address of the person who is assigned to the appointment
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Latitude">
-            <summary>
-            Latitude for the property location
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Longitude">
-            <summary>
-            Longitude for the property location
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.UtilityProviderID">
-            <summary>
-            ID of the utility provider linked to the lead
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.UtilityProviderName">
-            <summary>
-            Name of the utility provider linked to the lead
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.EventDate">
-            <summary>
-            Date in YYYY-MM-DD format
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.StartTime">
-            <summary>
-            Start time in HH:MM AM/PM format
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.EndTime">
-            <summary>
-            Start time in HH:MM AM/PM format
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.SBAppointmentType">
-            <summary>
-            SMARTBoard appointment type ID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadKwhModel.TotalConsumptionInKwH">
-            <summary>
-            Total consumption in kW
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.ServiceType">
-            <summary>
-            Residential or Commercial
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.UtilityName">
-            <summary>
-            Name of utility
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.ServiceConfigVoltage">
-            <summary>
-            Power spec, i.e. "240 V : 120 V Split Phase"
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.UtilityAccountNumber">
-            <summary>
-            Customer's utility account number
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.AverageMonthlyBill">
-            <summary>
-            Average monthly bill
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.AnnualConsumption">
-            <summary>
-            Annual usage in kwh
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.AverageConsumption">
-            <summary>
-            Average monthly usage in kwh
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.TotalAnnualBill">
-            <summary>
-            Total annual bill
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBUsageModel.AnnualConsumption">
-            <summary>
-            Annual consumption in watts
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalDataModel.SystemSize">
-            <summary>
-            In kW
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalDataModel.Y1SolarProduction">
-            <summary>
-            In kWh
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalDataModel.UsageOffset">
-            <summary>
-            Percentage
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalMonthData.Production">
-            <summary>
-            In kWh
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Persons.PersonKPIScreenshotRequest.ScreenshotData">
-            <summary>
-            Base64 encoded value of the screenshot data used in personKPI
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.AuditItem.ItemIDs">
-            <summary>
-            Audited item IDs (image ID)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.SystemTypeName">
-            <summary>
-            Name of the System found at SystemTypeID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.PropertyName">
-            <summary>
-            Name of the property for this attachment
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.OUName">
-            <summary>
-            Organization name for the property of this attachment
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.TerritoryName">
-            <summary>
-            Territory name for the property of this attachment
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.AttachmentTypeName">
-            <summary>
-            Name of the Attachment type matching AttachmentTypeID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.SalesAgent">
-            <summary>
-            Name of the person identified with CreatedByID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.PropertyAttachmentDTO.AttachmentTypeID">
-            <summary>
-            ID of the Attachment option found at Legion.Features.Property.Attachments.Options
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.DTOs.PropertyAttachments.SBAttachmentsDTO">
-            <summary>
-            Class used to pass property attachment information to SmartBOARD.
-            It includes both the definitions and the data.
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.PropertyAttachmentID">
-            <summary>
-            ID of the property attachment for which to upload the images
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.PropertyAttachmentItemID">
-            <summary>
-            Optional parameter. If present, the images will be linked to the specified ID. If not present, the attachment item will be identified or created through SectionID and ItemID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.SectionID">
-            <summary>
-            Optional parameter. Will be used to identify attachment item if ID is not present. If attachment item is not identified, one will be created from this and ItemID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.ItemID">
-            <summary>
-            Optional parameter. Will be used to identify attachment item if ID is not present. If attachment item is not identified, one will be created from this and SectionID
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Content">
-            <summary>
-            Base64 representation of the media content
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.ContentType">
-            <summary>
-            Item content-type
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Notes">
-            <summary>
-            Optional image notes
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.SBNoteDTO.APIKey">
-            <summary>
-            You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
-            </summary>
-            
-        </member>
-        <member name="T:DataReef.TM.Models.DTOs.Signatures.DocumentSignRequest">
-            <summary>
-            Class used 
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.DocumentSignRequest.ProposalDataJSON">
-            <summary>
-            Custom Proposal Specific data serialized as JSON
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.BaseUserInputData.DataJSON">
-            <summary>
-            UserInput specific custom data serialized as JSON
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.DTOs.Signatures.UserInputDataLinks">
-            <summary>
-            Class that will store links to content on 3rd party storage (e.g. AWS - S3)
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.BaseDocumentData.DataJSON">
-            <summary>
-            Document specific data serialzied as JSON
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.DocumentData.Content">
-            <summary>
-            can be a string for text, or a base64 encoded image
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.DocumentDataLink.ContentURL">
-            <summary>
-            Link to content
-            </summary>
-        </member>
-        <member name="T:DataReef.TM.Models.DTOs.Signatures.Proposals.Proposal2DataView">
-            <summary>
-            This model is created to be used by the html proposal... for now
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.Proposal2DataView.ProposalDataJSON">
-            <summary>
-            Dynamic object, containing proposal data set by the customer/sales rep before signing the proposal
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.ProposalDVConstructor.ForecastTermInYears">
-            <summary>
-            Number of years used to generate the Forecast data
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.ProposalEnergy.EnergyData">
-            <summary>
-            Production and Consumption data for 12 months
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.ForecastBase.StateTaxIncentive">
-            <summary>
-            The amount of money that are being received from the states that offer this incentive
-            </summary>
-        </member>
-        <member name="M:DataReef.TM.Models.DTOs.Signatures.Proposals.SystemCostItem.#ctor(DataReef.TM.Models.Solar.AdderItem,System.Int32,System.Boolean)">
-            <summary>
-            Create a SystemCostItem using data from an AdderItem
-            </summary>
-            <param name="adder"></param>
-            <param name="systemSize">System Size in Watts</param>
-            <param name="roundAmounts"></param>
-        </member>
-        <member name="T:DataReef.TM.Models.DTOs.Signatures.DispositionDataView">
-            <summary>
-            Disposition
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.IsArchive">
-            <summary>
-                When double knocking, all inquiries are Archived before starting the double knock.  So we know which
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.IsLead">
-            <summary>
-                this person was interested and should be followed
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.Lat">
-            <summary>
-                Longitude at the time of the inquiry
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.Lon">
-            <summary>
-                Latitude at the time of the inquiry
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.MergeField.Value">
-            <summary>
-            can be a string for text, or a base64 encoded image
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.FederalTaxIncentive">
-            <summary>
-            The amount of federal money that are being received 
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.StateTaxIncentive">
-            <summary>
-            The amount of money that are being received from the states that offer this incentive
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.PBI">
-            <summary>
-            Performance-based incentives
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.SREC">
-            <summary>
-            Solar Renewable Energy Credit
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.PricePerWatt">
-            <example>$5.00</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.CurrentMonthlyBill">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.MonthlyBillIn25Years">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalElectricityBillWithSolar">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalElectricityBillWithoutSolar">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.UtilityInflationRate">
-            <example>4.90%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.FirstYearProduction">
-            <example>11,066 kWh</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalProduction">
-            <example>11,066 kWh</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SolarPowerPercentage">
-            <example>89%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.UtilityPowerPercentage">
-            <summary>100 - SolarPowerPercentage</summary>
-            <example>11%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalSolarPaymentsCost">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalBenefitsAndIncentives">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalPaidByUser">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.YearlySavings">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.UtilityPowerCost">
-            <example>$0.441</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SolarPowerCost">
-            <example>$0.323</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.IntroMonthlyPayment">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.MonthlyPayment">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SolarSystemCost">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalFederalInvestmentTaxCredit">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalStateTaxIncentive">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalPBI">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalSREC">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalUpfrontRebate">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.InterestRate">
-            <example>4.99%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.LoanTermInYears">
-            <example>20 years</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.ScenarioTermInYears">
-            <example>25 years</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.CurrentAnnualBill">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SystemSize">
-            price in watts
-             <example>6910</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.AnnualSystemDegradation">
-            <example>0.5%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.DownPayment">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalExtraCosts">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.AmountFinanced">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.EquipmentInfo">
-            <example>
-            3 Sunniva 285 W, 22 Sunniva 275 W
-            SolarEdge Inverter w/ power optimizers
-            </example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.Date">
-            <summary>MM/dd/yyyy</summary>
-            <example>08/18/2016</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.PowerMetaData">
-            <summary>
-            Consumption / bill data entered by the sales rep
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.Losses">
-            <summary>
-            Name options: [Solar.SystemLosses.Soiling, Solar.SystemLosses.Snow, Solar.SystemLosses.Mismatch, Solar.SystemLosses.Wiring, Solar.SystemLosses.Connections, Solar.SystemLosses.LightInductedDegradation, Solar.SystemLosses.NamePlateRating, Solar.SystemLosses.Age, Solar.SystemLosses.Availability]
-            </summary>        
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.PVWattData">
-            <summary>
-            Name options: [Genability.CreateAccount, Genability.ChangeAccountProperty, Genability.CalculateSavingAnalysis, Genability.CalculateCost, Genability.GetPriceResult, Genability.GetRecommendedPrice, Genability.GetTarrifs, Genability.GetZipCodeTariffs, Genability.GetUsageProfile, Genability.GetMonthPresolarConsumption, Genability.GetLSEs, Genability.UpsertSolarProfileWithIntegratedPVWatts, Genability.UpsertUsageProfile]
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.PricePerWatt">
-            <example>$5.00</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.CurrentMonthlyBill">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.MonthlyBillIn25Years">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalElectricityBillWithSolar">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalElectricityBillWithoutSolar">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.UtilityInflationRate">
-            <example>4.90%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.FirstYearProduction">
-            <example>11,066 kWh</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalProduction">
-            <example>11,066 kWh</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SolarPowerPercentage">
-            <example>89%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.UtilityPowerPercentage">
-            <summary>100 - SolarPowerPercentage</summary>
-            <example>11%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalSolarPaymentsCost">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalBenefitsAndIncentives">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalPaidByUser">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalSavings">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.YearlySavings">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.UtilityPowerCost">
-            <example>$0.441</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SolarPowerCost">
-            <example>$0.323</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.IntroMonthlyPayment">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.MonthlyPayment">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SolarSystemCost">
-            <example>$1,242.05</example>; SystemCost with tax
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalExtraCosts">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalFederalInvestmentTaxCredit">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalStateTaxIncentive">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalPBI">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalSREC">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalUpfrontRebate">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.InterestRate">
-            <example>4.99%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.LoanTermInYears">
-            <example>20 years</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.ScenarioTermInYears">
-            <example>25 years</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.CurrentAnnualBill">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SystemSize">
-            <example>6.91 kW</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.AnnualSystemDegradation">
-            <example>0.5%</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.DownPayment">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.AmountFinanced">
-            <example>$1,242.05</example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.EquipmentInfo">
-            <example>
-            3 Sunniva 285 W, 22 Sunniva 275 W
-            SolarEdge Inverter w/ power optimizers
-            </example>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.Date">
-            <summary>MM/dd/yyyy</summary>
-            <example>08/18/2016</example>
-        </member>
-        <member name="T:DataReef.TM.Models.DTOs.Signatures.Recipient">
-            <summary>
-            A signer or mail receiver of a document
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.UserInput.Content">
-            <summary>
-            base64 encoded binary
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.UserInput.Validation">
-            <summary>
-            list of base64 encoded binary Validation Images
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Signatures.SignDocumentRequest.EmbeddedSigning">
-            <summary>
-            If true, the signing was done on the spot through the app; otherwise, the signing was done through e-mail
-            </summary>
-        </member>
         <member name="M:DataReef.TM.Models.DTOs.Solar.Finance.Incentive.GetGrandTotal(System.Int64)">
             <summary>
             Get the total incentives for all period
@@ -3562,6 +2938,630 @@
         <member name="P:DataReef.TM.Models.DTOs.Solar.MonthlyPower.ProductionInKwh">
             <summary>
             KiloWatts produced in a month by the solar array.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.HomeAge">
+            <summary>
+            Pipe delimited. e.g. min | max
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.SquareFootage">
+            <summary>
+            Pipe delimited. e.g. min | max
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.LengthOfResidence">
+            <summary>
+            Pipe delimited. e.g. min | max
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Commerce.CreateLeadsDto.EstimatedIncome">
+            <summary>
+            Pipe delimited. e.g. min | max
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Type">
+            <summary>
+            "Individual" or "Business"
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.TaxEntity">
+            <summary>
+            "Individual" or "Business"
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.SalesOwner">
+            <summary>
+            Sales owner's email
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Scheduler">
+            <summary>
+            Email address of the person who created the appointment
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Closer">
+            <summary>
+            Email address of the person who is assigned to the appointment
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Latitude">
+            <summary>
+            Latitude for the property location
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.Longitude">
+            <summary>
+            Longitude for the property location
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.UtilityProviderID">
+            <summary>
+            ID of the utility provider linked to the lead
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadModel.UtilityProviderName">
+            <summary>
+            Name of the utility provider linked to the lead
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.EventDate">
+            <summary>
+            Date in YYYY-MM-DD format
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.StartTime">
+            <summary>
+            Start time in HH:MM AM/PM format
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.EndTime">
+            <summary>
+            Start time in HH:MM AM/PM format
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBAppointmentModel.SBAppointmentType">
+            <summary>
+            SMARTBoard appointment type ID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBLeadKwhModel.TotalConsumptionInKwH">
+            <summary>
+            Total consumption in kW
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.ServiceType">
+            <summary>
+            Residential or Commercial
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.UtilityName">
+            <summary>
+            Name of utility
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.ServiceConfigVoltage">
+            <summary>
+            Power spec, i.e. "240 V : 120 V Split Phase"
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.UtilityAccountNumber">
+            <summary>
+            Customer's utility account number
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.AverageMonthlyBill">
+            <summary>
+            Average monthly bill
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.AnnualConsumption">
+            <summary>
+            Annual usage in kwh
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.AverageConsumption">
+            <summary>
+            Average monthly usage in kwh
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBEnergyUtilityModel.TotalAnnualBill">
+            <summary>
+            Total annual bill
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBUsageModel.AnnualConsumption">
+            <summary>
+            Annual consumption in watts
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalDataModel.SystemSize">
+            <summary>
+            In kW
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalDataModel.Y1SolarProduction">
+            <summary>
+            In kWh
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalDataModel.UsageOffset">
+            <summary>
+            Percentage
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalMonthData.Production">
+            <summary>
+            In kWh
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Persons.PersonKPIScreenshotRequest.ScreenshotData">
+            <summary>
+            Base64 encoded value of the screenshot data used in personKPI
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.AuditItem.ItemIDs">
+            <summary>
+            Audited item IDs (image ID)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.SystemTypeName">
+            <summary>
+            Name of the System found at SystemTypeID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.PropertyName">
+            <summary>
+            Name of the property for this attachment
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.OUName">
+            <summary>
+            Organization name for the property of this attachment
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.TerritoryName">
+            <summary>
+            Territory name for the property of this attachment
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.AttachmentTypeName">
+            <summary>
+            Name of the Attachment type matching AttachmentTypeID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.ExtendedPropertyAttachmentDTO.SalesAgent">
+            <summary>
+            Name of the person identified with CreatedByID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.PropertyAttachmentDTO.AttachmentTypeID">
+            <summary>
+            ID of the Attachment option found at Legion.Features.Property.Attachments.Options
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.DTOs.PropertyAttachments.SBAttachmentsDTO">
+            <summary>
+            Class used to pass property attachment information to SmartBOARD.
+            It includes both the definitions and the data.
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.PropertyAttachmentID">
+            <summary>
+            ID of the property attachment for which to upload the images
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.PropertyAttachmentItemID">
+            <summary>
+            Optional parameter. If present, the images will be linked to the specified ID. If not present, the attachment item will be identified or created through SectionID and ItemID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.SectionID">
+            <summary>
+            Optional parameter. Will be used to identify attachment item if ID is not present. If attachment item is not identified, one will be created from this and ItemID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.UploadImageToPropertyAttachmentRequest.ItemID">
+            <summary>
+            Optional parameter. Will be used to identify attachment item if ID is not present. If attachment item is not identified, one will be created from this and SectionID
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Content">
+            <summary>
+            Base64 representation of the media content
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.ContentType">
+            <summary>
+            Item content-type
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Notes">
+            <summary>
+            Optional image notes
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.SBNoteDTO.APIKey">
+            <summary>
+            You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
+            </summary>
+            
+        </member>
+        <member name="T:DataReef.TM.Models.DTOs.Signatures.DocumentSignRequest">
+            <summary>
+            Class used 
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.DocumentSignRequest.ProposalDataJSON">
+            <summary>
+            Custom Proposal Specific data serialized as JSON
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.BaseUserInputData.DataJSON">
+            <summary>
+            UserInput specific custom data serialized as JSON
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.DTOs.Signatures.UserInputDataLinks">
+            <summary>
+            Class that will store links to content on 3rd party storage (e.g. AWS - S3)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.BaseDocumentData.DataJSON">
+            <summary>
+            Document specific data serialzied as JSON
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.DocumentData.Content">
+            <summary>
+            can be a string for text, or a base64 encoded image
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.DocumentDataLink.ContentURL">
+            <summary>
+            Link to content
+            </summary>
+        </member>
+        <member name="T:DataReef.TM.Models.DTOs.Signatures.Proposals.Proposal2DataView">
+            <summary>
+            This model is created to be used by the html proposal... for now
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.Proposal2DataView.ProposalDataJSON">
+            <summary>
+            Dynamic object, containing proposal data set by the customer/sales rep before signing the proposal
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.ProposalDVConstructor.ForecastTermInYears">
+            <summary>
+            Number of years used to generate the Forecast data
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.ProposalEnergy.EnergyData">
+            <summary>
+            Production and Consumption data for 12 months
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.Proposals.ForecastBase.StateTaxIncentive">
+            <summary>
+            The amount of money that are being received from the states that offer this incentive
+            </summary>
+        </member>
+        <member name="M:DataReef.TM.Models.DTOs.Signatures.Proposals.SystemCostItem.#ctor(DataReef.TM.Models.Solar.AdderItem,System.Int32,System.Boolean)">
+            <summary>
+            Create a SystemCostItem using data from an AdderItem
+            </summary>
+            <param name="adder"></param>
+            <param name="systemSize">System Size in Watts</param>
+            <param name="roundAmounts"></param>
+        </member>
+        <member name="T:DataReef.TM.Models.DTOs.Signatures.DispositionDataView">
+            <summary>
+            Disposition
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.IsArchive">
+            <summary>
+                When double knocking, all inquiries are Archived before starting the double knock.  So we know which
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.IsLead">
+            <summary>
+                this person was interested and should be followed
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.Lat">
+            <summary>
+                Longitude at the time of the inquiry
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.DispositionDataView.Lon">
+            <summary>
+                Latitude at the time of the inquiry
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.MergeField.Value">
+            <summary>
+            can be a string for text, or a base64 encoded image
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.FederalTaxIncentive">
+            <summary>
+            The amount of federal money that are being received 
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.StateTaxIncentive">
+            <summary>
+            The amount of money that are being received from the states that offer this incentive
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.PBI">
+            <summary>
+            Performance-based incentives
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalYearDataView.SREC">
+            <summary>
+            Solar Renewable Energy Credit
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.PricePerWatt">
+            <example>$5.00</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.CurrentMonthlyBill">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.MonthlyBillIn25Years">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalElectricityBillWithSolar">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalElectricityBillWithoutSolar">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.UtilityInflationRate">
+            <example>4.90%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.FirstYearProduction">
+            <example>11,066 kWh</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalProduction">
+            <example>11,066 kWh</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SolarPowerPercentage">
+            <example>89%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.UtilityPowerPercentage">
+            <summary>100 - SolarPowerPercentage</summary>
+            <example>11%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalSolarPaymentsCost">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalBenefitsAndIncentives">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalPaidByUser">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.YearlySavings">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.UtilityPowerCost">
+            <example>$0.441</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SolarPowerCost">
+            <example>$0.323</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.IntroMonthlyPayment">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.MonthlyPayment">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SolarSystemCost">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalFederalInvestmentTaxCredit">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalStateTaxIncentive">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalPBI">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalSREC">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalUpfrontRebate">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.InterestRate">
+            <example>4.99%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.LoanTermInYears">
+            <example>20 years</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.ScenarioTermInYears">
+            <example>25 years</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.CurrentAnnualBill">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.SystemSize">
+            price in watts
+             <example>6910</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.AnnualSystemDegradation">
+            <example>0.5%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.DownPayment">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.TotalExtraCosts">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.AmountFinanced">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.EquipmentInfo">
+            <example>
+            3 Sunniva 285 W, 22 Sunniva 275 W
+            SolarEdge Inverter w/ power optimizers
+            </example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.Date">
+            <summary>MM/dd/yyyy</summary>
+            <example>08/18/2016</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.PowerMetaData">
+            <summary>
+            Consumption / bill data entered by the sales rep
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.Losses">
+            <summary>
+            Name options: [Solar.SystemLosses.Soiling, Solar.SystemLosses.Snow, Solar.SystemLosses.Mismatch, Solar.SystemLosses.Wiring, Solar.SystemLosses.Connections, Solar.SystemLosses.LightInductedDegradation, Solar.SystemLosses.NamePlateRating, Solar.SystemLosses.Age, Solar.SystemLosses.Availability]
+            </summary>        
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalUnformattedDataView.PVWattData">
+            <summary>
+            Name options: [Genability.CreateAccount, Genability.ChangeAccountProperty, Genability.CalculateSavingAnalysis, Genability.CalculateCost, Genability.GetPriceResult, Genability.GetRecommendedPrice, Genability.GetTarrifs, Genability.GetZipCodeTariffs, Genability.GetUsageProfile, Genability.GetMonthPresolarConsumption, Genability.GetLSEs, Genability.UpsertSolarProfileWithIntegratedPVWatts, Genability.UpsertUsageProfile]
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.PricePerWatt">
+            <example>$5.00</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.CurrentMonthlyBill">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.MonthlyBillIn25Years">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalElectricityBillWithSolar">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalElectricityBillWithoutSolar">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.UtilityInflationRate">
+            <example>4.90%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.FirstYearProduction">
+            <example>11,066 kWh</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalProduction">
+            <example>11,066 kWh</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SolarPowerPercentage">
+            <example>89%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.UtilityPowerPercentage">
+            <summary>100 - SolarPowerPercentage</summary>
+            <example>11%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalSolarPaymentsCost">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalBenefitsAndIncentives">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalPaidByUser">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalSavings">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.YearlySavings">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.UtilityPowerCost">
+            <example>$0.441</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SolarPowerCost">
+            <example>$0.323</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.IntroMonthlyPayment">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.MonthlyPayment">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SolarSystemCost">
+            <example>$1,242.05</example>; SystemCost with tax
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalExtraCosts">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalFederalInvestmentTaxCredit">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalStateTaxIncentive">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalPBI">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalSREC">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.TotalUpfrontRebate">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.InterestRate">
+            <example>4.99%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.LoanTermInYears">
+            <example>20 years</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.ScenarioTermInYears">
+            <example>25 years</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.CurrentAnnualBill">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.SystemSize">
+            <example>6.91 kW</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.AnnualSystemDegradation">
+            <example>0.5%</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.DownPayment">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.AmountFinanced">
+            <example>$1,242.05</example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.EquipmentInfo">
+            <example>
+            3 Sunniva 285 W, 22 Sunniva 275 W
+            SolarEdge Inverter w/ power optimizers
+            </example>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.ProposalDataView.Date">
+            <summary>MM/dd/yyyy</summary>
+            <example>08/18/2016</example>
+        </member>
+        <member name="T:DataReef.TM.Models.DTOs.Signatures.Recipient">
+            <summary>
+            A signer or mail receiver of a document
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.UserInput.Content">
+            <summary>
+            base64 encoded binary
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.UserInput.Validation">
+            <summary>
+            list of base64 encoded binary Validation Images
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Signatures.SignDocumentRequest.EmbeddedSigning">
+            <summary>
+            If true, the signing was done on the spot through the app; otherwise, the signing was done through e-mail
             </summary>
         </member>
         <member name="T:DataReef.TM.Models.ApiToken">

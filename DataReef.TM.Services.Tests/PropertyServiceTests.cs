@@ -27,6 +27,7 @@ namespace DataReef.TM.Services.Tests
         private Mock<IDeviceService> _deviceServiceMock;
         private Mock<ISolarSalesTrackerAdapter> _sbAdapter;
         private Mock<ISunlightAdapter> _sunlightAdapter;
+        private Mock<ISunnovaAdapter> _sunnovaAdapter;
         private Mock<IOUService> _ouService;
         private Mock<IOUSettingService> _ouSettingService;
         private Mock<ITerritoryService> _territoryService;
@@ -41,6 +42,7 @@ namespace DataReef.TM.Services.Tests
             _deviceServiceMock = new Mock<IDeviceService>();
             _sbAdapter = new Mock<ISolarSalesTrackerAdapter>();
             _sunlightAdapter = new Mock<ISunlightAdapter>();
+            _sunnovaAdapter = new Mock<ISunnovaAdapter>();
             _ouService = new Mock<IOUService>();
             _ouSettingService = new Mock<IOUSettingService>();
             _territoryService = new Mock<ITerritoryService>();
@@ -55,6 +57,7 @@ namespace DataReef.TM.Services.Tests
                 new Lazy<IDeviceService>(() => _deviceServiceMock.Object),
                 new Lazy<ISolarSalesTrackerAdapter>(() => _sbAdapter.Object),
                 new Lazy<ISunlightAdapter>(() => _sunlightAdapter.Object),
+                new Lazy<ISunnovaAdapter>(() => _sunnovaAdapter.Object),
                 new Lazy<IOUService>(() => _ouService.Object),
                 new Lazy<IOUSettingService>(() => _ouSettingService.Object),
                 new Lazy<ITerritoryService>(() => _territoryService.Object),
