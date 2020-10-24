@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="ApiKey.cs" />
     <Compile Include="DTOs\QuotasCommitments\AdminQuotas.cs" />
+    <Compile Include="DTOs\Solar\Finance\SunnovaLead.cs" />
     <Compile Include="NewMexicoData.cs" />
     <Compile Include="ApiLogEntry.cs" />
     <Compile Include="ApiToken.cs" />

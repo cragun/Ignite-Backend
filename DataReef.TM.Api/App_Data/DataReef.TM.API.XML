@@ -775,6 +775,13 @@
             Invalidate cache for OUsController GET methods.
             </summary>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.SendLeadSunnova(System.Guid)">
+            <summary>
+            send data to sunnova website
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.SignaturesController.SignCompleted">
             <summary>
             The requests should not reach this endpoint, as the client app should intercept the RightSignature redirect and close the signature screen.

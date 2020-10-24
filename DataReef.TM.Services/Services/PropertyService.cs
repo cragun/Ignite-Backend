@@ -16,6 +16,7 @@ using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Geo;
 using DataReef.TM.Models.PubSubMessaging;
@@ -40,6 +41,7 @@ using System.Net.Http.Headers;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using Property = DataReef.TM.Models.Property;
@@ -62,6 +64,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
+        private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
         private readonly Lazy<ISmsService> _smsService;
 
         private static string BaseURL = "http://www.esiids.com/cgi-bin/esiids_xml.cgi?";
@@ -86,6 +89,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IDeviceService> deviceService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Lazy<ISunlightAdapter> sunlightAdapter,
+            Lazy<ISunnovaAdapter> sunnovaAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
@@ -99,6 +103,7 @@ namespace DataReef.TM.Services.Services
             _deviceService = deviceService;
             _sbAdapter = sbAdapter;
             _sunlightAdapter = sunlightAdapter;
+            _sunnovaAdapter = sunnovaAdapter;
             _ouService = ouService;
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
@@ -1066,7 +1071,7 @@ namespace DataReef.TM.Services.Services
             return propertiesRequest.PropertiesRequest != null
                 ? properties.Union(newProperties).ToList()
                 : newProperties;
-           // return mexicoProperties;
+            // return mexicoProperties;
         }
 
 
@@ -1630,6 +1635,41 @@ namespace DataReef.TM.Services.Services
                     return true;
                 }
             }
+        }
+
+        public async Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid)
+        {
+            List<SunnovaLead> lead;
+            using (var dataContext = new DataContext())
+            {
+               var prop = dataContext.Properties.Include(y => y.Occupants).Where(x => x.Guid == propertyid).FirstOrDefault();
+                lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
+
+                var json = new JavaScriptSerializer().Serialize(lead);
+
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = SmartPrincipal.UserId.ToString();
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "";
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "sunnovaleadresponse";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = "";
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = json.ToString();
+
+                using (var dc = new DataContext())
+                {
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+                }
+            }
+
+            return lead;
         }
     }
 }

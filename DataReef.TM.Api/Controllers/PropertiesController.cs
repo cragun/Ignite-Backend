@@ -275,5 +275,25 @@ namespace DataReef.TM.Api.Controllers
                 }
             }
         }
+
+        /// <summary>
+        /// send data to sunnova website
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <returns></returns>
+        [Route("SendLeadSunnova/{propertyID:guid}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> SendLeadSunnova(Guid propertyID)
+        {
+            try
+            {
+                var result = await propertyService.SendLeadSunnova(propertyID);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
     }
 }

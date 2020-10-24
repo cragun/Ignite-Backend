@@ -9,6 +9,7 @@ using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using System.Threading.Tasks;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -76,6 +77,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         Task<bool> IsPropertyAvailable(long igniteId);
+
+        [OperationContract]
+        Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid);
 
     }
 }
