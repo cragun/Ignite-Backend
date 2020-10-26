@@ -1,22 +1,16 @@
 ﻿using DataReef.Core.Attributes;
-using DataReef.TM.Contracts.Services;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
-using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.DTOs.Solar.Finance;
-using DataReef.TM.Models.Finance;
-using DataReef.TM.Models.Solar;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
