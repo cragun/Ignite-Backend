@@ -120,7 +120,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 //string token = GetSunnovaToken();
                 string token = "";
 
-                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
+                var request = new RestRequest($"/services/v1.1/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
 
@@ -147,7 +147,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                     db.ApiLogEntries.Add(apilog); 
                     db.SaveChanges();
                 }
-
+                 
                 var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -156,7 +156,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 }
 
                 var content = response.Content;
-                var ReqJson = new JavaScriptSerializer().Serialize(req);
                 var ret = JsonConvert.DeserializeObject<List<SunnovaLead>>(content);
 
                 return ret;
