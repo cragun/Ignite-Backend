@@ -971,7 +971,6 @@ namespace DataReef.Application.Services
                                     StartDate = DateTime.UtcNow
                                 };
 
-
                                 if (!string.IsNullOrEmpty(newUser.PhoneNumber))
                                 {
                                     person.PhoneNumbers = new List<PhoneNumber> { new PhoneNumber
