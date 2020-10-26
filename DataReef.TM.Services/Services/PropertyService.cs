@@ -1644,6 +1644,8 @@ namespace DataReef.TM.Services.Services
             {
                var prop = dataContext.Properties.Include(y => y.Occupants).Where(x => x.Guid == propertyid).FirstOrDefault();
                 lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
+                prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
+                dataContext.SaveChanges();
 
                 var json = new JavaScriptSerializer().Serialize(lead);
 
