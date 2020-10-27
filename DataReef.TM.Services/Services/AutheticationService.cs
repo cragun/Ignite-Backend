@@ -893,7 +893,14 @@ namespace DataReef.Application.Services
                               .FirstOrDefault(x =>
                               {
                                   var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
-                                  return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                                  if (selectedIntegrations != null)
+                                  {
+                                      return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                                  }
+                                  else
+                                  {
+                                      return false;
+                                  }
                               });
 
                                 if (ouSetting == null)
@@ -1031,7 +1038,7 @@ namespace DataReef.Application.Services
                                       return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
                                   }
                                   else
-                                  { 
+                                  {
                                       return false;
                                   }
                               });
