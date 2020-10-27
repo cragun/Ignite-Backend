@@ -862,6 +862,7 @@ namespace DataReef.Application.Services
                                 isExist.EmailAddressString = newUser.EmailAddress;
                             }
 
+
                             if (!String.IsNullOrEmpty(newUser.PhoneNumber))
                             {
                                 var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
