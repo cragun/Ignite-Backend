@@ -173,6 +173,7 @@ namespace DataReef.Auth.Helpers
 
             return APIKEY;
         }
+
         public static bool checkTime(string apikey)
         {
             byte[] encodedDataAsBytes = System.Convert.FromBase64String(apikey);
