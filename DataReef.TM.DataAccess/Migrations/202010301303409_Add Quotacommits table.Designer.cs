@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class GenabilitySolarProviderProfileID : IMigrationMetadata
+    public sealed partial class AddQuotacommitstable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(GenabilitySolarProviderProfileID));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddQuotacommitstable));
         
         string IMigrationMetadata.Id
         {
-            get { return "201603011625551_GenabilitySolarProviderProfileID"; }
+            get { return "202010301303409_Add Quotacommits table"; }
         }
         
         string IMigrationMetadata.Source
