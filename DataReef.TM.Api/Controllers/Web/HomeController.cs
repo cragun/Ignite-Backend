@@ -43,6 +43,7 @@ namespace DataReef.TM.Api.Controllers.Web
             return PartialView("UserInvitation", customUrl);
         }
 
+
         /// <summary>
         /// This action is used as a proxy from an email messages to custom URLs intended for the mobile app to handle
         /// You'll need to send the action and the parameters
