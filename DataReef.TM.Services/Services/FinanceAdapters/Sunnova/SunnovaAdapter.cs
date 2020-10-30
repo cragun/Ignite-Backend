@@ -63,7 +63,30 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 var request = new RestRequest($"/gettoken/authentication", Method.GET);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
-                var response = client.Execute(request);
+                var response = client.Execute(request);               
+
+                var json = new JavaScriptSerializer().Serialize(response);
+
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = "testuser";
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "";
+                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteData = "";
+                apilog.RequestIpAddress = "";
+                apilog.RequestMethod = "sunnovatokenresponse";
+                apilog.RequestHeaders = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = "";
+                apilog.ResponseContentBody = "";
+                apilog.RequestContentBody = json.ToString();
+
+                using (var db = new DataContext())
+                {
+                    db.ApiLogEntries.Add(apilog);
+                    db.SaveChanges();
+                }
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
