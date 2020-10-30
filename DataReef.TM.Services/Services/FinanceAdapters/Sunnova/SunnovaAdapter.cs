@@ -120,7 +120,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 //string token = GetSunnovaToken();
                 string token = "";
 
-                var request = new RestRequest($"/services/v1.1/leads", Method.POST);
+                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
 
