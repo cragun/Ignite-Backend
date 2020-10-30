@@ -101,6 +101,7 @@ namespace DataReef.TM.DataAccess.Database
         public DbSet<OUMediaItem> OUMediaItems { get; set; }
         public DbSet<AppSetting> AppSettings { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<QuotasCommitment> QuotasCommitments { get; set; }
 
         //Agreements
         public DbSet<Agreement> Agreements { get; set; }

@@ -277,6 +277,7 @@
     <Compile Include="Services\ProposalIntegrationAuditService.cs" />
     <Compile Include="Services\PushNotificationService.cs" />
     <Compile Include="Services\PushSubscriptionService.cs" />
+    <Compile Include="Services\QuotasCommitmentsService.cs" />
     <Compile Include="Services\SmsService.cs" />
     <Compile Include="Services\SpruceGenDocsRequestService.cs" />
     <Compile Include="Services\SpruceQuoteResponseService.cs" />

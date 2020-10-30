@@ -303,6 +303,7 @@
   <ItemGroup>
     <Folder Include="Views\FinanceIntegrations\" />
     <Folder Include="Views\Layers\" />
+    <Folder Include="Views\QuotasCommitments\" />
     <Folder Include="Views\SpruceGenDocsRequest\" />
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +333,7 @@
     <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\PropertyNotesController.cs" />
     <Compile Include="Controllers\PropertySurveysController.cs" />
+    <Compile Include="Controllers\QuotasCommitmentsController.cs" />
     <Compile Include="Controllers\ServiceFinanceController.cs" />
     <Compile Include="Controllers\SignalR\PortalHub.cs" />
     <Compile Include="Controllers\SolarSalesTrackerController.cs" />

@@ -179,6 +179,12 @@ namespace DataReef.TM.Contracts.Services
         void RemoveFavouriteOu(Guid ouId, Guid personID);
 
         [OperationContract]
+        List<OU> FavouriteOusList(Guid personID, bool deletedItems = false);
+
+        [OperationContract]
+        List<Territory> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens"); 
+
+        [OperationContract]
         string InsertMasterTerritory();
     }
 }

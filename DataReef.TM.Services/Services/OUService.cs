@@ -905,16 +905,37 @@ namespace DataReef.TM.Services.Services
         }
 
 
+        //public IEnumerable<SBOU> GetOusList(string name)
+        //{
+        //    using (var dc = new DataContext())
+        //    {
+        //        var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains(name) && y.Name == "Integrations.Options.Selected").FirstOrDefault();
+
+        //        var allAncestorIDs = dc.Database
+        //                        .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
+        //                        .ToList();
+        //        return allAncestorIDs.Where(x => x.Name.Contains(apikeyouid.OU.Name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+        //    }
+        //}
+
         public IEnumerable<SBOU> GetOusList(string name)
         {
+
             using (var dc = new DataContext())
             {
-                var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains(name) && y.Name == "Integrations.Options.Selected").FirstOrDefault();
+                var allAncestorIDs = dc.Database.SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)").ToList();
 
-                var allAncestorIDs = dc.Database
-                                .SqlQuery<SBOU>($"select guid as OUID,Name as ParentTree, (select Replace(parents, 'DataReef Solar > ' , '') from [dbo].[GetOUTreeParentName](guid)) as Name from ous where isdeleted = 0 and guid not in (select ouid from ousettings where name = 'Integrations.Options.Selected' and isdeleted = 0)")
-                                .ToList();
-                return allAncestorIDs.Where(x => x.Name.Contains(apikeyouid.OU.Name) && x.Name.Contains("IGNITE")).OrderBy(x => x.Name);
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var apikeyouid = dc.OUSettings.Include("OU").Where(y => y.Value.Contains(name) && y.Name == "Integrations.Options.Selected").FirstOrDefault();
+                    string searchname = apikeyouid != null ? apikeyouid.OU.Name : "";
+                    allAncestorIDs = allAncestorIDs.Where(x => x.Name.Contains(searchname)).ToList();
+                }
+
+                allAncestorIDs = allAncestorIDs.Where(x => x.Name.Contains("IGNITE")).OrderBy(x => x.Name).ToList();
+                return allAncestorIDs;
+
             }
         }
 
@@ -2442,6 +2463,54 @@ namespace DataReef.TM.Services.Services
 
                 dc.FavouriteOus.Remove(FavouriteOu);
                 dc.SaveChanges();
+            }
+        }
+
+        public List<OU> FavouriteOusList(Guid personID, bool deletedItems = false)
+        {
+            using (var dc = new DataContext())
+            {
+                var FavoriteOUS = dc.FavouriteOus.Where(x => x.PersonID == personID).Select(a => a.OUID).ToList();
+
+                List<OU> ous = new List<OU>();
+                foreach (var item in FavoriteOUS)
+                {
+                    var ou = Get(item, "Settings,Children", deletedItems: deletedItems);
+                    ou.WellKnownText = null;
+                    ou.IsFavourite = true;
+                    ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();
+
+                    ous.Add(ou);
+                }
+
+                return ous;
+            }
+        }
+
+        public List<Territory> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens,OU")
+        {
+            using (var context = new DataContext())
+            {
+                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID ).ToList();
+                List<Territory> territory = new List<Territory>();
+                foreach (var item in favouriteTerritories)
+                {
+                    var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.TerritoryID && !t.IsDeleted);
+
+                    AssignIncludes(include, ref ouTerritoriesQuery); 
+                    var ouTerritories = ouTerritoriesQuery.FirstOrDefault();
+
+                    ouTerritories.IsFavourite = true;
+                    ouTerritories.shapeWKT = ouTerritories.WellKnownText; 
+
+                    if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && ouTerritories.OU != null)
+                    {
+                        OUService.PopulateOUSummary(ouTerritories.OU);
+                    }
+
+                    territory.Add(ouTerritories);
+                }
+                return territory; 
             }
         }
 

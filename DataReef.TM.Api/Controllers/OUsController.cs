@@ -590,6 +590,29 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
 
+
+        [HttpPost]
+        [Route("Favourite")]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<IHttpActionResult> FavouriteOusList(FavouriteOu request)
+        {
+            var ousList = ouService.FavouriteOusList(request.PersonID);
+            var territoriesList = ouService.FavouriteTerritoriesList(request.PersonID);
+
+
+            var response = new
+            {
+                Response = new
+                {
+                    FavoriteOUS = ousList,
+                    FavouriteTerritories = territoriesList
+                }
+            };
+
+            return Ok(response);
+        }
+
+
         [HttpPost]
         [Route("addMasterTerritory")]
         public async Task<IHttpActionResult> InsertMasterTerritory()

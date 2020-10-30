@@ -101,6 +101,13 @@ namespace DataReef.TM.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
+        [DataMember]
+        public DateTime? SBLastActivityDate { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        [StringLength(250)]
+        public string SBActivityName { get; set; }
+
         [DataMember(EmitDefaultValue = false)]
         public List<string> EmailAddresses
         {

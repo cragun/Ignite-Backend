@@ -277,6 +277,7 @@
     <Compile Include="DTOs\Proposals\ProposalMediaUploadRequest.cs" />
     <Compile Include="DTOs\Proposals\ProposalUnformattedDataViewConstructor.cs" />
     <Compile Include="DTOs\Proposals\SignedDocumentDTO.cs" />
+    <Compile Include="DTOs\QuotasCommitments\AdminQuotas.cs" />
     <Compile Include="DTOs\Reports\OrganizationSelfTrackedReportRow.cs" />
     <Compile Include="DTOs\Reports\SalesRepresentativeSelfTrackedReportRow.cs" />
     <Compile Include="DTOs\Reports\SimplePersonKPI.cs" />
@@ -582,6 +583,7 @@
     <Compile Include="PubSubMessaging\EventActionType.cs" />
     <Compile Include="PubSubMessaging\EventMessage.cs" />
     <Compile Include="PushNotifications\PushSubscription.cs" />
+    <Compile Include="QuotasCommitment.cs" />
     <Compile Include="Reporting\Column.cs" />
     <Compile Include="Reporting\OUReport.cs" />
     <Compile Include="Reporting\Parameter.cs" />

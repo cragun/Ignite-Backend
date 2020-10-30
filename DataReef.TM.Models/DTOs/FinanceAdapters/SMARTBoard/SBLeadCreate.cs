@@ -40,7 +40,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public SBLeadModel(Property property, Person dealer, Person closer = null)
         {
             AssociatedId = property.Id;
-            SalesOwner = dealer.EmailAddresses?.FirstOrDefault();
+            SalesOwner = dealer?.EmailAddresses?.FirstOrDefault();
             Type = "Individual";
 
             var appointment = property?.GetLatestAppointment();

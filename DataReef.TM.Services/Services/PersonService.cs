@@ -97,13 +97,13 @@ namespace DataReef.TM.Services
             //}
 
             return ret;
-
         }
+
 
 
         public Person Updateactivity(Person prsn)
         {
-            if (prsn.SmartBoardID != null)
+            if(prsn.SmartBoardID != null)
             {
                 using (DataContext dc = new DataContext())
                 {
@@ -113,9 +113,9 @@ namespace DataReef.TM.Services
                         throw new ArgumentException("Couldn't find the person among the deleted ones!");
                     }
 
-                    person.ActivityName = prsn.ActivityName;
+                    person.SBActivityName = prsn.SBActivityName;
                     person.BuildVersion = prsn.BuildVersion;
-                    person.LastActivityDate = prsn.LastActivityDate;
+                    person.SBLastActivityDate = prsn.SBLastActivityDate;
 
                     var ret = base.Update(person);
                     return ret;
@@ -134,7 +134,7 @@ namespace DataReef.TM.Services
 
                 if (!string.IsNullOrEmpty(prsndetails.SmartBoardID))
                 {
-                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID, prsndetails.ActivityName, prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid);
+                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName, prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid);
                 }
 
                 return ret;
@@ -485,6 +485,33 @@ namespace DataReef.TM.Services
             return distinctDispositions.ToList();
         }
 
+
+        public List<CRMDisposition> CRMGetAvailableDispositionsQuotas()
+        {
+            // Get all the OUs for the logged in user
+
+            var rootGuids = _ouService.Value.ListRootGuidsForPerson(Guid.Parse("b3db3e22-7aed-4daa-888c-850b8c8ee0f2"));
+
+            var settings = _ouSettingsService
+                        .Value
+                        .GetOuSettingsMany(rootGuids)?
+                        .SelectMany(os => os.Value)?
+                        .ToList();
+            var dispSettings = settings?
+                    .Where(s => s.Name == OUSetting.NewDispositions)?
+                    .ToList();
+
+            var dispositions = dispSettings?
+                    .SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?
+                    .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Quota = d.Quota })?
+                    .ToList() ?? new List<CRMDisposition>();
+
+            var distinctDispositions = new HashSet<CRMDisposition>(dispositions);
+            distinctDispositions.Add(new CRMDisposition { Disposition = "With Proposal" , DisplayName = "With Proposal", Quota = 0 , Commitments = 0});
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments", DisplayName = "Appointments", Quota = 0, Commitments = 0 });
+
+            return distinctDispositions.ToList();
+        }
 
 
         public List<CRMLeadSource> CRMGetAvailableLeadSources(Guid ouid)

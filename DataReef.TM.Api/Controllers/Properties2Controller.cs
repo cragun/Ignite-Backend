@@ -322,7 +322,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="request"></param>
         /// <param name="apiKey"></param>
         [HttpPost, Route("sb/{apiKey}")]
-        [ResponseType(typeof(SBAppointmentDTO))]
+        [ResponseType(typeof(SBPropertyDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
         public async Task<SBPropertyDTO> CreateNewPropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
         {
