@@ -126,8 +126,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 request.AddHeader("Authorization", "Bearer " + token);
                  
                 var response = client.Execute(request);
-
-
                 var json = new JavaScriptSerializer().Serialize(req);
                 var resp = new JavaScriptSerializer().Serialize(response.Content);
 
