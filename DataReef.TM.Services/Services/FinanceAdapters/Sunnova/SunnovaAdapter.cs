@@ -118,13 +118,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Suffix = "";
 
                 string token = GetSunnovaToken();
-               // string token = "";
-
             // https://apitest.sunnova.com/services/v1.0/leads
                 var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
-
 
                 var json = new JavaScriptSerializer().Serialize(req);
 
