@@ -54,7 +54,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             public string external_id { get; set; }
         }
 
-
         public string GetSunnovaToken()
         {
             try
