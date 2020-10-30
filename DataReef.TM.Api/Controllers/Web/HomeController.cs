@@ -34,6 +34,7 @@ namespace DataReef.TM.Api.Controllers.Web
             _resetService = resetService;
         }
 
+
         // GET: Home
         public ActionResult UserInvitation(UserInvitationViewModel model)
         {
