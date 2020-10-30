@@ -116,7 +116,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Preferred_Contact_Method = "Email";
                 req.Preferred_Language = "English";
                 req.Suffix = "";
-
                 
                 string token = GetSunnovaToken();
                // string token = "";
