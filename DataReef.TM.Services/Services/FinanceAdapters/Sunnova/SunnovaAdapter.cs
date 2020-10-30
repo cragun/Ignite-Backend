@@ -60,7 +60,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             {
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
 
-                var request = new RestRequest($"/gettoken/authentication", Method.GET);
+                var request = new RestRequest($"/authentication", Method.GET);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 var response = client.Execute(request);               
 
