@@ -106,9 +106,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 var name = property.GetMainOccupant();
 
-                req.FirstName = name.FirstName;
-                req.LastName = name.LastName;
-                req.Middle_Name = name.MiddleInitial;
+                req.FirstName = name?.FirstName == null ? "" : name?.FirstName;
+                req.LastName = name?.LastName == null ? "" : name?.LastName;
+                req.Middle_Name = name?.MiddleInitial == null ? "" : name?.MiddleInitial;
                 req.Email = email == null ? "" : email;
                 req.Phone = phone;
                 req.Address = addr;
@@ -117,9 +117,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Preferred_Language = "English";
                 req.Suffix = "";
 
-                //string token = GetSunnovaToken();
-                string token = "";
+                string token = GetSunnovaToken();
+               // string token = "";
 
+            // https://apitest.sunnova.com/services/v1.0/leads
                 var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
@@ -131,7 +132,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 apilog.Id = Guid.NewGuid();
                 apilog.User = "testuser";
                 apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "";
+                apilog.RequestContentType = token;
                 apilog.RequestRouteTemplate = "";
                 apilog.RequestRouteData = "";
                 apilog.RequestIpAddress = "";
