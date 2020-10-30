@@ -124,8 +124,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
+                 
+                var response = client.Execute(request);
+
 
                 var json = new JavaScriptSerializer().Serialize(req);
+                var resp = new JavaScriptSerializer().Serialize(response.Content);
 
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
@@ -139,16 +143,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 apilog.RequestHeaders = "";
                 apilog.RequestTimestamp = DateTime.UtcNow;
                 apilog.RequestUri = "";
-                apilog.ResponseContentBody = "";
+                apilog.ResponseContentBody = resp.ToString();
                 apilog.RequestContentBody = json.ToString();
 
                 using (var db = new DataContext())
                 {
-                    db.ApiLogEntries.Add(apilog); 
+                    db.ApiLogEntries.Add(apilog);
                     db.SaveChanges();
                 }
-                 
-                var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
