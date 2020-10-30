@@ -1,6 +1,7 @@
 ﻿using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Logging;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.Contracts.Services.FinanceAdapters;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.PropertyAttachments;
@@ -25,14 +26,17 @@ namespace DataReef.TM.Api.Controllers
     public class PropertiesController : EntityCrudController<Property>
     {
         private readonly IPropertyService propertyService;
+        private readonly ISunnovaAdapter sunnovaAdapter;
         private readonly Func<IPropertyAttachmentService> _propertyAttachmentServiceFactory;
 
         public PropertiesController(IPropertyService propertyService,
                                     ILogger logger,
+                                    ISunnovaAdapter sunnovaAdapter,
                                     Func<IPropertyAttachmentService> propertyAttachmentServiceFactory)
             : base(propertyService, logger)
         {
             this.propertyService = propertyService;
+            this.sunnovaAdapter = sunnovaAdapter;
             _propertyAttachmentServiceFactory = propertyAttachmentServiceFactory;
         }
 
@@ -273,6 +277,21 @@ namespace DataReef.TM.Api.Controllers
                 {
                     cache.Remove(key);
                 }
+            }
+        }
+
+        [AllowAnonymous]
+        [Route("sunnovatoken")]
+        [HttpGet]
+        public async Task<string> sunnovatoken()
+        {
+            try
+            {
+                return sunnovaAdapter.GetSunnovaToken();
+            }
+            catch (System.Exception)
+            {
+                throw;
             }
         }
 
