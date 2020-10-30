@@ -127,14 +127,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                  
                 var response = client.Execute(request);
                 var json = new JavaScriptSerializer().Serialize(req);
-                var resp = new JavaScriptSerializer().Serialize(response.Content);
+                var resp = new JavaScriptSerializer().Serialize(response);
 
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
                 apilog.User = "testuser";
                 apilog.Machine = Environment.MachineName;
                 apilog.RequestContentType = token;
-                apilog.RequestRouteTemplate = "";
+                apilog.RequestRouteTemplate = response.StatusCode.ToString();
                 apilog.RequestRouteData = "";
                 apilog.RequestIpAddress = "";
                 apilog.RequestMethod = "sunnovaleadresquest";
