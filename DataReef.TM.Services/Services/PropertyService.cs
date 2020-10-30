@@ -1642,7 +1642,7 @@ namespace DataReef.TM.Services.Services
             List<SunnovaLead> lead;
             using (var dataContext = new DataContext())
             {
-               var prop = dataContext.Properties.Include(y => y.Occupants).Where(x => x.Guid == propertyid).FirstOrDefault();
+               var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
                 lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
                 prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
                 dataContext.SaveChanges();
