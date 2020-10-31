@@ -281,20 +281,20 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [AllowAnonymous]
-        [Route("sunnovatoken")]
-        [HttpGet]
-        public async Task<string> sunnovatoken()
-        {
-            try
-            {
-                return sunnovaAdapter.GetSunnovaToken();
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
-        }
+        //[AllowAnonymous]
+        //[Route("sunnovatoken")]
+        //[HttpGet]
+        //public async Task<string> sunnovatoken()
+        //{
+        //    try
+        //    {
+        //        return sunnovaAdapter.GetSunnovaToken();
+        //    }
+        //    catch (System.Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         /// <summary>
         /// send data to sunnova website
