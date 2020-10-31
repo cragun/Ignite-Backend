@@ -87,6 +87,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             }
         }
 
+
         public List<SunnovaLead> CreateSunnovaLead(Property property)
         {
             using (var dc = new DataContext())
