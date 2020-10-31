@@ -119,37 +119,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 
                 string token = GetSunnovaToken();
                // string token = "";
-               // https://apitest.sunnova.com/services/v1.0/leads
                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
                  
                 var response = client.Execute(request);
-                var json = new JavaScriptSerializer().Serialize(req);
-                var resp = new JavaScriptSerializer().Serialize(response);
+                //var json = new JavaScriptSerializer().Serialize(req);
+                //var resp = new JavaScriptSerializer().Serialize(response);                
 
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = "testuser";
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = token;
-                apilog.RequestRouteTemplate = response.StatusCode.ToString();
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "sunnovaleadresquest";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = "";
-                apilog.ResponseContentBody = resp.ToString();
-                apilog.RequestContentBody = json.ToString();
-
-                using (var db = new DataContext())
-                {
-                    db.ApiLogEntries.Add(apilog);
-                    db.SaveChanges();
-                }
-
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.Created)
                 {
                     throw new ApplicationException($"CreateSunnovaLead Failed. {response.Content}");
                 }
