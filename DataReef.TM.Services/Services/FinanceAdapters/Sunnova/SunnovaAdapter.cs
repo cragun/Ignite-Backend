@@ -12,17 +12,23 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Text;
 using System.Web.Script.Serialization;
+using DataReef.TM.Services;
+using DataReef.TM.Contracts.Services;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     [Service(typeof(ISunnovaAdapter))]
-    public class SunnovaAdapter : ISunnovaAdapter
+    public class SunnovaAdapter : FinancialAdapterBase, ISunnovaAdapter
     {
         private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunnova.test.url"];
         private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunnova.Auth.Username"];
         private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunnova.Auth.Password"];
+        
+        public SunnovaAdapter(Lazy<IOUSettingService> ouSettingService) : base("Sunnova", ouSettingService)
+        {
+        }
 
         private RestClient client
         {
@@ -117,7 +123,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Suffix = "";
                 
                 string token = GetSunnovaToken();
-               // string token = "";
                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
@@ -131,6 +136,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                     throw new ApplicationException($"CreateSunnovaLead Failed. {response.Content}");
                 }
 
+                try
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, token);
+                }
+                catch (Exception)
+                {
+                }
+
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<List<SunnovaLead>>(content);
 
@@ -138,5 +151,24 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             }
         }
 
+        public override string GetBaseUrl(Guid ouid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override AuthenticationContext GetAuthenticationContext(Guid ouid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Services.TokenResponse AuthorizeAdapter(AuthenticationContext authenticationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Dictionary<string, string> GetCustomHeaders(Services.TokenResponse tokenResponse)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

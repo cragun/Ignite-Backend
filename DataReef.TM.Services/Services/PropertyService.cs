@@ -1634,40 +1634,20 @@ namespace DataReef.TM.Services.Services
                 {
                     return true;
                 }
-            }
+            }                                                                                      
         }
 
         public async Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid)
         {
-            List<SunnovaLead> lead;
+            List<SunnovaLead> lead = new List<SunnovaLead>();
             using (var dataContext = new DataContext())
             {
                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
-                lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
-                prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
-                dataContext.SaveChanges();
-
-                var json = new JavaScriptSerializer().Serialize(lead);
-
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "";
-                apilog.RequestRouteTemplate = "";
-                apilog.RequestRouteData = "";
-                apilog.RequestIpAddress = "";
-                apilog.RequestMethod = "sunnovaleadresponse";
-                apilog.RequestHeaders = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = "";
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = json.ToString();
-
-                using (var dc = new DataContext())
+                if(prop != null && prop.SunnovaLeadID == null)
                 {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
+                    lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
+                    prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
+                    dataContext.SaveChanges();
                 }
             }
 
