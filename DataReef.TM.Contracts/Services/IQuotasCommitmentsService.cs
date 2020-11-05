@@ -20,6 +20,6 @@ namespace DataReef.TM.Contracts.Services
         QuotasCommitment InsertQuotas(QuotasCommitment request); 
 
         [OperationContract]
-        List<QuotasCommitment> GetQuotasReport(); 
+        List<List<object>> GetQuotasReport(); 
     }
 }

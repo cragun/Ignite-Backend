@@ -23,6 +23,9 @@ using System.Threading.Tasks;
 using DataReef.Auth.Helpers;
 using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Models.DTOs.QuotasCommitments;
+using Serilog;
+using Serilog.Context;
+using System.Web;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -30,7 +33,7 @@ namespace DataReef.TM.Api.Controllers
     public class QuotasCommitmentsController : EntityCrudController<QuotasCommitment>
     {
         private readonly IQuotasCommitmentsService quotasCommitmentsService;
-        public QuotasCommitmentsController(IQuotasCommitmentsService quotasCommitmentsService, ILogger logger) : base(quotasCommitmentsService, logger)
+        public QuotasCommitmentsController(IQuotasCommitmentsService quotasCommitmentsService, Core.Logging.ILogger logger) : base(quotasCommitmentsService, logger)
         {
             this.quotasCommitmentsService = quotasCommitmentsService;
         }
@@ -40,6 +43,23 @@ namespace DataReef.TM.Api.Controllers
         [Route("gettype")]
         public async Task<IHttpActionResult> GetQuotasType()
         {
+            //var path = HttpContext.Current.Request.MapPath("/Datadog/logs/log.json");
+
+            //// Instantiate the logger
+            //var log = new Serilog.LoggerConfiguration() 
+            //    .Enrich.FromLogContext()
+            //    .WriteTo.File(new Serilog.Formatting.Json.JsonFormatter(renderMessage: true), path) 
+            //    .CreateLogger();
+
+
+            //// An example
+            //var position = new { Latitude = 25, Longitude = 134 };
+            //var elapsedMs = 34;
+
+            //log.Information("Processed1 {@Position} in {Elapsed:000} ms.", position, elapsedMs);
+
+            int[] myNumbers = { 1, 2, 3 };
+            var testc = myNumbers[10];
             return Ok(quotasCommitmentsService.GetQuotasType());
         }
 
@@ -47,6 +67,10 @@ namespace DataReef.TM.Api.Controllers
         [Route("roles/users")]
         public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
         {
+
+            int[] myNumbers = { 1, 2, 3 };
+            var testc = myNumbers[10];
+
             var ret = quotasCommitmentsService.GetUsersFromRoleType(request.RoleID);
             return Ok(new { Response = ret });
         }
@@ -62,11 +86,11 @@ namespace DataReef.TM.Api.Controllers
 
 
         [HttpGet]
-        [ResponseType(typeof(List<AdminQuotas>))]
+        [Route("quota/report")]
         public async Task<IHttpActionResult> GetQuotasReport()
         {
             var ret = quotasCommitmentsService.GetQuotasReport();
             return Ok(new { Response = ret });
-        } 
+        }
     }
 }
