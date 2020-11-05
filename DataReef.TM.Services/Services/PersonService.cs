@@ -508,8 +508,8 @@ namespace DataReef.TM.Services
                     .ToList() ?? new List<CRMDisposition>();
 
             var distinctDispositions = new HashSet<CRMDisposition>(dispositions);
-            distinctDispositions.Add(new CRMDisposition { Disposition = "With Proposal" , DisplayName = "With Proposal", Quota = 0 , Commitments = 0});
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments", DisplayName = "Appointments", Quota = 0, Commitments = 0 });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "With Proposal" , DisplayName = "With Proposal", Quota = "" , Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments", DisplayName = "Appointments", Quota = "", Commitments = "" });
 
             return distinctDispositions.ToList();
         }

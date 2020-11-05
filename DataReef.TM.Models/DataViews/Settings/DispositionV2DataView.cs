@@ -18,8 +18,8 @@ namespace DataReef.TM.Models.DataViews.Settings
         public List<DispositionV2DataView> Children { get; set; }
         public int? SBTypeId { get; set; }
 
-        public int Quota { get; set; }
-        public int Commitments { get; set; }
+        public string Quota { get; set; }
+        public string Commitments { get; set; }
 
         public List<string> GetUniqueNames()
         {
