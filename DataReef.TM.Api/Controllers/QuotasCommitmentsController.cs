@@ -43,35 +43,14 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(AdminQuotas))]
         [Route("gettype")]
         public async Task<IHttpActionResult> GetQuotasType()
-        {
-            //var path = HttpContext.Current.Request.MapPath("/Datadog/logs/log.json");
-
-            //// Instantiate the logger
-            //var log = new Serilog.LoggerConfiguration() 
-            //    .Enrich.FromLogContext()
-            //    .WriteTo.File(new Serilog.Formatting.Json.JsonFormatter(renderMessage: true), path) 
-            //    .CreateLogger();
-
-
-            //// An example
-            //var position = new { Latitude = 25, Longitude = 134 };
-            //var elapsedMs = 34;
-
-            //log.Information("Processed1 {@Position} in {Elapsed:000} ms.", position, elapsedMs);
-
-            int[] myNumbers = { 1, 2, 3 };
-            var testc = myNumbers[10];
+        {  
             return Ok(quotasCommitmentsService.GetQuotasType());
         }
 
         [HttpPost, AllowAnonymous, InjectAuthPrincipal]
         [Route("roles/users")]
         public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
-        {
-
-            int[] myNumbers = { 1, 2, 3 };
-            var testc = myNumbers[10];
-
+        { 
             var ret = quotasCommitmentsService.GetUsersFromRoleType(request.RoleID);
             return Ok(new { Response = ret });
         }
