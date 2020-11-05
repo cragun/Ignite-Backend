@@ -26,8 +26,7 @@ using DataReef.TM.Models.DTOs.QuotasCommitments;
 //using Serilog;
 //using Serilog.Context;
 //using System.Web;
-
-
+ 
 namespace DataReef.TM.Api.Controllers
 {
     [RoutePrefix("api/v1/quotascommitments")]
