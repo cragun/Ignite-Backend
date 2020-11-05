@@ -163,12 +163,14 @@ namespace DataReef.TM.Services
             {
                 if (cashPPW != null)
                 {
-                    var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
-                    if (financePlan != null)
-                    {
-                        financePlan.PPW = cashPPW;
-                        dc.SaveChanges();
-                    }
+                    //var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Name == "Cash");
+                    //if (financePlan != null)
+                    //{
+                    //    financePlan.PPW = cashPPW;
+                    //    dc.SaveChanges();
+                    //}
+                    dc.FinancePlaneDefinitions.ToList().ForEach(c => c.PPW = cashPPW);
+                    dc.SaveChanges();
                 }
 
                 if (lenderFee != null)

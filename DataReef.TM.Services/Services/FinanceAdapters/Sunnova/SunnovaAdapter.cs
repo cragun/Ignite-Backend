@@ -14,6 +14,7 @@ using System.Text;
 using System.Web.Script.Serialization;
 using DataReef.TM.Services;
 using DataReef.TM.Contracts.Services;
+using System.Linq;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 {
@@ -139,7 +140,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response, url, null, token);
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/leads", null, token);
                 }
                 catch (Exception)
                 {
@@ -147,11 +148,46 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<List<SunnovaLead>>(content);
+                var SunnovaLeadID = ret.FirstOrDefault() != null ? ret.FirstOrDefault().lead.Id : "";
+
+                GetSunnovaContacts(SunnovaLeadID);
 
                 return ret;
             }
         }
 
+
+        public List<SunnovaContacts> GetSunnovaContacts(string SunnovaLeadID)
+        {
+            using (var dc = new DataContext())
+            {
+                //https://apitest.sunnova.com/services/v1.0/leads/{LeadID}/contacts
+                string token = GetSunnovaToken();
+                var request = new RestRequest($"/services/v1.0/leads/" + SunnovaLeadID + "/contacts", Method.GET);
+                request.AddHeader("Authorization", "Bearer " + token);
+
+                var response = client.Execute(request);            
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new ApplicationException($"GetSunnovaContacts Failed. {response.Content}");
+                }
+
+                try
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/leads/" + SunnovaLeadID + "/contacts", null, token);
+                }
+                catch (Exception)
+                {
+                }
+
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<List<SunnovaContacts>>(content);
+
+                return ret;
+            }
+
+        }
         public override string GetBaseUrl(Guid ouid)
         {
             throw new NotImplementedException();
