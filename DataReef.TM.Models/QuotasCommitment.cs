@@ -41,6 +41,9 @@ namespace DataReef.TM.Models
         [NotMapped]
         public int durations { get; set; }
 
+        [NotMapped]
+        public Guid UserID { get; set; }
+
         #region Navigation Properties
 
         [DataMember]

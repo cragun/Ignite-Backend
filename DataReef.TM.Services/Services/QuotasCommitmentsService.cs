@@ -140,7 +140,7 @@ namespace DataReef.TM.Services
                 quota.Disposition = JsonConvert.DeserializeObject<List<CRMDisposition>>(quota.dispositions);
                 quota.Disposition = quota.Disposition.OrderBy(a => a.Disposition).ToList();
 
-                var commitment = dc.QuotasCommitments.FirstOrDefault(a => a.StartDate == req.StartDate && a.EndDate == req.EndDate && a.PersonID == req.PersonID);
+                var commitment = dc.QuotasCommitments.FirstOrDefault(a => a.StartDate == req.StartDate && a.EndDate == req.EndDate && a.PersonID == req.UserID);
 
                 if (commitment != null)
                 {
