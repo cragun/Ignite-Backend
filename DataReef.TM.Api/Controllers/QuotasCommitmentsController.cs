@@ -71,5 +71,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new { Response = ret });
         }
 
+
+        [HttpPost]
+        [Route("commitement/report")]
+        public async Task<IHttpActionResult> GetCommitementsReport(QuotasCommitment req)
+        {
+            var ret = quotasCommitmentsService.GetQuotasCommitementsReport(req);
+            return Ok(new { Response = ret });
+        }
+
     }
 }

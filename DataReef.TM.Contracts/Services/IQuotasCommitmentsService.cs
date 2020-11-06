@@ -1,4 +1,5 @@
 ﻿using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs.Inquiries;
 using DataReef.TM.Models.DTOs.QuotasCommitments;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace DataReef.TM.Contracts.Services
         QuotasCommitment InsertQuotas(QuotasCommitment request); 
 
         [OperationContract]
-        List<List<object>> GetQuotasReport(); 
+        List<List<object>> GetQuotasReport();
+         
+        [OperationContract]
+        List<CRMDisposition> GetQuotasCommitementsReport(QuotasCommitment request);
     }
 }
