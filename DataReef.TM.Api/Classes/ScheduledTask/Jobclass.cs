@@ -56,6 +56,8 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 if (person != null && !person.IsDeleted)
                                 {
                                     person.IsDeleted = true;
+                                    person.SBActivityName = "Active";
+                                    person.SBLastActivityDate = DateTime.Now.AddDays(-1);
                                 }
 
                                 var user = Users.SingleOrDefault(u => u.PersonID == c.UserID
