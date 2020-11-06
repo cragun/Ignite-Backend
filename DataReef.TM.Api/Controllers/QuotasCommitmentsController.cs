@@ -79,6 +79,6 @@ namespace DataReef.TM.Api.Controllers
             var ret = quotasCommitmentsService.GetQuotasCommitementsReport(req);
             return Ok(new { Response = ret });
         }
-
+         
     }
 }
