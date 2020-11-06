@@ -106,7 +106,7 @@ namespace DataReef.TM.Services
                 for (int i = 0; i < data.Count; i++)
                 {
                     data[i].durations = Convert.ToInt32(data[i].EndDate.Subtract(data[i].StartDate).TotalDays);
-                    data[i].week = "Week" + i;
+                    data[i].week = "Week " + i;
 
                     var quota = new List<object>{
                         data[i].week,
@@ -128,53 +128,45 @@ namespace DataReef.TM.Services
 
                 return report;
             }
-        }
+        } 
          
-        //public List<List<object>> GetQuotasCommitementsReport(QuotasCommitment req)
-        //{
-        //    using (DataContext dc = new DataContext())
-        //    {  
-        //        var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
-        //        dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
-                 
-        //        var quota = dc.QuotasCommitments.FirstOrDefault(a => a.StartDate == req.StartDate && a.EndDate == req.EndDate);
-        //        quota.Disposition = JsonConvert.DeserializeObject<List<CRMDisposition>>(quota.dispositions);
-        //        quota.Disposition = quota.Disposition.OrderBy(a => a.Disposition).ToList();
-       
-        //        var commitment = dc.QuotasCommitments.FirstOrDefault(a => a.StartDate == req.StartDate && a.EndDate == req.EndDate && a.PersonID == req.PersonID);
+        public List<CRMDisposition> GetQuotasCommitementsReport(QuotasCommitment req)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
+                dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
 
-        //        if (commitment != null)
-        //        {
-        //            commitment.Disposition = JsonConvert.DeserializeObject<List<CRMDisposition>>(commitment.dispositions);
-        //            commitment.Disposition = commitment.Disposition.OrderBy(a => a.Disposition).ToList(); 
-        //        } 
+                var quota = dc.QuotasCommitments.FirstOrDefault(a => a.StartDate == req.StartDate && a.EndDate == req.EndDate);
+                quota.Disposition = JsonConvert.DeserializeObject<List<CRMDisposition>>(quota.dispositions);
+                quota.Disposition = quota.Disposition.OrderBy(a => a.Disposition).ToList();
 
-        //        foreach (var item in quota.Disposition)
-        //        {
-        //            item.TodayQuotas = (Convert.ToInt32(item.Quota) / Convert.ToInt32(quota.EndDate.Subtract(quota.StartDate).TotalDays)).ToString();
-        //            item.WeekQuotas = item.Quota / ( item.TodayQuotas * 7 );
-        //            item.RangeQuotas = item.Quota;
-                      
-        //            DateTime startDate = quota.StartDate;
-        //            DateTime toDate = quota.EndDate;
+                var commitment = dc.QuotasCommitments.FirstOrDefault(a => a.StartDate == req.StartDate && a.EndDate == req.EndDate && a.PersonID == req.PersonID);
 
-        //            do
-        //            {
-        //                Console.WriteLine(quota.StartDate.ToString("dd/MM/yyyy") + "-" + startDate.AddDays(6).ToString("dd/MM/yyyy"));
-        //                startDate = startDate.AddDays(7);
-        //            }
+                if (commitment != null)
+                {
+                    commitment.Disposition = JsonConvert.DeserializeObject<List<CRMDisposition>>(commitment.dispositions);
+                    commitment.Disposition = commitment.Disposition.OrderBy(a => a.Disposition).ToList();
+                }
 
-        //            while (startDate < toDate.AddDays(7));
+                foreach (var item in quota.Disposition)
+                {
+                    item.TodayQuotas = (Convert.ToInt32(item.Quota) / Convert.ToInt32(quota.EndDate.Subtract(quota.StartDate).TotalDays)).ToString();                                                                   
+                    item.WeekQuotas = item.Quota;
+                    item.RangeQuotas = item.Quota; 
 
-        //            if (commitment != null)
-        //            {
-        //                item.TodayCommitments = JsonConvert.DeserializeObject<List<CRMDisposition>>(commitment.dispositions);
-        //                commitment.Disposition = commitment.Disposition.OrderBy(a => a.Disposition).ToList();
-        //            }
-        //        }
+                    if (commitment != null)
+                    {
+                        var data = commitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
 
-        //        return report;
-        //    }
+                        item.TodayCommitments = data.TodayCommitments;
+                        item.WeekCommitments = data.WeekCommitments;
+                        item.RangeCommitments = data.RangeCommitments;
+                    }
+                }
+
+                return quota.Disposition;
+            }
         }
-    //}
+    }
 }
