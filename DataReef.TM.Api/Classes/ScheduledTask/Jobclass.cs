@@ -48,6 +48,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
                             var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
 
+
                             if (dayvalidation.Count > 0 && lastLoginCount == 0)
                             {
                                 var person = People.SingleOrDefault(p => p.Guid == c.UserID
