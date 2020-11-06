@@ -124,8 +124,7 @@ namespace DataReef.TM.Services
                     }
                      
                     report.Add(quota); 
-                }
-
+                } 
                 return report;
             }
         } 
