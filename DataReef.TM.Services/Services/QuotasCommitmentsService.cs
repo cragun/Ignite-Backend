@@ -112,7 +112,7 @@ namespace DataReef.TM.Services
                         data[i].week,
                         data[i].StartDate.ToShortDateString(),
                         data[i].EndDate.ToShortDateString(),
-                        data[i].durations,
+                        data[i].durations.ToString(),
                     };
 
                     data[i].Disposition = JsonConvert.DeserializeObject<List<DataReef.TM.Models.DTOs.Inquiries.CRMDisposition>>(data[i].dispositions);
