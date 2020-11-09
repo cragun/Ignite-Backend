@@ -5,6 +5,7 @@ using DataReef.TM.Api.Classes.ViewModels;
 using DataReef.TM.Api.Common;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs.Integrations;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -26,12 +27,15 @@ namespace DataReef.TM.Api.Controllers.Web
 
         private readonly Lazy<IAuthenticationService> _authService;
         private readonly Lazy<IDataService<PasswordReset>> _resetService;
+        private readonly Lazy<IOUSettingService> _ouSettingService;
 
         public HomeController(Lazy<IAuthenticationService> authService,
-            Lazy<IDataService<PasswordReset>> resetService)
+            Lazy<IDataService<PasswordReset>> resetService,
+            Lazy<IOUSettingService> ouSettingService)
         {
             _authService = authService;
             _resetService = resetService;
+            _ouSettingService = ouSettingService; 
         }
 
 
@@ -237,5 +241,20 @@ namespace DataReef.TM.Api.Controllers.Web
             return $"{Constants.CustomURL}{stringAction}?{query.ToString().EscapeEmail()}";
         }
 
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public string getapikey(Guid prop)
+        {
+            var sbSettings = _ouSettingService
+                                    .Value
+                                    .GetOUSettingForPropertyID<ICollection<SelectedIntegrationOption>>(prop, "Integrations.Options.Selected")?
+                                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                    .Data?
+                                    .SMARTBoard;
+
+            return sbSettings?.ApiKey;
+        }
     }
 }
