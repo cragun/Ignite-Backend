@@ -67,7 +67,8 @@ namespace DataReef.TM.Services.Services
                 apilog.RequestTimestamp = DateTime.UtcNow;
                 apilog.RequestUri = new JavaScriptSerializer().Serialize(ex.Message.ToString());
                 apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = "";
+                apilog.RequestContentBody = ""; 
+
 
                 using (var dc = new DataContext())
                 {
