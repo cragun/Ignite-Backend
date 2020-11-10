@@ -1521,7 +1521,11 @@ namespace DataReef.TM.Services.Services
         {
             using (var dataContext = new DataContext())
             {
-                var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalid);
+                var proposalData = dataContext
+                                    .ProposalData
+                                    .FirstOrDefault(pd => pd.Guid == proposalid); 
+
+                var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalData.ProposalID);
                 Guid? ouid = Guid.Empty;
                 if (proposal != null)
                 {
@@ -1533,7 +1537,7 @@ namespace DataReef.TM.Services.Services
                                 .SqlQuery<Guid>($"select * from OUTreeUP('{ouid}')")
                                 .ToList();
 
-                // get Financing Options OU Settings for all ancestors
+                 // get Financing Options OU Settings for all ancestors
                 var allOUSettings = dataContext
                                 .OUSettings
                                 .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
