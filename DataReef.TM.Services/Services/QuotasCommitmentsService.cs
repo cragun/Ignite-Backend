@@ -67,7 +67,7 @@ namespace DataReef.TM.Services
         public QuotasCommitment InsertQuotas(QuotasCommitment entity)
         {
             entity.CreatedByID = SmartPrincipal.UserId;
-            entity.dispositions = JsonConvert.SerializeObject(entity.Disposition); 
+            entity.dispositions = JsonConvert.SerializeObject(entity.Disposition);
             var ret = base.Insert(entity);
 
             if (ret == null)
@@ -122,14 +122,14 @@ namespace DataReef.TM.Services
                     {
                         quota.Add(item.Quota);
                     }
-                     
-                    report.Add(quota); 
-                } 
+
+                    report.Add(quota);
+                }
                 return report;
             }
-        } 
-         
-        public List<CRMDisposition> GetQuotasCommitementsReport(QuotasCommitment req)
+        }
+
+        public List<List<object>> GetQuotasCommitementsReport(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
             {
@@ -148,11 +148,24 @@ namespace DataReef.TM.Services
                     commitment.Disposition = commitment.Disposition.OrderBy(a => a.Disposition).ToList();
                 }
 
+                List<List<object>> report = new List<List<object>>();
+
+                List<object> header = new List<object>();
+                header.Add("Metric");
+                header.Add("Quota Today");
+                header.Add("Commitment Today");
+                header.Add("Quota This Week");
+                header.Add("Commitment This Week");
+                header.Add("Quota (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
+                header.Add("Commitment (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
+
+                report.Add(header);
+
                 foreach (var item in quota.Disposition)
                 {
-                    item.TodayQuotas = (Convert.ToInt32(item.Quota) / Convert.ToInt32(quota.EndDate.Subtract(quota.StartDate).TotalDays)).ToString();                                                                   
+                    item.TodayQuotas = (Convert.ToInt32(item.Quota) / Convert.ToInt32(quota.EndDate.Subtract(quota.StartDate).TotalDays)).ToString();
                     item.WeekQuotas = item.Quota;
-                    item.RangeQuotas = item.Quota; 
+                    item.RangeQuotas = item.Quota;
 
                     if (commitment != null)
                     {
@@ -162,10 +175,63 @@ namespace DataReef.TM.Services
                         item.WeekCommitments = data.WeekCommitments;
                         item.RangeCommitments = data.RangeCommitments;
                     }
+                    else
+                    {
+                        item.TodayCommitments = "";
+                        item.WeekCommitments = "";
+                        item.RangeCommitments = "";
+                    }
+
+                    var commitments = new List<object>{
+                        item.DisplayName,
+                        item.TodayQuotas,
+                        item.TodayCommitments,
+                        item.WeekQuotas,
+                        item.WeekCommitments,
+                        item.RangeQuotas,
+                        item.RangeCommitments,
+                    };
+
+                    report.Add(commitments);
                 }
 
-                return quota.Disposition;
+                return report;
             }
         }
+
+        public QuotasCommitment InsertCommitments(QuotasCommitment entity)
+        {
+            entity.CreatedByID = SmartPrincipal.UserId;
+
+            List<CRMDisposition> dispositions = new List<CRMDisposition>();
+
+            foreach (var item in entity.commitments)
+            {
+                var commitments = new CRMDisposition
+                {
+                    DisplayName = item[0].ToString(),
+                    TodayQuotas = item[1].ToString(),
+                    TodayCommitments = item[2].ToString(),
+                    WeekQuotas = item[3].ToString(),
+                    WeekCommitments = item[4].ToString(),
+                    RangeQuotas = item[5].ToString(),
+                    RangeCommitments = item[6].ToString(),
+                };
+
+                dispositions.Add(commitments);
+            }
+             
+            entity.dispositions = JsonConvert.SerializeObject(dispositions);
+            var ret = base.Insert(entity);
+
+            if (ret == null)
+            {
+                entity.SaveResult = SaveResult.SuccessfulInsert;
+                return entity;
+            }
+
+            return entity;
+        }
+
     }
 }

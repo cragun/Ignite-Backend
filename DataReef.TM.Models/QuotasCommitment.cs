@@ -44,6 +44,9 @@ namespace DataReef.TM.Models
         [NotMapped]
         public Guid UserID { get; set; }
 
+        [NotMapped]
+        public List<List<object>> commitments { get; set; }
+
         #region Navigation Properties
 
         [DataMember]

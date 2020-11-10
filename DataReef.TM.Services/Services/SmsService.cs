@@ -25,9 +25,6 @@ namespace DataReef.TM.Services.Services
 
         public void SendSms(string message, string mobileNumber)
         {
-            try
-            {
- 
             AmazonSimpleNotificationServiceClient snsClient = new AmazonSimpleNotificationServiceClient(_s3AccessKeyId, _s3SecretAccessKey, Amazon.RegionEndpoint.USWest2);
             PublishRequest pubRequest = new PublishRequest();
             pubRequest.Message = message;
@@ -40,42 +37,6 @@ namespace DataReef.TM.Services.Services
 
             pubRequest.PhoneNumber = mobileNumber;
             PublishResponse pubResponse = snsClient.Publish(pubRequest);
-
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "SMSService"; 
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = new JavaScriptSerializer().Serialize(pubResponse);
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = "";
-
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "SMSService";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = new JavaScriptSerializer().Serialize(ex.Message.ToString());
-                apilog.ResponseContentBody = "";
-                apilog.RequestContentBody = ""; 
-
-
-                using (var dc = new DataContext())
-                {
-                    dc.ApiLogEntries.Add(apilog);
-                    dc.SaveChanges();
-                }
-            } 
         }
     }
 }

@@ -24,6 +24,10 @@ namespace DataReef.TM.Contracts.Services
         List<List<object>> GetQuotasReport();
          
         [OperationContract]
-        List<CRMDisposition> GetQuotasCommitementsReport(QuotasCommitment request);
+        List<List<object>> GetQuotasCommitementsReport(QuotasCommitment request);
+
+        [OperationContract]
+        QuotasCommitment InsertCommitments(QuotasCommitment request);
+
     }
 }
