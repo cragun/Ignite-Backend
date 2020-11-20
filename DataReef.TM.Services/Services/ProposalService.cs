@@ -1514,6 +1514,7 @@ namespace DataReef.TM.Services.Services
             {
                 var proposalData = dataContext
                                     .ProposalData
+                                    .AsNoTracking()
                                     .FirstOrDefault(pd => pd.Guid == proposalDataId);
 
                 if (proposalData == null)
@@ -1555,6 +1556,7 @@ namespace DataReef.TM.Services.Services
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.SolarSystem.Proposal.Tariff))
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Details))
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Provider))
+                                               .AsNoTracking()
                                                .FirstOrDefault(p => p.Guid == proposalData.ProposalID);
 
                     financePlan = proposal.SolarSystem.FinancePlans.FirstOrDefault();
@@ -1568,11 +1570,13 @@ namespace DataReef.TM.Services.Services
                 var contractorSetting = dataContext
                                 .OUSettings
                                 .Include(ous => ous.OU)
+                                .AsNoTracking()
                                 .FirstOrDefault(ous => ous.Value == proposalData.ContractorID);
 
                 proposal.SalesRep = dataContext
                                         .People
                                         .Include(p => p.PhoneNumbers)
+                                        .AsNoTracking()
                                         .FirstOrDefault(p => p.Guid == proposalData.SalesRepID);
 
 

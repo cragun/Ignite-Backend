@@ -90,7 +90,7 @@ namespace DataReef.TM.Services.Services
         {
             using (var dc = new DataContext())
             {
-                var person = dc.People.Include(x => x.PersonSettings).FirstOrDefault(x => x.Guid == personID);
+                var person = dc.People.Include(x => x.PersonSettings).AsNoTracking().FirstOrDefault(x => x.Guid == personID);
                 if (person == null)
                 {
                     return 0;
@@ -100,7 +100,7 @@ namespace DataReef.TM.Services.Services
                     .Notifications
                     .Where(x => x.PersonID == personID && !x.IsDeleted && x.Status == IgniteNotificationSeenStatus.NotSeen)
                     .GroupBy(x => x.Value)
-                    .Select(g => g.OrderByDescending(x => x.DateCreated).FirstOrDefault());
+                    .Select(g => g.OrderByDescending(x => x.DateCreated).FirstOrDefault()).AsNoTracking();
 
                 var lastReadDate = person.PersonSettings.FirstOrDefault(x => x.Name == "Ignite.Notifications.LastChecked");
 
@@ -108,7 +108,7 @@ namespace DataReef.TM.Services.Services
                 {
                     if (DateTime.TryParse(lastReadDate?.Value, out var dateLastChecked))
                     {
-                        query = query.Where(x => x.DateCreated >= dateLastChecked);
+                        query = query.Where(x => x.DateCreated >= dateLastChecked).AsNoTracking();
                     }
 
                 }

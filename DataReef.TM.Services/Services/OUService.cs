@@ -1475,6 +1475,7 @@ namespace DataReef.TM.Services.Services
                 var allOUSettings = dataContext
                                 .OUSettings
                                 .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
+                                .AsNoTracking()
                                 .ToList()
                                 .OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID))
                                 .ToList();

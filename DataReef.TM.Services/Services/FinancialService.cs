@@ -47,6 +47,7 @@ namespace DataReef.TM.Services.Services
                             .FinancePlaneDefinitions
                             .Include(fpd => fpd.Details)
                             .Where(fpd => request.FinancePlanGuids.Contains(fpd.Guid))
+                            .AsNoTracking()
                             .ToList();
 
                 List<FinancePlanDefinition> plans = null;
