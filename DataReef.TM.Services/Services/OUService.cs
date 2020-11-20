@@ -1530,11 +1530,18 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
         public ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
         {
             using (var dataContext = new DataContext())
             {
-                var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalid);
+                //var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalid);
+                var proposalData = dataContext
+                                    .ProposalData
+                                    .FirstOrDefault(pd => pd.Guid == proposalid);
+
+                var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalData.ProposalID);
+
                 Guid? ouid = Guid.Empty;
                 if (proposal != null)
                 {
