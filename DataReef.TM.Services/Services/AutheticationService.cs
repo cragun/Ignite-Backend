@@ -921,6 +921,7 @@ namespace DataReef.Application.Services
                                         {
                                             var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
 
+
                                             //add the OU association and the Role to that Association
                                             organizationalUnitAssociation = new OUAssociation
                                             {
