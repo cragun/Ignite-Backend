@@ -833,58 +833,61 @@ namespace DataReef.Application.Services
                 var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
                 if (isExist != null)
                 {
+
+                    if (isExist.IsDeleted == true)
+                    {
+                        return new SaveResult { Success = false, SuccessMessage = "Please activate user" };
+                    }
+
+                    if (!String.IsNullOrEmpty(newUser.FirstName))
+                    {
+                        isExist.FirstName = newUser.FirstName;
+                    }
+
+                    if (!String.IsNullOrEmpty(newUser.LastName))
+                    {
+                        isExist.LastName = newUser.LastName;
+                    }
+
+                    if (!String.IsNullOrEmpty(newUser.FirstName) && !String.IsNullOrEmpty(newUser.LastName))
+                    {
+                        isExist.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
+                    }
+
+                    if (!String.IsNullOrEmpty(newUser.EmailAddress))
+                    {
+                        isExist.EmailAddressString = newUser.EmailAddress;
+                    }
+
+
+                    if (!String.IsNullOrEmpty(newUser.PhoneNumber))
+                    {
+                        var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                        if (isExistPhoneNumber != null)
+                        {
+                            isExistPhoneNumber.Number = newUser.PhoneNumber;
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(newUser.Password))
+                    {
+                        var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
+                        if (isExistCredentials != null)
+                        {
+                            isExistCredentials.UserName = newUser.EmailAddress;
+                            isExistCredentials.PasswordRaw = newUser.Password;
+                            isExistCredentials.PerformHash();
+                        }
+                    }
+
+                    var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
+                    dc.OUAssociations.RemoveRange(OUAssociations);
+                    dc.SaveChanges();
+
                     using (var transaction = dc.Database.BeginTransaction())
                     {
                         try
                         {
-                            if (isExist.IsDeleted == true)
-                            {
-                                return new SaveResult { Success = false, SuccessMessage = "Please activate user" };
-                            }
-
-                            if (!String.IsNullOrEmpty(newUser.FirstName))
-                            {
-                                isExist.FirstName = newUser.FirstName;
-                            }
-
-                            if (!String.IsNullOrEmpty(newUser.LastName))
-                            {
-                                isExist.LastName = newUser.LastName;
-                            }
-
-                            if (!String.IsNullOrEmpty(newUser.FirstName) && !String.IsNullOrEmpty(newUser.LastName))
-                            {
-                                isExist.Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName);
-                            }
-
-                            if (!String.IsNullOrEmpty(newUser.EmailAddress))
-                            {
-                                isExist.EmailAddressString = newUser.EmailAddress;
-                            }
-
-                            if (!String.IsNullOrEmpty(newUser.PhoneNumber))
-                            {
-                                var isExistPhoneNumber = dc.PhoneNumbers.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
-                                if (isExistPhoneNumber != null)
-                                {
-                                    isExistPhoneNumber.Number = newUser.PhoneNumber;
-                                }
-                            }
-
-                            if (!String.IsNullOrEmpty(newUser.Password))
-                            {
-                                var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
-                                if (isExistCredentials != null)
-                                {
-                                    isExistCredentials.UserName = newUser.EmailAddress;
-                                    isExistCredentials.PasswordRaw = newUser.Password;
-                                    isExistCredentials.PerformHash();
-                                }
-                            }
-
-                            var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
-                            dc.OUAssociations.RemoveRange(OUAssociations);
-
                             string not_avail = "";
 
                             foreach (var item in apikey)
@@ -918,6 +921,7 @@ namespace DataReef.Application.Services
                                         {
                                             var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
 
+
                                             //add the OU association and the Role to that Association
                                             organizationalUnitAssociation = new OUAssociation
                                             {
@@ -948,7 +952,7 @@ namespace DataReef.Application.Services
                         }
                     }
                 }
-                else 
+                else
                 {
                     using (var transaction = dc.Database.BeginTransaction())
                     {
@@ -963,6 +967,7 @@ namespace DataReef.Application.Services
                             Person person = null;
                             User user = null;
                             Guid accountID = System.Guid.Empty;
+
 
                             if (credential == null)
                             {
@@ -1032,8 +1037,16 @@ namespace DataReef.Application.Services
                               .FirstOrDefault(x =>
                               {
                                   var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
-                                  return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                                  if (selectedIntegrations != null)
+                                  {
+                                      return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                                  }
+                                  else
+                                  {
+                                      return false;
+                                  }
                               });
+
 
                                 if (ouSetting == null)
                                 {
@@ -1061,7 +1074,7 @@ namespace DataReef.Application.Services
                                             dc.OUAssociations.Add(organizationalUnitAssociation);
                                         }
                                     }
-                                }    
+                                }
                             }
 
                             try
