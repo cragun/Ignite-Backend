@@ -1367,6 +1367,7 @@ namespace DataReef.TM.Services.Services
             {
                 var property = uow
                                 .Get<Property>()
+                                .AsNoTracking()
                                 .FirstOrDefault(p => p.GenabilityProviderAccountID == id);
                 if (property == null)
                 {
@@ -1379,6 +1380,7 @@ namespace DataReef.TM.Services.Services
                                  && p.Tariff != null
                                  && p.Tariff.TariffName != null)
                         .Select(p => p.Tariff)
+                        .AsNoTracking()
                         .FirstOrDefault();
             }
         }

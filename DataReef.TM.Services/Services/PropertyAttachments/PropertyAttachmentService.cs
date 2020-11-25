@@ -732,6 +732,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                 var property = uow
                         .Get<Property>()
                         .Include(p => p.Attachments.Select(a => a.Items))
+                        .AsNoTracking()
                         .FirstOrDefault(p => p.Id == propertyID);
 
                 if (property == null || property?.Attachments?.Any() != true)
@@ -791,6 +792,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                         people = uow
                             .Get<Person>()
                             .Where(p => personIDs.Contains(p.Guid))
+                            .AsNoTracking()
                             .ToList();
                     }
 

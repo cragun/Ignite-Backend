@@ -52,6 +52,7 @@ namespace DataReef.TM.Services
                                   && (cl.Lat != 0 || cl.Lon != 0 || cl.Accuracy != 0))
                         .GroupBy(cl => cl.PersonID)
                         .Select(gcl => gcl.OrderByDescending(cl => cl.DateCreated).FirstOrDefault())
+                        .AsNoTracking()
                         .ToList();
             }
         }

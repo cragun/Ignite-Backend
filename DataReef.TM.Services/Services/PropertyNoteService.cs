@@ -388,7 +388,7 @@ namespace DataReef.TM.Services.Services
                 var property = GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
-                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
+                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToList();
 
 
                 return property.PropertyNotes?.Select(x => new SBNoteDTO
@@ -772,9 +772,10 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
                 //first get the property
-                var property = dc.Properties
+                var property = dc.Properties                    
                     .Include(x => x.Territory)
                     .Include(x => x.PropertyNotes)
+                    .AsNoTracking()
                     .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
 
                 if (property == null)
