@@ -503,6 +503,7 @@ namespace DataReef.Application.Services
                             DeviceService.HandleDevice(dc, c.User.NumberOfDevicesAllowed, userDevices, currentDevice, SmartPrincipal.DeviceId, c.UserID);
                         }
 
+
                         //TODO: refactor to throw an error if multi account access and missing an accountid from the header
                         //for now just grab the first one
                         AccountAssociation aa = dc.AccountAssociations.FirstOrDefault(aas => aas.PersonID == c.User.PersonID);
