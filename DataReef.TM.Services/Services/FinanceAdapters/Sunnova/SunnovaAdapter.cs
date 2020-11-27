@@ -135,6 +135,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/leads", null, token);
                     throw new ApplicationException($"CreateSunnovaLead Failed. {response.Content}");
                 }
 
