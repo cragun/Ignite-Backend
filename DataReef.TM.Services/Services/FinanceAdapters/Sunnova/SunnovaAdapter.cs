@@ -108,8 +108,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 addr.Latitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude)); 
                 addr.Longitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
                 addr.PostalCode = property.ZipCode;
-                addr.State = property.State;
-                addr.Street = property.Address1;
+                addr.State = property.State == null ? "" : property.State;
+                addr.Street = property.Address1 == null ? "" : property.Address1;
 
                 var name = property.GetMainOccupant();
 
@@ -119,7 +119,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Email = email == null ? "" : email;
                 req.Phone = phone;
                 req.Address = addr;
-                req.external_id = property.ExternalID;
+                req.external_id = property.ExternalID == null ? "" : property.ExternalID;
                 req.Preferred_Contact_Method = "Email";
                 req.Preferred_Language = "English";
                 req.Suffix = "";

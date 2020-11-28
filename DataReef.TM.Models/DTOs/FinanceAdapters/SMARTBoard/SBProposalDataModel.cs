@@ -35,6 +35,10 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             ModuleModel = solarPanel?.Description;
             ModuleSize = solarPanel?.Watts;
 
+            ProductionKWH = proposal.ProductionKWH;
+            ProductionKWHpercentage = proposal.ProductionKWHpercentage;
+            IsManual = proposal.IsManual;
+
             InverterMake = inverter?.Name;
             InverterModel = inverter?.Model;
             InverterQuantity = proposal.SolarSystem.GetInvertersCount();
@@ -170,6 +174,13 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public string ModuleMake { get; set; }
         public string ModuleModel { get; set; }
         public int? ModuleSize { get; set; }
+
+        #endregion
+
+        #region Manual Production
+        public double ProductionKWH { get; set; }
+        public double ProductionKWHpercentage { get; set; }
+        public bool IsManual { get; set; }
 
         #endregion
 
