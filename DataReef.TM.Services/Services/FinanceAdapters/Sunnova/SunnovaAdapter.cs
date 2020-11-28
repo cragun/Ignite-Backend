@@ -45,6 +45,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
         }
 
 
+
         // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);        
 
         public class SunnovaProjects
