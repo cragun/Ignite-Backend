@@ -39,6 +39,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             ProductionKWHpercentage = proposal.ProductionKWHpercentage;
             IsManual = proposal.IsManual;
 
+
             InverterMake = inverter?.Name;
             InverterModel = inverter?.Model;
             InverterQuantity = proposal.SolarSystem.GetInvertersCount();
