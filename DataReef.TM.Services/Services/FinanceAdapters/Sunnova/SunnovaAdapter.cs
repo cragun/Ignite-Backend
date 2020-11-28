@@ -52,7 +52,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string Middle_Name { get; set; }
-            public string Suffix { get; set; }
+          //  public string Suffix { get; set; }
             public string Email { get; set; }
             public string Preferred_Contact_Method { get; set; }
             public string Preferred_Language { get; set; }
@@ -122,7 +122,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.external_id = property.ExternalID == null ? "" : property.ExternalID;
                 req.Preferred_Contact_Method = "Email";
                 req.Preferred_Language = "English";
-                req.Suffix = "";
+               // req.Suffix = "";
                 
                 string token = GetSunnovaToken();
                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
