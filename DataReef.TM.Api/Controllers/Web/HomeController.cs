@@ -2,15 +2,11 @@
 using DataReef.Core.Extensions;
 using DataReef.TM.Api.Classes.Enums;
 using DataReef.TM.Api.Classes.ViewModels;
-using DataReef.TM.Api.Common;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Web;
 using System.Web.Mvc;
 

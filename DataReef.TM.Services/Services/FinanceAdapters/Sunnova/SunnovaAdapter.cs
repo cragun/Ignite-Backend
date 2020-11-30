@@ -45,6 +45,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
         }
 
 
+
         // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);        
 
         public class SunnovaProjects
@@ -52,7 +53,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string Middle_Name { get; set; }
-            public string Suffix { get; set; }
+          //  public string Suffix { get; set; }
             public string Email { get; set; }
             public string Preferred_Contact_Method { get; set; }
             public string Preferred_Language { get; set; }
@@ -108,8 +109,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 addr.Latitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude)); 
                 addr.Longitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
                 addr.PostalCode = property.ZipCode;
-                addr.State = property.State;
-                addr.Street = property.Address1;
+                addr.State = property.State == null ? "" : property.State;
+                addr.Street = property.Address1 == null ? "" : property.Address1;
 
                 var name = property.GetMainOccupant();
 
@@ -119,10 +120,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Email = email == null ? "" : email;
                 req.Phone = phone;
                 req.Address = addr;
-                req.external_id = property.ExternalID;
+                req.external_id = property.ExternalID == null ? "" : property.ExternalID;
                 req.Preferred_Contact_Method = "Email";
                 req.Preferred_Language = "English";
-                req.Suffix = "";
+               // req.Suffix = "";
                 
                 string token = GetSunnovaToken();
                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
@@ -133,8 +134,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 //var json = new JavaScriptSerializer().Serialize(req);
                 //var resp = new JavaScriptSerializer().Serialize(response);                
 
+
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/leads", null, token);
                     throw new ApplicationException($"CreateSunnovaLead Failed. {response.Content}");
                 }
 
