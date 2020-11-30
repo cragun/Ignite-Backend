@@ -81,5 +81,9 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid);
 
+        [OperationContract]
+        List<Territory> GetTerritoriesFromAddress(Property req);
+        
+
     }
 }
