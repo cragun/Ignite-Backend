@@ -86,14 +86,17 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 }
 
                                 dc.SaveChanges();
-                            }
 
-                            //send mail 
+                                //send mail 
 
-                            string mailbody = "<p>SMARTBOARD ID : " + person.SmartBoardID + "</p><p>User ID : " + person.Guid + "</p><p>UserName : " + person.Name + "</p>"; 
+                                if (person != null && !person.IsDeleted)
+                                {
+                                    string mailbody = "<p>SMARTBOARD ID : " + person.SmartBoardID + "</p><p>User ID : " + person.Guid + "</p><p>UserName : " + person.Name + "</p>";
 
-                            Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody , true);
-                            Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody , true);
+                                    Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
+                                    Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
+                                }
+                            } 
                         }
                     }
                 }
