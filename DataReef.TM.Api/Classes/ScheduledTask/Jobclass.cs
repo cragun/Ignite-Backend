@@ -87,8 +87,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
                                 dc.SaveChanges();
 
-                                //send mail 
-
+                                //send mail  
                                 if (person != null && !person.IsDeleted)
                                 {
                                     string mailbody = "<p>SMARTBOARD ID : " + person.SmartBoardID + "</p><p>User ID : " + person.Guid + "</p><p>UserName : " + person.Name + "</p>";
