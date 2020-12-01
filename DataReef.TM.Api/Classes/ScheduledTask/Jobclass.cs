@@ -53,15 +53,17 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
                             bool isDeactivate = false; 
 
-                            if (person != null && !person.IsDeleted && person.SBLastActivityDate != null)
-                            {
-                                if (person.SBLastActivityDate.Value.Date >= oldDate.Date)
-                                {
-                                    isDeactivate = true;
-                                };
-                            }
+
+                            //if (person != null && !person.IsDeleted && person.SBLastActivityDate != null)
+                            //{
+                            //    if (person.SBLastActivityDate.Value.Date >= oldDate.Date)
+                            //    {
+                            //        isDeactivate = true;
+                            //    };
+                            //}
                              
-                            if (dayvalidation.Count > 0 && lastLoginCount == 0 &&  isDeactivate == true)
+                            //if (dayvalidation.Count > 0 && lastLoginCount == 0 &&  isDeactivate == true)
+                            if (dayvalidation.Count > 0 && lastLoginCount == 0)
                             { 
                                 if (person != null && !person.IsDeleted)
                                 {
