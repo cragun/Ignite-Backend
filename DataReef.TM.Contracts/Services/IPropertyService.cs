@@ -77,5 +77,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Task<bool> IsPropertyAvailable(long igniteId);
 
+        [OperationContract]
+        List<Territory> GetTerritoriesFromAddress(Property req);
+
     }
 }

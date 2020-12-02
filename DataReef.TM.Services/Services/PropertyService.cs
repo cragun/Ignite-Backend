@@ -1620,5 +1620,19 @@ namespace DataReef.TM.Services.Services
                 }
             }
         }
+
+        public List<Territory> GetTerritoriesFromAddress(Property req)
+        {
+            using (var dc = new DataContext())
+            {
+                //first get the property
+                var property = dc.Properties.Where(x => x.ZipCode == req.ZipCode).Select(a => a.TerritoryID).ToList();
+                var territories = dc
+                                 .Territories
+                                 .Where(o => property.Contains(o.Guid)).ToList();
+
+                return territories;
+            }
+        }
     }
 }

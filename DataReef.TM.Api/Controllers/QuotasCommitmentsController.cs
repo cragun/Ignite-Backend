@@ -62,11 +62,29 @@ namespace DataReef.TM.Api.Controllers
 
 
         [HttpGet]
+        //[Route("quota/report")]
         [ResponseType(typeof(List<AdminQuotas>))]
         public async Task<IHttpActionResult> GetQuotasReport()
         {
             var ret = quotasCommitmentsService.GetQuotasReport();
             return Ok(new { Response = ret });
         }
+        
+        //[HttpPost]
+        //[Route("commitement/report")]
+        //public async Task<IHttpActionResult> GetCommitementsReport(QuotasCommitment req)
+        //{
+        //    var ret = quotasCommitmentsService.GetQuotasCommitementsReport(req);
+        //    return Ok(new { Response = ret });
+        //}
+
+
+        ////add Commitments by user
+        //[HttpPost, Route("addCommitments")]
+        //public async Task<IHttpActionResult> InsertCommitments(QuotasCommitment request)
+        //{
+        //    var ret = quotasCommitmentsService.InsertCommitments(request);
+        //    return Ok(ret);
+        //}
     }
 }

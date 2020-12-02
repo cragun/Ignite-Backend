@@ -275,5 +275,21 @@ namespace DataReef.TM.Api.Controllers
                 }
             }
         }
+
+        /// get territories from address
+        [Route("territories")]
+        [HttpPost]
+        public async Task<IHttpActionResult> GetTerritoriesFromAddress(Property req)
+        {
+            try
+            {
+                var result = propertyService.GetTerritoriesFromAddress(req);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

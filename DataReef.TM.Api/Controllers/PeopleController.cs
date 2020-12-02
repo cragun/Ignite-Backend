@@ -5,14 +5,17 @@ using DataReef.TM.Api.Classes;
 using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Api.Classes.ViewModels;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.Inquiries;
 using DataReef.TM.Models.DTOs.Common;
 using DataReef.TM.Models.DTOs.Inquiries;
+using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Persons;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Reporting.Settings;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,19 +41,22 @@ namespace DataReef.TM.Api.Controllers
         private readonly IBlobService blobService;
         private readonly ICurrentLocationService currentLocationService;
         private readonly IInquiryService inquiryService;
+        private readonly Lazy<IOUSettingService> ouSettingService;
 
         public PeopleController(IPersonService peopleService,
             IPersonSettingService settingsService,
             IBlobService blobService,
             ILogger logger,
             ICurrentLocationService currentLocationService,
-            IInquiryService inquiry)
+            IInquiryService inquiry,
+            Lazy<IOUSettingService> ouSettingService)
             : base(peopleService, logger)
         {
             this.peopleService = peopleService;
             this.blobService = blobService;
             this.currentLocationService = currentLocationService;
             this.inquiryService = inquiry;
+            this.ouSettingService = ouSettingService;
             this.settingsService = settingsService;
         }
 
@@ -457,6 +463,39 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("sb/GetUserRole/{usrSbid}")]
+        public async Task<IHttpActionResult> GetUserRoleWithApikey(string usrSbid)
+        {
+            using (var dc = new DataContext())
+            {
+                var people = dc.People.FirstOrDefault(x => x.SmartBoardID.Equals(usrSbid, StringComparison.InvariantCultureIgnoreCase));
+
+                if (people == null)
+                {
+                    throw new Exception("No account linked to the specified Smartboardid");
+                }
+
+                var persn = peopleService.OuassociationRoleName(people.Guid);
+                List<PersonOffboard> prolist = new List<PersonOffboard>();
+                foreach (var i in persn)
+                {
+                    PersonOffboard pro = new PersonOffboard();
+
+                    var sbSettings = ouSettingService.Value.GetSettingsByOUID(i.OUID)?.FirstOrDefault(x => x.Name == "Integrations.Options.Selected")?.GetValue<ICollection<SelectedIntegrationOption>>()?.FirstOrDefault(s => s.Data?.SMARTBoard != null)?.Data?.SMARTBoard;
+
+                    pro.Apikey = sbSettings != null ? sbSettings?.ApiKey : "";
+                    pro.AssociateOuName = i.AssociateOuName;
+                    pro.OUID = i.OUID;
+                    pro.RoleID = i.RoleID;
+                    pro.RoleName = i.RoleName;
+                    prolist.Add(pro);
+                }
+
+                return Ok(prolist);
+            }
+        }
 
     }
 }

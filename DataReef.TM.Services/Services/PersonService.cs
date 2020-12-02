@@ -1183,7 +1183,8 @@ namespace DataReef.TM.Services
                 var OUAssociation = dc.OUAssociations?.Include(p => p.OU).Include(p => p.OURole).Where(x => x.PersonID == personid && x.IsDeleted == false).ToList();
                 var OUAss = OUAssociation?.Select(x => new PersonOffboard
                 {
-                    OUID = x.Guid,
+                    RoleID = x.OURoleID,
+                    OUID = x.OUID,
                     AssociateOuName = x.OU?.Name,
                     RoleName = x.OURole?.Name
                 });
