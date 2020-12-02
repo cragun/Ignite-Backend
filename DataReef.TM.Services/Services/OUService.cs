@@ -1912,7 +1912,8 @@ namespace DataReef.TM.Services.Services
 
                 foreach (var item in ignite)
                 {
-                    var isExist = sbclients.FirstOrDefault(a => a.Name == "Disposition.Options");
+                   // var isExist = sbclients.FirstOrDefault(a => a.Name == "Disposition.Options");
+                    var isExist = sbclients.FirstOrDefault(a => a.Name == item.Name);
                     if (isExist == null)
                     {
                         OUSetting setting = new OUSetting();
