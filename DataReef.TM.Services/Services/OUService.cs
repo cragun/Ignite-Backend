@@ -1878,6 +1878,45 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+
+        public void AddOUSettingsTest()
+        {
+            using (var dc = new DataContext())
+            {
+                Guid igniteid = Guid.Parse("3F78B1B0-C0C5-4987-A5D5-32EE1C893460");
+                Guid sbclientsid = Guid.Parse("9E0D3BE2-40CC-4FD5-BDB5-3BAAB201BD8C");
+                var ignite = dc
+                    .OUSettings
+                    .Where(s => s.OUID == igniteid)
+                    .ToList();
+
+
+                var sbclients = dc
+                 .OUSettings
+                 .Where(s => s.OUID == sbclientsid)
+                 .ToList();
+
+                foreach (var item in ignite)
+                {
+                    var isExist = sbclients.FirstOrDefault(a => a.Name == "Disposition.Options");
+                    if (isExist == null)
+                    {
+                        OUSetting setting = new OUSetting();
+                        setting.OUID = sbclientsid;
+                        setting.Value = item.Value;
+                        setting.Group = item.Group;
+                        setting.Inheritable = item.Inheritable;
+                        setting.Name = item.Name;
+                        setting.ValueType = item.ValueType;
+
+                        dc.OUSettings.Add(setting);
+                    }
+                }
+
+                dc.SaveChanges();
+            }
+        }
+
         public void EditOU(Guid ouid, OnboardingOUDataView req)
         {
             using (var dc = new DataContext())

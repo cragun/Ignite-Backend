@@ -100,6 +100,9 @@ namespace DataReef.TM.Contracts.Services
         void EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req);
 
         [OperationContract]
+        void AddOUSettingsTest();
+
+        [OperationContract]
         OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false);
 
         [OperationContract]

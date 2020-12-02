@@ -87,5 +87,16 @@ namespace DataReef.TM.Api.Controllers
             return Ok(ouService.GetOnboardingLookupData(parentID));
         }
 
+
+        [HttpGet]
+        [Route("oustest")]
+        public async Task<IHttpActionResult> AddOUSettingsTest()
+        {
+            ouService.AddOUSettingsTest();
+            return Ok("success");
+        }
+
+
+
     }
 }
