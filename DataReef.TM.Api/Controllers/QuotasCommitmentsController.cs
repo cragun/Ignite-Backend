@@ -69,6 +69,7 @@ namespace DataReef.TM.Api.Controllers
             var ret = quotasCommitmentsService.GetQuotasReport();
             return Ok(new { Response = ret });
         }
+
         
         //[HttpPost]
         //[Route("commitement/report")]
