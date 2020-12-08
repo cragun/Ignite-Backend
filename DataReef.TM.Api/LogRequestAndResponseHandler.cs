@@ -34,7 +34,11 @@ namespace DataReef.TM.Api
                 responseBody = await result.Content.ReadAsStringAsync();
             }
 
-            if (request.RequestUri.ToString().ToLowerInvariant().Contains(("sunnova/calback").ToLowerInvariant()))
+            //if (request.RequestUri.ToString().ToLowerInvariant().Contains(("sunnova/calback").ToLowerInvariant()))
+            if (request.RequestUri.ToString().ToLowerInvariant().Contains(("sbzapierOus").ToLowerInvariant())
+                || request.RequestUri.ToString().ToLowerInvariant().Contains(("TerritoriesByOu").ToLowerInvariant())
+                || request.RequestUri.ToString().ToLowerInvariant().Contains(("properties/sb").ToLowerInvariant())
+                || request.RequestUri.ToString().ToLowerInvariant().Contains(("sunnova/calback").ToLowerInvariant()))
             {
                 ApiLogEntry apilog = new ApiLogEntry();
                 apilog.Id = Guid.NewGuid();
