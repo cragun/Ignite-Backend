@@ -1,4 +1,5 @@
-﻿using DataReef.Core.Infrastructure.Authorization;
+﻿using DataReef.Auth.Helpers;
+using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Logging;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
@@ -54,6 +55,30 @@ namespace DataReef.TM.Api.Controllers
             try
             {
                 var result = await propertyService.GetTerritoriesList(propertyID, apiKey);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// / Gets all Territories base on apikey only
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [Route("GetTerritoryList/{apiKey}")]
+        [ResponseType(typeof(IEnumerable<Territories>))]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetTerritoryListbyApikey(string apiKey)
+        {
+            try
+            {
+                bool checkTime = CryptographyHelper.checkTime(apiKey);
+                string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+                var result = await propertyService.GetTerritoryListbyApikey(DecyptApiKey);
                 return Ok(result);
             }
             catch (System.Exception)

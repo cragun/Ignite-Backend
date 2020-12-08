@@ -1426,6 +1426,17 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async Task<IEnumerable<Territories>> GetTerritoryListbyApikey(string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryListByapiKeyOnly @apiKey", new SqlParameter("@apiKey", apiKey)).ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+
         public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
         {
             using (var dc = new DataContext())
