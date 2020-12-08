@@ -104,8 +104,6 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-
-
         /// <summary>
         /// / Gets all inquiries regardless of person, for a property
         /// </summary>
