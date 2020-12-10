@@ -472,6 +472,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
             catch (Exception)
             {
+
             }
 
             if (!String.IsNullOrEmpty(response))
