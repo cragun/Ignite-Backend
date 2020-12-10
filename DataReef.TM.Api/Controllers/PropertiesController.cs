@@ -71,6 +71,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("GetTerritoryList/{apiKey}")]
         [ResponseType(typeof(IEnumerable<Territories>))]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> GetTerritoryListbyApikey(string apiKey)
         {
             try
