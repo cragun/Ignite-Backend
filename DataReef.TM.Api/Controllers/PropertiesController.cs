@@ -81,6 +81,7 @@ namespace DataReef.TM.Api.Controllers
 
                 var result = await propertyService.GetTerritoryListbyApikey(DecyptApiKey);
                 return Ok(result);
+
             }
             catch (System.Exception)
             {
