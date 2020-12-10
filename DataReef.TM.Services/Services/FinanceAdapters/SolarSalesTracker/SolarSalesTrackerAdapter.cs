@@ -474,7 +474,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
             }
 
-            return JsonConvert.DeserializeObject<SBGetDocument>(response);
+            if (!String.IsNullOrEmpty(response))
+            {
+                return JsonConvert.DeserializeObject<SBGetDocument>(response);
+            }
+            else
+            {
+                return new SBGetDocument();
+            }
         }
 
         public void SBActiveDeactiveUser(bool IsActive, string sbid)
