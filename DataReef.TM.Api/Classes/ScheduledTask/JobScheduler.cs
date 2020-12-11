@@ -26,6 +26,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
             .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(22, 45)))
             .Build();
 
+
             scheduler.ScheduleJob(job, trigger);
         }
     }
