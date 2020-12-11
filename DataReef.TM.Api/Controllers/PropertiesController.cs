@@ -73,12 +73,13 @@ namespace DataReef.TM.Api.Controllers
         [Route("GetTerritoryList/{apiKey}")]
         [ResponseType(typeof(IEnumerable<Territories>))]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IHttpActionResult> GetTerritoryListbyApikey(string apiKey, double Lat, double Long)
         {
             try
             {
-                //bool checkTime = CryptographyHelper.checkTime(apiKey);
-                //string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+                bool checkTime = CryptographyHelper.checkTime(apiKey);
+                string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
                 var result = await propertyService.GetTerritoryListbyApikey(apiKey, Lat, Long);
                 return Ok(result);
