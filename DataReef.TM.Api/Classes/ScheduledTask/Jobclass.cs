@@ -81,8 +81,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 if (c != null && !c.IsDeleted)
                                 {
                                     c.IsDeleted = true;
-                                }
-
+                                } 
                                 dc.SaveChanges();
 
                                 //send mail  
