@@ -63,25 +63,27 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+
         /// <summary>
         /// / Gets all Territories base on apikey only
         /// </summary>
         /// <param name="apiKey"></param>
+        /// <param name="Lat"></param>
+        /// <param name="Long"></param>
         /// <returns></returns>
         [Route("GetTerritoryList/{apiKey}")]
         [ResponseType(typeof(IEnumerable<Territories>))]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IHttpActionResult> GetTerritoryListbyApikey(string apiKey)
+        public async Task<IHttpActionResult> GetTerritoryListbyApikey(string apiKey, double Lat, double Long)
         {
             try
             {
                 bool checkTime = CryptographyHelper.checkTime(apiKey);
                 string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
-                var result = await propertyService.GetTerritoryListbyApikey(DecyptApiKey);
+                var result = await propertyService.GetTerritoryListbyApikey(DecyptApiKey, Lat, Long);
                 return Ok(result);
-
             }
             catch (System.Exception)
             {

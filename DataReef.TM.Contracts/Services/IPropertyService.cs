@@ -70,7 +70,7 @@ namespace DataReef.TM.Contracts.Services
         Task<IEnumerable<Territories>> GetTerritoriesList(Guid propertyid, string apiKey);
 
         [OperationContract]
-        Task<IEnumerable<Territories>> GetTerritoryListbyApikey(string apiKey);
+        Task<IEnumerable<Territories>> GetTerritoryListbyApikey(string apiKey, double Lat, double Long);
 
         [OperationContract]
         SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request);
