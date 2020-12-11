@@ -29,7 +29,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                 dc.SaveChanges();
 
                 var loginday = dc.AppSettings.FirstOrDefault(a => a.Key == Constants.LoginDays);
-                int logindays = loginday != null ? Convert.ToInt32(loginday.Value) : 0; 
+                int logindays = loginday != null ? Convert.ToInt32(loginday.Value) : 0;
 
                 try
                 {
@@ -45,7 +45,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                             var dayvalidation = Authentications.Where(a => a.UserID == c.UserID).ToList();
 
                             DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
-
+                                 
                             var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
 
                             var person = People.SingleOrDefault(p => p.Guid == c.UserID
@@ -53,18 +53,16 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
                             bool isDeactivate = false; 
 
-
-                            //if (person != null && !person.IsDeleted && person.SBLastActivityDate != null)
-                            //{
-                            //    if (person.SBLastActivityDate.Value.Date >= oldDate.Date)
-                            //    {
-                            //        isDeactivate = true;
-                            //    };
-                            //}
-                             
-                            //if (dayvalidation.Count > 0 && lastLoginCount == 0 &&  isDeactivate == true)
-                            if (dayvalidation.Count > 0 && lastLoginCount == 0)
+                            if (person != null && !person.IsDeleted && person.SBLastActivityDate != null)
                             { 
+                                if (person.SBLastActivityDate.Value.Date <= oldDate.Date)
+                                {
+                                    isDeactivate = true;
+                                };
+                            }
+
+                            if (dayvalidation.Count > 0 && lastLoginCount == 0 && isDeactivate == true)  
+                            {
                                 if (person != null && !person.IsDeleted)
                                 {
                                     person.IsDeleted = true;
@@ -95,7 +93,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                     Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
                                     Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
                                 }
-                            } 
+                            }
                         }
                     }
                 }
