@@ -22,8 +22,8 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
             .WithIdentity("trigger1", "group1")
             .StartNow()
             .WithDailyTimeIntervalSchedule(x => x
-            .WithIntervalInHours(24) 
-            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(16, 45)))
+            .WithIntervalInMinutes(15) 
+            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(22, 45)))
             .Build();
 
             scheduler.ScheduleJob(job, trigger);
