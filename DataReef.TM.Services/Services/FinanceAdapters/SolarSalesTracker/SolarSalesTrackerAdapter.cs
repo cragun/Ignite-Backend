@@ -1060,7 +1060,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 //3F78B1B0-C0C5-4987-A5D5-32EE1C893460 - ignite 
                 Guid ouid = Guid.Parse("3F78B1B0-C0C5-4987-A5D5-32EE1C893460");
-                var response = MakeRequest(ouid, url, "", serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+                var response = MakeRequest(ouid, url, null, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
 
                 if (!String.IsNullOrEmpty(response))
                 {

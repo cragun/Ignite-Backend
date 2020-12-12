@@ -1223,7 +1223,7 @@ namespace DataReef.TM.Services.Services
         {
             //send notification 
             var response = _sbAdapter.Value.GetAllSbUsers();
-            if (response?.users.Count > 0)
+            if (response?.users?.Count > 0)
             {
                 //try
                 //{
