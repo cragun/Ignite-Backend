@@ -26,7 +26,13 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
+        SBNoteDTO AddNoteCommentFromSmartboard(SBNoteDTO noteRequest, string apiKey);
+
+        [OperationContract]
         SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
+
+        [OperationContract]
+        SBNoteDTO EditNoteCommentFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
         IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey);
@@ -45,6 +51,9 @@ namespace DataReef.TM.Contracts.Services
         SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
 
         [OperationContract]
-        string SendNotification(string fcm_token);
+        string SendNotification(string fcm_token); 
+
+        [OperationContract]
+        string UpdateSmartboardIdByEmail(); 
     }
 }

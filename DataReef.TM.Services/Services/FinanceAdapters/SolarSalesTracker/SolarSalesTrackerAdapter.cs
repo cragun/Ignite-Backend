@@ -1047,5 +1047,30 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
+        public SBAllUsersModel GetAllSbUsers()
+        {
+            using (DataContext dc = new DataContext())
+            {
+
+                string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey("8ea1468dd9dd46d14a6622d1f48042a0");
+
+                //This sb api is not acc. specific.
+                //used static apikey for authentication purpose.
+                var url = $"/apis/get_all_users/{encryptedAPIkey}";
+
+                //3F78B1B0-C0C5-4987-A5D5-32EE1C893460 - ignite 
+                Guid ouid = Guid.Parse("3F78B1B0-C0C5-4987-A5D5-32EE1C893460");
+                var response = MakeRequest(ouid, url, "", serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
+
+                if (!String.IsNullOrEmpty(response))
+                {
+                    return JsonConvert.DeserializeObject<SBAllUsersModel>(response);
+                }
+                else
+                {
+                    return new SBAllUsersModel();
+                }
+            }
+        }
     }
 }

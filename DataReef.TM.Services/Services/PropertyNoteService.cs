@@ -21,7 +21,7 @@ using DataReef.Core.Classes;
 using DataReef.Core;
 using System.Data.SqlClient;
 using DataReef.TM.Models.Enums;
-
+using Newtonsoft.Json;
 
 namespace DataReef.TM.Services.Services
 {
@@ -120,7 +120,7 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, proprty, dc);
                     }
                 }
-                 
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -168,7 +168,7 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, proprty, dc);
                     }
                 }
-                 
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -220,7 +220,7 @@ namespace DataReef.TM.Services.Services
                             NotifyComment(not.PersonID, not, proprty, dc);
                         }
                     }
-                     
+
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
                     {
@@ -298,7 +298,7 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, proprty, dc);
                     }
-                } 
+                }
 
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
@@ -400,8 +400,9 @@ namespace DataReef.TM.Services.Services
                     Content = x.Content,
                     DateCreated = x.DateCreated,
                     DateLastModified = x.DateLastModified,
-                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID
-
+                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
+                    ContentType = x.ContentType,
+                    ParentID = x.ParentID
                 });
             }
         }
@@ -446,6 +447,91 @@ namespace DataReef.TM.Services.Services
                 var taggedPersons = GetTaggedPersons(note.Content);
                 if (taggedPersons?.Any() == true)
                 {
+                    List<string> email = new List<string>(1);
+                    email.Add("hevin.android@gmail.com");
+
+                    var emails = taggedPersons?.Select(x => x.EmailAddressString);
+                    var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
+                    if (emails?.Any() == true)
+                    {
+                        //SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, email, property, note.Guid);
+                    }
+
+                    NotifyTaggedUsers(taggedPersons, note, property, dc);
+                }
+
+
+                return new SBNoteDTO
+                {
+                    Guid = note.Guid,
+                    PropertyID = property.Guid,
+                    LeadID = property.SmartBoardId,
+                    Content = note.Content,
+                    DateCreated = note.DateCreated,
+                    DateLastModified = note.DateLastModified,
+                    UserID = user.SmartBoardID,
+                    Email = user.EmailAddressString,
+                };
+            }
+        }
+
+        public SBNoteDTO AddNoteCommentFromSmartboard(SBNoteDTO noteRequest, string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                //first get the property
+                if (!noteRequest.LeadID.HasValue || !noteRequest.IgniteID.HasValue)
+                {
+                    throw new Exception("LeadID or IgniteID is required");
+                }
+                var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
+
+                //get user by the the smartboardId
+
+                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                                      && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+                                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
+                if (user == null)
+                {
+                    throw new Exception("User with the specified ID was not found");
+                }
+
+
+                var note = new PropertyNote
+                {
+                    CreatedByID = user.Guid,
+                    CreatedByName = user.FullName,
+                    PersonID = user.Guid,
+                    Content = noteRequest.Content,
+                    PropertyID = property.Guid,
+                    ContentType = noteRequest.ContentType,
+                    ParentID = noteRequest.ParentID,
+
+                };
+
+                dc.PropertyNotes.Add(note);
+                dc.SaveChanges();
+
+                //if reply type is comment
+                if (noteRequest.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+
+                    not.Updated(user.Guid, user?.Name);
+                    dc.SaveChanges();
+
+                    if (not != null && property != null)
+                    {
+                        NotifyComment(not.PersonID, not, property, dc);
+                    }
+                }
+
+                //send notifications to the tagged users
+                var taggedPersons = GetTaggedPersons(note.Content);
+                if (taggedPersons?.Any() == true)
+                {
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
@@ -468,6 +554,8 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = note.DateLastModified,
                     UserID = user.SmartBoardID,
                     Email = user.EmailAddressString,
+                    ContentType = note.ContentType,
+                    ParentID = note.ParentID
                 };
             }
         }
@@ -548,6 +636,102 @@ namespace DataReef.TM.Services.Services
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
                     UserID = smartboardUserID
+                };
+            }
+        }
+
+        public SBNoteDTO EditNoteCommentFromSmartboard(SBNoteDTO noteRequest, string apiKey)
+        {
+            using (var dc = new DataContext())
+            {
+                if (!noteRequest.Guid.HasValue)
+                {
+                    throw new Exception("The note Guid is required");
+                }
+
+                //get the note
+                var note = dc
+                    .PropertyNotes
+                    .Include(x => x.Property)
+                    .Include(x => x.Person)
+                    .FirstOrDefault(x => x.Guid == noteRequest.Guid);
+                if (note == null)
+                {
+                    throw new Exception("The note with the specified Guid was not found");
+                }
+
+                //get the property
+                var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
+                if (property == null)
+                {
+                    throw new Exception("The lead was not found");
+                }
+
+                //get user by the the smartboardId
+                var smartboardUserID = noteRequest.UserID;
+                Person user = null;
+                if (!string.IsNullOrEmpty(noteRequest.UserID) || !string.IsNullOrEmpty(noteRequest.Email))
+                {
+                    user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                                                           && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+                                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email, StringComparison.InvariantCultureIgnoreCase))));
+                    if (user == null)
+                    {
+                        throw new Exception("User with the specified ID was not found");
+                    }
+                    note.Updated(user?.Guid, user.Name);
+                }
+                else
+                {
+                    smartboardUserID = note.Person?.SmartBoardID;
+                }
+
+                note.Content = noteRequest.Content;
+
+                //if reply type is comment
+                if (noteRequest.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+
+                    not.Updated(user.Guid, user?.Name);
+                    dc.SaveChanges();
+
+                    if (not != null && property != null)
+                    {
+                        NotifyComment(not.PersonID, not, property, dc);
+                    }
+                }
+
+
+                var taggedPersons = GetTaggedPersons(note.Content);
+                if (taggedPersons?.Any() == true)
+                {
+                    var emails = taggedPersons?.Select(x => x.EmailAddressString);
+                    var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
+                    if (emails?.Any() == true)
+                    {
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                    }
+
+                    NotifyTaggedUsers(taggedPersons, note, property, dc);
+                }
+
+
+                dc.SaveChanges();
+
+                return new SBNoteDTO
+                {
+                    Guid = note.Guid,
+                    PropertyID = property.Guid,
+                    LeadID = property.SmartBoardId,
+                    Email = user.EmailAddressString,
+                    Content = note.Content,
+                    DateCreated = note.DateCreated,
+                    DateLastModified = note.DateLastModified,
+                    UserID = smartboardUserID,
+                    ContentType = note.ContentType,
+                    ParentID = note.ParentID
                 };
             }
         }
@@ -920,10 +1104,9 @@ namespace DataReef.TM.Services.Services
 
                 //var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
 
-
                 var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
                 //var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . /*<br/><br/> Note Sent by: {Username}*/<br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
-                
+
                 var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 
@@ -952,6 +1135,7 @@ namespace DataReef.TM.Services.Services
 
                 if (persons.Any() == true)
                 {
+
                     foreach (var person in persons)
                     {
                         //check if the user is assigned to the territory
@@ -1039,6 +1223,38 @@ namespace DataReef.TM.Services.Services
             return res;
         }
 
+        public string UpdateSmartboardIdByEmail()
+        {
+            //send notification 
+            var response = _sbAdapter.Value.GetAllSbUsers();
+ 
+            if (response?.users.Count > 0)
+            {
+                //try
+                //{
+                //    //update the user's SmartBoard ID
+                //    using (var dc = new DataContext())
+                //    {
+                //        foreach (var item in response?.users)
+                //        {
+                //            var currentPerson = dc.People.FirstOrDefault(x => x.EmailAddressString == item.email);
+                //            if (currentPerson != null)
+                //            {
+                //                currentPerson.SmartBoardID = item.id.ToString();
+                //                currentPerson.Updated();
+                //            } 
+                //        }
+
+                //        dc.SaveChanges();
+
+                //    }
+                //}
+                //catch (Exception)
+                //{
+                //}
+            }
+            return JsonConvert.SerializeObject(response?.users);
+        }
     }
 }
 
