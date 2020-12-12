@@ -446,17 +446,13 @@ namespace DataReef.TM.Services.Services
                 //send notifications to the tagged users
                 var taggedPersons = GetTaggedPersons(note.Content);
                 if (taggedPersons?.Any() == true)
-                {
-                    List<string> email = new List<string>(1);
-                    email.Add("hevin.android@gmail.com");
-
+                { 
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
                     if (emails?.Any() == true)
                     {
-                        //SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
-                        SendEmailNotification(note.Content, note.CreatedByName, email, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
