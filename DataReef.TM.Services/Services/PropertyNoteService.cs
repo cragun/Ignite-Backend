@@ -429,7 +429,7 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("User with the specified ID was not found");
                 }
-                 
+
                 var note = new PropertyNote
                 {
                     CreatedByID = user.Guid,
@@ -459,7 +459,7 @@ namespace DataReef.TM.Services.Services
                 //send notifications to the tagged users
                 var taggedPersons = GetTaggedPersons(note.Content);
                 if (taggedPersons?.Any() == true)
-                { 
+                {
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
@@ -481,13 +481,13 @@ namespace DataReef.TM.Services.Services
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
                     UserID = user.SmartBoardID,
-                    Email = user.EmailAddressString, 
+                    Email = user.EmailAddressString,
                     ContentType = noteRequest.ContentType,
                     ParentID = noteRequest.ParentID
                 };
             }
         }
-         
+
         public SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             using (var dc = new DataContext())
@@ -582,8 +582,8 @@ namespace DataReef.TM.Services.Services
                     ParentID = noteRequest.ParentID
                 };
             }
-        } 
-   
+        }
+
 
         public SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
         {
@@ -1092,8 +1092,20 @@ namespace DataReef.TM.Services.Services
                                 if (item.id.ToString() != currentPerson.SmartBoardID)
                                 {
                                     currentPerson.SmartBoardID = item.id.ToString();
-                                    currentPerson.Updated(); 
-                                } 
+                                    currentPerson.Updated();
+
+                                    ApiLogEntry apilog = new ApiLogEntry();
+                                    apilog.Id = Guid.NewGuid();
+                                    apilog.User = SmartPrincipal.UserId.ToString();
+                                    apilog.Machine = Environment.MachineName;
+                                    apilog.RequestContentType = "Update All Smartboard IDS";
+                                    apilog.RequestTimestamp = DateTime.UtcNow;
+                                    apilog.RequestUri = "SunnovaCallBackApi";
+                                    apilog.ResponseContentBody = "IGNITE-SmartBoardID " + currentPerson.SmartBoardID + "SmartBoardID " + item.id;
+
+                                    dc.ApiLogEntries.Add(apilog);
+                                    dc.SaveChanges();
+                                }
                             }
                         }
 
@@ -1104,7 +1116,7 @@ namespace DataReef.TM.Services.Services
                 catch (Exception)
                 {
                 }
-            } 
+            }
             return JsonConvert.SerializeObject(response?.users);
         }
     }
