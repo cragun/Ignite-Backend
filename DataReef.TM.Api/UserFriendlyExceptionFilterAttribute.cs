@@ -2,6 +2,7 @@
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,6 +42,29 @@ namespace DataReef.TM.Api
                 dc.ApiLogEntries.Add(apilog);
                 dc.SaveChanges();
             }
+
+            #region Send Exception Log File to datadog agent.
+
+            var path = HttpContext.Current.Request.MapPath("/Datadog/logs/log.json");
+
+            var log = new Serilog.LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.File(new Serilog.Formatting.Json.JsonFormatter(renderMessage: true), path)
+                .CreateLogger();
+
+            var request = new
+            {
+                User = SmartPrincipal.UserId.ToString(),
+                Exception = context.Exception?.Message?.ToString(),
+                Request = context.Request?.ToString(),
+                RequestContentBody = context.Response?.StatusCode.ToString()
+            }; 
+
+            log.Information("Exception - {@request}", request);
+
+            #endregion
+
+
         }
     }
 }

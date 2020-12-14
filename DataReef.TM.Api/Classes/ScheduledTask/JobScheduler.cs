@@ -23,7 +23,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
             .StartNow()
             .WithDailyTimeIntervalSchedule(x => x
             .WithIntervalInMinutes(15) 
-            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(23, 35)))
+            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(09, 24)))
             .Build();
 
 
