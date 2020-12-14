@@ -1081,6 +1081,7 @@ namespace DataReef.TM.Services.Services
             {
                 try
                 {
+
                     //update the user's SmartBoard ID
                     using (var dc = new DataContext())
                     {
