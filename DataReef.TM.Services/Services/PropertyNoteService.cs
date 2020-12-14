@@ -1090,7 +1090,7 @@ namespace DataReef.TM.Services.Services
                             var currentPerson = dc.People.FirstOrDefault(x => x.EmailAddressString == item.email);
                             if (currentPerson != null)
                             {
-                                if (item.id.ToString() != currentPerson.SmartBoardID)
+                                if (item.id != Convert.ToInt32(currentPerson.SmartBoardID))
                                 {
                                     currentPerson.SmartBoardID = item.id.ToString();
                                     currentPerson.Updated();
