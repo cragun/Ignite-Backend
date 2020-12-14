@@ -145,31 +145,7 @@ namespace DataReef.TM.Api.Controllers
             var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
 
             return Ok(result);
-        }
-
-
-        /// <summary>
-        /// creates a new note from smartboard and notify parent user
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="apiKey"></param>
-        /// <returns></returns>
-        [Route("sb/comment/{apiKey}")]
-        [ResponseType(typeof(SBNoteDTO))]
-        [HttpPost]
-        [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IHttpActionResult> CreateNoteCommentFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
-        {
-
-
-            bool checkTime = CryptographyHelper.checkTime(apiKey);
-            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-
-
-            var result = _propertyNoteService.AddNoteCommentFromSmartboard(request, DecyptApiKey);
-
-            return Ok(result);
-        }
+        } 
 
         public class testmodel
         {
@@ -228,29 +204,7 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok(result);
         }
-
-        /// <summary>
-        /// edits a note comments from smartboard and notify parent user 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="apiKey"></param>
-        /// <returns></returns>
-        [Route("sb/comment/{apiKey}")]
-        [ResponseType(typeof(SBNoteDTO))]
-        [HttpPatch]
-        [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IHttpActionResult> EditNoteCommentFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
-        {
-
-            bool checkTime = CryptographyHelper.checkTime(apiKey);
-            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-
-            var result = _propertyNoteService.EditNoteCommentFromSmartboard(request, DecyptApiKey);
-
-            return Ok(result);
-        }
-
-
+  
         /// <summary>
         /// deletes a note by its specified id
         /// </summary>
