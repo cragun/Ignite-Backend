@@ -1091,6 +1091,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 var url = $"/apis/get_all_users";
 
                 var response = MakeRequest<SBAllUsersModel>(integrationData.BaseUrl, url, Method.POST, headers);
+
+                try
+                {
+                    SaveRequest(null, response, url, headers, integrationData.ApiKey);
+                }
+                catch (Exception)
+                {
+                }
+
                 return response;
             }
         }
