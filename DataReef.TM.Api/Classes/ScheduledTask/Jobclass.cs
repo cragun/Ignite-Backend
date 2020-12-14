@@ -33,6 +33,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                     var Users = dc.Users.ToList();
                     var Authentications = dc.Authentications.ToList();
 
+
                     foreach (var c in Credentials)
                     {
                         //if (c != null && !c.IsDeleted)
