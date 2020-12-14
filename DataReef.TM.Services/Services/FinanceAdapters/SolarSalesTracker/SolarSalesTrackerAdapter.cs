@@ -1090,7 +1090,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 var url = $"/apis/get_all_users";
 
-                var response = MakeRequest<SBAllUsersModel>(integrationData.BaseUrl, url, Method.POST, headers);
+                var response = MakeRequest(integrationData.BaseUrl, url, Method.POST, headers);
+               // var response = MakeRequest<SBAllUsersModel>(integrationData.BaseUrl, url, Method.POST, headers);
 
                 try
                 {
@@ -1100,7 +1101,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
 
-                return response;
+                return new SBAllUsersModel();
             }
         }
     }

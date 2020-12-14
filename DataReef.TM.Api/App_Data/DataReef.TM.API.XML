@@ -446,6 +446,14 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateSmartboardIdByEmail">
+            <summary>
+            / Update SmartboardId By Email.
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
             <summary>
             Managers CRUD for Properties
