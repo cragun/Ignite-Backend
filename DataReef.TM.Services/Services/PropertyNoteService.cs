@@ -482,7 +482,9 @@ namespace DataReef.TM.Services.Services
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
                     UserID = user.SmartBoardID,
-                    Email = user.EmailAddressString,
+                    Email = user.EmailAddressString, 
+                    ContentType = noteRequest.ContentType,
+                    ParentID = noteRequest.ParentID
                 };
             }
         }
@@ -576,7 +578,9 @@ namespace DataReef.TM.Services.Services
                     Content = note.Content,
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
-                    UserID = smartboardUserID
+                    UserID = smartboardUserID,
+                    ContentType = noteRequest.ContentType,
+                    ParentID = noteRequest.ParentID
                 };
             }
         } 
