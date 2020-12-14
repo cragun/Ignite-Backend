@@ -1049,6 +1049,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         public SBAllUsersModel GetAllSbUsers()
         {
+
             using (DataContext dc = new DataContext())
             {
                 //1202823E-7C9C-47D9-8D0F-F0F4F588AA3D - Trismart solar 
