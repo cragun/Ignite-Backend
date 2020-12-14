@@ -1086,13 +1086,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 var headers = new Dictionary<string, string>
                 {
-                    {"x-api-key", encryptedAPIkey}
+                    {"x-api-key", integrationData.ApiKey}
                 };
 
                 var url = $"/apis/get_all_users";
 
-                var response = MakeRequest(integrationData.BaseUrl, url, Method.POST, headers);
-               // var response = MakeRequest<SBAllUsersModel>(integrationData.BaseUrl, url, Method.POST, headers);
+                var response = MakeRequest<SBAllUsersModel>(integrationData.BaseUrl, url, Method.POST, headers);
 
                 try
                 {
@@ -1102,7 +1101,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
 
-                return new SBAllUsersModel();
+                return response; 
+
             }
         }
     }

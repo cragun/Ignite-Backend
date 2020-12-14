@@ -429,8 +429,7 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("User with the specified ID was not found");
                 }
-
-
+                 
                 var note = new PropertyNote
                 {
                     CreatedByID = user.Guid,
@@ -1079,28 +1078,31 @@ namespace DataReef.TM.Services.Services
             var response = _sbAdapter.Value.GetAllSbUsers();
             if (response?.users?.Count > 0)
             {
-                //try
-                //{
-                //    //update the user's SmartBoard ID
-                //    using (var dc = new DataContext())
-                //    {
-                //        foreach (var item in response?.users)
-                //        {
-                //            var currentPerson = dc.People.FirstOrDefault(x => x.EmailAddressString == item.email);
-                //            if (currentPerson != null)
-                //            {
-                //                currentPerson.SmartBoardID = item.id.ToString();
-                //                currentPerson.Updated();
-                //            } 
-                //        }
+                try
+                {
+                    //update the user's SmartBoard ID
+                    using (var dc = new DataContext())
+                    {
+                        foreach (var item in response?.users)
+                        {
+                            var currentPerson = dc.People.FirstOrDefault(x => x.EmailAddressString == item.email);
+                            if (currentPerson != null)
+                            {
+                                if (item.id.ToString() != currentPerson.SmartBoardID)
+                                {
+                                    currentPerson.SmartBoardID = item.id.ToString();
+                                    currentPerson.Updated(); 
+                                } 
+                            }
+                        }
 
-                //        dc.SaveChanges();
+                        dc.SaveChanges();
 
-                //    }
-                //}
-                //catch (Exception)
-                //{
-                //}
+                    }
+                }
+                catch (Exception)
+                {
+                }
             } 
             return JsonConvert.SerializeObject(response?.users);
         }
