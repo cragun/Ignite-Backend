@@ -1102,7 +1102,7 @@ namespace DataReef.TM.Services.Services
                                     apilog.RequestContentType = "Update All Smartboard IDS";
                                     apilog.RequestTimestamp = DateTime.UtcNow;
                                     apilog.RequestUri = "SunnovaCallBackApi";
-                                    apilog.ResponseContentBody = "IGNITE-SmartBoardID " + currentPerson.SmartBoardID + "SmartBoardID " + item.id;
+                                    apilog.ResponseContentBody = "IGNITE-SmartBoardID " + currentPerson.SmartBoardID + " SmartBoardID " + item.id;
 
                                     dc.ApiLogEntries.Add(apilog);
                                     dc.SaveChanges();
