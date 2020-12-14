@@ -1247,8 +1247,7 @@ namespace DataReef.TM.Services.Services
                 //catch (Exception)
                 //{
                 //}
-            }
-
+            } 
             return JsonConvert.SerializeObject(response?.users);
         }
     }
