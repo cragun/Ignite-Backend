@@ -35,6 +35,42 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
                     foreach (var c in Credentials)
                     {
+                        //if (c != null && !c.IsDeleted)
+                        //{
+                        //    var dayvalidation = Authentications.Where(a => a.UserID == c.UserID).ToList();
+
+                        //    DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
+
+                        //    var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
+
+                        //    if (dayvalidation.Count > 0 && lastLoginCount == 0)
+                        //    {
+                        //        var person = People.SingleOrDefault(p => p.Guid == c.UserID
+                        //             && p.IsDeleted == false);
+
+                        //        if (person != null && !person.IsDeleted)
+                        //        {
+                        //            person.IsDeleted = true;
+                        //            person.SBActivityName = "Active";
+                        //            person.SBLastActivityDate = DateTime.Now.AddDays(-1).Date;
+                        //        }
+
+                        //        var user = Users.SingleOrDefault(u => u.PersonID == c.UserID
+                        //                       && u.IsDeleted == false);
+
+                        //        if (user != null && !user.IsDeleted)
+                        //        {
+                        //            user.IsDeleted = true;
+                        //        }
+
+                        //        if (c != null && !c.IsDeleted)
+                        //        {
+                        //            c.IsDeleted = true;
+                        //        }
+
+                        //        dc.SaveChanges();
+                        //    }
+                        //}
                         if (c != null && !c.IsDeleted)
                         {
                             var dayvalidation = Authentications.Where(a => a.UserID == c.UserID).ToList();
@@ -43,11 +79,21 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
                             var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
 
-                            if (dayvalidation.Count > 0 && lastLoginCount == 0)
-                            {
-                                var person = People.SingleOrDefault(p => p.Guid == c.UserID
-                                     && p.IsDeleted == false);
+                            var person = People.SingleOrDefault(p => p.Guid == c.UserID
+                                   && p.IsDeleted == false);
 
+                            bool isDeactivate = false;
+
+                            if (person != null && !person.IsDeleted && person.SBLastActivityDate != null)
+                            {
+                                if (person.SBLastActivityDate.Value.Date <= oldDate.Date)
+                                {
+                                    isDeactivate = true;
+                                };
+                            }
+
+                            if (dayvalidation.Count > 0 && lastLoginCount == 0 && isDeactivate == true)
+                            {
                                 if (person != null && !person.IsDeleted)
                                 {
                                     person.IsDeleted = true;
@@ -67,8 +113,16 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 {
                                     c.IsDeleted = true;
                                 }
-
                                 dc.SaveChanges();
+
+                                //send mail  
+                                if (person != null && !person.IsDeleted)
+                                {
+                                    string mailbody = "<p>SMARTBOARD ID : " + person.SmartBoardID + "</p><p>User ID : " + person.Guid + "</p><p>UserName : " + person.Name + "</p>";
+
+                                    Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
+                                    Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
+                                }
                             }
                         }
                     }
