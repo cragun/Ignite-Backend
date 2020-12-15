@@ -110,7 +110,11 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public ProposalCreditStatus CreditStatus { get; set; }
 
+        [DataMember]
+        public double TotalBill { get; set; }
 
+        [DataMember]
+        public double TotalKWH { get; set; }
 
         [DataMember]
         public double ProductionKWH { get; set; }

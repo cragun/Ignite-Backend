@@ -1,18 +1,8 @@
 ﻿using DataReef.Core.Infrastructure.Authorization;
-using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
-using Serilog;
+//using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.Filters;
 
@@ -47,10 +37,10 @@ namespace DataReef.TM.Api
 
             var path = HttpContext.Current.Request.MapPath("/Datadog/logs/log.json");
 
-            var log = new Serilog.LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.File(new Serilog.Formatting.Json.JsonFormatter(renderMessage: true), path)
-                .CreateLogger();
+            //var log = new Serilog.LoggerConfiguration()
+            //    .Enrich.FromLogContext()
+            //    .WriteTo.File(new Serilog.Formatting.Json.JsonFormatter(renderMessage: true), path)
+            //    .CreateLogger();
 
             var request = new
             {
@@ -60,7 +50,7 @@ namespace DataReef.TM.Api
                 RequestContentBody = context.Response?.StatusCode.ToString()
             }; 
 
-            log.Information("Exception - {@request}", request);
+           // log.Information("Exception - {@request}", request);
 
             #endregion
 

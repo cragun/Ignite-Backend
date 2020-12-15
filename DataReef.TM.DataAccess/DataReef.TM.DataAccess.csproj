@@ -1271,6 +1271,10 @@
     <Compile Include="Migrations\202010241029114_Add Field on Property.Designer.cs">
       <DependentUpon>202010241029114_Add Field on Property.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012151747538_Add new field in proposal.cs" />
+    <Compile Include="Migrations\202012151747538_Add new field in proposal.Designer.cs">
+      <DependentUpon>202012151747538_Add new field in proposal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2183,6 +2187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010241029114_Add Field on Property.resx">
       <DependentUpon>202010241029114_Add Field on Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012151747538_Add new field in proposal.resx">
+      <DependentUpon>202012151747538_Add new field in proposal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
