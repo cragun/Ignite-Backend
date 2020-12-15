@@ -459,6 +459,7 @@ namespace DataReef.TM.Api.Controllers
             public bool IsManual { get; set; }
         }
 
+
         [Route("Manualpresolarcost/{proposalID}")]
         [HttpPost]
         public async Task<IHttpActionResult> Manualpresolarcost(Guid proposalID, ManualProposal req)
@@ -468,6 +469,19 @@ namespace DataReef.TM.Api.Controllers
             prop.TotalBill = req.TotalBill;
             prop.TotalKWH = req.TotalKWH;
             var proposal = _proposalService.Update(prop);
+
+            ManualProposal pro = new ManualProposal();
+            pro.IsManual = proposal.IsManual;
+            pro.TotalBill = proposal.TotalBill;
+            pro.TotalKWH = proposal.TotalKWH;
+            return Ok(pro);
+        }
+
+        [Route("ManualpresolarcostData/{proposalID}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetManualpresolarcostData(Guid proposalID)
+        {
+            var proposal = _proposalService.Get(proposalID);
 
             ManualProposal pro = new ManualProposal();
             pro.IsManual = proposal.IsManual;
