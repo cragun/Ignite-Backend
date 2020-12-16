@@ -44,6 +44,7 @@ namespace DataReef.TM.Api.Controllers
     public partial class IntegrationsController : ApiController
     {
         private readonly IDataService<User> _userService;
+        private readonly IDataService<ManualProposal> _manualProposalService;
         private readonly IDataService<ProposalRoofPlaneInfo> _proroofService;
         private readonly IPersonService _personService;
         private readonly IOUService _ouService;
@@ -63,6 +64,7 @@ namespace DataReef.TM.Api.Controllers
         private readonly string _spruceUrl = ConfigurationManager.AppSettings["SpruceUrl"];
 
         public IntegrationsController(IDataService<User> userService,
+                                      IDataService<ManualProposal> manualProposalService,
                                       IDataService<ProposalRoofPlaneInfo> proroofService,
                                       IPersonService personService,
                                       IOUService ouService,
@@ -81,6 +83,7 @@ namespace DataReef.TM.Api.Controllers
         {
             HttpContext.Current.Server.ScriptTimeout = 300;
             _userService = userService;
+            _manualProposalService = manualProposalService;
             _proroofService = proroofService;
             _personService = personService;
             _ouService = ouService;
@@ -452,23 +455,38 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
-        public class ManualProposal
-        {           
-            public double TotalBill { get; set; }            
-            public double TotalKWH { get; set; }            
-            public bool IsManual { get; set; }
-        }
+        //public class ManualProposal
+        //{           
+        //    public double TotalBill { get; set; }            
+        //    public double TotalKWH { get; set; }            
+        //    public bool IsManual { get; set; }
+        //}
 
 
         [Route("Manualpresolarcost/{proposalID}")]
         [HttpPost]
         public async Task<IHttpActionResult> Manualpresolarcost(Guid proposalID, ManualProposal req)
         {
-            var prop = _proposalService.Get(proposalID);
-            prop.IsManual = req.IsManual;
-            prop.TotalBill = req.TotalBill;
-            prop.TotalKWH = req.TotalKWH;
-            var proposal = _proposalService.Update(prop);
+            var prop = _manualProposalService.Get(proposalID);            
+
+            var proposal = new ManualProposal();
+            if (prop == null)
+            {
+                prop = new ManualProposal();
+                prop.Guid = proposalID;
+                prop.IsManual = req.IsManual;
+                prop.TotalBill = req.TotalBill;
+                prop.TotalKWH = req.TotalKWH;
+                proposal = _manualProposalService.Insert(prop);
+            }
+            else
+            {
+                prop.IsManual = req.IsManual;
+                prop.TotalBill = req.TotalBill;
+                prop.TotalKWH = req.TotalKWH;
+                proposal = _manualProposalService.Update(prop);
+            }
+            
 
             ManualProposal pro = new ManualProposal();
             pro.IsManual = proposal.IsManual;
@@ -483,6 +501,11 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetManualpresolarcostData(Guid proposalID)
         {
             var proposal = _proposalService.Get(proposalID);
+
+            if(proposal == null)
+            {
+                throw new ArgumentNullException("Please send valid ProposalId");
+            }
 
             ManualProposal pro = new ManualProposal();
             pro.IsManual = proposal.IsManual;

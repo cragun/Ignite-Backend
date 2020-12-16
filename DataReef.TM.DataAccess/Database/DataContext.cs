@@ -137,6 +137,7 @@ namespace DataReef.TM.DataAccess.Database
         public DbSet<Inverter> Inverters { get; set; }
         public DbSet<PowerConsumption> PowerConsumption { get; set; }
         public DbSet<Proposal> Proposal { get; set; }
+        public DbSet<ManualProposal> ManualProposal { get; set; }
         public DbSet<ProposalMediaItem> ProposalMediaItems { get; set; }
         public DbSet<ProposalIntegrationAudit> ProposalIntegrationAudits { get; set; }
         public DbSet<ProposalData> ProposalData { get; set; }
