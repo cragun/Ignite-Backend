@@ -455,14 +455,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok(response);
         }
 
-        //public class ManualProposal
-        //{           
-        //    public double TotalBill { get; set; }            
-        //    public double TotalKWH { get; set; }            
-        //    public bool IsManual { get; set; }
-        //}
-
-
         [Route("Manualpresolarcost/{proposalID}")]
         [HttpPost]
         public async Task<IHttpActionResult> Manualpresolarcost(Guid proposalID, ManualProposal req)
@@ -486,13 +478,8 @@ namespace DataReef.TM.Api.Controllers
                 prop.TotalKWH = req.TotalKWH;
                 proposal = _manualProposalService.Update(prop);
             }
-            
 
-            ManualProposal pro = new ManualProposal();
-            pro.IsManual = proposal.IsManual;
-            pro.TotalBill = proposal.TotalBill;
-            pro.TotalKWH = proposal.TotalKWH;
-            return Ok(pro);
+            return Ok(proposal);
         }
 
 
@@ -500,18 +487,14 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetManualpresolarcostData(Guid proposalID)
         {
-            var proposal = _proposalService.Get(proposalID);
+            var proposal = _manualProposalService.Get(proposalID);
 
             if(proposal == null)
             {
                 throw new ArgumentNullException("Please send valid ProposalId");
             }
 
-            ManualProposal pro = new ManualProposal();
-            pro.IsManual = proposal.IsManual;
-            pro.TotalBill = proposal.TotalBill;
-            pro.TotalKWH = proposal.TotalKWH;
-            return Ok(pro);
+            return Ok(proposal);
         }
 
         [Route("{ouid:guid}/Genability/account/{accountId}/lseandtariff/{proposalID?}")]
