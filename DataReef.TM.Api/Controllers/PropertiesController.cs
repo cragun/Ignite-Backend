@@ -117,6 +117,7 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+
         /// <summary>
         /// / Gets all Territories regardless of Lat - Long, for a property
         /// </summary>
