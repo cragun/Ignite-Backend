@@ -59,5 +59,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid);
+
+        [OperationContract]
+        SBAllUsersModel GetAllSbUsers();
     }
 }

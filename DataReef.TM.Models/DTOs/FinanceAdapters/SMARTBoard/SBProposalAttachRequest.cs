@@ -139,4 +139,22 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
     }
 
+    public class SBMessageModel
+    {
+        public string text { get; set; }
+        public string type { get; set; }
+        public int error_code { get; set; }
+    }
+
+    public class SBUserModel
+    {
+        public int id { get; set; }
+        public string email { get; set; }
+    }
+
+    public class SBAllUsersModel
+    {
+        public SBMessageModel message { get; set; }
+        public List<SBUserModel> users { get; set; }
+    }
 }

@@ -742,6 +742,15 @@
             <param name="apiKey"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetTerritoryListbyApikey(System.String,System.Double,System.Double)">
+            <summary>
+            / Gets all Territories base on apikey only
+            </summary>
+            <param name="apiKey"></param>
+            <param name="Lat"></param>
+            <param name="Long"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetEsidByAddressPropertyid(System.Guid)">
             <summary>
             / Gets all Territories regardless of Lat - Long, for a property

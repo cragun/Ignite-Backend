@@ -40,6 +40,8 @@ namespace DataReef.TM.Models.DTOs
         public Guid? Guid { get; set; }
 
         public Guid PropertyID { get; set; }
+        public Guid ParentID { get; set; }
+        public string ContentType { get; set; }
 
         /// <summary>
         /// You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.

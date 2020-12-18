@@ -591,6 +591,7 @@
     <Compile Include="Reporting\Settings\OUReportingSettings.cs" />
     <Compile Include="Solar\AdderItem.cs" />
     <Compile Include="Solar\CustomUtilityRate.cs" />
+    <Compile Include="Solar\ManualProposal.cs" />
     <Compile Include="Solar\ObstructionPoint.cs" />
     <Compile Include="Solar\PropertyPowerConsumption.cs" />
     <Compile Include="Solar\ProposalData.cs" />

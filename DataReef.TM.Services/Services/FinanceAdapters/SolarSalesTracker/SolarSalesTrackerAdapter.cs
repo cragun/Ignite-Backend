@@ -472,9 +472,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
             catch (Exception)
             {
+
             }
 
-            return JsonConvert.DeserializeObject<SBGetDocument>(response);
+            if (!String.IsNullOrEmpty(response))
+            {
+                return JsonConvert.DeserializeObject<SBGetDocument>(response);
+            }
+            else
+            {
+                return new SBGetDocument();
+            }
         }
 
         public void SBActiveDeactiveUser(bool IsActive, string sbid)
@@ -1038,5 +1046,65 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
         }
+
+        public SBAllUsersModel GetAllSbUsers()
+        {
+
+            using (DataContext dc = new DataContext())
+            {
+                //1202823E-7C9C-47D9-8D0F-F0F4F588AA3D - Trismart solar 
+                Guid ouid = Guid.Parse("1202823E-7C9C-47D9-8D0F-F0F4F588AA3D");
+
+                EnsureInitialized(ouid);
+                var integrationSettings = new IntegrationOptionSettings
+                {
+                    Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
+                    SelectedIntegrations = ouSettings.GetByKey<ICollection<SelectedIntegrationOption>>(SolarTrackerResources.SelectedSettingName)
+
+                };
+
+                var integrationData =
+                    integrationSettings
+                    ?.SelectedIntegrations
+                    ?.FirstOrDefault(x =>
+                    {
+                        var matchingOption = integrationSettings?.Options?.FirstOrDefault(o => o.Id == x.Id);
+
+                        return matchingOption?.Type == IntegrationType.SMARTBoard;
+                    })
+                    ?.Data
+                    ?.SMARTBoard;
+
+                // no SST/SB settings for this OU. 
+                if (integrationData == null)
+                {
+                    return new SBAllUsersModel { message = new SBMessageModel { text = "No SmartBOARD integration settings found!" } };
+                }
+
+                //get user email by its id
+                string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+
+                var headers = new Dictionary<string, string>
+                {
+                    {"x-api-key", integrationData.ApiKey}
+                };
+
+                var url = $"/apis/get_all_users";
+
+                var response = MakeRequest<SBAllUsersModel>(integrationData.BaseUrl, url, Method.POST, headers);
+
+                try
+                {
+                    SaveRequest(null, response, url, headers, integrationData.ApiKey);
+                }
+                catch (Exception)
+                {
+                }
+
+                return response;
+
+            }
+        }
     }
 }
+

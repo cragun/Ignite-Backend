@@ -21,7 +21,7 @@ using DataReef.Core.Classes;
 using DataReef.Core;
 using System.Data.SqlClient;
 using DataReef.TM.Models.Enums;
-
+using Newtonsoft.Json;
 
 namespace DataReef.TM.Services.Services
 {
@@ -400,7 +400,9 @@ namespace DataReef.TM.Services.Services
                     Content = x.Content,
                     DateCreated = x.DateCreated,
                     DateLastModified = x.DateLastModified,
-                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID
+                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
+                    ContentType = x.ContentType,
+                    ParentID = x.ParentID
 
                 });
             }
@@ -442,6 +444,20 @@ namespace DataReef.TM.Services.Services
                 dc.PropertyNotes.Add(note);
                 dc.SaveChanges();
 
+                //if reply type is comment
+                if (noteRequest.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+
+                    not.Updated(user.Guid, user?.Name);
+                    dc.SaveChanges();
+
+                    if (not != null && property != null)
+                    {
+                        NotifyComment(not.PersonID, not, property, dc);
+                    }
+                }
+
                 //send notifications to the tagged users
                 var taggedPersons = GetTaggedPersons(note.Content);
                 if (taggedPersons?.Any() == true)
@@ -468,6 +484,8 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = note.DateLastModified,
                     UserID = user.SmartBoardID,
                     Email = user.EmailAddressString,
+                    ContentType = noteRequest.ContentType,
+                    ParentID = noteRequest.ParentID
                 };
             }
         }
@@ -520,6 +538,20 @@ namespace DataReef.TM.Services.Services
 
                 note.Content = noteRequest.Content;
 
+                //if reply type is comment
+                if (noteRequest.ContentType == "Comment")
+                {
+                    var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+
+                    not.Updated(user.Guid, user?.Name);
+                    dc.SaveChanges();
+
+                    if (not != null && property != null)
+                    {
+                        NotifyComment(not.PersonID, not, property, dc);
+                    }
+                }
+
                 var taggedPersons = GetTaggedPersons(note.Content);
                 if (taggedPersons?.Any() == true)
                 {
@@ -547,7 +579,9 @@ namespace DataReef.TM.Services.Services
                     Content = note.Content,
                     DateCreated = note.DateCreated,
                     DateLastModified = note.DateLastModified,
-                    UserID = smartboardUserID
+                    UserID = smartboardUserID,
+                    ContentType = noteRequest.ContentType,
+                    ParentID = noteRequest.ParentID
                 };
             }
         }
@@ -1037,6 +1071,54 @@ namespace DataReef.TM.Services.Services
 
             var res = _pushNotificationService.Value.PushNotification("You received new notes", fcm_token, "Ignite", notification, "Property");
             return res;
+        }
+
+        public string UpdateSmartboardIdByEmail()
+        {
+            //send notification 
+            var response = _sbAdapter.Value.GetAllSbUsers();
+
+            if (response?.users?.Count > 0)
+            {
+                try
+                {
+
+                    //update the user's SmartBoard ID
+                    using (var dc = new DataContext())
+                    {
+                        foreach (var item in response?.users)
+                        {
+                            var currentPerson = dc.People.FirstOrDefault(x => x.EmailAddressString == item.email);
+                            if (currentPerson != null)
+                            {
+                                if (item.id != Convert.ToInt32(currentPerson.SmartBoardID))
+                                {
+                                    currentPerson.SmartBoardID = item.id.ToString();
+                                    currentPerson.Updated(); 
+                                    ApiLogEntry apilog = new ApiLogEntry();
+                                    apilog.Id = Guid.NewGuid();
+                                    apilog.User = SmartPrincipal.UserId.ToString();
+                                    apilog.Machine = Environment.MachineName;
+                                    apilog.RequestContentType = "Update All Smartboard IDS";
+                                    apilog.RequestTimestamp = DateTime.UtcNow;
+                                    apilog.RequestUri = "SunnovaCallBackApi";
+                                    apilog.ResponseContentBody = "IGNITE-SmartBoardID " + currentPerson.SmartBoardID + " SmartBoardID " + item.id;
+
+                                    dc.ApiLogEntries.Add(apilog);
+                                    dc.SaveChanges();
+                                }
+                            }
+                        }
+
+                        dc.SaveChanges();
+
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return JsonConvert.SerializeObject(response?.users);
         }
 
     }
