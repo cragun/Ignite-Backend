@@ -107,6 +107,13 @@ namespace DataReef.TM.Models.DTOs
         public string Name { get; set; }
     }
 
+    public class TerritoryApikey
+    {
+        public Guid TerritoryId { get; set; }
+        public string Name { get; set; }
+        public string Apikey { get; set; }
+    }
+
     public class TerritoryModel
     {
         public string apikey { get; set; }

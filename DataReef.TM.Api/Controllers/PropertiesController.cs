@@ -92,6 +92,32 @@ namespace DataReef.TM.Api.Controllers
         }
 
         /// <summary>
+        /// / Gets all Territories , apikey base on lat-long
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <param name="Lat"></param>
+        /// <param name="Long"></param>
+        /// <returns></returns>
+        [Route("Sb/GetTerritoryNApikey/{apiKey}")]
+        [ResponseType(typeof(IEnumerable<TerritoryApikey>))]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> GetTerritoryNApikey(string apiKey, double Lat, double Long)
+        {
+            try
+            {
+                bool checkTime = CryptographyHelper.checkTime(apiKey);
+
+                var result = await propertyService.TerritoryNApikey(Lat, Long);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
         /// / Gets all Territories regardless of Lat - Long, for a property
         /// </summary>
         /// <param name="propertyID"></param>

@@ -1439,6 +1439,16 @@ namespace DataReef.TM.Services.Services
         }
 
 
+        public async Task<IEnumerable<TerritoryApikey>> TerritoryNApikey(double Lat, double Long)
+        {
+            using (var dc = new DataContext())
+            {
+                var TerritoriesList = dc.Database.SqlQuery<TerritoryApikey>("exec sp_GetTerritoryIdsForGeoCoordinates @latitude, @longitude", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Long)).ToList();
+
+                return TerritoriesList;
+            }
+        }
+
         public SBPropertyDTO EditPropertyNameFromSB(long igniteID, SBPropertyNameDTO Request)
         {
             using (var dc = new DataContext())
@@ -1647,7 +1657,7 @@ namespace DataReef.TM.Services.Services
                 {
                     return true;
                 }
-            }                                                                                      
+            }
         }
 
         public async Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid)
@@ -1655,8 +1665,8 @@ namespace DataReef.TM.Services.Services
             List<SunnovaLead> lead = new List<SunnovaLead>();
             using (var dataContext = new DataContext())
             {
-               var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
-                if(prop != null && prop.SunnovaLeadID == null)
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null && prop.SunnovaLeadID == null)
                 {
                     lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
                     prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
@@ -1666,17 +1676,17 @@ namespace DataReef.TM.Services.Services
 
             return lead;
         }
-         
+
         public List<Territory> GetTerritoriesFromAddress(Property req)
         {
             using (var dc = new DataContext())
             {
                 //first get the property
-                var property =   dc.Properties.Where(x => x.ZipCode == req.ZipCode).Select(a => a.TerritoryID).ToList();
+                var property = dc.Properties.Where(x => x.ZipCode == req.ZipCode).Select(a => a.TerritoryID).ToList();
                 var territories = dc
                                  .Territories
                                  .Where(o => property.Contains(o.Guid)).ToList();
-                  
+
                 return territories;
             }
         }
