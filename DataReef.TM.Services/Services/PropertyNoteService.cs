@@ -390,7 +390,6 @@ namespace DataReef.TM.Services.Services
 
                 var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
 
-
                 return property.PropertyNotes?.Select(x => new SBNoteDTO
                 {
                     Guid = x.Guid,
@@ -410,6 +409,34 @@ namespace DataReef.TM.Services.Services
 
         }
 
+        public IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey , Guid ParentID)
+        {
+            using (var dc = new DataContext())
+            {
+                //first get the property
+                var property = GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
+                var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
+
+                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
+
+                return property.PropertyNotes?.Where(a => a.ParentID  == ParentID).Select(x => new SBNoteDTO
+                {
+                    Guid = x.Guid,
+                    PropertyID = property.Guid,
+                    LeadID = property.SmartBoardId,
+                    IgniteID = property.Id,
+                    Content = x.Content,
+                    DateCreated = x.DateCreated,
+                    DateLastModified = x.DateLastModified,
+                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
+                    ContentType = x.ContentType,
+                    ParentID = x.ParentID,
+                    Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
+                    LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
+                });
+            }
+
+        }
         public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             using (var dc = new DataContext())
@@ -442,12 +469,12 @@ namespace DataReef.TM.Services.Services
                     PropertyID = property.Guid
                 };
 
-                dc.PropertyNotes.Add(note);
-                dc.SaveChanges();
-
                 //if reply type is comment
                 if (noteRequest.ContentType == "Comment")
                 {
+                    note.ContentType = noteRequest.ContentType;
+                    note.ParentID = noteRequest.ParentID;
+
                     var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
 
                     not.Updated(user.Guid, user?.Name);
@@ -458,6 +485,9 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, property, dc);
                     }
                 }
+
+                dc.PropertyNotes.Add(note);
+                dc.SaveChanges(); 
 
                 //send notifications to the tagged users
                 var taggedPersons = GetTaggedPersons(note.Content);

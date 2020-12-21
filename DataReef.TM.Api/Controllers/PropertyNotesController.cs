@@ -88,6 +88,29 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+
+
+        /// <summary>
+        /// Gets the notes comments linked to the specified smartboard lead Id
+        /// </summary>
+        /// <param name="leadId"></param>
+        /// <param name="apiKey"></param>
+        /// <param name="igniteId"></param>
+        /// <returns></returns>
+        [Route("sb/{leadId}/{apiKey}")]
+        [ResponseType(typeof(ICollection<SBNoteDTO>))]
+        [HttpPost]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<IHttpActionResult> GetAllForSmartboard(long leadId, string apiKey, long? igniteId , SBNoteDTO request)
+        {
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _propertyNoteService.GetNoteComments(leadId, igniteId, DecyptApiKey , request.ParentID);
+
+            return Ok(result);
+        }
+
         public class testmodelforapi
         {
             public string ApiKey { get; set; }
