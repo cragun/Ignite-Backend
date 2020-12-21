@@ -67,6 +67,8 @@ namespace DataReef.TM.Models.DTOs
         public DateTime DateCreated { get; set; }
 
         public DateTime? DateLastModified { get; set; }
+        public int? Count { get; set; }
+        public DateTime? LastUpdateTime { get; set; }
 
 
 

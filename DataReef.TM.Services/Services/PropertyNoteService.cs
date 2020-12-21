@@ -402,7 +402,9 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = x.DateLastModified,
                     UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
-                    ParentID = x.ParentID
+                    ParentID = x.ParentID,
+                    Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
+                    LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
                 });
             }
         }
@@ -1093,7 +1095,7 @@ namespace DataReef.TM.Services.Services
                                 if (item.id != Convert.ToInt32(currentPerson.SmartBoardID))
                                 {
                                     currentPerson.SmartBoardID = item.id.ToString();
-                                    currentPerson.Updated(); 
+                                    currentPerson.Updated();
                                     ApiLogEntry apilog = new ApiLogEntry();
                                     apilog.Id = Guid.NewGuid();
                                     apilog.User = SmartPrincipal.UserId.ToString();
