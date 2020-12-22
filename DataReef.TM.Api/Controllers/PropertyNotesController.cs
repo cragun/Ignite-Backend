@@ -95,18 +95,18 @@ namespace DataReef.TM.Api.Controllers
         /// </summary>
         /// <param name="leadId"></param>
         /// <param name="apiKey"></param>
-        /// <param name="igniteId"></param>
+        ///// <param name="igniteId"></param>
         /// <returns></returns>
         [Route("sb/comments/{leadId}/{apiKey}")]
         [ResponseType(typeof(ICollection<SBNoteDTO>))]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IHttpActionResult> GetNoteCommentsForSmartboard(long leadId, string apiKey, long? igniteId , SBNoteDTO request)
+        public async Task<IHttpActionResult> GetNoteCommentsForSmartboard(long leadId, string apiKey, SBNoteDTO request)
         {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
-            var result = _propertyNoteService.GetNoteComments(leadId, igniteId, DecyptApiKey , request.ParentID);
+            var result = _propertyNoteService.GetNoteComments(leadId, request.IgniteID, DecyptApiKey , request.ParentID);
 
             return Ok(result);
         }
