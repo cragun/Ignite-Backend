@@ -62,7 +62,7 @@ namespace DataReef.TM.Services
                 var users = dc.UserInvitations.Where(a => a.RoleID == roleid).ToList();
                 return users;
             }
-        }
+        } 
 
         public QuotasCommitment InsertQuotas(QuotasCommitment entity)
         {
@@ -231,6 +231,61 @@ namespace DataReef.TM.Services
             }
 
             return entity;
+        }
+
+        public List<List<object>> GetQuotasReportByPerson(QuotasCommitment req)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                List<List<object>> report = new List<List<object>>();
+
+                List<object> header = new List<object>();
+                header.Add("UserName");
+                header.Add("Position");
+                header.Add("Type");
+                header.Add("Start");
+                header.Add("End");
+                header.Add("Duration(Days)");
+
+                var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
+                dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
+
+                foreach (var item in dispositions)
+                {
+                    header.Add(item.DisplayName);
+                }
+
+                report.Add(header);
+
+                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID).ToList();
+
+                for (int i = 0; i < data.Count; i++)
+                {
+                    data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == data[i].UserID)?.Name; 
+                    data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == data[i].RoleID)?.Name; 
+                    data[i].Types = data[i].Type == 1 ?"Quotas" : "Commitments";  
+
+                    var quota = new List<object>{
+                        data[i].UserName,
+                        data[i].Position,
+                        data[i].Types,
+                        data[i].StartDate.ToShortDateString(),
+                        data[i].EndDate.ToShortDateString()
+                    };
+
+                    data[i].Disposition = JsonConvert.DeserializeObject<List<DataReef.TM.Models.DTOs.Inquiries.CRMDisposition>>(data[i].dispositions);
+                    data[i].Disposition = data[i].Disposition.OrderBy(a => a.Disposition).ToList();
+
+                    foreach (var item in data[i].Disposition)
+                    {
+                        quota.Add(item.Quota);
+                    }
+
+                    report.Add(quota);
+                }
+
+                return report;
+            }
         }
 
     }
