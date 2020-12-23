@@ -31,6 +31,5 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         QuotasCommitment InsertCommitments(QuotasCommitment request);
-
     }
 }
