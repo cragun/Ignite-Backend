@@ -257,13 +257,13 @@ namespace DataReef.TM.Services
 
                 report.Add(header);
 
-                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID).ToList();
+                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type).ToList();
 
                 for (int i = 0; i < data.Count; i++)
                 {
                     data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == data[i].UserID)?.Name; 
                     data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == data[i].RoleID)?.Name; 
-                    data[i].Types = data[i].Type == 1 ?"Quotas" : "Commitments";  
+                    data[i].Types = data[i].Type == 1 ? "Quotas" : "Commitments";  
 
                     var quota = new List<object>{
                         data[i].UserName,
