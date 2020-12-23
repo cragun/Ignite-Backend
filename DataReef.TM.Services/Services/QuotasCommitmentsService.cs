@@ -257,7 +257,7 @@ namespace DataReef.TM.Services
 
                 report.Add(header);
 
-                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type).ToList();
+                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type && a.StartDate == req.StartDate && a.EndDate == req.EndDate).ToList();
 
                 for (int i = 0; i < data.Count; i++)
                 {
