@@ -434,9 +434,9 @@ namespace DataReef.TM.Services.Services
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid && !a.IsDeleted).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
                 });
-            }
-
+            } 
         }
+
         public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             using (var dc = new DataContext())
