@@ -1279,6 +1279,10 @@
     <Compile Include="Migrations\202012161506050_Add ManualProposal Table.Designer.cs">
       <DependentUpon>202012161506050_Add ManualProposal Table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012231540328_Set Startdate allow null.cs" />
+    <Compile Include="Migrations\202012231540328_Set Startdate allow null.Designer.cs">
+      <DependentUpon>202012231540328_Set Startdate allow null.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2197,6 +2201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012161506050_Add ManualProposal Table.resx">
       <DependentUpon>202012161506050_Add ManualProposal Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012231540328_Set Startdate allow null.resx">
+      <DependentUpon>202012231540328_Set Startdate allow null.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

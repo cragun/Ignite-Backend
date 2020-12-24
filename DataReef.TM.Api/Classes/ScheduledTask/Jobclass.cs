@@ -21,7 +21,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
             apilog.Id = Guid.NewGuid();
             apilog.User = SmartPrincipal.UserId.ToString();
             apilog.Machine = Environment.MachineName;
-            apilog.RequestContentType = "Scheduler Job " + DateTime.Now;
+            apilog.RequestContentType = "Scheduler Job " + DateTime.UtcNow;
 
             using (var dc = new DataContext())
             {
@@ -67,7 +67,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 {
                                     person.IsDeleted = true;
                                     person.SBActivityName = "Active";
-                                    person.SBLastActivityDate = DateTime.Now.AddDays(-1).Date;
+                                    person.SBLastActivityDate = DateTime.UtcNow.AddDays(-1).Date;
                                 }
 
                                 var user = Users.SingleOrDefault(u => u.PersonID == c.UserID

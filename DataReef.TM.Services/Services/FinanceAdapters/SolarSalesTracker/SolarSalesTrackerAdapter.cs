@@ -983,11 +983,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
         }
 
 
-        public void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid)
+        public void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid, DateTime? StartDate)
         {
             using (DataContext dc = new DataContext())
             {
-                var ret = dc
+                var ret = dc 
                         .Database
                         .SqlQuery<OU>("exec proc_OUsForPerson {0}", prsnid)
                         .Where(o => !o.IsArchived)
@@ -1023,7 +1023,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
 
-
                 var url = $"/apis/Updateactivity/{encryptedAPIkey}";
 
                 var request = new SBActivityUserModel
@@ -1031,7 +1030,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     UserId = SmartBoardID,
                     ActivityName = ActivityName,
                     BuildVersion = BuildVersion,
-                    LastActivityDate = LastActivityDate
+                    LastActivityDate = LastActivityDate,
+                    StartDate = StartDate
                 };
 
                 var response = MakeRequest(ouid, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());

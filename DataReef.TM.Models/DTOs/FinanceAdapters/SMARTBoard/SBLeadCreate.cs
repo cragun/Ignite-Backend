@@ -471,6 +471,9 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
         [JsonProperty("lastactivity_date")]
         public DateTime? LastActivityDate { get; set; }
+
+        [JsonProperty("start_date")]
+        public DateTime? StartDate { get; set; }
     }
 
 }

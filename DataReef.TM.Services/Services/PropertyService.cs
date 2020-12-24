@@ -66,6 +66,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
         private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
         private readonly Lazy<ISmsService> _smsService;
+        private readonly IPersonService _peopleService;
 
         private static string BaseURL = "http://www.esiids.com/cgi-bin/esiids_xml.cgi?";
 
@@ -95,7 +96,8 @@ namespace DataReef.TM.Services.Services
             Lazy<ITerritoryService> territoryService,
             Lazy<IAppointmentService> appointmentService,
             Lazy<IInquiryService> inquiryService,
-            Lazy<ISmsService> smsService)
+            Lazy<ISmsService> smsService,
+            IPersonService peopleService)
             : base(logger, unitOfWorkFactory)
         {
             _geoProvider = geoProvider;
@@ -110,6 +112,7 @@ namespace DataReef.TM.Services.Services
             _appointmentService = appointmentService;
             _inquiryService = inquiryService;
             _smsService = smsService;
+            _peopleService = peopleService;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -407,6 +410,8 @@ namespace DataReef.TM.Services.Services
 
                         if (oldProp.LatestDisposition != entity.LatestDisposition)
                         {
+                            //Update StartDate and Sb User StartDate
+                            _peopleService.UpdateStartDate();
                             //person clocktime 
                             _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
                         }

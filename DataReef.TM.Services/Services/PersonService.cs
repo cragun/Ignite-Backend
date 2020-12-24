@@ -99,7 +99,24 @@ namespace DataReef.TM.Services
             return ret;
         }
 
+        public void UpdateStartDate()
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var person = dc.People.Where(x => x.IsDeleted == false && x.Guid == SmartPrincipal.UserId).FirstOrDefault();
 
+                if (person != null)
+                {
+                    person.StartDate = DateTime.UtcNow;
+                    var ret = base.Update(person);
+
+                    if (!string.IsNullOrEmpty(person.SmartBoardID))
+                    {
+                        _sbAdapter.Value.SBUpdateactivityUser(person.SmartBoardID, person.ActivityName, person.BuildVersion, person.LastActivityDate, person.Guid, person.StartDate);
+                    }
+                }
+            }
+        }
 
         public Person Updateactivity(Person prsn)
         {
@@ -134,7 +151,7 @@ namespace DataReef.TM.Services
 
                 if (!string.IsNullOrEmpty(prsndetails.SmartBoardID))
                 {
-                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName , prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid);
+                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName , prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid, prsndetails.StartDate);
                 }
                
                 return ret;
@@ -1100,11 +1117,11 @@ namespace DataReef.TM.Services
             PersonClockTime person = new PersonClockTime();
             using (DataContext dc = new DataContext())
             {
-                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
 
                 if (person != null)
                 {
-                    if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
+                    if (person.EndDate.Value <= DateTime.UtcNow && person.ClockType == "ClockIn")
                     {
                         TimeSpan timespan = person.EndDate.Value - person.StartDate.Value;
                         long difMin = (long)Math.Floor(timespan.TotalMinutes);
@@ -1118,16 +1135,16 @@ namespace DataReef.TM.Services
                         person.TenantID = 0;
                         person.Version += 1;
                         person.IsRemainFiveMin = false;
-                        person.DateLastModified = DateTime.Now;
+                        person.DateLastModified = DateTime.UtcNow;
                         dc.SaveChanges();
 
                     }
                     else if (person.ClockType == "ClockIn")
                     {
-                        TimeSpan timespan = DateTime.Now - person.StartDate.Value;
+                        TimeSpan timespan = DateTime.UtcNow - person.StartDate.Value;
                         long diffMin = (long)Math.Floor(timespan.TotalMinutes);
 
-                        TimeSpan FiveMin = person.EndDate.Value - DateTime.Now;
+                        TimeSpan FiveMin = person.EndDate.Value - DateTime.UtcNow;
                         long ReFiveMin = (long)Math.Floor(FiveMin.TotalMinutes);
                         person.IsRemainFiveMin = false;
                         if (ReFiveMin == 5)
@@ -1135,10 +1152,10 @@ namespace DataReef.TM.Services
                             person.IsRemainFiveMin = true;
                         }
                         person.ClockDiff = diffMin;
-                        person.DateLastModified = DateTime.Now;
+                        person.DateLastModified = DateTime.UtcNow;
                         dc.SaveChanges();
                     }
-                    person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                    person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
                 }
             }
             if (person == null) { person = new PersonClockTime(); };
