@@ -72,6 +72,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new { Response = ret });
         }
 
+        [HttpPost]
+        [Route("person/report")]
+        public async Task<IHttpActionResult> GetQuotasReportByPerson(QuotasCommitment req)
+        {
+            var ret = quotasCommitmentsService.GetQuotasReportByPerson(req);
+            return Ok(new { Response = ret });
+        }
+         
 
         [HttpPost]
         [Route("commitement/report")]

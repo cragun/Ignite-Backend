@@ -47,6 +47,15 @@ namespace DataReef.TM.Models
         [NotMapped]
         public List<List<object>> commitments { get; set; }
 
+        [NotMapped]
+        public string UserName { get; set; }
+
+        [NotMapped]
+        public string Position { get; set; }
+
+        [NotMapped]
+        public string Types { get; set; }
+
         #region Navigation Properties
 
         [DataMember]

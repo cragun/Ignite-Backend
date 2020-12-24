@@ -22,12 +22,14 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<List<object>> GetQuotasReport();
-         
+
+        [OperationContract]
+        List<List<object>> GetQuotasReportByPerson(QuotasCommitment req);  
+
         [OperationContract]
         List<List<object>> GetQuotasCommitementsReport(QuotasCommitment request);
 
         [OperationContract]
         QuotasCommitment InsertCommitments(QuotasCommitment request);
-
     }
 }
