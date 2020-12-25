@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class SetStartdateallownull : IMigrationMetadata
+    public sealed partial class Addmigrationtables : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(SetStartdateallownull));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Addmigrationtables));
         
         string IMigrationMetadata.Id
         {
-            get { return "202012231540328_Set Startdate allow null"; }
+            get { return "202012250417425_Add migration tables"; }
         }
         
         string IMigrationMetadata.Source
