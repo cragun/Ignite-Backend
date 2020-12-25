@@ -202,7 +202,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok(true);
         }
 
-
         [HttpGet]
         [Route("{personID:guid}/settings/{group?}")]
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
