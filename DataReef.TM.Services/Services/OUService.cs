@@ -2357,7 +2357,7 @@ namespace DataReef.TM.Services.Services
                 {
                     Guid = o.Guid,
                     Name = o.Name,
-                }).ToList(); ;
+                }).ToList(); 
 
                 return ouRoles;
             }
@@ -2401,6 +2401,31 @@ namespace DataReef.TM.Services.Services
                 return false;
             }
         }
+
+        public bool UpdateOuPermissions(List<OU> ous)
+        {
+            try
+            {
+                using (var dc = new DataContext())
+                {
+                    foreach (var item in ous)
+                    {
+                        var ou = dc.OUs.FirstOrDefault(a => a.Guid == item.Guid);
+                        ou.Permissions = item.Permissions;
+                        ou.Updated(ou.Guid);
+                    }
+
+                    dc.SaveChanges();
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
 
         public void CreateNewOURole(OURole req)
         {
