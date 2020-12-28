@@ -239,7 +239,8 @@ namespace DataReef.TM.Services
             { 
                 List<List<object>> report = new List<List<object>>();
 
-                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type && a.StartDate >= req.StartDate && a.EndDate <= req.EndDate).ToList();
+                var data = dc.QuotasCommitments.Where(a => (a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type)
+                && a.StartDate >= req.StartDate && a.EndDate <= req.EndDate).ToList();
 
                 if (data.Count > 0)
                 { 
@@ -256,7 +257,7 @@ namespace DataReef.TM.Services
 
                     foreach (var item in dispositions)
                     {
-                        header.Add(item.DisplayName);
+                        header.Add(item.Disposition);
                     }
 
                     report.Add(header);
@@ -264,8 +265,11 @@ namespace DataReef.TM.Services
 
                     for (int i = 0; i < data.Count; i++)
                     {
-                        data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == data[i].UserID)?.Name;
-                        data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == data[i].RoleID)?.Name;
+                        var PersonID = data[i].PersonID;
+                        var RoleID = data[i].RoleID;
+
+                        data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == PersonID)?.Name;
+                        data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == RoleID)?.Name;
                         data[i].Types = data[i].Type == 1 ? "Quotas" : "Commitments";
 
                         var quota = new List<object>{
@@ -281,7 +285,14 @@ namespace DataReef.TM.Services
 
                         foreach (var item in data[i].Disposition)
                         {
-                            quota.Add(item.Quota);
+                            if (data[i].Type == 1)
+                            {
+                                quota.Add(item.Quota);
+                            }
+                            else
+                            {
+                                quota.Add(item.Commitments);
+                            } 
                         }
 
                         report.Add(quota);
@@ -291,6 +302,5 @@ namespace DataReef.TM.Services
                 return report;
             }
         }
-
     }
 }
