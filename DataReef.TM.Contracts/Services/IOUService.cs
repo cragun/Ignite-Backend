@@ -164,6 +164,9 @@ namespace DataReef.TM.Contracts.Services
         bool UpdateOuRolesPermission(List<OURole> roles);
 
         [OperationContract]
+        bool UpdateOuPermissions(List<OU> ous); 
+
+        [OperationContract]
         OURole GetOuRoleByID(Guid? ouid);
 
         [OperationContract]
