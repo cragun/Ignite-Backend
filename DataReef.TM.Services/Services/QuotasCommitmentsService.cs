@@ -260,8 +260,7 @@ namespace DataReef.TM.Services
                         header.Add(item.Disposition);
                     }
 
-                    report.Add(header);
-
+                    report.Add(header); 
 
                     for (int i = 0; i < data.Count; i++)
                     {
