@@ -526,8 +526,7 @@ namespace DataReef.TM.Api.Controllers
            var response = ouService.UpdateOuRolesPermission(roles);
             return Ok(new GenericResponse<bool> { Response = response });
         }
-
-
+         
         [HttpPost]
         [Route("permission")]
         [ResponseType(typeof(bool))]
