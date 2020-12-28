@@ -261,6 +261,7 @@ namespace DataReef.TM.Services
 
                     report.Add(header);
 
+
                     for (int i = 0; i < data.Count; i++)
                     {
                         data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == data[i].UserID)?.Name;
