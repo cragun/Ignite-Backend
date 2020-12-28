@@ -236,37 +236,38 @@ namespace DataReef.TM.Services
         public List<List<object>> GetQuotasReportByPerson(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
-            {
+            { 
                 List<List<object>> report = new List<List<object>>();
 
-                List<object> header = new List<object>();
-                header.Add("UserName");
-                header.Add("Position");
-                header.Add("Type");
-                header.Add("Start");
-                header.Add("End");
-                header.Add("Duration(Days)");
+                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type && a.StartDate >= req.StartDate && a.EndDate <= req.EndDate).ToList();
 
-                var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
-                dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
+                if (data.Count > 0)
+                { 
+                    List<object> header = new List<object>();
+                    header.Add("UserName");
+                    header.Add("Position");
+                    header.Add("Type");
+                    header.Add("Start");
+                    header.Add("End");
+                    header.Add("Duration(Days)");
 
-                foreach (var item in dispositions)
-                {
-                    header.Add(item.DisplayName);
-                }
+                    var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
+                    dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
 
-                report.Add(header);
+                    foreach (var item in dispositions)
+                    {
+                        header.Add(item.DisplayName);
+                    }
 
+                    report.Add(header);
 
-                var data = dc.QuotasCommitments.Where(a => a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type && a.StartDate == req.StartDate && a.EndDate == req.EndDate).ToList();
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == data[i].UserID)?.Name;
+                        data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == data[i].RoleID)?.Name;
+                        data[i].Types = data[i].Type == 1 ? "Quotas" : "Commitments";
 
-                for (int i = 0; i < data.Count; i++)
-                {
-                    data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == data[i].UserID)?.Name; 
-                    data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == data[i].RoleID)?.Name; 
-                    data[i].Types = data[i].Type == 1 ? "Quotas" : "Commitments";  
-
-                    var quota = new List<object>{
+                        var quota = new List<object>{
                         data[i].UserName,
                         data[i].Position,
                         data[i].Types,
@@ -274,16 +275,17 @@ namespace DataReef.TM.Services
                         data[i].EndDate.ToShortDateString()
                     };
 
-                    data[i].Disposition = JsonConvert.DeserializeObject<List<DataReef.TM.Models.DTOs.Inquiries.CRMDisposition>>(data[i].dispositions);
-                    data[i].Disposition = data[i].Disposition.OrderBy(a => a.Disposition).ToList();
+                        data[i].Disposition = JsonConvert.DeserializeObject<List<DataReef.TM.Models.DTOs.Inquiries.CRMDisposition>>(data[i].dispositions);
+                        data[i].Disposition = data[i].Disposition.OrderBy(a => a.Disposition).ToList();
 
-                    foreach (var item in data[i].Disposition)
-                    {
-                        quota.Add(item.Quota);
+                        foreach (var item in data[i].Disposition)
+                        {
+                            quota.Add(item.Quota);
+                        }
+
+                        report.Add(quota);
                     }
-
-                    report.Add(quota);
-                }
+                } 
 
                 return report;
             }
