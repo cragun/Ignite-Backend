@@ -63,6 +63,7 @@ namespace DataReef.TM.Services.Tests
                 new Lazy<ITerritoryService>(() => _territoryService.Object),
                 null,
                 null,
+                null,
                 null);
         }
         #region GetProperties

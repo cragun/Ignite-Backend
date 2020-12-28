@@ -1279,9 +1279,9 @@
     <Compile Include="Migrations\202012161506050_Add ManualProposal Table.Designer.cs">
       <DependentUpon>202012161506050_Add ManualProposal Table.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202012231540328_Set Startdate allow null.cs" />
-    <Compile Include="Migrations\202012231540328_Set Startdate allow null.Designer.cs">
-      <DependentUpon>202012231540328_Set Startdate allow null.cs</DependentUpon>
+    <Compile Include="Migrations\202012250417425_Add migration tables.cs" />
+    <Compile Include="Migrations\202012250417425_Add migration tables.Designer.cs">
+      <DependentUpon>202012250417425_Add migration tables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202012281427179_AddPermissionsOu.cs" />
     <Compile Include="Migrations\202012281427179_AddPermissionsOu.Designer.cs">
@@ -2206,8 +2206,8 @@
     <EmbeddedResource Include="Migrations\202012161506050_Add ManualProposal Table.resx">
       <DependentUpon>202012161506050_Add ManualProposal Table.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012231540328_Set Startdate allow null.resx">
-      <DependentUpon>202012231540328_Set Startdate allow null.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202012250417425_Add migration tables.resx">
+      <DependentUpon>202012250417425_Add migration tables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012281427179_AddPermissionsOu.resx">
       <DependentUpon>202012281427179_AddPermissionsOu.cs</DependentUpon>
