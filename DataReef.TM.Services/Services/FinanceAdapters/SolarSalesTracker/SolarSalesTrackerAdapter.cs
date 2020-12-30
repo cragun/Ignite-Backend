@@ -340,7 +340,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var headers = new Dictionary<string, string>
             {
-                {"x-api-key", encryptedAPIkey},
+                {"x-api-key", integrationData.ApiKey},
                 {"x-email", email},
             };
 
@@ -1081,7 +1081,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 }
 
                 //get user email by its id
-                string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+                //string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
                 var headers = new Dictionary<string, string>
                 {
