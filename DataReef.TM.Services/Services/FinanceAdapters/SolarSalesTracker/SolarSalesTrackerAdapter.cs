@@ -982,7 +982,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return JsonConvert.DeserializeObject<SstResponse>(response);
         }
 
-
         public void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid, DateTime? StartDate)
         {
             using (DataContext dc = new DataContext())
