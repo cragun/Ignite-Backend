@@ -503,6 +503,7 @@ namespace DataReef.TM.Services
             return base.UpdateMany(entities);
         }
 
+
         public override Appointment Update(Appointment entity)
         {
             VerifyUserAssignmentAndInvite(entity);
