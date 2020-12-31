@@ -35,6 +35,7 @@ namespace DataReef.TM.Services
         private readonly Lazy<IPropertyService> _propertyService;
         private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISmsService> _smsService;
+        private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
         public AppointmentService(ILogger logger,
             IOUAssociationService ouAssociationService,
             Lazy<IOUService> ouService,
@@ -44,6 +45,7 @@ namespace DataReef.TM.Services
             Lazy<IPropertyService> propertyService,
             Lazy<IPersonService> personService,
             Lazy<ISmsService> smsService,
+            Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
         {
             _ouAssociationService = ouAssociationService;
@@ -54,6 +56,7 @@ namespace DataReef.TM.Services
             _propertyService = propertyService;
             _personService = personService;
             _smsService = smsService;
+            _sbAdapter = sbAdapter;
         }
 
         public Appointment SetAppointmentStatus(Guid appointmentID, AppointmentStatus status)
@@ -503,7 +506,11 @@ namespace DataReef.TM.Services
         public override Appointment Update(Appointment entity)
         {
             VerifyUserAssignmentAndInvite(entity);
-            return base.Update(entity);
+            var appointment = base.Update(entity);
+
+            var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+
+            return appointment;
         }
 
         public override Appointment Insert(Appointment entity)
