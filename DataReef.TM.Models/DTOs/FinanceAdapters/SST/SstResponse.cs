@@ -30,10 +30,10 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SST
     public class SstResponseMessage
     {
         [DataMember]
-        public string Text { get; set; }
+        public string text { get; set; }
 
         [DataMember]
-        public string Type { get; set; }
+        public string type { get; set; }
     }
 
     [DataContract]
