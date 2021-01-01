@@ -1063,7 +1063,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
             }
-
         }
 
         public SBAllUsersModel GetAllSbUsers()
