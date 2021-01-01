@@ -343,6 +343,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {"x-sm-email", email},
             };
 
+
             var url = "/apis/create_user_token";
 
             var response = MakeRequest<SBUserTokenResponse>(integrationData.BaseUrl, url, Method.POST, headers);
