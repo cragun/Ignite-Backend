@@ -390,7 +390,6 @@ namespace DataReef.TM.Services.Services
 
                 var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToList();
 
-
                 return property.PropertyNotes?.Select(x => new SBNoteDTO
                 {
                     Guid = x.Guid,
