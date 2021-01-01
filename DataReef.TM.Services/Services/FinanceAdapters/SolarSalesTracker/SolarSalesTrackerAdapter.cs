@@ -341,7 +341,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             var headers = new Dictionary<string, string>
             {
                 {"x-api-key", integrationData.ApiKey},
-                {"x-email", email},
+                {"x-sm-email", email},
             };
 
             var url = "/apis/create_user_token";
