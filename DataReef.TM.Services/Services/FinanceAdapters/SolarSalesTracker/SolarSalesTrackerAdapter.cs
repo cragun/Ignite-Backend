@@ -337,7 +337,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 email = dc.Credentials.FirstOrDefault(x => x.UserID == SmartPrincipal.UserId)?.UserName;
             }
 
-
             var headers = new Dictionary<string, string>
             {
                 {"x-api-key", integrationData.ApiKey},
