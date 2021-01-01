@@ -344,7 +344,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
 
             var url = "/apis/create_user_token";
+
             var response = MakeRequest<SBUserTokenResponse>(integrationData.BaseUrl, url, Method.POST, headers);
+            SaveRequest(null, response, url, headers, integrationData.ApiKey);
 
             ApiLogEntry apilog = new ApiLogEntry();
             apilog.Id = Guid.NewGuid();
@@ -359,7 +361,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             apilog.RequestTimestamp = DateTime.UtcNow;
             apilog.RequestUri = integrationData.BaseUrl + url;
             apilog.ResponseContentBody = integrationData.ApiKey + email;
-            apilog.RequestContentBody = response != null ? response.message.ToString() : "response";
+            apilog.RequestContentBody = response != null ? response.Message.ToString() : "response";
 
             using (var dc = new DataContext())
             {
@@ -377,14 +379,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         var currentPerson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
                         if (currentPerson != null)
                         {
-                            currentPerson.SmartBoardID = response?.User?.id ?? currentPerson.SmartBoardID;
+                            currentPerson.SmartBoardID = response?.User?.Id ?? currentPerson.SmartBoardID;
                             currentPerson.Updated();
                         }
 
                         dc.SaveChanges();
 
                     }
-                    SaveRequest(null, response, url, headers, integrationData.ApiKey);
+                    
                 }
                 catch (Exception)
                 {
@@ -392,8 +394,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
             return new SBIntegrationLoginModel
             {
-                Message = response?.message?.text,
-                Token = response?.User?.token,
+                Message = response?.Message?.Text,
+                Token = response?.User?.Token,
                 ApiKey = encryptedAPIkey
             };
         }
