@@ -347,6 +347,27 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var response = MakeRequest<SBUserTokenResponse>(integrationData.BaseUrl, url, Method.POST, headers);
 
+            ApiLogEntry apilog = new ApiLogEntry();
+            apilog.Id = Guid.NewGuid();
+            apilog.User = SmartPrincipal.UserId.ToString();
+            apilog.Machine = Environment.MachineName;
+            apilog.RequestContentType = "";
+            apilog.RequestRouteTemplate = "";
+            apilog.RequestRouteData = "";
+            apilog.RequestIpAddress = "";
+            apilog.RequestMethod = "sbtoken api";
+            apilog.RequestHeaders = "";
+            apilog.RequestTimestamp = DateTime.UtcNow;
+            apilog.RequestUri = integrationData.BaseUrl + url;
+            apilog.ResponseContentBody = integrationData.ApiKey + email;
+            apilog.RequestContentBody = response != null ? response.Message.ToString() : "response";
+
+            using (var dc = new DataContext())
+            {
+                dc.ApiLogEntries.Add(apilog);
+                dc.SaveChanges();
+            }
+
             if (response != null)
             {
                 try
