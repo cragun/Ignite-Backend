@@ -13,6 +13,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public UserTokenModel User { get; set; }
     }
 
+
     [DataContract]
     public class SstResponseMessageToken
     {
