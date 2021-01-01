@@ -99,7 +99,24 @@ namespace DataReef.TM.Services
             return ret;
         }
 
+        public void UpdateStartDate()
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var person = dc.People.Where(x => x.IsDeleted == false && x.Guid == SmartPrincipal.UserId).FirstOrDefault();
 
+                if (person != null)
+                {
+                    person.StartDate = DateTime.UtcNow;
+                    var ret = base.Update(person);
+
+                    if (!string.IsNullOrEmpty(person.SmartBoardID))
+                    {
+                        _sbAdapter.Value.SBUpdateactivityUser(person.SmartBoardID, person.ActivityName, person.BuildVersion, person.LastActivityDate, person.Guid, person.StartDate);
+                    }
+                }
+            }
+        }
 
         public Person Updateactivity(Person prsn)
         {
@@ -134,7 +151,7 @@ namespace DataReef.TM.Services
 
                 if (!string.IsNullOrEmpty(prsndetails.SmartBoardID))
                 {
-                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName, prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid);
+                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName, prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid, prsndetails.StartDate);
                 }
 
                 return ret;

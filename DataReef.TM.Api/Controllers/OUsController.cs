@@ -525,6 +525,15 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpPost]
+        [Route("permission")]
+        [ResponseType(typeof(bool))]
+        public async Task<IHttpActionResult> UpdateOuPermissions(List<OU> ous)
+        {
+            var response = ouService.UpdateOuPermissions(ous);
+            return Ok(new GenericResponse<bool> { Response = response });
+        }
+
+        [HttpPost]
         [Route("roles/create")]
         public async Task<IHttpActionResult> AddOuRole(OURole req)
         {

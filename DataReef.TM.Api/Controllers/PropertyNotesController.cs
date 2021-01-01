@@ -80,7 +80,6 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal]
         public async Task<IHttpActionResult> GetAllForSmartboard(long leadId, string apiKey, long? igniteId)
         {
-
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
@@ -88,6 +87,29 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok(result);
         }
+
+
+        /// <summary>
+        /// Gets the notes comments linked to the specified smartboard lead Id
+        /// </summary>
+        /// <param name="leadId"></param>
+        /// <param name="apiKey"></param>
+        ///// <param name="igniteId"></param>
+        /// <returns></returns>
+        [Route("sb/comments/{leadId}/{apiKey}")]
+        [ResponseType(typeof(ICollection<SBNoteDTO>))]
+        [HttpPost]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<IHttpActionResult> GetNoteCommentsForSmartboard(long leadId, string apiKey, SBNoteDTO request)
+        {
+            bool checkTime = CryptographyHelper.checkTime(apiKey);
+            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+            var result = _propertyNoteService.GetNoteComments(leadId, request.IgniteID, DecyptApiKey, request.ParentID);
+
+            return Ok(result);
+        }
+
 
         public class testmodelforapi
         {
@@ -296,6 +318,22 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> SendNotification(Person people)
         {
             var result = _propertyNoteService.SendNotification(people.fcm_token);
+            return Ok(result);
+        }
+
+
+        /// <summary>
+        /// / Update SmartboardId By Email.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        [Route("sb/idupdate")]
+        [HttpPost]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<IHttpActionResult> UpdateSmartboardIdByEmail()
+        {
+            var result = _propertyNoteService.UpdateSmartboardIdByEmail();
             return Ok(result);
         }
 

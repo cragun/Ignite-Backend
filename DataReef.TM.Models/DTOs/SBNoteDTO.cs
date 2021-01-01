@@ -66,6 +66,8 @@ namespace DataReef.TM.Models.DTOs
         public DateTime DateCreated { get; set; }
 
         public DateTime? DateLastModified { get; set; }
+        public int? Count { get; set; }
+        public DateTime? LastUpdateTime { get; set; }
 
 
 
@@ -104,6 +106,13 @@ namespace DataReef.TM.Models.DTOs
     {
         public Guid TerritoryId { get; set; }
         public string Name { get; set; }
+    }
+
+    public class TerritoryApikey
+    {
+        public Guid TerritoryId { get; set; }
+        public string Name { get; set; }
+        public string Apikey { get; set; }
     }
 
     public class TerritoryModel

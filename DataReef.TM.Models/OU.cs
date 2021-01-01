@@ -75,6 +75,9 @@ namespace DataReef.TM.Models
         public Guid AccountID { get; set; }
 
         [DataMember]
+        public PermissionType Permissions { get; set; }
+
+        [DataMember]
         public OUSummary Summary
         {
             get

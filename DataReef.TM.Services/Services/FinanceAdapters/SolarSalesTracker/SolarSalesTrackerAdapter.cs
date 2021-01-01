@@ -330,7 +330,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
             //get user email by its id
-            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+           // string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
             string email;
             using (DataContext dc = new DataContext())
             {
@@ -340,13 +340,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var headers = new Dictionary<string, string>
             {
-                {"x-sm-api-key", encryptedAPIkey},
+                {"x-api-key", integrationData.ApiKey},
                 {"x-sm-email", email},
             };
 
             var url = "/apis/create_user_token";
 
             var response = MakeRequest<SBUserTokenResponse>(integrationData.BaseUrl, url, Method.POST, headers);
+            SaveRequest(null, response, url, headers, integrationData.ApiKey);
 
             if (response != null)
             {
@@ -365,7 +366,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         dc.SaveChanges();
 
                     }
-                    SaveRequest(null, response, url, headers, integrationData.ApiKey);
+                    
                 }
                 catch (Exception)
                 {
@@ -375,7 +376,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 Message = response?.Message?.Text,
                 Token = response?.User?.Token,
-                ApiKey = encryptedAPIkey
+                ApiKey = integrationData.ApiKey
             };
         }
 
@@ -983,7 +984,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
         }
 
 
-        public void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid)
+        public void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid, DateTime? StartDate)
         {
             using (DataContext dc = new DataContext())
             {
@@ -1031,7 +1032,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     UserId = SmartBoardID,
                     ActivityName = ActivityName,
                     BuildVersion = BuildVersion,
-                    LastActivityDate = LastActivityDate
+                    LastActivityDate = LastActivityDate,
+                    StartDate = StartDate
                 };
 
                 var response = MakeRequest(ouid, url, request, serializer: new RestSharp.Serializers.RestSharpJsonSerializer());
@@ -1082,7 +1084,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 }
 
                 //get user email by its id
-                string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+               // string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
                 var headers = new Dictionary<string, string>
                 {

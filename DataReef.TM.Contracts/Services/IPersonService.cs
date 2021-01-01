@@ -92,6 +92,9 @@ namespace DataReef.TM.Contracts.Services
         void RemoveFavoritePerson(Guid FavouritePersonID);
 
         [OperationContract]
+        void UpdateStartDate();
+
+        [OperationContract]
         Person Updateactivity(Person prsn);
 
     }
