@@ -360,7 +360,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             apilog.RequestTimestamp = DateTime.UtcNow;
             apilog.RequestUri = integrationData.BaseUrl + url;
             apilog.ResponseContentBody = integrationData.ApiKey + email;
-            apilog.RequestContentBody = response != null ? response.Message.ToString() : "response";
+            apilog.RequestContentBody = response != null ? response.message.ToString() : "response";
 
             using (var dc = new DataContext())
             {
@@ -378,7 +378,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                         var currentPerson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
                         if (currentPerson != null)
                         {
-                            currentPerson.SmartBoardID = response?.User?.Id ?? currentPerson.SmartBoardID;
+                            currentPerson.SmartBoardID = response?.User?.id ?? currentPerson.SmartBoardID;
                             currentPerson.Updated();
                         }
 
@@ -393,8 +393,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
             return new SBIntegrationLoginModel
             {
-                Message = response?.Message?.Text,
-                Token = response?.User?.Token,
+                Message = response?.message?.text,
+                Token = response?.User?.token,
                 ApiKey = encryptedAPIkey
             };
         }
@@ -1063,6 +1063,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
             }
+
         }
 
         public SBAllUsersModel GetAllSbUsers()
