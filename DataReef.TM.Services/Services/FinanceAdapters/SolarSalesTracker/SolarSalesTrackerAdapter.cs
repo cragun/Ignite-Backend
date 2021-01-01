@@ -344,7 +344,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
 
             var url = "/apis/create_user_token";
-
             var response = MakeRequest<SBUserTokenResponse>(integrationData.BaseUrl, url, Method.POST, headers);
 
             ApiLogEntry apilog = new ApiLogEntry();

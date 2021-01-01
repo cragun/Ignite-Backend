@@ -7,12 +7,21 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
     public class SBUserTokenResponse
     {
         [DataMember]
-        public SstResponseMessage message { get; set; }
+        public SstResponseMessageToken message { get; set; }
 
         [DataMember]
         public UserTokenModel User { get; set; }
     }
 
+    [DataContract]
+    public class SstResponseMessageToken
+    {
+        [DataMember]
+        public string text { get; set; }
+
+        [DataMember]
+        public string type { get; set; }
+    }
 
     [DataContract]
     public class UserTokenModel
