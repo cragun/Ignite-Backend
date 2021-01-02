@@ -1243,49 +1243,9 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202010121729022_Add sb activity.cs" />
-    <Compile Include="Migrations\202010121729022_Add sb activity.Designer.cs">
-      <DependentUpon>202010121729022_Add sb activity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202010131340147_Added ESID.cs" />
-    <Compile Include="Migrations\202010131340147_Added ESID.Designer.cs">
-      <DependentUpon>202010131340147_Added ESID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202010151119462_Add newmexicodata table.cs" />
-    <Compile Include="Migrations\202010151119462_Add newmexicodata table.Designer.cs">
-      <DependentUpon>202010151119462_Add newmexicodata table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202010191140419_AddQuotasCommitments.cs" />
-    <Compile Include="Migrations\202010191140419_AddQuotasCommitments.Designer.cs">
-      <DependentUpon>202010191140419_AddQuotasCommitments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202010191211423_AddQuotasCommitment.cs" />
-    <Compile Include="Migrations\202010191211423_AddQuotasCommitment.Designer.cs">
-      <DependentUpon>202010191211423_AddQuotasCommitment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202010191729058_AddMigration01.cs" />
-    <Compile Include="Migrations\202010191729058_AddMigration01.Designer.cs">
-      <DependentUpon>202010191729058_AddMigration01.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202010241029114_Add Field on Property.cs" />
-    <Compile Include="Migrations\202010241029114_Add Field on Property.Designer.cs">
-      <DependentUpon>202010241029114_Add Field on Property.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202012151747538_Add new field in proposal.cs" />
-    <Compile Include="Migrations\202012151747538_Add new field in proposal.Designer.cs">
-      <DependentUpon>202012151747538_Add new field in proposal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202012161506050_Add ManualProposal Table.cs" />
-    <Compile Include="Migrations\202012161506050_Add ManualProposal Table.Designer.cs">
-      <DependentUpon>202012161506050_Add ManualProposal Table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202012250417425_Add migration tables.cs" />
-    <Compile Include="Migrations\202012250417425_Add migration tables.Designer.cs">
-      <DependentUpon>202012250417425_Add migration tables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202012281427179_AddPermissionsOu.cs" />
-    <Compile Include="Migrations\202012281427179_AddPermissionsOu.Designer.cs">
-      <DependentUpon>202012281427179_AddPermissionsOu.cs</DependentUpon>
+    <Compile Include="Migrations\202101021244080_Add Permissions.cs" />
+    <Compile Include="Migrations\202101021244080_Add Permissions.Designer.cs">
+      <DependentUpon>202101021244080_Add Permissions.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2179,38 +2139,8 @@
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202010121729022_Add sb activity.resx">
-      <DependentUpon>202010121729022_Add sb activity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202010131340147_Added ESID.resx">
-      <DependentUpon>202010131340147_Added ESID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202010151119462_Add newmexicodata table.resx">
-      <DependentUpon>202010151119462_Add newmexicodata table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202010191140419_AddQuotasCommitments.resx">
-      <DependentUpon>202010191140419_AddQuotasCommitments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202010191211423_AddQuotasCommitment.resx">
-      <DependentUpon>202010191211423_AddQuotasCommitment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202010191729058_AddMigration01.resx">
-      <DependentUpon>202010191729058_AddMigration01.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202010241029114_Add Field on Property.resx">
-      <DependentUpon>202010241029114_Add Field on Property.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012151747538_Add new field in proposal.resx">
-      <DependentUpon>202012151747538_Add new field in proposal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012161506050_Add ManualProposal Table.resx">
-      <DependentUpon>202012161506050_Add ManualProposal Table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012250417425_Add migration tables.resx">
-      <DependentUpon>202012250417425_Add migration tables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012281427179_AddPermissionsOu.resx">
-      <DependentUpon>202012281427179_AddPermissionsOu.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202101021244080_Add Permissions.resx">
+      <DependentUpon>202101021244080_Add Permissions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

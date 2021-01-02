@@ -3,7 +3,7 @@ namespace DataReef.TM.DataAccess.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Addnewmexicodatatable : DbMigration
+    public partial class AddPermissions : DbMigration
     {
         public override void Up()
         {
@@ -401,10 +401,16 @@ namespace DataReef.TM.DataAccess.Migrations
                     })
                 .PrimaryKey(t => t.id);
             
+            AddColumn("dbo.OUs", "Permissions", c => c.Long(nullable: false));
+            AddColumn("dbo.Properties", "SunnovaLeadID", c => c.String(maxLength: 200));
+            AlterColumn("dbo.People", "StartDate", c => c.DateTime());
         }
         
         public override void Down()
         {
+            AlterColumn("dbo.People", "StartDate", c => c.DateTime(nullable: false));
+            DropColumn("dbo.Properties", "SunnovaLeadID");
+            DropColumn("dbo.OUs", "Permissions");
             DropTable("dbo.NewMexicoDatas");
         }
     }
