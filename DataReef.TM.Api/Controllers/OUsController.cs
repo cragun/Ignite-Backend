@@ -539,7 +539,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("inherit/parentpermission")]
-        [ResponseType(typeof(bool))]
+        [ResponseType(typeof(OU))]
         public async Task<IHttpActionResult> InheritsParentOuPermissions(OU ou)
         {
             var response = ouService.InheritsParentOuPermissions(ou);

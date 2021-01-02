@@ -2472,7 +2472,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public bool InheritsParentOuPermissions(OU request)
+        public OU InheritsParentOuPermissions(OU request)
         {
             try
             {
@@ -2489,12 +2489,12 @@ namespace DataReef.TM.Services.Services
                     ou.Updated(ou.Guid); 
                     dc.SaveChanges();
 
-                    return true;
+                    return ou;
                 }
             }
             catch (Exception ex)
             {
-                return false;
+                return new OU();
             }
         }
 
