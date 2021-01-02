@@ -611,8 +611,7 @@ namespace DataReef.TM.Api.Controllers
             ouService.RemoveFavouriteOu(request.OUID, request.PersonID);
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
-
-
+         
         [HttpPost]
         [Route("Favourite")]
         [AllowAnonymous, InjectAuthPrincipal] 
