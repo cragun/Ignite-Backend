@@ -2472,19 +2472,21 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public bool InheritsParent(List<OU> ous)
+        public bool InheritsParentOuPermissions(OU request)
         {
             try
             {
                 using (var dc = new DataContext())
                 {
-                    foreach (var item in ous)
-                    {
-                        var ou = dc.OUs.FirstOrDefault(a => a.Guid == item.Guid);
-                        ou.Permissions = item.Permissions;
-                        ou.Updated(ou.Guid);
-                    }
+                    var ou = dc.OUs.FirstOrDefault(a => a.Guid == request.Guid);
 
+                    var parentOu = dc.OUs.FirstOrDefault(a => a.Guid == ou.ParentID);
+                    if (parentOu != null)
+                    {
+                        ou.Permissions = parentOu.Permissions; 
+                    } 
+
+                    ou.Updated(ou.Guid); 
                     dc.SaveChanges();
 
                     return true;
