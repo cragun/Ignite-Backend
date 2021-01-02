@@ -543,7 +543,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> InheritsParentOuPermissions(OU ou)
         {
             var response = ouService.InheritsParentOuPermissions(ou);
-            return Ok(new GenericResponse<bool> { Response = response });
+            return Ok(new GenericResponse<OU> { Response = response });
         }
 
         [HttpPost]
