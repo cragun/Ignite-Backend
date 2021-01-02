@@ -832,8 +832,7 @@ namespace DataReef.Application.Services
             {
                 var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
                 if (isExist != null)
-                {
-
+                { 
                     if (isExist.IsDeleted == true)
                     {
                         return new SaveResult { Success = false, SuccessMessage = "Please activate user" };
