@@ -61,8 +61,7 @@ namespace DataReef.TM.Api.Controllers
         {
             var ret = quotasCommitmentsService.InsertQuotas(request);
             return Ok(ret);
-        }
-
+        } 
 
         [HttpGet]
         [Route("quota/report")]
@@ -79,7 +78,6 @@ namespace DataReef.TM.Api.Controllers
             var ret = quotasCommitmentsService.GetQuotasReportByPerson(req);
             return Ok(new { Response = ret });
         }
-         
 
         [HttpPost]
         [Route("commitement/report")]
@@ -88,7 +86,6 @@ namespace DataReef.TM.Api.Controllers
             var ret = quotasCommitmentsService.GetQuotasCommitementsReport(req);
             return Ok(new { Response = ret });
         }
-
 
         //add Commitments by user
         [HttpPost, Route("addCommitments")]

@@ -96,6 +96,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok("success");
         }
 
+        [HttpGet]
+        [Route("genericproposal/settings")]
+        public async Task<IHttpActionResult> AddGenericProposalOUSettings()
+        {
+            ouService.AddGenericProposalOUSettings();
+            return Ok("success");
+        }
+
 
 
     }

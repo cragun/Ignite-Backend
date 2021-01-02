@@ -1523,7 +1523,7 @@ namespace DataReef.TM.Services.Services
             {
                 var proposalData = dataContext
                                     .ProposalData
-                                    .FirstOrDefault(pd => pd.Guid == proposalid); 
+                                    .FirstOrDefault(pd => pd.Guid == proposalid);
 
                 var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalData.ProposalID);
                 Guid? ouid = Guid.Empty;
@@ -1538,7 +1538,7 @@ namespace DataReef.TM.Services.Services
                                 .SqlQuery<Guid>($"select * from OUTreeUP('{ouid}')")
                                 .ToList();
 
-                 // get Financing Options OU Settings for all ancestors
+                // get Financing Options OU Settings for all ancestors
                 var allOUSettings = dataContext
                                 .OUSettings
                                 .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
@@ -1914,6 +1914,52 @@ namespace DataReef.TM.Services.Services
                 }
 
                 dc.SaveChanges();
+            }
+        }
+
+        public void AddGenericProposalOUSettings()
+        {
+            using (var dc = new DataContext())
+            {
+                using (var transaction = dc.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var ignite = dc.OUs.ToList();
+
+                        foreach (var item in ignite)
+                        {
+                            OUSetting setting = new OUSetting();
+                            setting.OUID = item.Guid;
+                            setting.Value = "0";
+                            setting.Group = OUSettingGroupType.ConfigurationFile;
+                            setting.Inheritable = true;
+                            setting.Name = "Proposal.GenericSettings";
+                            setting.ValueType = SettingValueType.String;
+
+                            dc.OUSettings.Add(setting);
+
+                            OUSetting generic = new OUSetting();
+                            generic.OUID = item.Guid;
+                            generic.Value = "http://ignite-proposals-stage.s3-website-us-west-2.amazonaws.com/generic/";
+                            generic.Group = OUSettingGroupType.ConfigurationFile;
+                            generic.Inheritable = true;
+                            generic.Name = "Proposal.Template.GenericUrl";
+                            generic.ValueType = SettingValueType.String;
+
+                            dc.OUSettings.Add(generic);
+                        }
+
+                        dc.SaveChanges();
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+                }
             }
         }
 
@@ -2357,7 +2403,7 @@ namespace DataReef.TM.Services.Services
                 {
                     Guid = o.Guid,
                     Name = o.Name,
-                }).ToList(); 
+                }).ToList();
 
                 return ouRoles;
             }
@@ -2403,6 +2449,30 @@ namespace DataReef.TM.Services.Services
         }
 
         public bool UpdateOuPermissions(List<OU> ous)
+        {
+            try
+            {
+                using (var dc = new DataContext())
+                {
+                    foreach (var item in ous)
+                    {
+                        var ou = dc.OUs.FirstOrDefault(a => a.Guid == item.Guid);
+                        ou.Permissions = item.Permissions;
+                        ou.Updated(ou.Guid);
+                    }
+
+                    dc.SaveChanges();
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool InheritsParent(List<OU> ous)
         {
             try
             {
@@ -2530,7 +2600,7 @@ namespace DataReef.TM.Services.Services
                 var FavoriteOUS = dc.FavouriteOus.Where(x => x.PersonID == personID).Select(a => a.OUID).ToList();
 
                 List<OU> ous = new List<OU>();
-                 foreach (var item in FavoriteOUS)
+                foreach (var item in FavoriteOUS)
                 {
                     var ou = Get(item, "Settings,Children", deletedItems: deletedItems);
                     ou.WellKnownText = null;
@@ -2548,17 +2618,17 @@ namespace DataReef.TM.Services.Services
         {
             using (var context = new DataContext())
             {
-                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID ).ToList();
+                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
                 List<Territory> territory = new List<Territory>();
                 foreach (var item in favouriteTerritories)
                 {
                     var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.TerritoryID && !t.IsDeleted);
 
-                    AssignIncludes(include, ref ouTerritoriesQuery); 
+                    AssignIncludes(include, ref ouTerritoriesQuery);
                     var ouTerritories = ouTerritoriesQuery.FirstOrDefault();
 
                     ouTerritories.IsFavourite = true;
-                    ouTerritories.shapeWKT = ouTerritories.WellKnownText; 
+                    ouTerritories.shapeWKT = ouTerritories.WellKnownText;
 
                     if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && ouTerritories.OU != null)
                     {
@@ -2567,7 +2637,7 @@ namespace DataReef.TM.Services.Services
 
                     territory.Add(ouTerritories);
                 }
-                return territory; 
+                return territory;
             }
         }
 

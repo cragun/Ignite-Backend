@@ -880,77 +880,83 @@ namespace DataReef.Application.Services
                         }
                     }
 
-                    var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
-                    dc.OUAssociations.RemoveRange(OUAssociations);
-                    dc.SaveChanges();
+                    string not_avail = "";
 
-                    using (var transaction = dc.Database.BeginTransaction())
+                    if (newUser.RoleID != Guid.Empty && newUser.RoleID != null)
                     {
-                        try
+                        var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
+                        dc.OUAssociations.RemoveRange(OUAssociations);
+                        dc.SaveChanges();
+
+                        using (var transaction = dc.Database.BeginTransaction())
                         {
-                            string not_avail = "";
-
-                            foreach (var item in apikey)
+                            try
                             {
-                                var ouSetting = dc.OUSettings.Where(x => x.Name == SolarTrackerResources.SelectedSettingName).ToList()
-                              .FirstOrDefault(x =>
-                              {
-                                  var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
-                                  if (selectedIntegrations != null)
-                                  {
-                                      return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
-                                  }
-                                  else
-                                  {
-                                      return false;
-                                  }
-                              });
 
-                                if (ouSetting == null)
+                                foreach (var item in apikey)
                                 {
-                                    not_avail += item + ",";
-                                }
-                                else
-                                {
-                                    //check to see if the user is already part of the OU
-                                    var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExist.Guid && oua.OUID == ouSetting.OUID);
-                                    if (organizationalUnitAssociation == null)
+                                    var ouSetting = dc.OUSettings.Where(x => x.Name == SolarTrackerResources.SelectedSettingName).ToList()
+                                  .FirstOrDefault(x =>
+                                  {
+                                      var selectedIntegrations = x.GetValue<ICollection<SelectedIntegrationOption>>();
+                                      if (selectedIntegrations != null)
+                                      {
+                                          return selectedIntegrations.Any(s => s?.Data?.SMARTBoard?.ApiKey == item);
+                                      }
+                                      else
+                                      {
+                                          return false;
+                                      }
+                                  });
+
+                                    if (ouSetting == null)
                                     {
-                                        var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                                        if (Ou != null)
+                                        not_avail += item + ",";
+                                    }
+                                    else
+                                    {
+                                        //check to see if the user is already part of the OU
+                                        var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExist.Guid && oua.OUID == ouSetting.OUID);
+                                        if (organizationalUnitAssociation == null)
                                         {
-                                            var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
-
-
-                                            //add the OU association and the Role to that Association
-                                            organizationalUnitAssociation = new OUAssociation
+                                            var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                            if (Ou != null)
                                             {
-                                                OUID = ouSetting.OUID,
-                                                PersonID = isExist.Guid,
-                                                OURoleID = newUser.RoleID,
-                                                RoleType = role.RoleType
-                                            };
-                                            dc.OUAssociations.Add(organizationalUnitAssociation);
+                                                var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+
+                                                //add the OU association and the Role to that Association
+                                                organizationalUnitAssociation = new OUAssociation
+                                                {
+                                                    OUID = ouSetting.OUID,
+                                                    PersonID = isExist.Guid,
+                                                    OURoleID = newUser.RoleID,
+                                                    RoleType = role.RoleType
+                                                };
+                                                dc.OUAssociations.Add(organizationalUnitAssociation);
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            dc.SaveChanges();
-                            transaction.Commit();
-                            if (!String.IsNullOrEmpty(not_avail))
+                                dc.SaveChanges();
+                                transaction.Commit();
+                                if (!String.IsNullOrEmpty(not_avail))
+                                {
+                                    not_avail = not_avail.TrimEnd(',');
+                                }
+                            }
+                            catch (Exception ex)
                             {
-                                not_avail = not_avail.TrimEnd(',');
+                                transaction.Rollback();
+                                throw ex;
                             }
-
-                            return new SaveResult { Success = true, SuccessMessage = "User updated successfully", Exception = not_avail };
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            throw ex;
                         }
                     }
+                     
+
+                    return new SaveResult { Success = true, SuccessMessage = "User updated successfully", Exception = not_avail };
+
                 }
                 else
                 {
