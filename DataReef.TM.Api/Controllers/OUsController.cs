@@ -536,6 +536,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<bool> { Response = response });
         }
 
+
         [HttpPost]
         [Route("inherit/parentpermission")]
         [ResponseType(typeof(bool))]
