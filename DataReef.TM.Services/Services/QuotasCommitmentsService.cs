@@ -95,7 +95,7 @@ namespace DataReef.TM.Services
 
                 foreach (var item in dispositions)
                 {
-                    header.Add(item.DisplayName);
+                    header.Add(item.Disposition);
                 }
 
                 report.Add(header);
@@ -186,7 +186,7 @@ namespace DataReef.TM.Services
                     }
 
                     var commitments = new List<object>{
-                        item.DisplayName,
+                        item.Disposition,
                         item.TodayQuotas,
                         item.TodayCommitments,
                         item.WeekQuotas,
