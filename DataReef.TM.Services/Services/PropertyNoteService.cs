@@ -401,6 +401,7 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = x.DateLastModified,
                     UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
+                    Attachments = x.Attachments,
                     ParentID = x.ParentID,
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
@@ -430,6 +431,7 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = x.DateLastModified,
                     UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
+                    Attachments = x.Attachments,
                     ParentID = x.ParentID,
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid && !a.IsDeleted).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
@@ -466,6 +468,7 @@ namespace DataReef.TM.Services.Services
                     CreatedByName = user.FullName,
                     PersonID = user.Guid,
                     Content = noteRequest.Content,
+                    Attachments = noteRequest.Attachments,
                     PropertyID = property.Guid
                 };
 
@@ -516,6 +519,7 @@ namespace DataReef.TM.Services.Services
                     UserID = user.SmartBoardID,
                     Email = user.EmailAddressString,
                     ContentType = noteRequest.ContentType,
+                    Attachments = noteRequest.Attachments,
                     ParentID = noteRequest.ParentID
                 };
             }
