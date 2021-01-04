@@ -74,8 +74,7 @@ namespace DataReef.TM.Services
             {
                 entity.SaveResult = SaveResult.SuccessfulInsert;
                 return entity;
-            }
-
+            } 
             return entity;
         }
 
