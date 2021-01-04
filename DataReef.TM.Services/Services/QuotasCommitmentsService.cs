@@ -275,12 +275,15 @@ namespace DataReef.TM.Services
                         data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == RoleID)?.Name;
                         data[i].Types = data[i].Type == 1 ? "Quotas" : "Commitments";
 
+                        data[i].durations = Convert.ToInt32(data[i].EndDate.Subtract(data[i].StartDate).TotalDays);
+
                         var quota = new List<object>{
                         data[i].UserName,
                         data[i].Position,
                         data[i].Types,
                         data[i].StartDate.ToShortDateString(),
-                        data[i].EndDate.ToShortDateString()
+                        data[i].EndDate.ToShortDateString(),
+                        data[i].durations
                     };
 
                         data[i].Disposition = JsonConvert.DeserializeObject<List<DataReef.TM.Models.DTOs.Inquiries.CRMDisposition>>(data[i].dispositions);
