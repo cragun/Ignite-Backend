@@ -98,6 +98,7 @@ namespace DataReef.TM.Services
                     header.Add(item.Disposition);
                 }
 
+
                 report.Add(header);
 
                 var data = dc.QuotasCommitments.ToList();
