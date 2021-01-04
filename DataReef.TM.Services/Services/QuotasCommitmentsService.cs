@@ -163,6 +163,10 @@ namespace DataReef.TM.Services
 
                 foreach (var item in quota.Disposition)
                 {
+                    if (string.IsNullOrEmpty(item.Quota))
+                    {
+                        item.Quota = "0";
+                    }
                     item.TodayQuotas = (Convert.ToInt32(item.Quota) / Convert.ToInt32(quota.EndDate.Subtract(quota.StartDate).TotalDays)).ToString();
                     item.WeekQuotas = item.Quota;
                     item.RangeQuotas = item.Quota;
@@ -177,9 +181,9 @@ namespace DataReef.TM.Services
                     }
                     else
                     {
-                        item.TodayCommitments = "";
-                        item.WeekCommitments = "";
-                        item.RangeCommitments = "";
+                        item.TodayCommitments = "0";
+                        item.WeekCommitments = "0";
+                        item.RangeCommitments = "0";
                     }
 
                     var commitments = new List<object>{
