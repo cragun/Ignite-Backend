@@ -40,6 +40,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public string ContentType { get; set; }
 
+        [DataMember]
+        public string Attachments { get; set; }
+
         #endregion
 
         #region Navigation

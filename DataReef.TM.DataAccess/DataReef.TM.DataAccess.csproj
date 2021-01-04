@@ -1247,6 +1247,10 @@
     <Compile Include="Migrations\202101021244080_Add Permissions.Designer.cs">
       <DependentUpon>202101021244080_Add Permissions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101041425388_Add attachments field in propertynotes.cs" />
+    <Compile Include="Migrations\202101041425388_Add attachments field in propertynotes.Designer.cs">
+      <DependentUpon>202101041425388_Add attachments field in propertynotes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2141,6 +2145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101021244080_Add Permissions.resx">
       <DependentUpon>202101021244080_Add Permissions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101041425388_Add attachments field in propertynotes.resx">
+      <DependentUpon>202101041425388_Add attachments field in propertynotes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
