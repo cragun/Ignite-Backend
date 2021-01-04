@@ -538,10 +538,10 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [Route("inherit/parentpermission")]
         [ResponseType(typeof(OU))]
-        public async Task<IHttpActionResult> InheritsParentOuPermissions(OU ou)
+        public async Task<OU> InheritsParentOuPermissions(OU ou)
         {
             var response = ouService.InheritsParentOuPermissions(ou);
-            return Ok(new GenericResponse<OU> { Response = response });
+            return response;
         }
 
         [HttpPost]
@@ -609,8 +609,7 @@ namespace DataReef.TM.Api.Controllers
             ouService.RemoveFavouriteOu(request.OUID, request.PersonID);
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
-
-
+         
         [HttpPost]
         [Route("Favourite")]
         [AllowAnonymous, InjectAuthPrincipal] 
