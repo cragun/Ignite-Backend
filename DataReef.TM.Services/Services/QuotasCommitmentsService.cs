@@ -273,8 +273,7 @@ namespace DataReef.TM.Services
 
                         data[i].UserName = dc.People.FirstOrDefault(a => a.Guid == PersonID)?.Name;
                         data[i].Position = dc.OURoles.FirstOrDefault(a => a.Guid == RoleID)?.Name;
-                        data[i].Types = data[i].Type == 1 ? "Quotas" : "Commitments";
-
+                        data[i].Types = data[i].Type == 1 ? "Quotas" : "Commitments"; 
                         data[i].durations = Convert.ToInt32(data[i].EndDate.Subtract(data[i].StartDate).TotalDays);
 
                         var quota = new List<object>{
