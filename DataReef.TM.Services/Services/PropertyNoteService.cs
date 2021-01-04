@@ -94,7 +94,6 @@ namespace DataReef.TM.Services.Services
 
                 return _ouService.Value.GetPersonsAssociatedWithOUOrAncestor(property.Territory.OUID, email, name);
             }
-
         }
 
         public override PropertyNote Insert(PropertyNote entity)
