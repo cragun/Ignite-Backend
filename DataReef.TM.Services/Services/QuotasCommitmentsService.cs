@@ -139,6 +139,7 @@ namespace DataReef.TM.Services
                 var quota = dc.QuotasCommitments.FirstOrDefault(a => a.StartDate == req.StartDate && a.EndDate == req.EndDate);
 
                 List<List<object>> report = new List<List<object>>(); 
+
                 if (quota != null)
                 {
                     quota.Disposition = JsonConvert.DeserializeObject<List<CRMDisposition>>(quota.dispositions);
@@ -217,6 +218,7 @@ namespace DataReef.TM.Services
                 var commitments = new CRMDisposition
                 {
                     DisplayName = item[0].ToString(),
+                    Disposition = item[0].ToString(),
                     TodayQuotas = item[1].ToString(),
                     TodayCommitments = item[2].ToString(),
                     WeekQuotas = item[3].ToString(),
