@@ -152,8 +152,7 @@ namespace DataReef.TM.Services
                         commitment.Disposition = JsonConvert.DeserializeObject<List<CRMDisposition>>(commitment.dispositions);
                         commitment.Disposition = commitment.Disposition.OrderBy(a => a.Disposition).ToList();
                     }
-
-
+                     
                     List<object> header = new List<object>();
                     header.Add("Metric");
                     header.Add("Quota Today");
