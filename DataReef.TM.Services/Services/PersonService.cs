@@ -528,14 +528,14 @@ namespace DataReef.TM.Services
 
             var distinctDispositions = new HashSet<CRMDisposition>();
             distinctDispositions.Add(new CRMDisposition { Disposition = "Hours Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Doors Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Approach Delivered", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "New Contact", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments Set", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "CAPP", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "SS", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "FD", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "INS", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Doors Knocked", DisplayName = "Doors Knocked", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Approach Delivered", DisplayName = "Approach Delivered", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "New Contact", DisplayName = "New Contact", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments Set", DisplayName = "Appointments Set", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "CAPP", DisplayName = "CAPP", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "SS", DisplayName = "SS", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "FD", DisplayName = "FD", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "INS", DisplayName = "INS", Quota = "", Commitments = "" });
 
             return distinctDispositions.ToList();
         }
