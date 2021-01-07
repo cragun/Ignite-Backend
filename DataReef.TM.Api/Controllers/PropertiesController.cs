@@ -94,6 +94,37 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Gets all Master Territories base on apikey and lat-long
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <param name="Lat"></param>
+        /// <param name="Long"></param>
+        /// <returns></returns>
+        [Route("GetTerritoryListMaster/{apiKey}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> GetTerritoryListbyApikeyMaster(string apiKey, double Lat, double Long)
+        {
+            try
+            {
+                bool checkTime = CryptographyHelper.checkTime(apiKey);
+                string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+
+                var result = await propertyService.GetTerritoryListbyApikeyMaster(DecyptApiKey, Lat, Long);
+                if (result == null || result.Count() <= 0)
+                {
+                    return Ok("Leads Couldn't be created because  it is outside of the Territory.");
+                }
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
         /// <summary>
         /// / Gets all Territories , apikey base on lat-long
         /// </summary>

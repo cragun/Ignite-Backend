@@ -73,6 +73,9 @@ namespace DataReef.TM.Contracts.Services
         Task<IEnumerable<Territories>> GetTerritoryListbyApikey(string apiKey, double Lat, double Long);
 
         [OperationContract]
+        Task<IEnumerable<Territories>> GetTerritoryListbyApikeyMaster(string apiKey, double Lat, double Long);
+
+        [OperationContract]
         Task<IEnumerable<TerritoryApikey>> TerritoryNApikey(double Lat, double Long);
 
         [OperationContract]

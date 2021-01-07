@@ -1433,11 +1433,24 @@ namespace DataReef.TM.Services.Services
 
         public async Task<IEnumerable<Territories>> GetTerritoryListbyApikey(string apiKey, double Lat, double Long)
         {
-            using (var dc = new DataContext())
+            using (var dc = new DataContext()) 
             {
                 //var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryListByapiKeyOnly @apiKey", new SqlParameter("@apiKey", apiKey)).ToList();
 
                 var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Long), new SqlParameter("@apiKey", apiKey)).ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+
+        public async Task<IEnumerable<Territories>> GetTerritoryListbyApikeyMaster(string apiKey, double Lat, double Long)
+        {
+            using (var dc = new DataContext())
+            {
+                //var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryListByapiKeyOnly @apiKey", new SqlParameter("@apiKey", apiKey)).ToList();
+
+                var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKeyMaster @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Long), new SqlParameter("@apiKey", apiKey)).ToList();
 
                 return TerritoriesList;
             }
