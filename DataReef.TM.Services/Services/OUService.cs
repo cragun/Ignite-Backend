@@ -649,7 +649,8 @@ namespace DataReef.TM.Services.Services
                 CentroidLon = entity.CentroidLon,
                 Radius = entity.Radius,
                 ShapesVersion = entity.ShapesVersion,
-                Version = entity.Version
+                Version = entity.Version,
+                Status = TerritoryStatus.Master //Master Territory
             };
 
             List<TerritoryShape> tShape = new List<TerritoryShape>();
