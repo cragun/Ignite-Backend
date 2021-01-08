@@ -330,7 +330,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
             //get user email by its id
-            string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+            //string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
             string email;
             using (DataContext dc = new DataContext())
             {
@@ -397,7 +397,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 Message = response?.Message?.Text,
                 Token = response?.User?.Token,
-                ApiKey = encryptedAPIkey
+                ApiKey = integrationData.ApiKey
             };
         }
 
