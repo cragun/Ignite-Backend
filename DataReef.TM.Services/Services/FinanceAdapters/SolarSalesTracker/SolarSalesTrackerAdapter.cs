@@ -401,6 +401,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             };
         }
 
+
         public SBGetDocument GetProposalDocuments(Property property)
         {
             var ouid = property?.Territory?.OUID;
