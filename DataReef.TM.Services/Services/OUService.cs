@@ -711,6 +711,43 @@ namespace DataReef.TM.Services.Services
 
             //base.ProcessApiWebHooks(entity, EventDomain.Organization, EventAction.Changed, ret.Guid);
 
+            //update master territory
+            var territory = new Territory
+            {
+                Name = entity.Name,
+                OUID = entity.Guid,
+                CreatedByID = SmartPrincipal.UserId,
+                CreatedByName = SmartPrincipal.UserName,
+                WellKnownText = entity.WellKnownText,
+                CentroidLat = entity.CentroidLat,
+                CentroidLon = entity.CentroidLon,
+                Radius = entity.Radius,
+                ShapesVersion = entity.ShapesVersion,
+                Version = entity.Version,
+                Status = TerritoryStatus.Master //Master Territory
+            };
+
+            List<TerritoryShape> tShape = new List<TerritoryShape>();
+            foreach (var item in entity.Shapes)
+            {
+                tShape.Add(new TerritoryShape
+                {
+                    Radius = item.Radius,
+                    ResidentCount = item.ResidentCount,
+                    Name = item.Name,
+                    CentroidLat = item.CentroidLat,
+                    WellKnownText = item.WellKnownText,
+                    CentroidLon = item.CentroidLon,
+                    ParentID = item.ParentID,
+                    ShapeID = item.ShapeID,
+                    ShapeTypeID = item.ShapeTypeID,
+                    IsDeleted = item.IsDeleted
+                });
+            }
+
+            territory.Shapes = tShape;
+            _territoryService.Update(territory);
+
             try
             {
                 UpdateNavigationProperties(entity);
