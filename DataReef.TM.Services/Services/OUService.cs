@@ -735,6 +735,7 @@ namespace DataReef.TM.Services.Services
                     if (tShape.Count > 0)
                     {
                         dc.TerritoryShapes.AddRange(tShape);
+                        dc.SaveChanges();
                     }
                 } 
 
