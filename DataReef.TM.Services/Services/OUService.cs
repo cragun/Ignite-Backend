@@ -732,6 +732,7 @@ namespace DataReef.TM.Services.Services
                             IsDeleted = item.IsDeleted
                         });
                     }
+
                     if (tShape.Count > 0)
                     {
                         dc.TerritoryShapes.AddRange(tShape);
