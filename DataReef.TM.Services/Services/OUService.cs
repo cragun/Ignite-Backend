@@ -744,8 +744,7 @@ namespace DataReef.TM.Services.Services
                 entity.PrepareNavigationProperties();
 
                 //base.ProcessApiWebHooks(entity, EventDomain.Organization, EventAction.Changed, ret.Guid);
-
-
+                 
                 try
                 {
                     UpdateNavigationProperties(entity);
