@@ -54,7 +54,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                             bool isDeactivate = false; 
 
                             if (person != null && !person.IsDeleted && person.SBLastActivityDate != null)
-                            { 
+                            { 11111
                                 if (person.SBLastActivityDate.Value.Date <= oldDate.Date)
                                 {
                                     isDeactivate = true;
