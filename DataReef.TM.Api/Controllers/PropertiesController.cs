@@ -94,7 +94,12 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-
+        public class masterrslt
+        {
+            public IEnumerable<Territories> list { get; set; }
+            public double Lat { get; set; }
+            public double Long { get; set; }
+        }
 
         /// <summary>
         /// Gets all Master Territories base on apikey and lat-long
@@ -118,7 +123,13 @@ namespace DataReef.TM.Api.Controllers
                 {
                     return Ok("Leads Couldn't be created because  it is outside of the Territory.");
                 }
-                return Ok(result);
+
+                masterrslt mslt = new masterrslt();
+                mslt.list = result;
+                mslt.Lat = Lat;
+                mslt.Long = Long;
+
+                return Ok(mslt);
             }
             catch (System.Exception)
             {
