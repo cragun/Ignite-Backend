@@ -1443,7 +1443,6 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
         public async Task<IEnumerable<Territories>> GetTerritoryListbyApikeyMaster(string apiKey, double Lat, double Long)
         {
             using (var dc = new DataContext())
