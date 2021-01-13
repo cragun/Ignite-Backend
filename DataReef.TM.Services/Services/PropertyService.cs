@@ -442,8 +442,6 @@ namespace DataReef.TM.Services.Services
                                 //_smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
                                 _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + fstAppoint.StartDate.Date.ToShortDateString() + " at " + fstAppoint.StartDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
                                  fstAppoint.StartDate.Year + "/" + fstAppoint.StartDate.Month + "/" + fstAppoint.StartDate.Day, entity.GetMainPhoneNumber());
-
-
                             }
 
                             if (fstAppoint?.SendSmsToEC == true)
