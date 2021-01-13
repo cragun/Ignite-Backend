@@ -445,7 +445,8 @@ namespace DataReef.TM.Services.Services
 
 
                             }
-                            else if (fstAppoint?.SendSmsToEC == true)
+
+                            if (fstAppoint?.SendSmsToEC == true)
                             {
 
                                 _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + fstAppoint.StartDate.Date.ToShortDateString() + " at " + fstAppoint.StartDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
