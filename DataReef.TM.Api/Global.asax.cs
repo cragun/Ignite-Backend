@@ -4,6 +4,7 @@ using DataReef.Core.Infrastructure.Unity;
 using DataReef.Integrations.Spruce.DTOs;
 using DataReef.TM.Api.Bootstrap;
 using DataReef.TM.Api.Classes.ScheduledTask;
+using DataReef.TM.Api.Logging;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
 using DataReef.TM.Models.Commerce;
@@ -28,6 +29,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using System.Web.Http.ExceptionHandling;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -80,7 +82,7 @@ namespace DataReef.TM.Api
             //Create and register the global Unity container
             var container = new UnityContainer();
             GlobalConfiguration.Configuration.DependencyResolver = new UnityBootstrap(container);
-
+            GlobalConfiguration.Configuration.Services.Add(typeof(IExceptionLogger), new CustomLogger());
             //Create and init infrastructure web api
             var appBootstrap = new WebApiBootstrap(container,
                 AssemblyLoader.LoadAssemblies("bin", "DataReef.*.*.dll").ToArray(),
