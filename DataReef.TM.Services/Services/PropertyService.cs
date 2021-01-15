@@ -63,6 +63,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IInquiryService> _inquiryService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
         private readonly Lazy<ISmsService> _smsService;
+        private readonly IPersonService _peopleService;
 
         private static string BaseURL = "http://www.esiids.com/cgi-bin/esiids_xml.cgi?";
 
@@ -91,7 +92,8 @@ namespace DataReef.TM.Services.Services
             Lazy<ITerritoryService> territoryService,
             Lazy<IAppointmentService> appointmentService,
             Lazy<IInquiryService> inquiryService,
-            Lazy<ISmsService> smsService)
+            Lazy<ISmsService> smsService,
+            IPersonService peopleService)
             : base(logger, unitOfWorkFactory)
         {
             _geoProvider = geoProvider;
@@ -105,6 +107,7 @@ namespace DataReef.TM.Services.Services
             _appointmentService = appointmentService;
             _inquiryService = inquiryService;
             _smsService = smsService;
+            _peopleService = peopleService;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -402,6 +405,8 @@ namespace DataReef.TM.Services.Services
 
                         if (oldProp.LatestDisposition != entity.LatestDisposition)
                         {
+                            //Update StartDate and Sb User StartDate
+                            _peopleService.UpdateStartDate();
                             //person clocktime 
                             _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
                         }
@@ -437,10 +442,9 @@ namespace DataReef.TM.Services.Services
                                 //_smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
                                 _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + fstAppoint.StartDate.Date.ToShortDateString() + " at " + fstAppoint.StartDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
                                  fstAppoint.StartDate.Year + "/" + fstAppoint.StartDate.Month + "/" + fstAppoint.StartDate.Day, entity.GetMainPhoneNumber());
-
-
                             }
-                            else if (fstAppoint?.SendSmsToEC == true)
+
+                            if (fstAppoint?.SendSmsToEC == true)
                             {
 
                                 _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + fstAppoint.StartDate.Date.ToShortDateString() + " at " + fstAppoint.StartDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
@@ -1416,6 +1420,16 @@ namespace DataReef.TM.Services.Services
                 //var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryListByapiKeyOnly @apiKey", new SqlParameter("@apiKey", apiKey)).ToList();
 
                 var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Long), new SqlParameter("@apiKey", apiKey)).ToList();
+
+                return TerritoriesList;
+            }
+        }
+
+        public async Task<IEnumerable<TerritoryApikey>> TerritoryNApikey(double Lat, double Long)
+        {
+            using (var dc = new DataContext())
+            {
+                var TerritoriesList = dc.Database.SqlQuery<TerritoryApikey>("exec sp_GetTerritoryIdsForGeoCoordinates @latitude, @longitude", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Long)).ToList();
 
                 return TerritoriesList;
             }

@@ -23,6 +23,9 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SBNoteDTO> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey);
 
         [OperationContract]
+        IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID);
+
+        [OperationContract]
         SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
@@ -46,5 +49,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string SendNotification(string fcm_token);
+
+        [OperationContract]
+        string UpdateSmartboardIdByEmail();
     }
 }

@@ -1114,6 +1114,10 @@
     <Compile Include="Migrations\202012171819579_Add manualproposal.Designer.cs">
       <DependentUpon>202012171819579_Add manualproposal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101011806374_Add permission .cs" />
+    <Compile Include="Migrations\202101011806374_Add permission .Designer.cs">
+      <DependentUpon>202101011806374_Add permission .cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -1905,6 +1909,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012171819579_Add manualproposal.resx">
       <DependentUpon>202012171819579_Add manualproposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101011806374_Add permission .resx">
+      <DependentUpon>202101011806374_Add permission .cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

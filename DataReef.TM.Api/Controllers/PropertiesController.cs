@@ -67,7 +67,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="Long"></param>
         /// <returns></returns>
         [Route("GetTerritoryList/{apiKey}")]
-        [ResponseType(typeof(IEnumerable<Territories>))]
+        //[ResponseType(typeof(IEnumerable<Territories>))]
         [HttpGet]
         [AllowAnonymous]
         public async Task<IHttpActionResult> GetTerritoryListbyApikey(string apiKey, double Lat, double Long)
@@ -78,6 +78,10 @@ namespace DataReef.TM.Api.Controllers
                 string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
                 var result = await propertyService.GetTerritoryListbyApikey(DecyptApiKey, Lat, Long);
+                if (result == null || result.Count() <= 0)
+                {
+                    return Ok("Leads Couldn't be created because  it is outside of the Territory.");
+                }
                 return Ok(result);
             }
             catch (System.Exception)
@@ -85,6 +89,33 @@ namespace DataReef.TM.Api.Controllers
                 throw;
             }
         }
+
+        /// <summary>
+        /// / Gets all Territories , apikey base on lat-long
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <param name="Lat"></param>
+        /// <param name="Long"></param>
+        /// <returns></returns>
+        [Route("Sb/GetTerritoryNApikey/{apiKey}")]
+        [ResponseType(typeof(IEnumerable<TerritoryApikey>))]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> GetTerritoryNApikey(string apiKey, double Lat, double Long)
+        {
+            try
+            {
+                bool checkTime = CryptographyHelper.checkTime(apiKey);
+
+                var result = await propertyService.TerritoryNApikey(Lat, Long);
+                return Ok(result);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
 
         /// <summary>
         /// / Gets all Territories regardless of Lat - Long, for a property

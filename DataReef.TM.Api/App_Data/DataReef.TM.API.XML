@@ -378,6 +378,9 @@
             <param name="igniteId"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetNoteCommentsForSmartboard(System.Int64,System.String,DataReef.TM.Models.DTOs.SBNoteDTO)">
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetApikey(System.Int64,System.String,System.Int64)">
             <summary>
             Gets apikey
@@ -441,6 +444,14 @@
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateTerritoryIdInProperty(DataReef.TM.Models.DTOs.SBNoteDTO,System.String)">
             <summary>
             / Update TerritoryId for Property which given By SB.
+            </summary>
+            <param name="request"></param>
+            <param name="apiKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateSmartboardIdByEmail">
+            <summary>
+            / Update SmartboardId By Email.
             </summary>
             <param name="request"></param>
             <param name="apiKey"></param>
@@ -745,6 +756,15 @@
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetTerritoryListbyApikey(System.String,System.Double,System.Double)">
             <summary>
             / Gets all Territories base on apikey only
+            </summary>
+            <param name="apiKey"></param>
+            <param name="Lat"></param>
+            <param name="Long"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetTerritoryNApikey(System.String,System.Double,System.Double)">
+            <summary>
+            / Gets all Territories , apikey base on lat-long
             </summary>
             <param name="apiKey"></param>
             <param name="Lat"></param>
