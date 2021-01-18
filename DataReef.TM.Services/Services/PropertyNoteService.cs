@@ -500,7 +500,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -594,7 +594,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -976,7 +976,7 @@ namespace DataReef.TM.Services.Services
 
 
 
-        private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID)
+        private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID, bool IsSmartboard = false)
         {
             Task.Factory.StartNew(() =>
             {
@@ -992,7 +992,7 @@ namespace DataReef.TM.Services.Services
                 var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 
-                Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true);
+                Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
             });
         }
 
