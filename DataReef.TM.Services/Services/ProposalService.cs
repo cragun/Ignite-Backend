@@ -838,6 +838,21 @@ namespace DataReef.TM.Services.Services
                                     .Value?
                                     .Value ?? baseUrl;
                 }
+
+                var genericProposal = settings
+                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.Proposal_GenericSettings, StringComparison.InvariantCultureIgnoreCase))
+                                        .Value?.Value;
+
+                if (genericProposal == "1")
+                {
+                    if (settings.ContainsKey(OUSetting.Proposal_TemplateGenericUrl))
+                    {
+                        baseUrl = settings
+                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.Proposal_TemplateGenericUrl, StringComparison.InvariantCultureIgnoreCase))
+                                        .Value?
+                                        .Value ?? baseUrl;
+                    }
+                }
             }
 
             baseUrl = baseUrl.TrimEnd('/');

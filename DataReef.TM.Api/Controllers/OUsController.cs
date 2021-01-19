@@ -534,6 +534,15 @@ namespace DataReef.TM.Api.Controllers
         }
 
         [HttpPost]
+        [Route("inherit/parentpermission")]
+        [ResponseType(typeof(OU))]
+        public async Task<OU> InheritsParentOuPermissions(OU ou)
+        {
+            var response = ouService.InheritsParentOuPermissions(ou);
+            return response;
+        }
+
+        [HttpPost]
         [Route("roles/create")]
         public async Task<IHttpActionResult> AddOuRole(OURole req)
         {

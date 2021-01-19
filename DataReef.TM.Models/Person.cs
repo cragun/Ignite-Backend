@@ -97,9 +97,10 @@ namespace DataReef.TM.Models
         [DataMember(EmitDefaultValue = false)]
         public string BuildVersion { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime StartDate { get; set; }
+        //[DataMember(EmitDefaultValue = false)]
+        //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataMember]
+        public DateTime? StartDate { get; set; }
 
         [DataMember]
         public DateTime? SBLastActivityDate { get; set; }

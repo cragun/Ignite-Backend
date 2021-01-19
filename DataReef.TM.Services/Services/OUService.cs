@@ -648,7 +648,8 @@ namespace DataReef.TM.Services.Services
                 CentroidLon = entity.CentroidLon,
                 Radius = entity.Radius,
                 ShapesVersion = entity.ShapesVersion,
-                Version = entity.Version
+                Version = entity.Version,
+                Status = TerritoryStatus.Master //Master Territory
             };
 
             List<TerritoryShape> tShape = new List<TerritoryShape>();
@@ -682,12 +683,12 @@ namespace DataReef.TM.Services.Services
             // as per the discussion w/ Denisa, the client might send settings (as part of RestKIT implementation)
             // but the server should always discard them
             entity.Settings = null;
-
-            //the client sometimes doesn't set the RoleType on the association. do it here
-            if (entity.Associations?.Any() == true)
+            using (var dc = new DataContext())
             {
-                using (var dc = new DataContext())
+                //the client sometimes doesn't set the RoleType on the association. do it here
+                if (entity.Associations?.Any() == true)
                 {
+
                     var roleIds = entity.Associations.Select(x => x.OURoleID);
                     var roles = dc.OURoles.Where(x => roleIds.Contains(x.Guid)).ToList();
 
@@ -700,22 +701,60 @@ namespace DataReef.TM.Services.Services
                         }
                     }
                 }
+
+                //add shapes in master territories 
+                var masterterritory = dc.Territories.Include(t => t.Shapes).FirstOrDefault(a => a.OUID == entity.Guid && a.Status == TerritoryStatus.Master);
+                if (masterterritory != null)
+                {
+                    var masterterritoryShapes = dc.TerritoryShapes.Where(a => a.TerritoryID == masterterritory.Guid);
+                    foreach (var item in masterterritoryShapes)
+                    {
+                        item.IsDeleted = true;
+                    }
+
+                    List<TerritoryShape> tShape = new List<TerritoryShape>();
+
+                    foreach (var item in entity.Shapes)
+                    {
+                        tShape.Add(new TerritoryShape
+                        {
+                            Radius = item.Radius,
+                            TerritoryID = masterterritory.Guid,
+                            ResidentCount = item.ResidentCount,
+                            Name = item.Name,
+                            CentroidLat = item.CentroidLat,
+                            WellKnownText = item.WellKnownText,
+                            CentroidLon = item.CentroidLon,
+                            ParentID = item.ParentID,
+                            ShapeID = item.ShapeID,
+                            ShapeTypeID = item.ShapeTypeID,
+                            IsDeleted = item.IsDeleted
+                        });
+                    }
+
+                    if (tShape.Count > 0)
+                    {
+                        dc.TerritoryShapes.AddRange(tShape);
+                        dc.SaveChanges();
+                    }
+                }
+
+                var ret = base.Update(entity);
+
+                // this method will set the root Org Id to all children, if they don't already have it set.
+                entity.PrepareNavigationProperties();
+
+                //base.ProcessApiWebHooks(entity, EventDomain.Organization, EventAction.Changed, ret.Guid);
+
+
+                try
+                {
+                    UpdateNavigationProperties(entity);
+                }
+                catch (Exception) { }
+
+                return ret;
             }
-
-            var ret = base.Update(entity);
-
-            // this method will set the root Org Id to all children, if they don't already have it set.
-            entity.PrepareNavigationProperties();
-
-            //base.ProcessApiWebHooks(entity, EventDomain.Organization, EventAction.Changed, ret.Guid);
-
-            try
-            {
-                UpdateNavigationProperties(entity);
-            }
-            catch (Exception) { }
-
-            return ret;
         }
 
         private void ValidateShapes(OU entity)
@@ -1932,6 +1971,52 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
             }
         }
+
+        public void AddGenericProposalOUSettings()
+        {
+            using (var dc = new DataContext())
+            {
+                using (var transaction = dc.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var ignite = dc.OUs.ToList();
+
+                        foreach (var item in ignite)
+                        {
+                            OUSetting setting = new OUSetting();
+                            setting.OUID = item.Guid;
+                            setting.Value = "0";
+                            setting.Group = OUSettingGroupType.ConfigurationFile;
+                            setting.Inheritable = true;
+                            setting.Name = "Proposal.GenericSettings";
+                            setting.ValueType = SettingValueType.String;
+
+                            dc.OUSettings.Add(setting);
+
+                            OUSetting generic = new OUSetting();
+                            generic.OUID = item.Guid;
+                            generic.Value = "http://ignite-proposals.s3-website-us-west-2.amazonaws.com/generic/";
+                            generic.Group = OUSettingGroupType.ConfigurationFile;
+                            generic.Inheritable = true;
+                            generic.Name = "Proposal.Template.GenericUrl";
+                            generic.ValueType = SettingValueType.String;
+
+                            dc.OUSettings.Add(generic);
+                        }
+
+                        dc.SaveChanges();
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+        }
         public void EditOU(Guid ouid, OnboardingOUDataView req)
         {
             using (var dc = new DataContext())
@@ -2057,6 +2142,33 @@ namespace DataReef.TM.Services.Services
                     dc.OUShapes.Add(state);
                 }
                 statesLeftAfterRemoval.AddRange(stateShapes);
+
+                // add shapes in master territories 
+
+                var masterterritory = dc.Territories.Include(t => t.Shapes).FirstOrDefault(a => a.OUID == ouid && a.Status == TerritoryStatus.Master);
+                if (masterterritory != null)
+                {
+                    var masterterritoryShapes = geoStates
+                           .Select(s => new TerritoryShape
+                           {
+                               Name = s.ShapeName,
+                               TerritoryID = masterterritory.Guid,
+                               CentroidLat = s.CentroidLat,
+                               CentroidLon = s.CentroidLon,
+                               CreatedByID = SmartPrincipal.UserId,
+                               Radius = s.Radius,
+                               WellKnownText = s.ShapeReduced,
+                               ExternalID = s.ShapeID,
+                               ShapeTypeID = s.ShapeTypeID,
+                               ShapeID = new Guid(s.ShapeID),
+                               ParentID = !string.IsNullOrWhiteSpace(s.ParentID) ? new Guid(s.ParentID) : (Guid?)null,
+                           })
+                           .ToList();
+                    foreach (var item in masterterritoryShapes)
+                    {
+                        dc.TerritoryShapes.Add(item);
+                    }
+                }
             }
 
             if (shapesUpdated)
@@ -2441,6 +2553,31 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public OU InheritsParentOuPermissions(OU request)
+        {
+            try
+            {
+                using (var dc = new DataContext())
+                {
+                    var ou = dc.OUs.FirstOrDefault(a => a.Guid == request.Guid);
+
+                    var parentOu = dc.OUs.FirstOrDefault(a => a.Guid == ou.ParentID);
+                    if (parentOu != null)
+                    {
+                        ou.Permissions = parentOu.Permissions;
+                    }
+
+                    ou.Updated(ou.Guid);
+                    dc.SaveChanges();
+
+                    return ou;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new OU();
+            }
+        }
         public void CreateNewOURole(OURole req)
         {
             using (var dc = new DataContext())
@@ -2594,7 +2731,8 @@ namespace DataReef.TM.Services.Services
                 {
                     try
                     {
-                        var Ous = dc.OUs.Include(a => a.Shapes).ToList();
+                        Guid ouid = Guid.Parse("08E67948-8318-46BD-865A-293DC77D1C73");
+                        var Ous = dc.OUs.Include(a => a.Shapes).Where(x => x.Guid == ouid).ToList();
 
                         foreach (var entity in Ous)
                         {

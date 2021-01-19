@@ -762,6 +762,15 @@
             <param name="Long"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetTerritoryListbyApikeyMaster(System.String,System.Double,System.Double)">
+            <summary>
+            Gets all Master Territories base on apikey and lat-long
+            </summary>
+            <param name="apiKey"></param>
+            <param name="Lat"></param>
+            <param name="Long"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.GetTerritoryNApikey(System.String,System.Double,System.Double)">
             <summary>
             / Gets all Territories , apikey base on lat-long

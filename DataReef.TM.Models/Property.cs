@@ -100,6 +100,10 @@ namespace DataReef.TM.Models
         [DataMember]
         public Nullable<int> DispositionTypeId { get; set; }
 
+        [DataMember]
+        [StringLength(200)]
+        public string SunnovaLeadID { get; set; }
+
 
         #region Navigation
 

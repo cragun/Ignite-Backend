@@ -12,7 +12,7 @@ namespace DataReef.TM.Mail
     {
        // private static string _senderEmail = ConfigurationManager.AppSettings["SenderEmail"] ?? "support@smartboardcrm.com";
         private static string _senderEmail = ConfigurationManager.AppSettings["SenderEmail"] ?? "donotreply@smartboardcrm.com";
-        public static string SenderName = ConfigurationManager.AppSettings["Email.SenderName"] ?? "Ingite App";
+        public static string SenderName = ConfigurationManager.AppSettings["Email.SenderName"] ?? "Ignite App";
 
         public static void SendOUAssoicationConfirmationToAdmin(string toPersonName, string toPersonEmail, string fromPersonName, string ouName)
         {
@@ -122,7 +122,7 @@ namespace DataReef.TM.Mail
             DataReef.Mail.Mailer.SendMail(email);
         }
 
-        public static void SendEmail(string to, string cc, string subject, string body, bool isHtml = false, List<Attachment> attachments = null)
+        public static void SendEmail(string to, string cc, string subject, string body, bool isHtml = false, List<Attachment> attachments = null, bool IsSmartboard = false)
         {
             if (Constants.APIBaseAddress == "http://api-staging.ignite.trismartsolar.com")
             {
@@ -137,9 +137,18 @@ namespace DataReef.TM.Mail
                 }
                 
             }
-            
+
             var email = new MailMessage();
-            email.From = new MailAddress(_senderEmail, SenderName);
+
+            if (IsSmartboard == true)
+            {
+                email.From = new MailAddress(_senderEmail, "Smartboard App");
+            }
+            else
+            {
+                email.From = new MailAddress(_senderEmail, SenderName);
+            }
+
             email.Subject = subject;
             email.Body = body;
             email.IsBodyHtml = isHtml;

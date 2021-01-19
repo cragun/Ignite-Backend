@@ -401,6 +401,7 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = x.DateLastModified,
                     UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
+                    Attachments = x.Attachments,
                     ParentID = x.ParentID,
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
@@ -430,6 +431,7 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = x.DateLastModified,
                     UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
+                    Attachments = x.Attachments,
                     ParentID = x.ParentID,
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid && !a.IsDeleted).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
@@ -467,6 +469,7 @@ namespace DataReef.TM.Services.Services
                     CreatedByName = user.FullName,
                     PersonID = user.Guid,
                     Content = noteRequest.Content,
+                    Attachments = noteRequest.Attachments,
                     PropertyID = property.Guid
                 };
 
@@ -499,7 +502,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -517,6 +520,7 @@ namespace DataReef.TM.Services.Services
                     UserID = user.SmartBoardID,
                     Email = user.EmailAddressString,
                     ContentType = noteRequest.ContentType,
+                    Attachments = noteRequest.Attachments,
                     ParentID = noteRequest.ParentID
                 };
             }
@@ -592,7 +596,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
                     if (emails?.Any() == true)
                     {
-                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
                     }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
@@ -974,7 +978,7 @@ namespace DataReef.TM.Services.Services
 
 
 
-        private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID)
+        private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID, bool IsSmartboard = false)
         {
             Task.Factory.StartNew(() =>
             {
@@ -993,7 +997,7 @@ namespace DataReef.TM.Services.Services
                 var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 
-                Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true);
+                Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
             });
         }
 
