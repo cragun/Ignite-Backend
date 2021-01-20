@@ -209,14 +209,18 @@ namespace DataReef.TM.Api.Controllers
             return await base.Patch(item);
         }
 
-        public override async Task<ICollection<Territory>> PostMany(List<Territory> items)
+        public override async Task<ICollection<Territory>> PostMany(ICollection<Territory> items)
         {
             if (items == null || !items.Any())
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-
-            items.ForEach(i => CheckTerritoryValidity(i));
+            //items.ForEach(i => CheckTerritoryValidity(i));
+            foreach (var item in items)
+            {
+                CheckTerritoryValidity(item);
+            }
+            
 
             return await base.PostMany(items);
         }
