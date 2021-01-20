@@ -115,7 +115,6 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public bool CanBuild { get; set; }
         public double LenderFee { get; set; } 
         public double PPW { get; set; }
-         
         public decimal LenderFeesInAmount
         {
             get
