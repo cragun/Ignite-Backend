@@ -234,7 +234,7 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
-            var prop = base.InsertMany(new List<Property> { entity }).FirstOrDefault();
+            var prop = base.InsertMany(new List<Property>(1) { entity }).FirstOrDefault();
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
@@ -545,7 +545,7 @@ namespace DataReef.TM.Services.Services
 
         public override ICollection<Property> InsertMany(ICollection<Property> entities)
         {
-            var result = new List<Property>();
+            var result = new List<Property>(entities.Count);
 
             foreach (var entity in entities)
             {
@@ -557,7 +557,7 @@ namespace DataReef.TM.Services.Services
 
         public override ICollection<Property> UpdateMany(ICollection<Property> entities)
         {
-            var result = new List<Property>();
+            var result = new List<Property>(entities.Count);
 
             foreach (var entity in entities)
             {
@@ -589,7 +589,7 @@ namespace DataReef.TM.Services.Services
 
         public ICollection<Property> GetOUPropertiesByStatusPaged(Guid ouID, string disposition, string propertyNameSearch, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
         {
-            List<Property> ret = new List<Property>();
+            List<Property> ret;
 
             using (DataContext dc = new DataContext())
             {
@@ -600,6 +600,7 @@ namespace DataReef.TM.Services.Services
                                                                     p.Inquiries.Any(i => i.Disposition == disposition))
                                                              .OrderBy(p => p.Guid).Skip(pageIndex * itemsPerPage).Take(itemsPerPage);
                 AssignIncludes(include, ref setQuery);
+                ret = new List<Property>(setQuery.Count());
                 ret = setQuery.ToList();
             }
 
@@ -608,7 +609,7 @@ namespace DataReef.TM.Services.Services
 
         public ICollection<Property> GetOUPropertiesPaged(Guid ouID, string propertyNameSearch, int pageIndex = 0, int itemsPerPage = 20, string include = "")
         {
-            List<Property> ret = new List<Property>();
+            List<Property> ret;
 
             using (DataContext dc = new DataContext())
             {
@@ -618,6 +619,7 @@ namespace DataReef.TM.Services.Services
                                                                     (string.IsNullOrEmpty(propertyNameSearch) || p.Name.Contains(propertyNameSearch)))
                                                              .OrderBy(p => p.Guid).Skip(pageIndex * itemsPerPage).Take(itemsPerPage);
                 AssignIncludes(include, ref setQuery);
+                ret = new List<Property>(setQuery.Count());
                 ret = setQuery.ToList();
             }
 
@@ -692,7 +694,7 @@ namespace DataReef.TM.Services.Services
 
         public ICollection<Property> GetTerritoryPropertiesByStatusPaged(Guid territoryID, string disposition, string propertyNameSearch, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
         {
-            List<Property> ret = new List<Property>();
+            List<Property> ret;
 
             using (DataContext dc = new DataContext())
             {
@@ -701,6 +703,7 @@ namespace DataReef.TM.Services.Services
                                                                 p.Inquiries.Any(i => i.Disposition == disposition))
                                                              .OrderBy(p => p.Guid).Skip(pageIndex * itemsPerPage).Take(itemsPerPage);
                 AssignIncludes(include, ref setQuery);
+                ret = new List<Property>(setQuery.Count());
                 ret = setQuery.ToList();
             }
 
@@ -709,7 +712,7 @@ namespace DataReef.TM.Services.Services
 
         public ICollection<Property> GetTerritoryPropertiesWithProposal(Guid territoryID, string propertyNameSearch, int pageIndex = 0, int itemsPerPage = 20, string include = "", string exclude = "")
         {
-            List<Property> ret = new List<Property>();
+            List<Property> ret;
 
             using (DataContext dc = new DataContext())
             {
@@ -737,6 +740,7 @@ namespace DataReef.TM.Services.Services
                                 .Take(itemsPerPage);
 
                 AssignIncludes(include, ref retQuery);
+                ret = new List<Property>(retQuery.Count());
                 ret = retQuery.ToList();
 
                 propIds = ret
@@ -956,7 +960,7 @@ namespace DataReef.TM.Services.Services
                 throw new ArgumentNullException(nameof(propertiesRequest));
 
             if ((propertiesRequest.GeoPropertiesRequest == null && propertiesRequest.PropertiesRequest == null) || propertiesRequest.TerritoryID == Guid.Empty)
-                return new List<Property>();
+                return new List<Property>(0);
 
             //client app needs the notes count when using this API. Make sure to add PropertyNotes to the include query
             var includeString = string.Empty;

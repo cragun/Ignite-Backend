@@ -55,9 +55,9 @@ namespace DataReef.Integrations
                 throw new ApplicationException($"GetProperties Failed. {response.Content}");
             }
 
-            var content = response.Content; // raw content as string
+            // raw content as string
 
-            List<Property> ret = JsonConvert.DeserializeObject<List<Property>>(content);
+            List<Property> ret = JsonConvert.DeserializeObject<List<Property>>(response.Content);
 
             return ret;
 
@@ -80,8 +80,7 @@ namespace DataReef.Integrations
                 throw new ApplicationException($"GetProperties Failed. {response.Content}");
             }
 
-            var content = response.Content;
-            var ret = JsonConvert.DeserializeObject<List<Property>>(content);
+            var ret = JsonConvert.DeserializeObject<List<Property>>(response.Content);
 
             return ret;
         }

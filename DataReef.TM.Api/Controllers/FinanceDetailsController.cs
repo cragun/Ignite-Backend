@@ -27,7 +27,7 @@ namespace DataReef.TM.Api.Controllers
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-        public override async Task<ICollection<FinanceDetail>> PostMany(List<FinanceDetail> items)
+        public override async Task<ICollection<FinanceDetail>> PostMany(ICollection<FinanceDetail> items)
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }

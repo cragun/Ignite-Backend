@@ -61,7 +61,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
         public string GetState(string shortState, string type)
         {
-            string stateName = "";
+            //string stateName = "";
 
             var list = new List<KeyValuePair<string, string>>();
             list.Add(new KeyValuePair<string, string>("AL", "Alabama"));
@@ -119,14 +119,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
             if (type.Equals("shortState"))
             {
-                stateName = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
+                //stateName = list.Where(x => x.Key.ToLower() == shortState.ToLower()).FirstOrDefault().Value;
+                return list.FirstOrDefault(x => x.Key.Equals(shortState, StringComparison.OrdinalIgnoreCase)).Value;
             }
             else if (type.Equals("fullState"))
             {
-                stateName = list.Where(x => x.Value.ToLower() == shortState.ToLower()).FirstOrDefault().Key;
+                //stateName = list.Where(x => x.Value.ToLower() == shortState.ToLower()).FirstOrDefault().Key;
+                return list.FirstOrDefault(x => x.Value.Equals(shortState, StringComparison.OrdinalIgnoreCase)).Key;
             }
-
-            return stateName;
+            return string.Empty;
+            //return stateName;
         }
 
         public string GetSunlightToken()

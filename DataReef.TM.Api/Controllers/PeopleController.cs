@@ -422,7 +422,7 @@ namespace DataReef.TM.Api.Controllers
             return await base.Delete(item);
         }
 
-        public override async Task<ICollection<Person>> PostMany(List<Person> items)
+        public override async Task<ICollection<Person>> PostMany(ICollection<Person> items)
         {
             OUsControllerCacheInvalidation();
 

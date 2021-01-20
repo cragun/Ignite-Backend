@@ -269,7 +269,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [CrudApiAction]
         [GenericRoute("bulk", Order = 10)]
-        public virtual async Task<ICollection<T>> PostMany(List<T> items)
+        public virtual async Task<ICollection<T>> PostMany(ICollection<T> items)
         {
             if (items == null || !items.Any())
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
@@ -319,7 +319,8 @@ namespace DataReef.TM.Api.Controllers
 
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
-                    Content = new StringContent(exceptions.Aggregate((i, j) => i + " | " + j) + " Messages: " + exceptionMessage.Aggregate((i, j) => i + " | " + j))
+                    //Content = new StringContent(exceptions.Aggregate((i, j) => i + " | " + j) + " Messages: " + exceptionMessage.Aggregate((i, j) => i + " | " + j))
+                    Content = new StringContent($"{exceptions.Aggregate((i, j) => $"{i} | {j}")} Messages: {exceptionMessage.Aggregate((i, j) => $"{i} | {j}")}")
                 });
             }
 

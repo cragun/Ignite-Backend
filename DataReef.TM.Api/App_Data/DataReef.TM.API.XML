@@ -961,7 +961,7 @@
             <param name="item">The item.</param>
             <returns>The persisted item and OK if the operation is successful. Returns InternalServerError if the operation has failed or BadRequest if the request is faulty.</returns>
         </member>
-        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.PostMany(System.Collections.Generic.List{`0})">
+        <member name="M:DataReef.TM.Api.Controllers.EntityCrudController`1.PostMany(System.Collections.Generic.ICollection{`0})">
             <summary>
             The post method adds a list of new entity of type T.
             </summary>

@@ -30,7 +30,7 @@ namespace DataReef.TM.Api.Controllers
     
         }
 
-        public override async Task<ICollection<PrescreenBatch>> PostMany(List<PrescreenBatch> items)
+        public override async Task<ICollection<PrescreenBatch>> PostMany(ICollection<PrescreenBatch> items)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }

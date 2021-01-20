@@ -665,14 +665,18 @@ namespace DataReef.TM.Api.Controllers
             return await base.Delete(item);
         }
 
-        public override async Task<ICollection<OU>> PostMany(List<OU> items)
+        public override async Task<ICollection<OU>> PostMany(ICollection<OU> items)
         {
             if (items == null || !items.Any())
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-
-            items.ForEach(i => CheckOUValidity(i));
+            
+            //items.ForEach(i => CheckOUValidity(i));
+            foreach (var item in items)
+            {
+                CheckOUValidity(item);
+            }
 
             return await base.PostMany(items);
         }
