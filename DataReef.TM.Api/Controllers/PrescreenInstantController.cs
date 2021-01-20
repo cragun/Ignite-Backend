@@ -29,7 +29,7 @@ namespace DataReef.TM.Api.Controllers
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }
 
-        public override async Task<ICollection<PrescreenInstant>> PostMany(List<PrescreenInstant> items)
+        public override async Task<ICollection<PrescreenInstant>> PostMany(ICollection<PrescreenInstant> items)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotImplemented) { Content = new StringContent("Method not implemented") });
         }

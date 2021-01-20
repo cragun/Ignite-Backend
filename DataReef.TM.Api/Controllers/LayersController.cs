@@ -38,7 +38,7 @@ namespace DataReef.TM.Api.Controllers
         }
 
        
-        public override async Task<ICollection<Layer>> PostMany(List<Layer> items)
+        public override async Task<ICollection<Layer>> PostMany(ICollection<Layer> items)
         {
             throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.MethodNotAllowed)
             {
