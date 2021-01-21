@@ -120,7 +120,7 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, proprty, dc);
                     }
                 }
-                 
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -168,7 +168,7 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, proprty, dc);
                     }
                 }
-                 
+
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
                 if (property != null)
@@ -220,7 +220,7 @@ namespace DataReef.TM.Services.Services
                             NotifyComment(not.PersonID, not, proprty, dc);
                         }
                     }
-                     
+
                     var property = properties.FirstOrDefault(p => p.Guid == entity.PropertyID);
                     if (property != null)
                     {
@@ -298,7 +298,7 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, proprty, dc);
                     }
-                } 
+                }
 
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
@@ -487,6 +487,10 @@ namespace DataReef.TM.Services.Services
                     if (not != null && property != null)
                     {
                         NotifyComment(not.PersonID, not, property, dc);
+                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+
+                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+
                     }
                 }
 
@@ -585,6 +589,9 @@ namespace DataReef.TM.Services.Services
                     if (not != null && property != null)
                     {
                         NotifyComment(not.PersonID, not, property, dc);
+
+                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
                     }
                 }
 
@@ -842,7 +849,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
                 //first get the property
-                var property = dc.Properties                    
+                var property = dc.Properties
                     .Include(x => x.Territory)
                     .Include(x => x.PropertyNotes)
                     .AsNoTracking()
@@ -977,6 +984,18 @@ namespace DataReef.TM.Services.Services
         //}
 
 
+        private void SendEmailForNotesComment(string content, string Username, string email, Property property, Guid noteID, bool IsSmartboard = false)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
+
+                var body = $"Note Sent by: {Username}<br/><br/>New Comment on note you were created. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
+
+                Mail.Library.SendEmail(email, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
+            });
+
+        }
 
         private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID, bool IsSmartboard = false)
         {
@@ -993,7 +1012,7 @@ namespace DataReef.TM.Services.Services
 
                 var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
                 //var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . /*<br/><br/> Note Sent by: {Username}*/<br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
-                
+
                 var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 
@@ -1131,7 +1150,7 @@ namespace DataReef.TM.Services.Services
                                 if (item.id != Convert.ToInt32(currentPerson.SmartBoardID))
                                 {
                                     currentPerson.SmartBoardID = item.id.ToString();
-                                    currentPerson.Updated(); 
+                                    currentPerson.Updated();
                                     ApiLogEntry apilog = new ApiLogEntry();
                                     apilog.Id = Guid.NewGuid();
                                     apilog.User = SmartPrincipal.UserId.ToString();
