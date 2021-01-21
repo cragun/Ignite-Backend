@@ -91,6 +91,9 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
                                     Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
                                     Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
+
+                                    mailbody = mailbody + " Lastactivitydate : " + person.SBLastActivityDate;
+
                                     Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
                                 }
                             }
