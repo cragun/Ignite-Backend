@@ -408,6 +408,11 @@ namespace DataReef.TM.Api.Controllers.Web
 
         }
 
-
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<JsonResult> checktime()
+        {
+            return Json(DateTime.Now.ToString() +  "_  " + DateTime.UtcNow.ToString(), JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
             apilog.Id = Guid.NewGuid();
             apilog.User = SmartPrincipal.UserId.ToString();
             apilog.Machine = Environment.MachineName;
-            apilog.RequestContentType = "Scheduler Job " + DateTime.Now;
+            apilog.RequestContentType = "Scheduler Job " + DateTime.UtcNow;
 
             using (var dc = new DataContext())
             {
@@ -99,7 +99,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 {
                                     person.IsDeleted = true;
                                     person.SBActivityName = "Active";
-                                    person.SBLastActivityDate = DateTime.Now.AddDays(-1).Date;
+                                    person.SBLastActivityDate = DateTime.UtcNow.AddDays(-1).Date;
                                 }
 
                                 var user = Users.SingleOrDefault(u => u.PersonID == c.UserID
@@ -117,12 +117,16 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 dc.SaveChanges();
 
                                 //send mail  
-                                if (person != null && !person.IsDeleted)
+                                if (person != null)
                                 {
                                     string mailbody = "<p>SMARTBOARD ID : " + person.SmartBoardID + "</p><p>User ID : " + person.Guid + "</p><p>UserName : " + person.Name + "</p>";
 
                                     Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
                                     Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
+
+                                    mailbody = mailbody + " Lastactivitydate : " + person.SBLastActivityDate;
+
+                                    Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
                                 }
                             }
                         }
