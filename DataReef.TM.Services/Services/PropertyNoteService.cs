@@ -983,7 +983,6 @@ namespace DataReef.TM.Services.Services
         //    });
         //}
 
-
         private void SendEmailForNotesComment(string content, string Username, string email, Property property, Guid noteID, bool IsSmartboard = false)
         {
             Task.Factory.StartNew(() =>
