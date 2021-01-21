@@ -33,8 +33,6 @@ namespace DataReef.TM.Models.DTOs
 
     public class SBNoteDTO
     {
-
-
         public string Action { get; set; }
 
         public Guid? Guid { get; set; }
@@ -70,7 +68,8 @@ namespace DataReef.TM.Models.DTOs
         public DateTime? DateLastModified { get; set; }
         public int? Count { get; set; }
         public DateTime? LastUpdateTime { get; set; }
-
+        public bool IsSendSMS { get; set; }
+        public bool IsSendEmail { get; set; }
 
 
         public SBNoteDTO()

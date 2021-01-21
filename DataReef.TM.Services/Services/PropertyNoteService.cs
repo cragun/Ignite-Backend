@@ -486,16 +486,14 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, property, dc);
                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+                        
+                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
 
-                        // SendEmailNotification(note.Content, note.CreatedByName, personemail.EmailAddressString, property, note.Guid, true);
+                        //var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={not.Guid}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={not.Guid}'>Click here to open the note directly in SMARTBoard</a>";
 
-                        var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={not.Guid}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={not.Guid}'>Click here to open the note directly in SMARTBoard</a>";
+                        //var body = $"Note Sent by: {note.CreatedByName}<br/><br/>New Comment on note you were created. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {noteRequest.Content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
 
-                        var body = $"Note Sent by: {note.CreatedByName}<br/><br/>New Comment on note you were created. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {noteRequest.Content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
-
-                        Mail.Library.SendEmail(personemail.EmailAddressString, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, true);
-
-                        //Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, true);
+                        //Mail.Library.SendEmail(personemail.EmailAddressString, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, true);
                     }
                 }
 
@@ -596,16 +594,7 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, property, dc);
 
                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
-
-                        // SendEmailNotification(note.Content, note.CreatedByName, personemail.EmailAddressString, property, note.Guid, true);
-
-                        var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={not.Guid}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={not.Guid}'>Click here to open the note directly in SMARTBoard</a>";
-
-                        var body = $"Note Sent by: {note.CreatedByName}<br/><br/>New Comment on note you were created. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {noteRequest.Content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
-
-                        Mail.Library.SendEmail(personemail.EmailAddressString, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, true);
-
-                        Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, true);
+                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
                     }
                 }
 
@@ -622,9 +611,6 @@ namespace DataReef.TM.Services.Services
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
                 }
-
-
-
                 dc.SaveChanges();
 
                 return new SBNoteDTO
@@ -998,6 +984,18 @@ namespace DataReef.TM.Services.Services
 
 
 
+        private void SendEmailForNotesComment(string content, string Username, string email, Property property, Guid noteID, bool IsSmartboard = false)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
+
+                var body = $"Note Sent by: {Username}<br/><br/>New Comment on note you were created. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
+
+                Mail.Library.SendEmail(email, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
+            });
+
+        }
         private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID, bool IsSmartboard = false)
         {
             Task.Factory.StartNew(() =>
