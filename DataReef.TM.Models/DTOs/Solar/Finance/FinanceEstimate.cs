@@ -3,6 +3,7 @@ using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Finance;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public FinanceEstimate(LoanResponse response, FinancePlanDefinition plan, decimal mortgagePayment, LoanRequest request = null)
         {
-            FinancePlanDefinitionId = plan.Guid;
+            FinancePlanDefinitionId = plan.Guid; 
             CanBuild = plan.Type == FinancePlanType.Cash || plan.Type == FinancePlanType.Loan || plan.Type == FinancePlanType.Lease;
             FinanceType = plan.Type;
 
@@ -112,7 +113,21 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// Tells the client to show/hide the Build button
         /// </summary>
         public bool CanBuild { get; set; }
-        public double LenderFee { get; set; }
+        public double LenderFee { get; set; } 
         public double PPW { get; set; }
+        public decimal LenderFeesInAmount
+        {
+            get
+            {
+                if (LoanPayment != 0)
+                { 
+                    return Math.Round(LoanPayment * ((LoanPayment / (LoanPayment * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
+                }
+                else
+                {
+                    return 0;  
+                } 
+            }
+        }
     }
 }

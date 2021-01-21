@@ -129,11 +129,11 @@ namespace DataReef.Integrations.SolarCloud
                 throw new ApplicationException("Invalid TerritoryID");
             }
 
-            List<Property> props = null;
+            ICollection<Property> props = null;
 
             try
             {
-                props = GeoBridge.GetPropertiesForWellKnownText(wkt).ToList();
+                props = GeoBridge.GetPropertiesForWellKnownText(wkt);
             }
             catch (Exception ex)
             {
