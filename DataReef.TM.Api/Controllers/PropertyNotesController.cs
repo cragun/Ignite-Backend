@@ -163,7 +163,6 @@ namespace DataReef.TM.Api.Controllers
          {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-
             var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
 
             return Ok(result);
