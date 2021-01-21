@@ -2718,7 +2718,9 @@ namespace DataReef.TM.Services.Services
                 {
                     try
                     {
-                        var Ous = dc.OUs.Include(a => a.Shapes).ToList();
+                        //var Ous = dc.OUs.Include(a => a.Shapes).ToList();
+                        Guid ouid = Guid.Parse("7749729D-787E-49D2-83F1-E070597A152E");
+                        var Ous = dc.OUs.Include(a => a.Shapes).Where(x => x.Guid == ouid).ToList();
 
                         foreach (var entity in Ous)
                         {

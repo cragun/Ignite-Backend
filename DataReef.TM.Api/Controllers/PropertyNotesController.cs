@@ -160,12 +160,9 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
         public async Task<IHttpActionResult> CreateNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
-        {
-
-
+         {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-
 
             var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
 
