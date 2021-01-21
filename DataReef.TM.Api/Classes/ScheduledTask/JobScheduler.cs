@@ -14,7 +14,6 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
 
             IJobDetail job = JobBuilder.Create<Jobclass>().Build();
 
-
             ITrigger trigger = TriggerBuilder.Create()
             .WithIdentity("trigger1", "group1")
             .StartNow()
