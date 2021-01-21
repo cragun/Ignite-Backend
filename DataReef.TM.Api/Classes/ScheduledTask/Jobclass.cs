@@ -85,12 +85,13 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 dc.SaveChanges();
 
                                 //send mail  
-                                if (person != null && !person.IsDeleted)
+                                if (person != null)
                                 {
                                     string mailbody = "<p>SMARTBOARD ID : " + person.SmartBoardID + "</p><p>User ID : " + person.Guid + "</p><p>UserName : " + person.Name + "</p>";
 
                                     Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
                                     Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
+                                    Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
                                 }
                             }
                         }
