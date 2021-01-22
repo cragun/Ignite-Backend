@@ -23,6 +23,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                 dc.ApiLogEntries.Add(apilog);
                 dc.SaveChanges();
 
+
                 //Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"User Deactivation", "Scheduler job time: " + DateTime.Now.ToString() , true);
 
                 var loginday = dc.AppSettings.FirstOrDefault(a => a.Key == Constants.LoginDays);
