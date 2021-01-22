@@ -490,17 +490,20 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, property, dc);
                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
-                        if (noteRequest.IsSendEmail)
+                        if (not.PersonID != user.Guid)
                         {
+                            if (noteRequest.IsSendEmail)
+                            {
+                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            }
 
-                            SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
-                        }
+                            if (noteRequest.IsSendSMS)
+                            {
+                                _smsService
+                       .Value
+                       .SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
 
-                        if (noteRequest.IsSendSMS)
-                        {
-                            _smsService
-                   .Value
-                   .SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                            }
                         }
 
                         //var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={not.Guid}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={not.Guid}'>Click here to open the note directly in SMARTBoard</a>";
@@ -514,31 +517,43 @@ namespace DataReef.TM.Services.Services
                 dc.PropertyNotes.Add(note);
                 dc.SaveChanges();
 
-                if (noteRequest.IsSendEmail)
+                //send notifications to the tagged users
+                var taggedPersons = GetTaggedPersons(note.Content);
+                if (taggedPersons?.Any() == true)
                 {
-                    //send notifications to the tagged users
-                    var taggedPersons = GetTaggedPersons(note.Content);
-                    if (taggedPersons?.Any() == true)
+                    var emails = taggedPersons?.Select(x => x.EmailAddressString);
+                    var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
+                    //if (emails?.Any() == true)
+                    //{
+                    //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
+                    //}
+
+                    NotifyTaggedUsers(taggedPersons, note, property, dc);
+
+                    //email / sms to tagged users
+                    if (noteRequest.TaggedUsers.Count > 0)
                     {
-                        var emails = taggedPersons?.Select(x => x.EmailAddressString);
-                        var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-                        if (emails?.Any() == true)
+                        List<string> sendemails = new List<string>();
+                        foreach (var item in noteRequest.TaggedUsers)
                         {
-                            SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
+                            if (item.IsSendEmail)
+                            {
+                                sendemails.Add(item.email);
+                            }
+
+                            if (item.IsSendSMS)
+                            {
+                                _smsService
+                             .Value
+                             .SendSms("You received new notes", item.PhoneNumber);
+                            }
                         }
 
-                        NotifyTaggedUsers(taggedPersons, note, property, dc);
+                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
                     }
                 }
-
-                if (noteRequest.IsSendSMS)
-                {
-                    _smsService
-                 .Value
-                 .SendSms("You received new notes", user?.PhoneNumbers?.FirstOrDefault()?.Number);
-                }
-
+                 
                 return new SBNoteDTO
                 {
                     Guid = note.Guid,
@@ -618,44 +633,63 @@ namespace DataReef.TM.Services.Services
 
                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
-                        if (noteRequest.IsSendEmail)
+                        if (not.PersonID != user.Guid)
                         {
-                            SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            if (noteRequest.IsSendEmail)
+                            {
+                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            }
+
+                            if (noteRequest.IsSendSMS)
+                            {
+                                _smsService
+                       .Value
+                       .SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+
+                            }
                         }
 
-                        if (noteRequest.IsSendSMS)
-                        {
-                            _smsService
-                   .Value
-                   .SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
-
-                        }
                     }
                 }
 
-                if (noteRequest.IsSendEmail)
+                var taggedPersons = GetTaggedPersons(note.Content);
+                if (taggedPersons?.Any() == true)
                 {
-                    var taggedPersons = GetTaggedPersons(note.Content);
-                    if (taggedPersons?.Any() == true)
+                    var emails = taggedPersons?.Select(x => x.EmailAddressString);
+                    var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
+                    //if (emails?.Any() == true)
+                    //{
+                    //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
+                    //}
+
+                    NotifyTaggedUsers(taggedPersons, note, property, dc);
+
+                    //email / sms to tagged users
+                    if (noteRequest.TaggedUsers.Count > 0)
                     {
-                        var emails = taggedPersons?.Select(x => x.EmailAddressString);
-                        var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-                        if (emails?.Any() == true)
+                        List<string> sendemails = new List<string>();
+                        foreach (var item in noteRequest.TaggedUsers)
                         {
-                            SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
+                            if (item.IsSendEmail)
+                            {
+                                sendemails.Add(item.email);
+                            }
+
+                            if (item.IsSendSMS)
+                            {
+                                _smsService
+                             .Value
+                             .SendSms("You received new notes", item.PhoneNumber);
+                            }
                         }
 
-                        NotifyTaggedUsers(taggedPersons, note, property, dc);
+                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
                     }
+
                 }
 
-                if (noteRequest.IsSendSMS)
-                {
-                    _smsService
-                 .Value
-                 .SendSms("You received new notes", user?.PhoneNumbers?.FirstOrDefault()?.Number);
-                }
+
 
 
                 dc.SaveChanges();

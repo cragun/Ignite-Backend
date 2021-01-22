@@ -70,14 +70,13 @@ namespace DataReef.TM.Models.DTOs
         public DateTime? LastUpdateTime { get; set; }
         public bool IsSendSMS { get; set; }
         public bool IsSendEmail { get; set; }
-
-
+        public List<SBTaggedUser> TaggedUsers { get; set; }
+         
         public SBNoteDTO()
         {
 
         }
-
-
+         
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
             if (note != null)
@@ -99,6 +98,14 @@ namespace DataReef.TM.Models.DTOs
 
     }
 
+    public class SBTaggedUser
+    {
+        public string email { get; set; }
+        public bool IsSendEmail { get; set; }
+        public bool IsSendSMS { get; set; }
+        public int SmartBoardId { get; set; }
+        public string PhoneNumber { get; set; }
+    } 
 
     public class Territories
     {
