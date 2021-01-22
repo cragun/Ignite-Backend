@@ -628,6 +628,7 @@ namespace DataReef.TM.Services.Services
                             _smsService
                    .Value
                    .SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+
                         }
                     }
                 }
