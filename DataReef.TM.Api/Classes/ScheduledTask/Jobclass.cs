@@ -23,6 +23,8 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                 dc.ApiLogEntries.Add(apilog);
                 dc.SaveChanges();
 
+                //Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"User Deactivation", "Scheduler job time: " + DateTime.Now.ToString() , true);
+
                 var loginday = dc.AppSettings.FirstOrDefault(a => a.Key == Constants.LoginDays);
                 int logindays = loginday != null ? Convert.ToInt32(loginday.Value) : 0;
 
@@ -33,45 +35,8 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                     var Users = dc.Users.ToList();
                     var Authentications = dc.Authentications.ToList();
 
-
                     foreach (var c in Credentials)
                     {
-                        //if (c != null && !c.IsDeleted)
-                        //{
-                        //    var dayvalidation = Authentications.Where(a => a.UserID == c.UserID).ToList();
-
-                        //    DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
-
-                        //    var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
-
-                        //    if (dayvalidation.Count > 0 && lastLoginCount == 0)
-                        //    {
-                        //        var person = People.SingleOrDefault(p => p.Guid == c.UserID
-                        //             && p.IsDeleted == false);
-
-                        //        if (person != null && !person.IsDeleted)
-                        //        {
-                        //            person.IsDeleted = true;
-                        //            person.SBActivityName = "Active";
-                        //            person.SBLastActivityDate = DateTime.Now.AddDays(-1).Date;
-                        //        }
-
-                        //        var user = Users.SingleOrDefault(u => u.PersonID == c.UserID
-                        //                       && u.IsDeleted == false);
-
-                        //        if (user != null && !user.IsDeleted)
-                        //        {
-                        //            user.IsDeleted = true;
-                        //        }
-
-                        //        if (c != null && !c.IsDeleted)
-                        //        {
-                        //            c.IsDeleted = true;
-                        //        }
-
-                        //        dc.SaveChanges();
-                        //    }
-                        //}
                         if (c != null && !c.IsDeleted)
                         {
                             var dayvalidation = Authentications.Where(a => a.UserID == c.UserID).ToList();
@@ -121,8 +86,8 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                                 {
                                     string mailbody = "<p>SMARTBOARD ID : " + person.SmartBoardID + "</p><p>User ID : " + person.Guid + "</p><p>UserName : " + person.Name + "</p>";
 
-                                    Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
-                                    Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
+                                    //Mail.Library.SendEmail("support@smartboardcrm.com", string.Empty, $"User Deactivation", mailbody, true);
+                                    //Mail.Library.SendEmail("mdhakecha@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
 
                                     mailbody = mailbody + " Lastactivitydate : " + person.SBLastActivityDate;
 
