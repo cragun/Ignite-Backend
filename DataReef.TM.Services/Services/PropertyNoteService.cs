@@ -1171,8 +1171,7 @@ namespace DataReef.TM.Services.Services
                 smartboardNotificationID = _sbAdapter.Value.AddUserTaggingNotification(property, note.CreatedByID.Value, prsnid);
                 smartboardNotificationID = smartboardNotificationID.Replace("\"", string.Empty);
             }
-            catch { }
-
+            catch { } 
             Notification Notification = new Notification
             {
                 Value = note.Guid,
