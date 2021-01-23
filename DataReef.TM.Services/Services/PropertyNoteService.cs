@@ -931,7 +931,6 @@ namespace DataReef.TM.Services.Services
 
                 return sbSettings?.ApiKey;
             }
-
         }
 
         public IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey)
