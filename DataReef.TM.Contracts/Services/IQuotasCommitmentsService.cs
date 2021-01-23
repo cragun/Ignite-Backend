@@ -31,5 +31,12 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         QuotasCommitment InsertCommitments(QuotasCommitment request);
+
+        [OperationContract]
+        List<QuotasCommitment> GetQuotasDateRange(QuotasCommitment request);
+
+        [OperationContract]
+        bool IsCommitmentsSetByUser(QuotasCommitment request);
+        
     }
 }
