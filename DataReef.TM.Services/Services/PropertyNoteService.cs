@@ -489,8 +489,18 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, property, dc);
                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
-                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                        if (not.PersonID != user.Guid)
+                        {
+                           // if (noteRequest.IsSendEmail)
+                           // {
+                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                           // }
 
+                            //if (noteRequest.IsSendSMS)
+                            //{
+                            //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                            //}
+                        }
                     }
                 }
 
@@ -590,8 +600,21 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, property, dc);
 
-                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
-                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+
+                        if (not.PersonID != user.Guid)
+                        {
+                            //if (noteRequest.IsSendEmail)
+                            //{
+                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            //}
+
+                            //if (noteRequest.IsSendSMS)
+                           // {
+                            //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                           // }
+                        }
+
                     }
                 }
 
