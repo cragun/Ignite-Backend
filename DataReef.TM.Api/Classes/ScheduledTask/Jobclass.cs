@@ -25,6 +25,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
                 Mail.Library.SendEmail("hevin.android@gmail.com", string.Empty, $"User Deactivation", mailbody, true);
             }
 
+
             //ApiLogEntry apilog = new ApiLogEntry();
             //apilog.Id = Guid.NewGuid();
             //apilog.User = SmartPrincipal.UserId.ToString();
