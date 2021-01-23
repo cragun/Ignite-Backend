@@ -504,7 +504,6 @@ namespace DataReef.TM.Services.Services
                         }
                     }
                 }
-
                 dc.PropertyNotes.Add(note);
                 dc.SaveChanges();
 
