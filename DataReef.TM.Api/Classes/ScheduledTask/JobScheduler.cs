@@ -22,7 +22,7 @@ namespace DataReef.TM.Api.Classes.ScheduledTask
             .WithIdentity("trigger1", "group1")
             .StartNow()
             .WithDailyTimeIntervalSchedule(x => x
-            .WithIntervalInMinutes(15) 
+            .WithIntervalInHours(24) 
             .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(17, 20)))
             .Build();
 
