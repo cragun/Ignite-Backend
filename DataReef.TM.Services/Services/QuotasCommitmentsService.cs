@@ -123,6 +123,7 @@ namespace DataReef.TM.Services
                         quota.Add(item.Quota);
                     }
 
+
                     report.Add(quota);
                 }
                 return report;
