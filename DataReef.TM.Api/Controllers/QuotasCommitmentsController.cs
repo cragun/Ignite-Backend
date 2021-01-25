@@ -106,7 +106,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> IsCommitmentsSetByUser(QuotasCommitment request)
         {
             var ret = quotasCommitmentsService.IsCommitmentsSetByUser(request);
-            return Ok(ret);
+            return Ok(new { Response = ret });
         }
 
     }
