@@ -108,6 +108,5 @@ namespace DataReef.TM.Api.Controllers
             var ret = quotasCommitmentsService.IsCommitmentsSetByUser(request);
             return Ok(new { Response = ret });
         }
-
     }
 }
