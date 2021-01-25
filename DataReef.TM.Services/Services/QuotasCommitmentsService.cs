@@ -123,6 +123,7 @@ namespace DataReef.TM.Services
                         quota.Add(item.Quota);
                     }
 
+
                     report.Add(quota);
                 }
                 return report;
@@ -309,6 +310,34 @@ namespace DataReef.TM.Services
                 }
 
                 return report;
+            }
+        }
+         
+        public List<QuotasCommitment> GetQuotasDateRange(QuotasCommitment req)
+        {
+            using (DataContext dc = new DataContext())
+            { 
+                var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate).ToList();
+                foreach (var item in data)
+                {
+                    item.Disposition = JsonConvert.DeserializeObject<List<DataReef.TM.Models.DTOs.Inquiries.CRMDisposition>>(item.dispositions);
+                    item.Disposition = item.Disposition.OrderBy(a => a.Disposition).ToList();
+                }
+                return data;
+            }
+        }
+
+        public bool IsCommitmentsSetByUser(QuotasCommitment req)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                bool isSet = false; 
+                var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.PersonID == req.PersonID).ToList();
+                if (data.Count > 0)
+                {
+                    isSet = true;
+                }
+                return isSet;
             }
         }
     }

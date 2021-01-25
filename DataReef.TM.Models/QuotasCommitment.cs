@@ -56,6 +56,10 @@ namespace DataReef.TM.Models
         [NotMapped]
         public string Types { get; set; }
 
+        [NotMapped]
+        public DateTime CurrentDate { get; set; }
+
+
         #region Navigation Properties
 
         [DataMember]
