@@ -272,10 +272,7 @@ namespace DataReef.Application.Services
                         {
                             if (c.User != null && c.User.UserDevices != null)
                             {
-                                var userDevices = c
-                                                    .User
-                                                    .UserDevices
-                                                    .ToList();
+                                var userDevices = c.User.UserDevices.ToList();
 
                                 var currentDevice = userDevices.FirstOrDefault(d => d.DeviceID == SmartPrincipal.DeviceId);
 
@@ -286,11 +283,7 @@ namespace DataReef.Application.Services
                             //for now just grab the first one
                             AccountAssociation aa = dc.AccountAssociations.FirstOrDefault(aas => aas.PersonID == c.User.PersonID);
 
-                            var setting = c
-                                            .User?
-                                            .Person?
-                                            .PersonSettings?
-                                            .FirstOrDefault(s => !s.IsDeleted && s.Name == CUSTOM_TOKEN_VALIDITY);
+                            var setting = c.User?.Person?.PersonSettings?.FirstOrDefault(s => !s.IsDeleted && s.Name == CUSTOM_TOKEN_VALIDITY);
 
                             var expirationDays = TOKEN_EXPIRATION_DAYS;
                             if (setting != null)
@@ -312,48 +305,48 @@ namespace DataReef.Application.Services
                                 }
                             }
 
-                            var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
+                           // var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
 
-                            int logindays = _appSettingService.GetLoginDays();
+                          //  int logindays = _appSettingService.GetLoginDays();
 
-                            DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
+                           // DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
 
-                            var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
+                          //  var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
 
-                            if (dayvalidation.Count > 0 && lastLoginCount == 0)
-                            {
+                            //if (dayvalidation.Count > 0 && lastLoginCount == 0)
+                            //{
 
-                                var person = dc
-                                     .People
-                                     .SingleOrDefault(p => p.Guid == c.UserID
-                                                  && p.IsDeleted == false);
+                            //    var person = dc
+                            //         .People
+                            //         .SingleOrDefault(p => p.Guid == c.UserID
+                            //                      && p.IsDeleted == false);
 
-                                if (person != null && !person.IsDeleted)
-                                {
-                                    person.IsDeleted = true;
-                                }
-                                var user = dc
-                                     .Users
-                                     .SingleOrDefault(u => u.PersonID == c.UserID
-                                                && u.IsDeleted == false);
+                            //    if (person != null && !person.IsDeleted)
+                            //    {
+                            //        person.IsDeleted = true;
+                            //    }
+                            //    var user = dc
+                            //         .Users
+                            //         .SingleOrDefault(u => u.PersonID == c.UserID
+                            //                    && u.IsDeleted == false);
 
-                                if (user != null && !user.IsDeleted)
-                                {
-                                    user.IsDeleted = true;
-                                }
-                                var credential = dc
-                                    .Credentials
-                                    .SingleOrDefault(u => u.PersonID == c.UserID
-                                               && u.IsDeleted == false);
+                            //    if (user != null && !user.IsDeleted)
+                            //    {
+                            //        user.IsDeleted = true;
+                            //    }
+                            //    var credential = dc
+                            //        .Credentials
+                            //        .SingleOrDefault(u => u.PersonID == c.UserID
+                            //                   && u.IsDeleted == false);
 
-                                if (credential != null && !credential.IsDeleted)
-                                {
-                                    credential.IsDeleted = true;
-                                }
-                                dc.SaveChanges();
+                            //    if (credential != null && !credential.IsDeleted)
+                            //    {
+                            //        credential.IsDeleted = true;
+                            //    }
+                            //    dc.SaveChanges();
 
-                                throw new ArgumentException("Account is suspended!");
-                            }
+                            //    throw new ArgumentException("Account is suspended!");
+                            //}
 
                             AuthenticationToken token = new AuthenticationToken();
                             token.Audience = "tm";
