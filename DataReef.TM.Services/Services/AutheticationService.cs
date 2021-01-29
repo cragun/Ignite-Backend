@@ -296,6 +296,7 @@ namespace DataReef.Application.Services
                                 var per = db.People.Where(p => p.Guid == c.User.PersonID).FirstOrDefault();
                                 if (per != null)
                                 {
+                                    per.ModifiedTime = DateTime.UtcNow;
                                     per.LastLoginDate = DateTime.UtcNow;
                                     if (!String.IsNullOrEmpty(fcm_token))
                                     {
@@ -305,13 +306,13 @@ namespace DataReef.Application.Services
                                 }
                             }
 
-                           // var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
+                            // var dayvalidation = dc.Authentications.Where(a => a.UserID == c.UserID).ToList();
 
-                          //  int logindays = _appSettingService.GetLoginDays();
+                            //  int logindays = _appSettingService.GetLoginDays();
 
-                           // DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
+                            // DateTime oldDate = System.DateTime.UtcNow.AddDays(-(logindays));
 
-                          //  var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
+                            //  var lastLoginCount = dayvalidation.Count(id => id.DateAuthenticated.Date >= oldDate.Date);
 
                             //if (dayvalidation.Count > 0 && lastLoginCount == 0)
                             //{
@@ -414,14 +415,17 @@ namespace DataReef.Application.Services
                     if (value)
                     {
                         person.IsDeleted = false;
+                        person.ModifiedTime = DateTime.UtcNow;
                         user.IsDeleted = false;
                         credential.IsDeleted = false;
+
                         dc.SaveChanges();
                         return true;
                     }
                     else
                     {
                         person.IsDeleted = true;
+                        person.ModifiedTime = DateTime.UtcNow;
                         user.IsDeleted = true;
                         credential.IsDeleted = true;
                         dc.SaveChanges();
@@ -629,7 +633,8 @@ namespace DataReef.Application.Services
                         LastName = newUser.LastName,
                         EmailAddressString = userInvitation.EmailAddress,
                         Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName),
-                        StartDate = System.DateTime.UtcNow
+                        StartDate = System.DateTime.UtcNow,
+                        ModifiedTime = DateTime.UtcNow,
                     };
                     if (!string.IsNullOrEmpty(phoneNumber))
                     {
@@ -676,7 +681,11 @@ namespace DataReef.Application.Services
                     person = credential.User.Person;
                     user = credential.User;
 
-                    if (person != null) person.IsDeleted = false;
+                    if (person != null)
+                    {
+                        person.IsDeleted = false;
+                        person.ModifiedTime = DateTime.UtcNow;
+                    }
                 }
 
                 //make sure the user is part of the account
@@ -825,7 +834,7 @@ namespace DataReef.Application.Services
             {
                 var isExist = dc.People.FirstOrDefault(cc => cc.SmartBoardID == newUser.ID);
                 if (isExist != null)
-                { 
+                {
                     if (isExist.IsDeleted == true)
                     {
                         return new SaveResult { Success = false, SuccessMessage = "Please activate user" };
@@ -945,7 +954,7 @@ namespace DataReef.Application.Services
                             }
                         }
                     }
-                     
+
 
                     return new SaveResult { Success = true, SuccessMessage = "User updated successfully", Exception = not_avail };
 
@@ -977,7 +986,8 @@ namespace DataReef.Application.Services
                                     EmailAddressString = newUser.EmailAddress,
                                     SmartBoardID = newUser.ID,
                                     Name = string.Format("{0} {1}", newUser.FirstName, newUser.LastName),
-                                    StartDate = DateTime.UtcNow
+                                    StartDate = DateTime.UtcNow,
+                                    ModifiedTime = DateTime.UtcNow
                                 };
 
                                 if (!string.IsNullOrEmpty(newUser.PhoneNumber))
@@ -1025,7 +1035,11 @@ namespace DataReef.Application.Services
                                 person = credential.User.Person;
                                 user = credential.User;
 
-                                if (person != null) person.IsDeleted = false;
+                                if (person != null)
+                                {
+                                    person.IsDeleted = false;
+                                    person.ModifiedTime = DateTime.UtcNow;
+                                }
                             }
 
                             string not_avail = "";

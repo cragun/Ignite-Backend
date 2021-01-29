@@ -73,6 +73,7 @@ namespace DataReef.TM.Services
 
         public override Person Insert(Person entity)
         {
+            entity.ModifiedTime = DateTime.UtcNow;
             var ret = base.Insert(entity);
 
             //foreach(OUAssociation oua in entity.OUAssociations)
@@ -89,6 +90,7 @@ namespace DataReef.TM.Services
             {
                 entity.Name = entity.FullName;
             }
+            entity.ModifiedTime = DateTime.UtcNow;
             var ret = base.Update(entity);
 
             //foreach (OUAssociation oua in entity.OUAssociations)
@@ -108,6 +110,7 @@ namespace DataReef.TM.Services
                 if (person != null)
                 {
                     person.StartDate = DateTime.UtcNow;
+                    person.ModifiedTime = DateTime.UtcNow;
                     var ret = base.Update(person);
 
                     if (!string.IsNullOrEmpty(person.SmartBoardID))
@@ -135,6 +138,7 @@ namespace DataReef.TM.Services
                     person.BuildVersion = prsn.BuildVersion;
                     person.SBLastActivityDate = prsn.SBLastActivityDate;
 
+                    person.ModifiedTime = DateTime.UtcNow;
                     var ret = base.Update(person);
                     return ret;
                 }
@@ -148,6 +152,7 @@ namespace DataReef.TM.Services
                 prsndetails.BuildVersion = prsn.BuildVersion;
                 prsndetails.LastActivityDate = prsn.LastActivityDate;
 
+                prsndetails.ModifiedTime = DateTime.UtcNow;
                 var ret = base.Update(prsndetails);
 
                 if (!string.IsNullOrEmpty(prsndetails.SmartBoardID))
@@ -284,6 +289,7 @@ namespace DataReef.TM.Services
                 }
 
                 person.IsDeleted = false;
+                person.ModifiedTime = DateTime.UtcNow;
 
                 var user = dc
                             .Users

@@ -1255,6 +1255,10 @@
     <Compile Include="Migrations\202101160524295_Add field SalesRepName.Designer.cs">
       <DependentUpon>202101160524295_Add field SalesRepName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101291616066_migration.cs" />
+    <Compile Include="Migrations\202101291616066_migration.Designer.cs">
+      <DependentUpon>202101291616066_migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2155,6 +2159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101160524295_Add field SalesRepName.resx">
       <DependentUpon>202101160524295_Add field SalesRepName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101291616066_migration.resx">
+      <DependentUpon>202101291616066_migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
