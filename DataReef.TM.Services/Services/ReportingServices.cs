@@ -115,7 +115,7 @@ namespace DataReef.TM.Services
             using (var context = new DataContext())
             {
                 // if the start OUID is a root ou guid, we'll use the first root for authenticated user
-                if (await Task.Run(()=> context.OUs.Any(o => o.Guid == startOUID && o.ParentID == null)))
+                if (context.OUs.Any(o => o.Guid == startOUID && o.ParentID == null))
                 {
                     startOUID = _ouService
                                 .Value
