@@ -286,6 +286,7 @@ namespace DataReef.Application.Services
                             //for now just grab the first one
                             AccountAssociation aa = dc.AccountAssociations.FirstOrDefault(aas => aas.PersonID == c.User.PersonID);
 
+
                             var setting = c
                                             .User?
                                             .Person?
