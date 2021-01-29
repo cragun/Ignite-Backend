@@ -38,7 +38,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                var blob = _imageryService.GetExistingHiResImageForProperty(propertyID, top, left, bottom, right, direction);
+                var blob = await _imageryService.GetExistingHiResImageForProperty(propertyID, top, left, bottom, right, direction);
                 return Ok<BlobModel>(blob);
             }
             catch (Exception ex)

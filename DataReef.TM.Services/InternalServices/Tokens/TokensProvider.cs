@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -19,38 +20,37 @@ namespace DataReef.TM.Contracts.Services
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class TokensProvider : ITokensProvider
     {
-        public double GetBalanceForLedger(Guid ledgerID)
+        public async Task<double> GetBalanceForLedger(Guid ledgerID)
         {
             using (var dc = new DataContext())
             {
-                var ret = dc.Database.SqlQuery<int>(
+                var ret = await dc.Database.SqlQuery<int>(
                         "SELECT Balance FROM [dbo].[TokenBalances]() WHERE LedgerID = @LedgerID",
-                        new SqlParameter("LedgerID", ledgerID.ToString())).FirstOrDefault();
+                        new SqlParameter("LedgerID", ledgerID.ToString())).FirstOrDefaultAsync();
 
                 return ret;
             }
         }
 
-        public TokenLedger GetDefaultLedgerForPerson(Guid personID)
+        public async Task<TokenLedger> GetDefaultLedgerForPerson(Guid personID)
         {
             using (DataContext dc = new DataContext())
             {
-                TokenLedger ret = dc.TokenLedgers
+                TokenLedger ret = await dc.TokenLedgers
                     .Include(tl => tl.Purchases)
                     .Include(tl => tl.TransfersIn)
                     .Include(tl => tl.Expenses)
                     .Include(tl => tl.TransfersOut)
-                    .Include(tl => tl.Adjustments)
-                    .FirstOrDefault(tl => tl.PersonID == personID && tl.IsDeleted == false && tl.IsPrimary == true);
+                    .Include(tl => tl.Adjustments).AsNoTracking()
+                    .FirstOrDefaultAsync(tl => tl.PersonID == personID && tl.IsDeleted == false && tl.IsPrimary == true);
                 return ret;
             }
         }
 
-        public LedgerDataView GetLedgerDataViewForPerson(Guid personID)
+        public async Task<LedgerDataView> GetLedgerDataViewForPerson(Guid personID)
         {
-            using (DataContext dc = new DataContext())
-            {
-                TokenLedger ledger = this.GetDefaultLedgerForPerson(personID);
+              
+                TokenLedger ledger = await this.GetDefaultLedgerForPerson(personID);
 
                 if (ledger == null)
                 {
@@ -60,7 +60,7 @@ namespace DataReef.TM.Contracts.Services
                 LedgerDataView ret = new LedgerDataView();
                 ret.PersonID = personID;
                 ret.Name = ledger.Name;
-                ret.Balance = this.GetBalanceForLedger(ledger.Guid);
+                ret.Balance = await this.GetBalanceForLedger(ledger.Guid);
                 ret.LedgerItems = new List<LedgerItemDataView>();
 
                 foreach (TokenPurchase p in ledger.Purchases)
@@ -131,7 +131,7 @@ namespace DataReef.TM.Contracts.Services
                 ret.LedgerItems = ret.LedgerItems.OrderBy(li => li.Date).ToList();
 
                 return ret;
-            }
+            
         }
 
         public void PerformTransfers(IEnumerable<TransferDataCommand> transfers)
@@ -180,21 +180,21 @@ namespace DataReef.TM.Contracts.Services
                     return;
                 }
 
-                TokenLedger fromLedger = this.GetDefaultLedgerForPerson(fromPersonID);
+                TokenLedger fromLedger = this.GetDefaultLedgerForPerson(fromPersonID).Result;
                 if (fromLedger == null)
                 {
                     transfer.SaveResult = SaveResult.FromException(new ApplicationException("Ledger not found (From)"), DataAction.Insert);
                     return;
                 }
 
-                double balance = this.GetBalanceForLedger(fromLedger.Guid);
+                double balance = this.GetBalanceForLedger(fromLedger.Guid).Result;
                 if (balance < transfer.Amount)
                 {
                     transfer.SaveResult = SaveResult.FromException(new ApplicationException("Insufficient Funds To Transfer"), DataAction.Insert);
                     return;
                 }
 
-                TokenLedger toLedger = this.GetDefaultLedgerForPerson(transfer.ToPersonID);
+                TokenLedger toLedger = this.GetDefaultLedgerForPerson(transfer.ToPersonID).Result;
                 try
                 {
                     if (toLedger == null) toLedger = this.CreateTokenLedgerForPerson(transfer.ToPersonID);

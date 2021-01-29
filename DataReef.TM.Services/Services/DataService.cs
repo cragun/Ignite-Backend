@@ -17,6 +17,7 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -58,7 +59,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public virtual T Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public virtual async Task<T> Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             using (var repository = UnitOfWorkFactory())
             {
@@ -66,7 +67,7 @@ namespace DataReef.TM.Services
 
                 AssignIncludes(include, ref setQuery);
 
-                var returnData = setQuery.FirstOrDefault(qq => qq.Guid == uniqueId);
+                var returnData = await setQuery.AsNoTracking().FirstOrDefaultAsync(qq => qq.Guid == uniqueId);
 
                 if (!deletedItems)
                 {

@@ -32,7 +32,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> Validate()
         {
-            var valid = _service.Validate();
+            var valid = await _service.Validate();
 
             if (valid)
             {

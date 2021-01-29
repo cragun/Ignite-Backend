@@ -59,7 +59,7 @@ namespace DataReef.TM.Services
 
         public SubmitApplicationResponse SubmitApplication(SubmitApplicationRequest submitRequest)
         {
-            var authContext = EnsureInitialized(submitRequest.OUID);
+            var authContext = EnsureInitialized(submitRequest.OUID).Result;
 
             var tokenResponse = AuthorizeAdapter(authContext);
             var headers = GetCustomHeaders(tokenResponse);

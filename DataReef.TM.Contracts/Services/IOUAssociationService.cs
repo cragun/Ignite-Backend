@@ -1,6 +1,7 @@
 ﻿using DataReef.TM.Models;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -9,7 +10,7 @@ namespace DataReef.TM.Contracts.Services
     public interface IOUAssociationService : IDataService<OUAssociation>
     {
         [OperationContract]
-        ICollection<OUAssociation> SmartList(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "");
+        Task<ICollection<OUAssociation>> SmartList(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
         void PopulatePersonMayEdit(ICollection<Person> people);

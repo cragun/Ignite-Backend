@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -30,9 +31,9 @@ namespace DataReef.TM.Services
             _ouService = ouService;
         }
 
-        public override UserInvitation Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override async Task<UserInvitation> Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            var userInvitation = base.Get(uniqueId, include, exclude, fields, deletedItems);
+            var userInvitation = await base.Get(uniqueId, include, exclude, fields, deletedItems);
             if (include.Contains("OU") && userInvitation.OU != null)
             {
                 userInvitation.OU = _ouService.OUBuilder(userInvitation.OU);

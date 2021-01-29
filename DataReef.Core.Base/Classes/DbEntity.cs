@@ -45,12 +45,12 @@ namespace DataReef.Core.Classes
                 return;
             }
 
-            _defaultExcludedProperties = _defaultExcludedProperties ?? new HashSet<string>(args);
+            _defaultExcludedProperties = _defaultExcludedProperties ?? new HashSet<string>();
 
-            //foreach (var item in args)
-            //{
-            //    _defaultExcludedProperties.Add(item);
-            //}
+            foreach (var item in args)
+            {
+                _defaultExcludedProperties.Add(item);
+            }
         }
 
         public void RemoveDefaultExcludedProperties(params string[] args)
@@ -269,12 +269,12 @@ namespace DataReef.Core.Classes
         {
             if (string.IsNullOrWhiteSpace(properties))
             {
-                PropertiesToExclude = PropertiesToExclude ?? new HashSet<string>(DefaultExcludedProperties);
+                PropertiesToExclude = PropertiesToExclude ?? new HashSet<string>();
 
-                //foreach (var item in DefaultExcludedProperties)
-                //{
-                //    PropertiesToExclude.Add(item);
-                //}
+                foreach (var item in DefaultExcludedProperties)
+                {
+                    PropertiesToExclude.Add(item);
+                }
                 return;
             }
 

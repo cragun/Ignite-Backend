@@ -12,6 +12,7 @@ using DataReef.TM.Models.DTOs.Blobs;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.ClientAPI;
 using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -25,7 +26,7 @@ namespace DataReef.TM.Contracts.Services
         ICollection<ProposalLite> GetProposalsLite(Guid ouID, DateTime startDate, DateTime endDate, bool deep = true, int pageNumber = 1, int pageSize = 1000);
 
         [OperationContract]
-        Proposal2DataView GetProposalDataView(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false);
+        Task<Proposal2DataView> GetProposalDataView(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false);
 
         [OperationContract]
         CreateProposalDataResponse CreateProposalData(DocumentSignRequest request);
@@ -40,7 +41,7 @@ namespace DataReef.TM.Contracts.Services
         List<DocumentDataLink> GetProposalDocuments(Guid proposalID);
 
         [OperationContract]
-        SBGetDocument GetOuDocumentType(Guid proposalID);
+        Task<SBGetDocument> GetOuDocumentType(Guid proposalID);
 
         [OperationContract]
         SBGetDocument GetDocuments(Guid propertID);

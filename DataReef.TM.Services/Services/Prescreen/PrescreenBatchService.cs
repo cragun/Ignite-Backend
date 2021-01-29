@@ -83,7 +83,7 @@ namespace DataReef.TM.Services.Services
             entity.PersonID = userID;
 
             //check to see if they have any balance first
-            TokenLedger ledger = tokensProvider.GetDefaultLedgerForPerson(userID);
+            TokenLedger ledger = tokensProvider.GetDefaultLedgerForPerson(userID).Result;
 
             //if ledger == null then the user has no credits available, no ledger=no credits
             if (ledger == null)
@@ -91,14 +91,14 @@ namespace DataReef.TM.Services.Services
                 throw new ApplicationException("Insufficient Credits Available");
             }
 
-            double balance = tokensProvider.GetBalanceForLedger(ledger.Guid);
+            double balance = tokensProvider.GetBalanceForLedger(ledger.Guid).Result;
             if (balance <= 0)
             {
                 throw new ApplicationException("Insufficient Credits Available");
             }
 
             //next we need to get the WKT associated with the Territory
-            Territory territory = this.territoryService.Get(entity.TerritoryID, "Shapes");
+            Territory territory = this.territoryService.Get(entity.TerritoryID, "Shapes").Result;
 
             if (territory == null)
             {
@@ -255,12 +255,12 @@ namespace DataReef.TM.Services.Services
                 entity.Status = newStatus;
 
                 var personID = entity.PersonID;
-                var territory = territoryService.Get(entity.TerritoryID);
+                var territory = territoryService.Get(entity.TerritoryID).Result;
                 if (territory == null)
                 {
                     throw new ApplicationException("Invalid territory");
                 }
-                var ledger = tokensProvider.GetDefaultLedgerForPerson(personID);
+                var ledger = tokensProvider.GetDefaultLedgerForPerson(personID).Result;
                 if (ledger == null)
                 {
                     throw new ApplicationException("Invalid ledger");
