@@ -19,6 +19,6 @@ namespace DataReef.TM.Contracts.Services
         ICollection<OrganizationSelfTrackedReportRow> GetOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);
 
         [OperationContract]
-        ICollection<SalesRepresentativeSelfTrackedReportRow> GetSalesRepresentativeSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);
+        IEnumerable<SalesRepresentativeSelfTrackedReportRow> GetSalesRepresentativeSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);
     }
 }

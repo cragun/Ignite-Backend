@@ -194,7 +194,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public ICollection<SalesRepresentativeSelfTrackedReportRow> GetSalesRepresentativeSelfTrackedReport(Guid startOUID, DateTime? specifiedDay)
+        public IEnumerable<SalesRepresentativeSelfTrackedReportRow> GetSalesRepresentativeSelfTrackedReport(Guid startOUID, DateTime? specifiedDay)
         {
             var results = new List<SalesRepresentativeSelfTrackedReportRow>();
 
@@ -212,8 +212,7 @@ namespace DataReef.TM.Services
                             .OUAssociations
                             .Where(oua => orgAndSubOrgIDs.Contains(oua.OUID))
                             .Select(oua => oua.PersonID)
-                            .Distinct()
-                            .ToList();
+                            .Distinct();
 
                 return context
                         .PersonKPIs
@@ -226,8 +225,7 @@ namespace DataReef.TM.Services
                             Id = p.Guid,
                             Name = $"{p.Person.FirstName} {p.Person.LastName}",
                             SelfTrackedStatistics = _personKPIService.Value.GetSelfTrackedStatisticsForPerson(p.PersonID, specifiedDay)
-                        })
-                        .ToList();
+                        });
             }
         }
 
