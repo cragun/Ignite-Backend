@@ -10,6 +10,7 @@ using RestSharp;
 using RestSharp.Serializers;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -25,13 +26,13 @@ namespace DataReef.TM.Services
             AdapterName = adapterName;
         }
 
-        protected AuthenticationContext EnsureInitialized(Guid ouid)
+        protected async Task<AuthenticationContext> EnsureInitialized(Guid ouid)
         {
             OUID = ouid;
             if (ouSettings != null)
                 return GetAuthenticationContext(ouid);
 
-            ouSettings = _ouSettingService.Value.GetSettings(ouid, null);
+            ouSettings = await _ouSettingService.Value.GetSettings(ouid, null);
             if (string.IsNullOrWhiteSpace(serviceUrl) || serviceUrl.Equals("none", StringComparison.InvariantCultureIgnoreCase))
                 serviceUrl = GetBaseUrl(ouid);
 
@@ -48,7 +49,7 @@ namespace DataReef.TM.Services
 
         public virtual T MakeRequest<T>(Guid ouid, string resource, object payload, List<Parameter> parameters = null, ISerializer serializer = null) where T : class, new()
         {
-            var authContext = EnsureInitialized(ouid);
+            var authContext = EnsureInitialized(ouid).Result;
 
             var tokenResponse = AuthorizeAdapter(authContext);
             var headers = GetCustomHeaders(tokenResponse);
@@ -59,7 +60,7 @@ namespace DataReef.TM.Services
 
         public virtual string MakeRequest(Guid ouid, string resource, object payload, List<Parameter> parameters = null, ISerializer serializer = null, Method method = Method.POST)
         {
-            var authContext = EnsureInitialized(ouid);
+            var authContext = EnsureInitialized(ouid).Result;
 
             var tokenResponse = AuthorizeAdapter(authContext);
             var headers = GetCustomHeaders(tokenResponse);

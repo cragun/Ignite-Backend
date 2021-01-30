@@ -109,7 +109,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             decimal? overridenUtilityRate = null, overridenUtilityBaseRate = null;
             if (param.Proposal.OUID.HasValue && param.Proposal != null && param.Proposal.Tariff != null)
             {
-                var orgSettings = _settingsService.GetSettings(param.Proposal.OUID.Value, null);
+                var orgSettings = _settingsService.GetSettings(param.Proposal.OUID.Value, null).Result;
                 List<CustomUtilityRate> customUtilityRates = null;
 
                 var sett = orgSettings.GetByKey(OUSetting.Utility_Rates);

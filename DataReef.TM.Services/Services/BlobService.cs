@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -25,9 +26,9 @@ namespace DataReef.TM.Services
         private static readonly RegionEndpoint _region = RegionEndpoint.USWest2;
         private static readonly int UrlValidityDays = 3650;
 
-        public BlobModel Download(Guid guid, string bucketName = null)
+        public async Task<BlobModel> Download(Guid guid, string bucketName = null)
         {
-            return DownloadByName(guid.ToString(), bucketName);
+            return await DownloadByName(guid.ToString(), bucketName);
         }
 
         private AmazonS3Client _client;
@@ -43,7 +44,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public BlobModel DownloadByName(string name, string bucketName = null)
+        public async Task<BlobModel> DownloadByName(string name, string bucketName = null)
         {
             var req = new GetObjectRequest
             {
@@ -55,7 +56,7 @@ namespace DataReef.TM.Services
 
             try
             {
-                resp = Client.GetObject(req);
+                resp = await Client.GetObjectAsync(req);
             }
             catch (Exception exception)
             {

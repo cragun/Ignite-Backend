@@ -162,7 +162,7 @@ namespace DataReef.TM.Services
         /// Method that verifies that an active UserDevice exists for current UserId and DeviceId
         /// </summary>
         /// <returns></returns>
-        public bool Validate()
+        public async Task<bool> Validate()
         {
             using (var context = new DataContext())
             {
@@ -171,8 +171,8 @@ namespace DataReef.TM.Services
                     UserID = SmartPrincipal.UserId,
                     DeviceID = SmartPrincipal.DeviceId
                 };
-
-                Task.Factory.StartNew(() =>
+               
+                await Task.Factory.StartNew(() =>
                 {
                     _powerBIBridge.Value.PushData(pbi);
                 });

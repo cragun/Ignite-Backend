@@ -32,7 +32,7 @@ namespace DataReef.TM.ClientApi.Controllers
         {
             var ouid = SmartPrincipal.OuId;
 
-            var ouSettings = _ouSettingServiceFactory().GetSettings(ouid, null);
+            var ouSettings = _ouSettingServiceFactory().GetSettings(ouid, null).Result;
             if (!ouSettings.ContainsKey(TM.Models.OUSetting.Epc_Statuses))
                 return Ok(new GenericResponse<List<string>>(new List<string>()));
 

@@ -3,6 +3,7 @@ using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -10,13 +11,13 @@ namespace DataReef.TM.Contracts.Services
     public interface IReportingServices
     {
         [OperationContract]
-        ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null);
+        Task<ICollection<OrganizationReportRow>> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null);
 
         [OperationContract]
-        ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, string proptype = null);
+        Task<ICollection<SalesRepresentativeReportRow>> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, string proptype = null);
 
         [OperationContract]
-        ICollection<OrganizationSelfTrackedReportRow> GetOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);
+        Task<ICollection<OrganizationSelfTrackedReportRow>> GetOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);
 
         [OperationContract]
         IEnumerable<SalesRepresentativeSelfTrackedReportRow> GetSalesRepresentativeSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);

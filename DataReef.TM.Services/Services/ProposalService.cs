@@ -94,7 +94,7 @@ namespace DataReef.TM.Services.Services
             Task.Factory.StartNew(() =>
             {
                 //  TODO: in a hurry to ship the fix, hardcoding the includes, must create a recursive method to get all the references at all levels from a particular entity
-                var ret = Get(entity.Guid, @"SolarSystem.AdderItems,SolarSystem.PowerConsumption,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions.ObstructionPoints,SolarSystem.SystemProduction.Months,SolarSystem.FinancePlans.Documents,Tariff");
+                var ret = Get(entity.Guid, @"SolarSystem.AdderItems,SolarSystem.PowerConsumption,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions.ObstructionPoints,SolarSystem.SystemProduction.Months,SolarSystem.FinancePlans.Documents,Tariff").Result;
                 if (ret != null)
                 {
                     ret.SaveResult = proposal.SaveResult;
@@ -655,7 +655,7 @@ namespace DataReef.TM.Services.Services
                     throw new ApplicationException("Invalid proposal");
                 }
 
-                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID).Result;
 
                 //var contractorOUSettings = GetOUSettingsForContractorID(data.ContractorID);
                 var documentUrls = GetProposalURLs(data.ContractorID, data.Guid, null, ouSettings);
@@ -813,7 +813,7 @@ namespace DataReef.TM.Services.Services
 
             if (ouid.HasValue)
             {
-                return OUSettingService.GetOuSettings(ouid.Value);
+                return OUSettingService.GetOuSettings(ouid.Value).Result;
             }
             return null;
         }
@@ -830,8 +830,7 @@ namespace DataReef.TM.Services.Services
             if (contractorIdSettings.Any())
             {
                 var ouid = contractorIdSettings.FirstOrDefault().OUID;
-                var settings = _ouSettingService.Value.GetSettings(ouid, null);
-
+                var settings = _ouSettingService.Value.GetSettings(ouid, null).Result;
                 if (settings.ContainsKey(OUSetting.Proposal_TemplateBaseUrl))
                 {
                     baseUrl = settings
@@ -880,7 +879,7 @@ namespace DataReef.TM.Services.Services
             if (contractorIdSettings.Any())
             {
                 var ouid = contractorIdSettings.FirstOrDefault().OUID;
-                var settings = _ouSettingService.Value.GetSettings(ouid, null);
+                var settings = _ouSettingService.Value.GetSettings(ouid, null).Result;
                 if (settings.ContainsKey("Proposal.Agreements.BaseUrl"))
                 {
                     baseUrl = settings
@@ -913,7 +912,7 @@ namespace DataReef.TM.Services.Services
         private List<Tuple<string, string>> GetProposalUrlForOUID(Guid ouid, Guid propososalDataGuid)
         {
             var templateDefaultUrl = $"{_templateDefaultUrl}{propososalDataGuid}";
-            var ouSettings = _ouSettingService.Value.GetSettings(ouid, null);
+            var ouSettings = _ouSettingService.Value.GetSettings(ouid, null).Result;
             if (!ouSettings.ContainsKey(Models.OUSetting.Proposal_TemplateBaseUrl))
             {
 
@@ -1022,7 +1021,7 @@ namespace DataReef.TM.Services.Services
 
                 //add the agreement
                 var contractorID = request.ContractorID ?? data.ContractorID;
-                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID).Result;
                 if(signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
                 {
                     var agreementSignedDocument = GetSignedAgreementUrl(contractorID, data.Guid, ouSettings);
@@ -1250,7 +1249,7 @@ namespace DataReef.TM.Services.Services
 
                 var proposal = financePlan.SolarSystem.Proposal;
                 //List<OUSetting> ouSettings = GetOUSettingsForContractorID(contractorID);
-                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID).Result;
                 List<SignedDocumentDTO> signedDocuments = null;
                 if (!string.IsNullOrWhiteSpace(request.ProposalDataJSON))
                 {
@@ -1526,13 +1525,14 @@ namespace DataReef.TM.Services.Services
             return documentDataLinks;
         }
 
-        public Proposal2DataView GetProposalDataView(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
+        public async Task<Proposal2DataView> GetProposalDataView(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
         {
             using (var dataContext = new DataContext())
             {
-                var proposalData = dataContext
+                var proposalData = await dataContext
                                     .ProposalData
-                                    .FirstOrDefault(pd => pd.Guid == proposalDataId);
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(pd => pd.Guid == proposalDataId);
 
                 if (proposalData == null)
                 {
@@ -1556,7 +1556,7 @@ namespace DataReef.TM.Services.Services
 
                 if (proposal == null)
                 {
-                    proposal = dataContext.Proposal
+                    proposal = await dataContext.Proposal
                                                .Include(p => p.Property.Territory.OU)
                                                .Include(p => p.Property.Occupants)
                                                .Include(p => p.Property.PropertyBag)
@@ -1573,7 +1573,8 @@ namespace DataReef.TM.Services.Services
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.SolarSystem.Proposal.Tariff))
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Details))
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Provider))
-                                               .FirstOrDefault(p => p.Guid == proposalData.ProposalID);
+                                               .AsNoTracking()
+                                               .FirstOrDefaultAsync(p => p.Guid == proposalData.ProposalID);
 
                     financePlan = proposal.SolarSystem.FinancePlans.FirstOrDefault();
                 }
@@ -1583,15 +1584,17 @@ namespace DataReef.TM.Services.Services
                     throw new ApplicationException("Proposal data does not exist!");
                 }
 
-                var contractorSetting = dataContext
+                var contractorSetting = await dataContext
                                 .OUSettings
                                 .Include(ous => ous.OU)
-                                .FirstOrDefault(ous => ous.Value == proposalData.ContractorID);
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(ous => ous.Value == proposalData.ContractorID);
 
-                proposal.SalesRep = dataContext
+                proposal.SalesRep = await dataContext
                                         .People
                                         .Include(p => p.PhoneNumbers)
-                                        .FirstOrDefault(p => p.Guid == proposalData.SalesRepID);
+                                        .AsNoTracking()
+                                        .FirstOrDefaultAsync(p => p.Guid == proposalData.SalesRepID);
 
 
                 var request = financePlan.Request;
@@ -1630,7 +1633,7 @@ namespace DataReef.TM.Services.Services
                 var proposalDV = new Proposal2DataView(param, roundAmounts);
 
                 // get the OU settings
-                var settings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                var settings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID).Result;
 
                 // Based on settings, add additional information to the proposal
                 var summaryFeature = settings?.FirstOrDefault(sett => sett.Name == OUSetting.Proposal_Features_Summary);
@@ -1643,7 +1646,7 @@ namespace DataReef.TM.Services.Services
                     proposalDV.BasicInfo.CompanyLogoUrl = logoUrl;
                 }
 
-                var proposalSettings = settings?.Where(s => s.Name.StartsWith("Proposal.", StringComparison.OrdinalIgnoreCase))?.ToList();
+                var proposalSettings = settings?.Where(s => s.Name.StartsWith("Proposal.", StringComparison.OrdinalIgnoreCase));
 
                 if (proposalSettings != null)
                 {
@@ -1740,7 +1743,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
 
-                return _blobService.Value.DownloadByName(mediaItem.GetAWSFileName());
+                return _blobService.Value.DownloadByName(mediaItem.GetAWSFileName()).Result;
             }
         }
 
@@ -1813,9 +1816,9 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SBGetDocument GetOuDocumentType(Guid ouid)
+        public async Task<SBGetDocument> GetOuDocumentType(Guid ouid)
         {
-            var response = _solarSalesTrackerAdapter.Value.GetOuDocumentType(ouid);
+            var response = await _solarSalesTrackerAdapter.Value.GetOuDocumentType(ouid);
             return response;
         }
 
@@ -1997,7 +2000,7 @@ namespace DataReef.TM.Services.Services
             {
                 default:
                 case FinancePlanType.Loan:
-                    var data = _financePlanDefinitionService.Value.Get(financePlan.FinancePlanDefinitionID.Value, "Details");
+                    var data = _financePlanDefinitionService.Value.Get(financePlan.FinancePlanDefinitionID.Value, "Details").Result;
                     return _loanCalculator.Value.CalculateLoan(financePlan.Request, data);
                 case FinancePlanType.Lease:
                     return _loanCalculator.Value.CalculateLease(financePlan.Request);
@@ -2488,7 +2491,7 @@ namespace DataReef.TM.Services.Services
 
                 //add the agreement
                 var contractorID = data.ContractorID;
-                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID).Result;
                 if (signedDocuments?.Any(x => x.Name == "Installation Agreement") != true)
                 {
                     var agreementSignedDocument = GetSignedAgreementUrl(contractorID, data.Guid, ouSettings);

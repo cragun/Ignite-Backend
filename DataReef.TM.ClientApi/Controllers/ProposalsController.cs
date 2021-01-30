@@ -109,7 +109,7 @@ namespace DataReef.TM.ClientApi.Controllers
             var ouGuids = this.ouService.GetHierarchicalOrganizationGuids(guidList);
 
             Proposal prop = propService.Get(proposalID,
-                "SolarSystem.FinancePlans,Property.Occupants,Property.Territory.OU,Property.PropertyBag,Tariff,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions,SolarSystem.RoofPlanes.SolarPanel,SolarSystem.RoofPlanes.Inverter,SolarSystem.PowerConsumption,SolarSystem.SystemProduction,SolarSystem.AdderItems,MediaItems");
+                "SolarSystem.FinancePlans,Property.Occupants,Property.Territory.OU,Property.PropertyBag,Tariff,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions,SolarSystem.RoofPlanes.SolarPanel,SolarSystem.RoofPlanes.Inverter,SolarSystem.PowerConsumption,SolarSystem.SystemProduction,SolarSystem.AdderItems,MediaItems").Result;
 
 
             if (prop == null)
@@ -259,7 +259,7 @@ namespace DataReef.TM.ClientApi.Controllers
             var guidList = new List<Guid>() { SmartPrincipal.OuId };
             var ouGuids = this.ouService.GetHierarchicalOrganizationGuids(guidList);
 
-            Proposal prop = propService.Get(proposalID, "SolarSystem,Property.Territory");
+            Proposal prop = propService.Get(proposalID, "SolarSystem,Property.Territory").Result;
 
             string json = prop.SolarSystem.SystemJSON;
 
@@ -330,7 +330,7 @@ namespace DataReef.TM.ClientApi.Controllers
 
                 //first get the existing proposal
                 Proposal existingProposal = propService.Get(proposalID,
-                    "SolarSystem.FinancePlans.Documents,SolarSystem.RoofPlanes.Obstructions.ObstructionPoints,SolarSystem.SystemProduction.Months,Property.Territory,SolarSystem.FinancePlans,Tariff,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions,SolarSystem.RoofPlanes.SolarPanel,SolarSystem.RoofPlanes.Inverter,SolarSystem.PowerConsumption,SolarSystem.SystemProduction,SolarSystem.AdderItems");
+                    "SolarSystem.FinancePlans.Documents,SolarSystem.RoofPlanes.Obstructions.ObstructionPoints,SolarSystem.SystemProduction.Months,Property.Territory,SolarSystem.FinancePlans,Tariff,SolarSystem.RoofPlanes.Points,SolarSystem.RoofPlanes.Edges,SolarSystem.RoofPlanes.Panels,SolarSystem.RoofPlanes.Obstructions,SolarSystem.RoofPlanes.SolarPanel,SolarSystem.RoofPlanes.Inverter,SolarSystem.PowerConsumption,SolarSystem.SystemProduction,SolarSystem.AdderItems").Result;
 
 
                 //business logic and security checks. 
@@ -442,7 +442,7 @@ namespace DataReef.TM.ClientApi.Controllers
                     //if there are any insert adders, we have to get the adder tempates
                     if (request.Adders != null && request.Adders.Insert.Any())
                     {
-                        var settings = ouSettingService.GetSettings(existingProposal.OUID.Value, null);
+                        var settings = ouSettingService.GetSettings(existingProposal.OUID.Value, null).Result;
                         var adderSetting = settings.FirstOrDefault(s => s.Key == "Adders");
                         var json = adderSetting.Value;
                         adderTemplates = JsonConvert.DeserializeObject<List<AdderItem>>(json.Value);
@@ -581,7 +581,7 @@ namespace DataReef.TM.ClientApi.Controllers
             var guidList = new List<Guid>() { SmartPrincipal.OuId };
             var ouGuids = this.ouService.GetHierarchicalOrganizationGuids(guidList);
 
-            Proposal prop = propService.Get(proposalID);
+            Proposal prop = propService.Get(proposalID).Result;
 
             if (prop == null)
             {
