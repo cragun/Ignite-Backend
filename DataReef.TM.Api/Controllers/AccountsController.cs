@@ -36,7 +36,7 @@ namespace DataReef.TM.Api.Controllers
         {
 
             List<Person> ret = new List<Person>();
-            Account account = this.accountService.Get(accountID, "Associations.Person");
+            Account account = await this.accountService.Get(accountID, "Associations.Person");
 
             if (account == null || account.Associations == null)
             {

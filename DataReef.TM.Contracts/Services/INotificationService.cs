@@ -2,6 +2,7 @@
 using DataReef.TM.Models;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -19,7 +20,7 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<Notification> MarkAllNotificationsAsRead(Guid personID, int pageNumber = 0, int itemsPerPage = 10);
 
         [OperationContract]
-        int CountUnreadNotifications(Guid personID);
+        Task<int> CountUnreadNotifications(Guid personID);
 
         [OperationContract]
         bool MarkAsReadFromSmartboard(string notificationSmartboardID, string apiKey);

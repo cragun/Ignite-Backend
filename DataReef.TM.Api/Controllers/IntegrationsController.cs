@@ -223,7 +223,7 @@ namespace DataReef.TM.Api.Controllers
             string masterTarrifId = null;
             if (proposalID.HasValue)
             {
-                var tarrif = _solarTarrifService.Value.Get(proposalID.Value);
+                var tarrif = await _solarTarrifService.Value.Get(proposalID.Value);
 
                 // Dirty hack that fixes some of the invalid data we get from Genability in some situations.
                 // Genability has an issue w/ Rocky Mountain Power
@@ -277,7 +277,7 @@ namespace DataReef.TM.Api.Controllers
                 string masterTarrifId = null;
                 if (proposalID.HasValue)
                 {
-                    var tarrif = _solarTarrifService.Value.Get(proposalID.Value);
+                    var tarrif = await _solarTarrifService.Value.Get(proposalID.Value);
 
                     // Dirty hack that fixes some of the invalid data we get from Genability in some situations.
                     // Genability has an issue w/ Rocky Mountain Power
@@ -348,7 +348,7 @@ namespace DataReef.TM.Api.Controllers
 
             if (proposalID.HasValue)
             {
-                var proposal = _proposalService.Get(proposalID.Value, "Property");
+                var proposal = await _proposalService.Get(proposalID.Value, "Property");
                 zipCode = proposal?.Property?.ZipCode;
                 usagecollected = proposal?.Property?.UsageCollected;
             }
@@ -460,7 +460,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Manualpresolarcost(Guid proposalID, ManualProposal req)
         {
-            var prop = _manualProposalService.Get(proposalID);
+            var prop = await _manualProposalService.Get(proposalID);
 
             var proposal = new ManualProposal();
             if (prop == null)
@@ -588,7 +588,7 @@ namespace DataReef.TM.Api.Controllers
             IntegrationProvider provider = new IntegrationProvider(credentials.Url, AddAuditData, credentials);
             RoofPlaneInfo property = request.RoofPlanes.First();
 
-            var ouSettings = _ouSettingsService.Value.GetSettings(ouid, null);
+            var ouSettings = await _ouSettingsService.Value.GetSettings(ouid, null);
 
 
             //foreach(var itm in request.RoofPlanes)
@@ -782,7 +782,7 @@ namespace DataReef.TM.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.ExpectationFailed);
             }
 
-            var planDefinition = _financePlanDefinitionService.Get(financePlanDefinitionId, "Provider");
+            var planDefinition = await _financePlanDefinitionService.Get(financePlanDefinitionId, "Provider");
             if (planDefinition?.Provider?.Name != "Spruce Financial")
             {
                 throw new HttpResponseException(HttpStatusCode.ExpectationFailed);
@@ -812,7 +812,7 @@ namespace DataReef.TM.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.ExpectationFailed);
             }
 
-            var planDefinition = _financePlanDefinitionService.Get(financePlanDefinitionId, "Provider");
+            var planDefinition = await _financePlanDefinitionService.Get(financePlanDefinitionId, "Provider");
             if (planDefinition?.Provider?.Name != "Spruce Financial")
             {
                 throw new HttpResponseException(HttpStatusCode.ExpectationFailed);

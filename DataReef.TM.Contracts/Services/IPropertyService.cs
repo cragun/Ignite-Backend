@@ -48,10 +48,10 @@ namespace DataReef.TM.Contracts.Services
         void SyncInstantPrescreenPropertyAttributes(Guid prescreenInstantId);
 
         [OperationContract]
-        Property SyncProperty(Guid propertyID, string include = "");
+        Task<Property> SyncProperty(Guid propertyID, string include = "");
 
         [OperationContract]
-        Property PropertyBagsbyID(Guid propertyID);
+        Task<Property> PropertyBagsbyID(Guid propertyID);
 
         [OperationContract]
         SolarTariff GetTariffByGenabilityProviderAccountID(string id);

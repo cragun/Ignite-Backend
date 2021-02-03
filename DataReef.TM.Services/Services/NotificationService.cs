@@ -86,11 +86,11 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public int CountUnreadNotifications(Guid personID)
+        public async Task<int> CountUnreadNotifications(Guid personID)
         {
             using (var dc = new DataContext())
             {
-                var person = dc.People.Include(x => x.PersonSettings).AsNoTracking().FirstOrDefault(x => x.Guid == personID);
+                var person = await dc.People.Include(x => x.PersonSettings).AsNoTracking().FirstOrDefaultAsync(x => x.Guid == personID);
                 if (person == null)
                 {
                     return 0;
@@ -98,9 +98,9 @@ namespace DataReef.TM.Services.Services
 
                 var query = dc
                     .Notifications
-                    .Where(x => x.PersonID == personID && !x.IsDeleted && x.Status == IgniteNotificationSeenStatus.NotSeen)
+                    .Where(x => x.PersonID == personID && !x.IsDeleted && x.Status == IgniteNotificationSeenStatus.NotSeen).AsNoTracking()
                     .GroupBy(x => x.Value)
-                    .Select(g => g.OrderByDescending(x => x.DateCreated).FirstOrDefault()).AsNoTracking();
+                    .Select(g => g.OrderByDescending(x => x.DateCreated).FirstOrDefault());
 
                 var lastReadDate = person.PersonSettings.FirstOrDefault(x => x.Name == "Ignite.Notifications.LastChecked");
 

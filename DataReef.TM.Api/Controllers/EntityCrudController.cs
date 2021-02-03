@@ -86,7 +86,7 @@ namespace DataReef.TM.Api.Controllers
         [GenericRoute("{guid:guid}")]
         public virtual async Task<T> Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            var entity = this._dataService.Get(guid, include, exclude, fields, deletedItems);
+            var entity = await this._dataService.Get(guid, include, exclude, fields, deletedItems);
 
             if (entity == null)
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));
@@ -521,7 +521,7 @@ namespace DataReef.TM.Api.Controllers
 
                 var include = PrepareEntityForNavigationPropertiesAttachment(itemEntity);
 
-                var entity = this._dataService.Get(itemEntity.Guid);
+                var entity = await this._dataService.Get(itemEntity.Guid);
 
                 if (entity == null)
                 {

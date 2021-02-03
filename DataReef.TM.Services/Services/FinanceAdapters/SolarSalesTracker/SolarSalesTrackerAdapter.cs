@@ -23,6 +23,7 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Auth.Helpers;
 using DataReef.TM.Models.DTOs.Signatures;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 {
@@ -435,9 +436,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
-        public SBGetDocument GetOuDocumentType(Guid ouid)
+        public async Task<SBGetDocument> GetOuDocumentType(Guid ouid)
         {
-            EnsureInitialized(ouid);
+            await EnsureInitialized(ouid);
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -812,7 +813,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     return null;
                 }
 
-                var proposalDataView = _proposalService.Value.GetProposalDataView(proposalData.Guid, null);
+                var proposalDataView = _proposalService.Value.GetProposalDataView(proposalData.Guid, null).Result;
 
                 if (proposalDataView == null)
                 {

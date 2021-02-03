@@ -24,6 +24,7 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services.PropertyAttachments
 {
@@ -650,7 +651,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
 
         public ExtendedPropertyAttachmentDTO GetPropertyAttachmentData(Guid propertyAttachmentID)
         {
-            var propertyAttachment = Get(propertyAttachmentID, include: "Property,Items,Property.Territory,Property.Territory.OU");
+            var propertyAttachment = Get(propertyAttachmentID, include: "Property,Items,Property.Territory,Property.Territory.OU").Result;
 
             if (propertyAttachment == null)
             {
@@ -663,7 +664,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
 
         }
 
-        public ICollection<ExtendedPropertyAttachmentDTO> GetPagedPropertyAttachments(int pageIndex, int pageSize, string query)
+        public async Task<ICollection<ExtendedPropertyAttachmentDTO>> GetPagedPropertyAttachments(int pageIndex, int pageSize, string query)
         {
             using (var repository = UnitOfWorkFactory())
             {
@@ -674,7 +675,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                     .Include(x => x.Property.Territory)
                     .Include(x => x.Property.Territory.OU)
                     //.Include(x => x.Items)
-                    .Where(pa => !pa.IsDeleted);
+                    .Where(pa => !pa.IsDeleted).AsNoTracking();
 
                 if (!string.IsNullOrEmpty(query))
                 {
@@ -683,11 +684,11 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                     propertyAttachmentsQuery = propertyAttachmentsQuery.Where(x => x.Property.Name.StartsWith(query) || x.Property.Address1.StartsWith(query));
                 }
 
-                var propertyAttachments =
+                var propertyAttachments = await
                     propertyAttachmentsQuery
                     .OrderByDescending(x => x.DateCreated)
                     .Skip(pageIndex * pageSize).Take(pageSize)
-                    .ToList();
+                    .ToListAsync();
 
                 var peopleIDs = propertyAttachments?
                                 .Where(pa => pa.CreatedByID.HasValue)?
@@ -928,7 +929,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
         {
             if (personID.HasValue)
             {
-                return _personService.Value.Get(personID.Value);
+                return _personService.Value.Get(personID.Value).Result;
             }
 
             return null;
@@ -1064,7 +1065,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             }
 
             
-                var propertyattech = base.Get(item.Guid, "Items");
+                var propertyattech = base.Get(item.Guid, "Items").Result;
 
             //var propertyattechitm = propertyattech.Items.Where();
 

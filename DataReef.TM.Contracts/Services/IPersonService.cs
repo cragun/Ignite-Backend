@@ -21,7 +21,7 @@ namespace DataReef.TM.Contracts.Services
         List<Person> GetMine(OUMembersRequest request);
 
         [OperationContract]
-        Person GetMayEdit(Guid uniqueId, bool mayEdit, string include = "", string exclude = "", string fields = "", bool deletedItems = false);
+        Task<Person> GetMayEdit(Guid uniqueId, bool mayEdit, string include = "", string exclude = "", string fields = "", bool deletedItems = false);
 
         [OperationContract]
         List<PersonLite> GetPeopleForOU(Guid ouID, bool deep);

@@ -32,7 +32,7 @@ namespace DataReef.TM.API.Controllers
             try
             {
 
-                return _settingsService.GetValue(Constants.IPadVersionSettingName);
+                return await _settingsService.GetValue(Constants.IPadVersionSettingName);
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace DataReef.TM.API.Controllers
             try
             {
 
-                return _settingsService.GetValue(Constants.LoginDays);
+                return await _settingsService.GetValue(Constants.LoginDays);
             }
             catch (Exception ex)
             {

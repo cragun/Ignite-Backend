@@ -8,9 +8,11 @@ using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
@@ -27,7 +29,7 @@ namespace DataReef.TM.Services.Services
             _loanPalBridge = loanPalBridge;
         }
 
-        public string GetValue(string key)
+        public async Task<string> GetValue(string key)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -36,10 +38,10 @@ namespace DataReef.TM.Services.Services
 
             using (var dataContext = new DataContext())
             {
-                var entity = dataContext
+                var entity = await dataContext
                             .AppSettings
                             .AsNoTracking()
-                            .FirstOrDefault(a => a.Key == key);
+                            .FirstOrDefaultAsync(a => a.Key == key);
 
                 return entity == null ? null : entity.Value;
             }
@@ -106,14 +108,14 @@ namespace DataReef.TM.Services.Services
 
         public int GetLoginDays()
         {
-            var loginDays = GetValue(Constants.LoginDays);
+            var loginDays = GetValue(Constants.LoginDays).Result;
             return int.Parse(loginDays);
         }
 
 
         public Version GetMinimumRequiredVersionForIPad()
         {
-            var versionString = GetValue(Constants.IPadMinimumVersionSettingName);
+            var versionString = GetValue(Constants.IPadMinimumVersionSettingName).Result;
             return Version.Parse(versionString);
         }
 

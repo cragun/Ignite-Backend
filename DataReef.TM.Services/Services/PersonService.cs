@@ -148,7 +148,7 @@ namespace DataReef.TM.Services
 
             if (prsn.Guid != null)
             {
-                var prsndetails = Get(prsn.Guid);
+                var prsndetails = Get(prsn.Guid).Result;
                 prsndetails.ActivityName = prsn.ActivityName;
                 prsndetails.BuildVersion = prsn.BuildVersion;
                 prsndetails.LastActivityDate = prsn.LastActivityDate;
@@ -176,14 +176,14 @@ namespace DataReef.TM.Services
             return ret;
         }
 
-        public override Person Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override async Task<Person> Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            return GetMayEdit(uniqueId, false, include, exclude, fields, deletedItems);
+            return await GetMayEdit(uniqueId, false, include, exclude, fields, deletedItems);
         }
 
-        public Person GetMayEdit(Guid uniqueId, bool mayEdit, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public async Task<Person> GetMayEdit(Guid uniqueId, bool mayEdit, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            Person ret = base.Get(uniqueId, include, exclude, fields, deletedItems);
+            Person ret = await base.Get(uniqueId, include, exclude, fields, deletedItems);
             if (mayEdit)
             {
                 _ouAssociationService.PopulatePersonMayEdit(new List<Person> { ret });
@@ -210,7 +210,7 @@ namespace DataReef.TM.Services
             if (request.ExcludeOUs == null) request.ExcludeOUs = new List<Guid>();
 
             // get only the effective OU associations of the current user
-            var currentUsersAssociations = _ouAssociationService.SmartList(include: "OURole,OU,OU.RootOrganization", filter: String.Format("Personid={0}", SmartPrincipal.UserId));
+            var currentUsersAssociations = _ouAssociationService.SmartList(include: "OURole,OU,OU.RootOrganization", filter: String.Format("Personid={0}", SmartPrincipal.UserId)).Result;
 
             using (DataContext dc = new DataContext())
             {
@@ -1101,7 +1101,7 @@ namespace DataReef.TM.Services
             var person = Get(personID, include: include);
             var roleType = OURoleType.None;
             var permissionType = PermissionType.None;
-            var currentUsersAssociations = _ouAssociationService.SmartList(filter: $"Personid={personID}");
+            var currentUsersAssociations = _ouAssociationService.SmartList(filter: $"Personid={personID}").Result;
             currentUsersAssociations
                     .ToList()
                     .ForEach(ouAssociation =>
