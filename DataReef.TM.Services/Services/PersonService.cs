@@ -73,6 +73,7 @@ namespace DataReef.TM.Services
 
         public override Person Insert(Person entity)
         {
+            entity.ModifiedTime = DateTime.UtcNow;
             var ret = base.Insert(entity);
 
             //foreach(OUAssociation oua in entity.OUAssociations)
@@ -89,6 +90,7 @@ namespace DataReef.TM.Services
             {
                 entity.Name = entity.FullName;
             }
+            entity.ModifiedTime = DateTime.UtcNow;
             var ret = base.Update(entity);
 
             //foreach (OUAssociation oua in entity.OUAssociations)
@@ -99,6 +101,7 @@ namespace DataReef.TM.Services
             return ret;
         }
 
+
         public void UpdateStartDate()
         {
             using (DataContext dc = new DataContext())
@@ -108,6 +111,7 @@ namespace DataReef.TM.Services
                 if (person != null)
                 {
                     person.StartDate = DateTime.UtcNow;
+                    person.ModifiedTime = DateTime.UtcNow;
                     var ret = base.Update(person);
 
                     if (!string.IsNullOrEmpty(person.SmartBoardID))
@@ -118,9 +122,10 @@ namespace DataReef.TM.Services
             }
         }
 
+
         public Person Updateactivity(Person prsn)
         {
-            if(prsn.SmartBoardID != null)
+            if (prsn.SmartBoardID != null)
             {
                 using (DataContext dc = new DataContext())
                 {
@@ -134,6 +139,7 @@ namespace DataReef.TM.Services
                     person.BuildVersion = prsn.BuildVersion;
                     person.SBLastActivityDate = prsn.SBLastActivityDate;
 
+                    person.ModifiedTime = DateTime.UtcNow;
                     var ret = base.Update(person);
                     return ret;
                 }
@@ -147,11 +153,12 @@ namespace DataReef.TM.Services
                 prsndetails.BuildVersion = prsn.BuildVersion;
                 prsndetails.LastActivityDate = prsn.LastActivityDate;
 
+                prsndetails.ModifiedTime = DateTime.UtcNow;
                 var ret = base.Update(prsndetails);
 
                 if (!string.IsNullOrEmpty(prsndetails.SmartBoardID))
                 {
-                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName, prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid, prsndetails.StartDate);
+                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID, prsndetails.ActivityName, prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid, prsndetails.StartDate);
                 }
 
                 return ret;
@@ -160,6 +167,7 @@ namespace DataReef.TM.Services
             return prsn;
 
         }
+
 
         public override ICollection<Person> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
         {
@@ -282,6 +290,7 @@ namespace DataReef.TM.Services
                 }
 
                 person.IsDeleted = false;
+                person.ModifiedTime = DateTime.UtcNow;
 
                 var user = dc
                             .Users
@@ -503,33 +512,6 @@ namespace DataReef.TM.Services
         }
 
 
-        //public List<CRMDisposition> CRMGetAvailableDispositionsQuotas()
-        //{
-        //    // Get all the OUs for the logged in user
-
-        //    var rootGuids = _ouService.Value.ListRootGuidsForPerson(Guid.Parse("b3db3e22-7aed-4daa-888c-850b8c8ee0f2"));
-
-        //    var settings = _ouSettingsService
-        //                .Value
-        //                .GetOuSettingsMany(rootGuids)?
-        //                .SelectMany(os => os.Value)?
-        //                .ToList();
-        //    var dispSettings = settings?
-        //            .Where(s => s.Name == OUSetting.NewDispositions)?
-        //            .ToList();
-
-        //    var dispositions = dispSettings?
-        //            .SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?
-        //            .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Quota = d.Quota })?
-        //            .ToList() ?? new List<CRMDisposition>();
-
-        //    var distinctDispositions = new HashSet<CRMDisposition>(dispositions);
-        //    distinctDispositions.Add(new CRMDisposition { Disposition = "With Proposal" , DisplayName = "With Proposal", Quota = 0 , Commitments = 0});
-        //    distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments", DisplayName = "Appointments", Quota = 0, Commitments = 0 });
-
-        //    return distinctDispositions.ToList();
-        //}
-
         public List<CRMDisposition> CRMGetAvailableDispositionsQuotas()
         {
             // Get all the OUs for the logged in user
@@ -550,17 +532,16 @@ namespace DataReef.TM.Services
             //        .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Quota = "" , Commitments = "" })?
             //        .ToList() ?? new List<CRMDisposition>();
 
-
             var distinctDispositions = new HashSet<CRMDisposition>();
             distinctDispositions.Add(new CRMDisposition { Disposition = "Hours Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Doors Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Approach Delivered", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "New Contact", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments Set", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "CAPP", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "SS", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "FD", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "INS", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Doors Knocked", DisplayName = "Doors Knocked", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Approach Delivered", DisplayName = "Approach Delivered", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "New Contact", DisplayName = "New Contact", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments Set", DisplayName = "Appointments Set", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "CAPP", DisplayName = "CAPP", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "SS", DisplayName = "SS", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "FD", DisplayName = "FD", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new CRMDisposition { Disposition = "INS", DisplayName = "INS", Quota = "", Commitments = "" });
 
             return distinctDispositions.ToList();
         }
@@ -1143,11 +1124,11 @@ namespace DataReef.TM.Services
             PersonClockTime person = new PersonClockTime();
             using (DataContext dc = new DataContext())
             {
-                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
 
                 if (person != null)
                 {
-                    if (person.EndDate.Value <= DateTime.Now && person.ClockType == "ClockIn")
+                    if (person.EndDate.Value <= DateTime.UtcNow && person.ClockType == "ClockIn")
                     {
                         TimeSpan timespan = person.EndDate.Value - person.StartDate.Value;
                         long difMin = (long)Math.Floor(timespan.TotalMinutes);
@@ -1161,16 +1142,16 @@ namespace DataReef.TM.Services
                         person.TenantID = 0;
                         person.Version += 1;
                         person.IsRemainFiveMin = false;
-                        person.DateLastModified = DateTime.Now;
+                        person.DateLastModified = DateTime.UtcNow;
                         dc.SaveChanges();
 
                     }
                     else if (person.ClockType == "ClockIn")
                     {
-                        TimeSpan timespan = DateTime.Now - person.StartDate.Value;
+                        TimeSpan timespan = DateTime.UtcNow - person.StartDate.Value;
                         long diffMin = (long)Math.Floor(timespan.TotalMinutes);
 
-                        TimeSpan FiveMin = person.EndDate.Value - DateTime.Now;
+                        TimeSpan FiveMin = person.EndDate.Value - DateTime.UtcNow;
                         long ReFiveMin = (long)Math.Floor(FiveMin.TotalMinutes);
                         person.IsRemainFiveMin = false;
                         if (ReFiveMin == 5)
@@ -1178,10 +1159,10 @@ namespace DataReef.TM.Services
                             person.IsRemainFiveMin = true;
                         }
                         person.ClockDiff = diffMin;
-                        person.DateLastModified = DateTime.Now;
+                        person.DateLastModified = DateTime.UtcNow;
                         dc.SaveChanges();
                     }
-                    person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                    person = dc.PersonClockTime.Where(p => p.PersonID == personID).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
                 }
             }
             if (person == null) { person = new PersonClockTime(); };
@@ -1265,8 +1246,8 @@ namespace DataReef.TM.Services
                     .ToList();
 
                     var favouritePeopleIds = (from oua in dc.AppointmentFavouritePersons
-                                           where oua.PersonID == SmartPrincipal.UserId
-                                           select oua.FavouritePersonID).Distinct().ToList();
+                                              where oua.PersonID == SmartPrincipal.UserId
+                                              select oua.FavouritePersonID).Distinct().ToList();
                     foreach (var item in peoples)
                     {
                         item.IsFavourite = favouritePeopleIds.Contains(item.Guid);
@@ -1310,6 +1291,7 @@ namespace DataReef.TM.Services
                 return person;
             }
         }
+
 
         /// <summary>
         /// This method remove Person as a Favorite 
