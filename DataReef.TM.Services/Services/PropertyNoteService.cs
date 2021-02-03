@@ -584,6 +584,11 @@ namespace DataReef.TM.Services.Services
 
                 //get user by the the smartboardId
                 var smartboardUserID = noteRequest.UserID;
+                if (!String.IsNullOrEmpty(noteRequest.Attachments))
+                {
+                    note.Attachments = noteRequest.Attachments;
+                }
+
                 Person user = null;
                 if (!string.IsNullOrEmpty(noteRequest.UserID) || !string.IsNullOrEmpty(noteRequest.Email))
                 {
@@ -602,7 +607,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 note.Content = noteRequest.Content;
-
+                
                 //if reply type is comment
                 if (noteRequest.ContentType == "Comment")
                 {
@@ -675,7 +680,8 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = note.DateLastModified,
                     UserID = smartboardUserID,
                     ContentType = noteRequest.ContentType,
-                    ParentID = noteRequest.ParentID
+                    ParentID = noteRequest.ParentID,
+                    Attachments = noteRequest.Attachments
                 };
             }
         }
