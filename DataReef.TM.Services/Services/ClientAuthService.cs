@@ -114,9 +114,9 @@ namespace DataReef.Application.Services
                     return null;
                 }
 
-                var associations = _ouAssociationService
+                var associations = Task.Run(() => _ouAssociationService
                                         .Value
-                                        .SmartList(filter: $"PersonID={token.UserId}", itemsPerPage: 1000).Result;
+                                        .SmartList(filter: $"PersonID={token.UserId}", itemsPerPage: 1000)).Result;
                                        
                 var userData = associations.Select(a => new
                 {

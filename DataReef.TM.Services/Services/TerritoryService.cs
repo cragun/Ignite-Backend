@@ -120,7 +120,7 @@ namespace DataReef.TM.Services
         {
             var result = new List<InquiryStatisticsForOrganization>();
 
-            var territory = Get(territoryId).Result;
+            var territory = Task.Run(() => Get(territoryId)).Result;
             if(territory != null)
             {
                 //if no settings are supplied, try to get them from the db for the ou
@@ -187,7 +187,7 @@ namespace DataReef.TM.Services
                     .Where(t => !t.IsArchived) as ICollection<Territory>;
 
 
-            territories = PopulateTerritoriesSummary(territories).Result;
+            territories =  PopulateTerritoriesSummary(territories).Result;
 
             foreach (Territory territory in territories)
             {
@@ -446,7 +446,7 @@ namespace DataReef.TM.Services
             if (ret.SaveResult.Success)
             {
                 // send mail
-                ret.Summary = PopulateTerritorySummary(ret).Result;
+                ret.Summary =  PopulateTerritorySummary(ret).Result;
                 if ((newAssignments != null) && (newAssignments.Length > 0))
                 {
                     _assignmentsService.SendTerritoryAssignmentNotification(newAssignments);

@@ -183,15 +183,15 @@ namespace DataReef.TM.Services
                 }
 
                 return await context
-                        .OUs
-                        .Where(o => (o.Guid == startOUID || o.ParentID == startOUID)).AsNoTracking()
-                        .Select(ou => new OrganizationSelfTrackedReportRow
-                        {
-                            Id = ou.Guid,
-                            OfficeName = ou.Name,
-                            SelfTrackedStatistics = _personKPIService.Value.GetSelfTrackedStatisticsForOrganization(ou.Guid, specifiedDay)
-                        }).ToListAsync();
-                       
+                         .OUs
+                         .Where(o => (o.Guid == startOUID || o.ParentID == startOUID)).AsNoTracking()
+                         .Select(ou => new OrganizationSelfTrackedReportRow
+                         {
+                             Id = ou.Guid,
+                             OfficeName = ou.Name,
+                             SelfTrackedStatistics = _personKPIService.Value.GetSelfTrackedStatisticsForOrganization(ou.Guid, specifiedDay)
+                         }).ToListAsync();
+
             }
         }
 

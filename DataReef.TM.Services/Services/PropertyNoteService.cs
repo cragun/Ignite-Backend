@@ -417,7 +417,7 @@ namespace DataReef.TM.Services.Services
             using (var dc = new DataContext())
             {
                 //first get the property
-                var property = GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey).Result;
+                var property = Task.Run(() => GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey)).Result;
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
                 var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
@@ -450,7 +450,7 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("LeadID or IgniteID is required");
                 }
-                var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey).Result;
+                var property = Task.Run(() => GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey)).Result;
 
                 //get user by the the smartboardId
                 //var user = dc.People.FirstOrDefault(x => !x.IsDeleted && (noteRequest.UserID != null &&  x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
@@ -586,7 +586,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //get the property
-                var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey).Result;
+                var property = Task.Run(() => GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey)).Result;
                 if (property == null)
                 {
                     throw new Exception("The lead was not found");
@@ -719,7 +719,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //get the property
-                var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey).Result;
+                var property = Task.Run(() => GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey)).Result;
 
                 note.IsDeleted = true;
                 note.Updated(user.Guid);
@@ -811,7 +811,7 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
 
                 //get the property
-                var property = GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey).Result;
+                var property = Task.Run(() => GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey)).Result;
 
                 return new SBUpdateProperty
                 {

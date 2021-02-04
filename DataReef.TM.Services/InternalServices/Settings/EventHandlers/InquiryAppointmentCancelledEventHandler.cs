@@ -7,6 +7,7 @@ using DataReef.TM.Models.PubSubMessaging;
 using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.InternalServices.Settings.EventHandlers
 {
@@ -36,7 +37,7 @@ namespace DataReef.TM.Services.InternalServices.Settings.EventHandlers
             {
                 //set the latest appoitnment to cancelled
                 var propertyService = ServiceLocator.Current.GetInstance<IPropertyService>();
-                var property = propertyService.Get(inquiry.PropertyID, "Appointments").Result;
+                var property = Task.Run(() => propertyService.Get(inquiry.PropertyID, "Appointments")).Result;
                 if(property != null)
                 {
                     var latestAppointment = property.GetLatestAppointment();

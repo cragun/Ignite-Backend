@@ -651,7 +651,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
 
         public ExtendedPropertyAttachmentDTO GetPropertyAttachmentData(Guid propertyAttachmentID)
         {
-            var propertyAttachment = Get(propertyAttachmentID, include: "Property,Items,Property.Territory,Property.Territory.OU").Result;
+            var propertyAttachment = Task.Run(() => Get(propertyAttachmentID, include: "Property,Items,Property.Territory,Property.Territory.OU")).Result;
 
             if (propertyAttachment == null)
             {
@@ -929,7 +929,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
         {
             if (personID.HasValue)
             {
-                return _personService.Value.Get(personID.Value).Result;
+                return Task.Run(() => _personService.Value.Get(personID.Value)).Result;
             }
 
             return null;
@@ -1065,7 +1065,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             }
 
             
-                var propertyattech = base.Get(item.Guid, "Items").Result;
+                var propertyattech = Task.Run(() => base.Get(item.Guid, "Items")).Result;
 
             //var propertyattechitm = propertyattech.Items.Where();
 

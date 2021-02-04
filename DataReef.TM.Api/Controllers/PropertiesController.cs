@@ -319,7 +319,7 @@ namespace DataReef.TM.Api.Controllers
             catch (HttpResponseException ex)
             {
                 // Get the exception and send the message as plain text.
-                var response = ex.Response.Content.ReadAsStringAsync().Result;
+                var response = Task.Run(() => ex.Response.Content.ReadAsStringAsync()).Result;
                 var data = new { Message = "" };
                 data = JsonConvert.DeserializeAnonymousType(response, data);
                 if (!string.IsNullOrWhiteSpace(data.Message))

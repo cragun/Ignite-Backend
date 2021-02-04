@@ -45,7 +45,7 @@ namespace DataReef.TM.Services
         {
             //var reportRows = _reportingServices.Value.GetOrganizationSelfTrackedReport(startOUID, specifiedDay).ToList();
 
-            var reportRows = _reportingServices.Value.GetOrganizationReport(startOUID, specifiedDay, null, null).Result;
+            var reportRows = Task.Run(() => _reportingServices.Value.GetOrganizationReport(startOUID, specifiedDay, null, null)).Result;
 
 
             if (reportRows?.Any() == true)

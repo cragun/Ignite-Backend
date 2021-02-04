@@ -49,7 +49,7 @@ namespace DataReef.TM.Services
 
         public virtual T MakeRequest<T>(Guid ouid, string resource, object payload, List<Parameter> parameters = null, ISerializer serializer = null) where T : class, new()
         {
-            var authContext = EnsureInitialized(ouid).Result;
+            var authContext = Task.Run(() => EnsureInitialized(ouid)).Result;
 
             var tokenResponse = AuthorizeAdapter(authContext);
             var headers = GetCustomHeaders(tokenResponse);
@@ -60,7 +60,7 @@ namespace DataReef.TM.Services
 
         public virtual string MakeRequest(Guid ouid, string resource, object payload, List<Parameter> parameters = null, ISerializer serializer = null, Method method = Method.POST)
         {
-            var authContext = EnsureInitialized(ouid).Result;
+            var authContext = Task.Run(() => EnsureInitialized(ouid)).Result;
 
             var tokenResponse = AuthorizeAdapter(authContext);
             var headers = GetCustomHeaders(tokenResponse);

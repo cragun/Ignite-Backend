@@ -813,7 +813,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     return null;
                 }
 
-                var proposalDataView = _proposalService.Value.GetProposalDataView(proposalData.Guid, null).Result;
+                var proposalDataView = Task.Run(() => _proposalService.Value.GetProposalDataView(proposalData.Guid, null)).Result;
 
                 if (proposalDataView == null)
                 {

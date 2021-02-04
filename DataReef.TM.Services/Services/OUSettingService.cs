@@ -237,7 +237,7 @@ namespace DataReef.TM.Services.Services
 
         public List<OUSetting> GetSettingsByOUID(Guid ouId, OUSettingGroupType? group = null)
         {
-            return GetOuSettings(ouId, group).Result;
+            return Task.Run(() => GetOuSettings(ouId, group)).Result;
         }
 
         public void UpdateSBSettings()
@@ -317,7 +317,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
 
-                return GetOuSettings(prop.Territory.OUID, group, dc).Result;
+                return Task.Run(() => GetOuSettings(prop.Territory.OUID, group, dc)).Result;
             }
         }
 
@@ -336,7 +336,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
 
-                var settings = GetOuSettings(ouid.Value).Result;
+                var settings = Task.Run(() => GetOuSettings(ouid.Value)).Result;
                 return settings?
                             .FirstOrDefault(s => s.Name == settingName)?
                             .GetValue(type);
@@ -358,7 +358,7 @@ namespace DataReef.TM.Services.Services
                     return default(T);
                 }
 
-                var settings = GetOuSettings(ouid.Value).Result;
+                var settings = Task.Run(() => GetOuSettings(ouid.Value)).Result;
                 return settings?
                             .FirstOrDefault(s => s.Name == settingName)?
                             .GetValue<T>();

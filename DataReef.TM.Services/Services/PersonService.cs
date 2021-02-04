@@ -148,7 +148,7 @@ namespace DataReef.TM.Services
 
             if (prsn.Guid != null)
             {
-                var prsndetails = Get(prsn.Guid).Result;
+                var prsndetails = Task.Run(() => Get(prsn.Guid)).Result;
                 prsndetails.ActivityName = prsn.ActivityName;
                 prsndetails.BuildVersion = prsn.BuildVersion;
                 prsndetails.LastActivityDate = prsn.LastActivityDate;
@@ -210,7 +210,7 @@ namespace DataReef.TM.Services
             if (request.ExcludeOUs == null) request.ExcludeOUs = new List<Guid>();
 
             // get only the effective OU associations of the current user
-            var currentUsersAssociations = _ouAssociationService.SmartList(include: "OURole,OU,OU.RootOrganization", filter: String.Format("Personid={0}", SmartPrincipal.UserId)).Result;
+            var currentUsersAssociations = Task.Run(() => _ouAssociationService.SmartList(include: "OURole,OU,OU.RootOrganization", filter: String.Format("Personid={0}", SmartPrincipal.UserId))).Result;
 
             using (DataContext dc = new DataContext())
             {
@@ -1101,7 +1101,7 @@ namespace DataReef.TM.Services
             var person = Get(personID, include: include);
             var roleType = OURoleType.None;
             var permissionType = PermissionType.None;
-            var currentUsersAssociations = _ouAssociationService.SmartList(filter: $"Personid={personID}").Result;
+            var currentUsersAssociations = Task.Run(() => _ouAssociationService.SmartList(filter: $"Personid={personID}")).Result;
             currentUsersAssociations
                     .ToList()
                     .ForEach(ouAssociation =>

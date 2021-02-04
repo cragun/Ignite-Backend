@@ -94,7 +94,7 @@ namespace DataReef.TM.Services.Services
                     lon = property.Longitude ?? (left + right) / 2;
                     lat = property.Latitude ?? (top + bottom) / 2;
 
-                    var ouSettings = _ouSettingServiceFactory().GetSettings(property.Territory.OUID, null).Result;
+                    var ouSettings = Task.Run(() => _ouSettingServiceFactory().GetSettings(property.Territory.OUID, null)).Result;
                     if (ouSettings != null && ouSettings.ContainsKey(OUSetting.LegionOUFreeHiResImages))
                     {
                         string tokenizeHiResSetting = ouSettings[OUSetting.LegionOUFreeHiResImages].Value;
@@ -114,10 +114,10 @@ namespace DataReef.TM.Services.Services
 #endif
                 if (!freeHiResImages)
                 {
-                    ledger = _tokensProvider.GetDefaultLedgerForPerson(userID).Result;
+                    ledger = Task.Run(() => _tokensProvider.GetDefaultLedgerForPerson(userID)).Result;
                     if (ledger == null) throw new ApplicationException("No Token Ledger Exists For This User");
 
-                    double balance = _tokensProvider.GetBalanceForLedger(ledger.Guid).Result;
+                    double balance = Task.Run(() => _tokensProvider.GetBalanceForLedger(ledger.Guid)).Result;
                     if (balance < tokenCost) throw new ApplicationException("Insufficient Tokens");
                 }
 
@@ -191,7 +191,7 @@ namespace DataReef.TM.Services.Services
                     }
                     else // metadata exists
                     {
-                        hiResImageContent =  _blobService.DownloadByName(hiResImg.Guid.ToString(), _s3BucketName).Result;
+                        hiResImageContent = Task.Run(() => _blobService.DownloadByName(hiResImg.Guid.ToString(), _s3BucketName)).Result;
                         imageWasCached = true;
                         if (hiResImageContent == null) // binary doesn't actually exists on amazon even though we have meta data. We could have deleted the s3 files or something
                         {

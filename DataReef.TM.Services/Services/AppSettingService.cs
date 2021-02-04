@@ -38,14 +38,12 @@ namespace DataReef.TM.Services.Services
 
             using (var dataContext = new DataContext())
             {
-                //var entity = await dataContext
-                //            .AppSettings
-                //            .AsNoTracking()
-                //            .FirstOrDefaultAsync(a => a.Key == key);
+                var entity = await dataContext
+                            .AppSettings
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(a => a.Key == key);
 
-                var entity =  dataContext
-                          .AppSettings
-                          .FirstOrDefault(a => a.Key == key);
+
 
 
                 return entity == null ? null : entity.Value;
@@ -113,14 +111,14 @@ namespace DataReef.TM.Services.Services
 
         public int GetLoginDays()
         {
-            var loginDays = GetValue(Constants.LoginDays).Result;
+            var loginDays = Task.Run(() => GetValue(Constants.LoginDays)).Result;
             return int.Parse(loginDays);
         }
 
 
         public Version GetMinimumRequiredVersionForIPad()
         {
-            var versionString = GetValue(Constants.IPadMinimumVersionSettingName).Result;
+            var versionString = Task.Run(() => GetValue(Constants.IPadMinimumVersionSettingName)).Result;
             return Version.Parse(versionString);
         }
 

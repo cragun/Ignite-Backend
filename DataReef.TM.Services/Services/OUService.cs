@@ -303,7 +303,7 @@ namespace DataReef.TM.Services.Services
                 ou.Territories = ou.Territories.Where(t => !t.IsArchived).ToList();
                 foreach (var item in ou.Territories)
                 {
-                    item.Summary = _territoryService.PopulateTerritorySummary(item).Result;
+                    item.Summary = Task.Run(() => _territoryService.PopulateTerritorySummary(item)).Result;
                 }
             }
 
@@ -373,7 +373,7 @@ namespace DataReef.TM.Services.Services
                                             .Where(i => !i.Equals("settings", StringComparison.OrdinalIgnoreCase)
                                                      && !i.Equals("children.settings", StringComparison.OrdinalIgnoreCase)));
 
-            OU ou = base.Get(uniqueId, getInclude, exclude, fields, deletedItems).Result;
+            OU ou = Task.Run(() => base.Get(uniqueId, getInclude, exclude, fields, deletedItems)).Result;
             ou = OUBuilder(ou, include, exclude, fields, includeAncestors, deletedItems);
 
             using (var context = new DataContext())
@@ -557,7 +557,7 @@ namespace DataReef.TM.Services.Services
 
         public OU GetByShapesVersion(Guid ouid, ICollection<OuShapeVersion> ouShapeVersions, bool deletedItems = false, string include = "")
         {
-            var ou = Get(ouid, include, deletedItems: deletedItems).Result;
+            var ou = Task.Run(() => Get(ouid, include, deletedItems: deletedItems)).Result;
             ou.WellKnownText = null;
 
             if (ou.Children != null && ouShapeVersions != null)
@@ -586,7 +586,7 @@ namespace DataReef.TM.Services.Services
 
             if (entity.ParentID.HasValue)
             {
-                var parent = Get(entity.ParentID.Value).Result;
+                var parent = Task.Run(() => Get(entity.ParentID.Value)).Result;
                 entity.RootOrganizationID = parent != null ? parent.RootOrganizationID : entity.ParentID;
             }
 
@@ -623,7 +623,7 @@ namespace DataReef.TM.Services.Services
             {
             }
 
-            OU ret = base.Get(entity.Guid, include).Result;
+            OU ret = Task.Run(() => base.Get(entity.Guid, include)).Result;
 
             if (ret != null)
             {
@@ -1284,7 +1284,7 @@ namespace DataReef.TM.Services.Services
             {
                 if (eventMessage.OUID.HasValue)
                 {
-                    ouSettings = OUSettingService.GetOuSettings(eventMessage.OUID.Value).Result;
+                    ouSettings = Task.Run(() => OUSettingService.GetOuSettings(eventMessage.OUID.Value)).Result;
                 }
             }
             var handlerSettings = ouSettings?.FirstOrDefault(ous => ous.Name == OUSetting.Legion_EventMessageHandlers);
@@ -1713,7 +1713,7 @@ namespace DataReef.TM.Services.Services
                                 .Provider?
                                 .ProposalFlowType ?? FinanceProviderProposalFlowType.None;
 
-                    var settings = _settingsService.Value.GetSettings(parentId.Value, null).Result;
+                    var settings = Task.Run(() => _settingsService.Value.GetSettings(parentId.Value, null)).Result;
 
                     //ret.HasTenantAncestor = dc
                     //            .OUSettings
@@ -1808,7 +1808,7 @@ namespace DataReef.TM.Services.Services
             // TODO: add validations
             // Use the generic proposal template guid
             req.ProposalTemplateID = new Guid("b41eda2d-416b-4ba2-8c24-c83eeee65d35");
-            var parent = Get(req.ParentID).Result;
+            var parent = Task.Run(() => Get(req.ParentID)).Result;
 
             using (var dc = new DataContext())
             {
@@ -2681,7 +2681,7 @@ namespace DataReef.TM.Services.Services
                 List<OU> ous = new List<OU>();
                 foreach (var item in FavoriteOUS)
                 {
-                    var ou = Get(item, "Settings,Children", deletedItems: deletedItems).Result;
+                    var ou = Task.Run(() => Get(item, "Settings,Children", deletedItems: deletedItems)).Result;
                     ou.WellKnownText = null;
                     ou.IsFavourite = true;
                     ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();

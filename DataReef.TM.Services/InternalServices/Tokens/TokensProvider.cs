@@ -180,21 +180,21 @@ namespace DataReef.TM.Contracts.Services
                     return;
                 }
 
-                TokenLedger fromLedger = this.GetDefaultLedgerForPerson(fromPersonID).Result;
+                TokenLedger fromLedger = Task.Run(() => this.GetDefaultLedgerForPerson(fromPersonID)).Result;
                 if (fromLedger == null)
                 {
                     transfer.SaveResult = SaveResult.FromException(new ApplicationException("Ledger not found (From)"), DataAction.Insert);
                     return;
                 }
 
-                double balance = this.GetBalanceForLedger(fromLedger.Guid).Result;
+                double balance = Task.Run(() => this.GetBalanceForLedger(fromLedger.Guid)).Result;
                 if (balance < transfer.Amount)
                 {
                     transfer.SaveResult = SaveResult.FromException(new ApplicationException("Insufficient Funds To Transfer"), DataAction.Insert);
                     return;
                 }
 
-                TokenLedger toLedger = this.GetDefaultLedgerForPerson(transfer.ToPersonID).Result;
+                TokenLedger toLedger = Task.Run(() => this.GetDefaultLedgerForPerson(transfer.ToPersonID)).Result;
                 try
                 {
                     if (toLedger == null) toLedger = this.CreateTokenLedgerForPerson(transfer.ToPersonID);

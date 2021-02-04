@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 using DataReef.Core.Attributes;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
@@ -59,7 +60,7 @@ namespace DataReef.TM.Services
 
         public SubmitApplicationResponse SubmitApplication(SubmitApplicationRequest submitRequest)
         {
-            var authContext = EnsureInitialized(submitRequest.OUID).Result;
+            var authContext = Task.Run(() => EnsureInitialized(submitRequest.OUID)).Result;
 
             var tokenResponse = AuthorizeAdapter(authContext);
             var headers = GetCustomHeaders(tokenResponse);

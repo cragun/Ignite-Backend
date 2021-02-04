@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 using DataReef.Core.Classes;
 using DataReef.Core.Infrastructure.Repository;
 using DataReef.Core.Logging;
@@ -28,7 +29,7 @@ namespace DataReef.TM.Services.Services
 
         public void UploadEpcStatuses(Guid ouid, List<EpcStatusInput> epcStatuses)
         {
-            var ouSettings = _ouSettingServiceFactory().GetSettings(ouid, null).Result;
+            var ouSettings = Task.Run(() => _ouSettingServiceFactory().GetSettings(ouid, null)).Result;
             if (!ouSettings.ContainsKey(OUSetting.Epc_Statuses))
                 return;
 

@@ -13,6 +13,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Geo = DataReef.Integrations.Common.Geo;
 
 namespace DataReef.TM.Services.Tests
@@ -304,7 +305,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -325,7 +326,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -346,7 +347,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -368,7 +369,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -389,7 +390,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -410,7 +411,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -431,7 +432,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -460,7 +461,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
@@ -483,7 +484,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            var result = service.SyncProperty(property.Object.Guid).Result;
+            var result = Task.Run(() => service.SyncProperty(property.Object.Guid)).Result;
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Once);
