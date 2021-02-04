@@ -77,8 +77,7 @@ namespace DataReef.TM.Models.DTOs
         public SBNoteDTO()
         {
 
-        }
-
+        } 
 
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
