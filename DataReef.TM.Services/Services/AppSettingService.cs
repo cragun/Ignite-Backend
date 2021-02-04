@@ -47,6 +47,7 @@ namespace DataReef.TM.Services.Services
                           .AppSettings
                           .FirstOrDefault(a => a.Key == key);
 
+
                 return entity == null ? null : entity.Value;
             }
         }
