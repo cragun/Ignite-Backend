@@ -1126,6 +1126,10 @@
     <Compile Include="Migrations\202101291700344_migration1.Designer.cs">
       <DependentUpon>202101291700344_migration1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102041305519_CheckMigration.cs" />
+    <Compile Include="Migrations\202102041305519_CheckMigration.Designer.cs">
+      <DependentUpon>202102041305519_CheckMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -1926,6 +1930,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101291700344_migration1.resx">
       <DependentUpon>202101291700344_migration1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102041305519_CheckMigration.resx">
+      <DependentUpon>202102041305519_CheckMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

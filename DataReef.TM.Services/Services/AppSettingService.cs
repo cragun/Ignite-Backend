@@ -38,10 +38,14 @@ namespace DataReef.TM.Services.Services
 
             using (var dataContext = new DataContext())
             {
-                var entity = await dataContext
-                            .AppSettings
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync(a => a.Key == key);
+                //var entity = await dataContext
+                //            .AppSettings
+                //            .AsNoTracking()
+                //            .FirstOrDefaultAsync(a => a.Key == key);
+
+                var entity =  dataContext
+                          .AppSettings
+                          .FirstOrDefault(a => a.Key == key);
 
                 return entity == null ? null : entity.Value;
             }
