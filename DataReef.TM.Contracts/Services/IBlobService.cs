@@ -3,7 +3,6 @@ using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -20,10 +19,10 @@ namespace DataReef.TM.Contracts.Services
         string UploadByNameGetFileUrl(string name, BlobModel blob, BlobAccessRights access, string bucketName = null);
 
         [OperationContract]
-        Task<BlobModel> Download(Guid guid, string bucketName = null);
+        BlobModel Download(Guid guid, string bucketName = null);
 
         [OperationContract]
-        Task<BlobModel> DownloadByName(string name, string bucketName = null);
+        BlobModel DownloadByName(string name, string bucketName = null);
 
         [OperationContract]
         void DeleteByName(string name, string bucketName = null);

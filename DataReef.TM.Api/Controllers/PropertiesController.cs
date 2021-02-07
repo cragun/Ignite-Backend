@@ -216,7 +216,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                Property property = await this.propertyService.Get(propertyID, "Inquiries");
+                Property property = this.propertyService.Get(propertyID, "Inquiries");
                 if (property == null || property.Inquiries == null)
                 {
                     return NotFound();
@@ -239,7 +239,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                Property property = await this.propertyService.Get(propertyID, "Inquiries");
+                Property property = this.propertyService.Get(propertyID, "Inquiries");
                 if (property == null || property.Inquiries == null)
                 {
                     return NotFound();
@@ -261,7 +261,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetPropertyPowerConsumptions(Guid propertyID)
         {
-            var property = await propertyService.Get(propertyID, "PowerConsumptions");
+            var property = propertyService.Get(propertyID, "PowerConsumptions");
             if (property?.PowerConsumptions == null)
                 return NotFound();
 
@@ -319,7 +319,7 @@ namespace DataReef.TM.Api.Controllers
             catch (HttpResponseException ex)
             {
                 // Get the exception and send the message as plain text.
-                var response = Task.Run(() => ex.Response.Content.ReadAsStringAsync()).Result;
+                var response = ex.Response.Content.ReadAsStringAsync().Result;
                 var data = new { Message = "" };
                 data = JsonConvert.DeserializeAnonymousType(response, data);
                 if (!string.IsNullOrWhiteSpace(data.Message))

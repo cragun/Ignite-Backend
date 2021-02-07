@@ -10,12 +10,10 @@ using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Reporting.Settings;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -46,13 +44,13 @@ namespace DataReef.TM.Services
             _inquiryService = inquiryService;
         }
 
-        public async Task<ICollection<OrganizationReportRow>> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay , DateTime? EndRangeDay )
+        public ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay , DateTime? EndRangeDay )
         {
             var results = new List<OrganizationReportRow>();
 
             using (var context = new DataContext())
             {
-                IQueryable<OU> ous = null;
+                List<OU> ous = null;
 
                 // if it's root OU, we get root OU id for authenticated person
                 if (context.OUs.Any(o => o.Guid == startOUID && o.ParentID == null))
@@ -66,8 +64,8 @@ namespace DataReef.TM.Services
 
                 ous = context
                         .OUs
-                        .Where(o => !o.IsDeleted && (o.Guid == startOUID || o.ParentID == startOUID)).AsNoTracking();
-                        
+                        .Where(o => !o.IsDeleted && (o.Guid == startOUID || o.ParentID == startOUID))
+                        .ToList();
 
 
 
@@ -90,15 +88,15 @@ namespace DataReef.TM.Services
                     var reps = _ouService
                         .Value
                         .ConditionalGetActivePeopleIDsForCurrentAndSubOUs(ou.Guid, true)
-                        .Distinct();
-                        
+                        .Distinct()
+                        .ToList();
 
 
                     var reportRow = new OrganizationReportRow
                     {
                         Id = ou.Guid,
                         OfficeName = ou.Name,
-                        TotalReps = reps.Count(),
+                        TotalReps = reps.Count,
                         WorkingReps = _inquiryService.Value.GetWorkingRepsDisposition(reps, reportSettings?.WorkingRepsDispositions, specifiedDay, StartRangeDay, EndRangeDay),
                         InquiryStatistics = _ouService.Value.GetInquiryStatisticsForOrganization(ou.Guid, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList)
                     };
@@ -108,14 +106,14 @@ namespace DataReef.TM.Services
             return results;
         }
 
-        public async Task<ICollection<SalesRepresentativeReportRow>> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, string proptype)
+        public ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, string proptype)
         {
             var results = new List<SalesRepresentativeReportRow>();
 
             using (var context = new DataContext())
             {
                 // if the start OUID is a root ou guid, we'll use the first root for authenticated user
-                if (await Task.Run(()=> context.OUs.Any(o => o.Guid == startOUID && o.ParentID == null)))
+                if (context.OUs.Any(o => o.Guid == startOUID && o.ParentID == null))
                 {
                     startOUID = _ouService
                                 .Value
@@ -140,9 +138,9 @@ namespace DataReef.TM.Services
                         ?.GetValue<OUReportingSettings>();
 
             var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
-            var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct();
+            var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct().ToList();
 
-            var peopleIdsWithOuAss = _personService.Value.GetMany(peopleIds, "OUAssociations", "", "", true).Where(p => !repExclusionList.Contains(p.Guid));
+            var peopleIdsWithOuAss = _personService.Value.GetMany(peopleIds, "OUAssociations", "", "", true).Where(p => !repExclusionList.Contains(p.Guid)).ToList();
 
             foreach (var personId in peopleIds)
             {
@@ -157,7 +155,7 @@ namespace DataReef.TM.Services
                     personId,
                     person != null ? string.Format("{0} {1}", person.FirstName, person.LastName) : "???",
                     person != null ? person.IsDeleted : false,
-                    inquiryStatistics.Where(i => i.PersonId == personId),
+                    inquiryStatistics.Where(i => i.PersonId == personId).ToList(),
                     reportSettings,
                     proptype);
 
@@ -170,7 +168,7 @@ namespace DataReef.TM.Services
             return results;
         }
 
-        public async Task<ICollection<OrganizationSelfTrackedReportRow>> GetOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay)
+        public ICollection<OrganizationSelfTrackedReportRow> GetOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay)
         {
 
             using (var context = new DataContext())
@@ -182,16 +180,17 @@ namespace DataReef.TM.Services
                     return new List<OrganizationSelfTrackedReportRow>();
                 }
 
-                return await context
-                         .OUs
-                         .Where(o => (o.Guid == startOUID || o.ParentID == startOUID)).AsNoTracking()
-                         .Select(ou => new OrganizationSelfTrackedReportRow
-                         {
-                             Id = ou.Guid,
-                             OfficeName = ou.Name,
-                             SelfTrackedStatistics = _personKPIService.Value.GetSelfTrackedStatisticsForOrganization(ou.Guid, specifiedDay)
-                         }).ToListAsync();
-
+                return context
+                        .OUs
+                        .Where(o => (o.Guid == startOUID || o.ParentID == startOUID))
+                        .ToList()
+                        .Select(ou => new OrganizationSelfTrackedReportRow
+                        {
+                            Id = ou.Guid,
+                            OfficeName = ou.Name,
+                            SelfTrackedStatistics = _personKPIService.Value.GetSelfTrackedStatisticsForOrganization(ou.Guid, specifiedDay)
+                        })
+                        .ToList();
             }
         }
 

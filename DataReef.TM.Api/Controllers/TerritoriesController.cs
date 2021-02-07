@@ -65,7 +65,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{territoryID:guid}/propertycount")]
         public async Task<IHttpActionResult> GetPropertiesCount(Guid territoryID)
         {
-            var territory = await _territoryService.Get(territoryID);
+            var territory = _territoryService.Get(territoryID);
             if (territory == null)
                 return NotFound();
 
@@ -97,7 +97,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(ICollection<Territory>))]
         public async Task<IHttpActionResult> GetForCurrentUserAndOU([FromUri] Guid ouID, [FromUri] Guid personID, string include = "", string fields = "")
         {
-            ICollection<Territory> ret = await _territoryService.GetForCurrentUserAndOU(ouID, personID, include, fields);
+            ICollection<Territory> ret = _territoryService.GetForCurrentUserAndOU(ouID, personID, include, fields);
             return Ok<ICollection<Territory>>(ret);
         }
 

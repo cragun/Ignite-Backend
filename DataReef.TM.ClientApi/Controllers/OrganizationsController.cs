@@ -45,7 +45,7 @@ namespace DataReef.TM.ClientApi.Controllers
                 return NotFound();
             }
 
-            var ou = Task.Run(() => this.ouService.Get(id)).Result;
+            var ou = this.ouService.Get(id);
             var ret = new GenericResponse<List<OrganizationDataView>>(content);
 
             OrganizationDataView dv = new OrganizationDataView(ou);

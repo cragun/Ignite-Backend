@@ -26,7 +26,7 @@ namespace DataReef.TM.API.Controllers
         [Route("{guid:guid}")]
         public async Task<string> Download(Guid guid)
         {
-            var blob = await blobService.Download(guid);
+            var blob = blobService.Download(guid);
             return Convert.ToBase64String(blob.Content);
         }
 
@@ -77,7 +77,7 @@ namespace DataReef.TM.API.Controllers
         {
             try
             {
-                var blob = await blobService.Download(guid);
+                var blob = blobService.Download(guid);
 
                 if (blob == null || blob.Content == null || blob.Content.Length == 0)
                 {

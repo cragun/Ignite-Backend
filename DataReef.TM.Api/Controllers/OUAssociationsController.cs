@@ -37,7 +37,7 @@ namespace DataReef.TM.Api.Controllers
             var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
             if (include.Contains("OU"))
             {
-                results = await _ouService.PopulateAssociationsOUs(results);
+                results = _ouService.PopulateAssociationsOUs(results);
             }
             return results;
         }
@@ -59,10 +59,10 @@ namespace DataReef.TM.Api.Controllers
 
             filters = filters ?? string.Empty;
 
-            var entityList = await _associationService.SmartList(deletedItems, pageNumber, itemsPerPage, filters, include, exclude, fields);
+            var entityList = _associationService.SmartList(deletedItems, pageNumber, itemsPerPage, filters, include, exclude, fields);
             if (include.Contains("OU"))
             {
-                entityList = await _ouService.PopulateAssociationsOUs(entityList);
+                entityList = _ouService.PopulateAssociationsOUs(entityList);
             }
 
             SetupSerialization(entityList, include, exclude, fields);

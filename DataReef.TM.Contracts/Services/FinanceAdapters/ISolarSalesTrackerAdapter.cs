@@ -8,7 +8,6 @@ using DataReef.TM.Models.Solar;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -38,7 +37,7 @@ namespace DataReef.TM.Contracts.Services
         SBGetDocument GetProposalDocuments(Property property);
 
         [OperationContract]
-        Task<SBGetDocument> GetOuDocumentType(Guid ouid);
+        SBGetDocument GetOuDocumentType(Guid ouid);
         
         [OperationContract]
         void SBActiveDeactiveUser(bool IsActive, string sbid);

@@ -45,22 +45,22 @@ namespace DataReef.TM.Services.Services
             
         }
 
-        public async Task<IEnumerable<PropertySurveyDTO>> GetPropertySurveysForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20)
+        public IEnumerable<PropertySurveyDTO> GetPropertySurveysForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20)
         {
             using(var dc = new DataContext())
             {
-                var matchingSurveys = await dc
+                var matchingSurveys = dc
                     .PropertySurveys
-                    .Where(x => !x.IsDeleted && x.PersonID == userID).AsNoTracking()
+                    .Where(x => !x.IsDeleted && x.PersonID == userID)
                     ?.GroupBy(x => x.PropertyID)
                     ?.Select(x => x.OrderByDescending(p => p.DateCreated).FirstOrDefault())
                     ?.OrderByDescending(x => x.DateCreated)
                     ?.Skip(pageIndex * itemsPerPage)
                     ?.Take(itemsPerPage)
-                    ?.ToListAsync();
+                    ?.ToList();
 
                 var propertyIds = matchingSurveys?.Select(x => x.PropertyID) ?? new List<Guid>();
-                var matchingProperties = dc.Properties.Where(x => propertyIds.Contains(x.Guid));
+                var matchingProperties = dc.Properties.Where(x => propertyIds.Contains(x.Guid)).ToList();
 
                 return matchingSurveys?.Select(x =>
                 {

@@ -4,7 +4,6 @@ using DataReef.TM.Models;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -18,7 +17,7 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         [AnonymousAccess]
-        Task<T> Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false);
+        T Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false);
 
         [OperationContract]
         ICollection<T> GetMany(IEnumerable<Guid> uniqueIds, string include = "", string exclude = "", string fields = "", bool deletedItems = false);

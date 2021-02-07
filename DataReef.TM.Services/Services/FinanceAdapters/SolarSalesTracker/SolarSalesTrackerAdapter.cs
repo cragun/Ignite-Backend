@@ -23,7 +23,6 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Auth.Helpers;
 using DataReef.TM.Models.DTOs.Signatures;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 {
@@ -116,7 +115,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var proposal = financePlan.SolarSystem.Proposal;
             var ouid = proposal.Property.Territory.OUID;
-            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid);
             
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -213,7 +212,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var ouid = property.Territory.OUID;
 
-            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid);
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -306,7 +305,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         public SBIntegrationLoginModel GetSBToken(Guid ouid)
         {
-            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid);
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -389,7 +388,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 throw new ApplicationException("Orgainization Not Found");
             }
-            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid.Value);
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -437,9 +436,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return JsonConvert.DeserializeObject<SBGetDocument>(response);
         }
 
-        public async Task<SBGetDocument> GetOuDocumentType(Guid ouid)
+        public SBGetDocument GetOuDocumentType(Guid ouid)
         {
-            await EnsureInitialized(ouid);
+            EnsureInitialized(ouid);
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -501,7 +500,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 var ouid = ret.FirstOrDefault().Guid;
 
-                Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+                EnsureInitialized(ouid);
 
                 var integrationSettings = new IntegrationOptionSettings
                 {
@@ -558,7 +557,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return;
             }
 
-            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid.Value);
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -626,7 +625,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return;
             }
 
-            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid.Value);
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -694,7 +693,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return null;
             }
 
-            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid.Value);
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -814,7 +813,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                     return null;
                 }
 
-                var proposalDataView = Task.Run(() => _proposalService.Value.GetProposalDataView(proposalData.Guid, null)).Result;
+                var proposalDataView = _proposalService.Value.GetProposalDataView(proposalData.Guid, null);
 
                 if (proposalDataView == null)
                 {
@@ -832,7 +831,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return null;
             }
 
-            Task.Run(()=>EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid.Value);
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -891,7 +890,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         public string DismissNotification(Guid ouid, string smartboardNotificationID)
         {
-            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+            EnsureInitialized(ouid);
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -998,7 +997,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 var ouid = ret.FirstOrDefault().Guid;
 
-                Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+                EnsureInitialized(ouid);
 
                 var integrationSettings = new IntegrationOptionSettings
                 {
@@ -1059,7 +1058,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 //1202823E-7C9C-47D9-8D0F-F0F4F588AA3D - Trismart solar 
                 Guid ouid = Guid.Parse("1202823E-7C9C-47D9-8D0F-F0F4F588AA3D");
 
-                Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+                EnsureInitialized(ouid);
                 var integrationSettings = new IntegrationOptionSettings
                 {
                     Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),

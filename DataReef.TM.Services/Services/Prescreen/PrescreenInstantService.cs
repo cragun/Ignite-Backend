@@ -77,7 +77,7 @@ namespace DataReef.TM.Services.Services
             entity.CreatedByID = userID;
 
             //we need to see if the user has a balance; if they dont, they cant do the instant prescreen
-            TokenLedger ledger = Task.Run(() => tokensProvider.GetDefaultLedgerForPerson(userID)).Result;
+            TokenLedger ledger = tokensProvider.GetDefaultLedgerForPerson(userID);
 
             //if ledger == null then the user has no credits available, no ledger=no credits
             if (ledger == null)
@@ -85,14 +85,14 @@ namespace DataReef.TM.Services.Services
                 throw new ApplicationException("Insufficient Credits Available");
             }
 
-            double balance = Task.Run(() => tokensProvider.GetBalanceForLedger(ledger.Guid)).Result;
+            double balance = tokensProvider.GetBalanceForLedger(ledger.Guid);
             if (balance <= 0)
             {
                 throw new ApplicationException("Insufficient Credits Available");
             }
 
             //next we need to get the property
-            var property = Task.Run(() => this.propertyService.Get(entity.PropertyID, "Territory")).Result;
+            var property = this.propertyService.Get(entity.PropertyID, "Territory");
 
             if (property == null)
             {
@@ -204,7 +204,7 @@ namespace DataReef.TM.Services.Services
 
             string serviceUrl = ConfigurationManager.AppSettings["SpruceUrl"].ToString();
 
-            var settings = Task.Run(() => _ouSettings.GetSettings(prescreen.Property.Territory.OUID, null)).Result;
+            var settings = _ouSettings.GetSettings(prescreen.Property.Territory.OUID, null);
             string contractorID = settings["Contractor ID"].Value;
 
             var provider = new Integrations.Spruce.IntegrationProvider(serviceUrl);
@@ -294,7 +294,7 @@ namespace DataReef.TM.Services.Services
 
                 var personID = entity.CreatedByID.Value;
 
-                var ledger = Task.Run(() => tokensProvider.GetDefaultLedgerForPerson(personID)).Result;
+                var ledger = tokensProvider.GetDefaultLedgerForPerson(personID);
 
                 if (ledger == null)
                 {

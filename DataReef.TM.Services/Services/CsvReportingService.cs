@@ -45,7 +45,7 @@ namespace DataReef.TM.Services
         {
             //var reportRows = _reportingServices.Value.GetOrganizationSelfTrackedReport(startOUID, specifiedDay).ToList();
 
-            var reportRows = Task.Run(() => _reportingServices.Value.GetOrganizationReport(startOUID, specifiedDay, null, null)).Result;
+            var reportRows = _reportingServices.Value.GetOrganizationReport(startOUID, specifiedDay, null, null).ToList();
 
 
             if (reportRows?.Any() == true)
@@ -78,23 +78,7 @@ namespace DataReef.TM.Services
                 //    fileContent.Add(kpiForOrgList);
                 //});
 
-                //reportRows.ForEach(x =>
-                //{
-                //    var kpiForOrgList = new List<string> { x.OfficeName };
-                //    kpiForOrgList
-                //    .AddRange(
-                //        dynamicHeaders.Select(
-                //            kpi =>
-                //                x.InquiryStatistics
-                //                ?.FirstOrDefault(s => s.Name.Equals(kpi))
-                //                ?.GetStatisticForInquiryReportingPeriod(reportingPeriod)
-                //                //?.Actions.ThisYear
-                //                .ToString() ?? string.Empty));
-
-                //    fileContent.Add(kpiForOrgList);
-                //});
-                //reportRows.ForEach(x =>
-                foreach(var x in reportRows)
+                reportRows.ForEach(x =>
                 {
                     var kpiForOrgList = new List<string> { x.OfficeName };
                     kpiForOrgList
@@ -108,8 +92,8 @@ namespace DataReef.TM.Services
                                 .ToString() ?? string.Empty));
 
                     fileContent.Add(kpiForOrgList);
-                }
-               
+                });
+
 
                 return GenerateFileBytes(knownHeaders, fileContent);
             }

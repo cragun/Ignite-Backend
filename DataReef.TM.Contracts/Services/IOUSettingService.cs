@@ -4,7 +4,6 @@ using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -22,7 +21,7 @@ namespace DataReef.TM.Contracts.Services
         List<OUSetting> GetSettingsByPropertyID(Guid propertyID, OUSettingGroupType? group = null);
 
         [OperationContract]
-        Task<Dictionary<string, ValueTypePair<SettingValueType, string>>> GetSettings(Guid ouid, OUSettingGroupType? group);
+        Dictionary<string, ValueTypePair<SettingValueType, string>> GetSettings(Guid ouid, OUSettingGroupType? group);
 
         [OperationContract]
         void SetSettings(Guid ouid, OUSettingGroupType? group, Dictionary<string, ValueTypePair<SettingValueType, string>> values);

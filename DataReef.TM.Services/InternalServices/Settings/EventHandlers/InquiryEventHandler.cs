@@ -60,7 +60,7 @@ namespace DataReef.TM.Services.InternalServices.Settings.EventHandlers
 
                 if (!string.IsNullOrEmpty(emailValue))
                 {
-                    var person = Task.Run(() => personService.Get(inquiry.PersonID)).Result;
+                    var person = personService.Get(inquiry.PersonID);
 
                     Task.Factory.StartNew(() =>
                     {

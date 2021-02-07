@@ -67,15 +67,15 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public async Task<IEnumerable<PropertyNote>> GetNotesByPropertyID(Guid propertyID)
+        public IEnumerable<PropertyNote> GetNotesByPropertyID(Guid propertyID)
         {
             using (var dc = new DataContext())
             {
                 //get property along with the notes
-                var notesList = await dc
-                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted).AsNoTracking()
+                var notesList = dc
+                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted)
                     .OrderByDescending(p => p.DateCreated)
-                    .ToListAsync();
+                    .ToList();
 
                 return notesList ?? new List<PropertyNote>();
             }
@@ -382,15 +382,15 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
-        public async Task<IEnumerable<SBNoteDTO>> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey)
+        public IEnumerable<SBNoteDTO> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey)
         {
             using (var dc = new DataContext())
             {
                 //first get the property
-                var property = await GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
+                var property = GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
-                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking();
+                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToList();
 
                 return property.PropertyNotes?.Select(x => new SBNoteDTO
                 {
@@ -417,7 +417,7 @@ namespace DataReef.TM.Services.Services
             using (var dc = new DataContext())
             {
                 //first get the property
-                var property = Task.Run(() => GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey)).Result;
+                var property = GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
                 var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
@@ -450,7 +450,7 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("LeadID or IgniteID is required");
                 }
-                var property = Task.Run(() => GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey)).Result;
+                var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
 
                 //get user by the the smartboardId
                 //var user = dc.People.FirstOrDefault(x => !x.IsDeleted && (noteRequest.UserID != null &&  x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
@@ -586,7 +586,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //get the property
-                var property = Task.Run(() => GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey)).Result;
+                var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
                 if (property == null)
                 {
                     throw new Exception("The lead was not found");
@@ -719,7 +719,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //get the property
-                var property = Task.Run(() => GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey)).Result;
+                var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
 
                 note.IsDeleted = true;
                 note.Updated(user.Guid);
@@ -811,7 +811,7 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
 
                 //get the property
-                var property = Task.Run(() => GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey)).Result;
+                var property = GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey);
 
                 return new SBUpdateProperty
                 {
@@ -910,7 +910,7 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        private async Task<Property> GetPropertyAndValidateToken(long? smartboardLeadID, long? igniteID, string apiKey)
+        private Property GetPropertyAndValidateToken(long? smartboardLeadID, long? igniteID, string apiKey)
         {
             using (var dc = new DataContext())
             {
@@ -919,11 +919,11 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
                 //first get the property
-                var property = await dc.Properties                    
+                var property = dc.Properties
                     .Include(x => x.Territory)
                     .Include(x => x.PropertyNotes)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
+                    .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
 
                 if (property == null)
                 {

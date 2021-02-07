@@ -44,7 +44,7 @@ namespace DataReef.TM.Api.Controllers
 
             Models.Spruce.QuoteResponse quoteResponse = _spruceQuoteResponseService.List(filter: String.Format("QuoteNumber={0}", request.QuoteNumber)).First();
 
-            Models.Spruce.QuoteRequest quoteRequest = await _spruceQuoteRequestService.Get(quoteResponse.Guid, include: "QuoteResponse,SetupInfo,AppInfo,CoAppInfo,GenDocsRequest");
+            Models.Spruce.QuoteRequest quoteRequest = _spruceQuoteRequestService.Get(quoteResponse.Guid, include: "QuoteResponse,SetupInfo,AppInfo,CoAppInfo,GenDocsRequest");
 
 
             if (quoteRequest == null)
@@ -70,7 +70,7 @@ namespace DataReef.TM.Api.Controllers
 
                 string serviceUrl = System.Configuration.ConfigurationManager.AppSettings["SpruceUrl"].ToString();
 
-                var user = await _userService.Get(quoteRequest.CreatedByID.Value, "ExternalCredentials");
+                var user =  _userService.Get(quoteRequest.CreatedByID.Value, "ExternalCredentials");
 
                 Integrations.Spruce.DTOs.GenDocsRequest genDocsRequest = new DataReef.Integrations.Spruce.DTOs.GenDocsRequest();
                 Models.Spruce.GenDocsRequest genDocsModel = quoteRequest.GenDocsRequest;
@@ -96,7 +96,7 @@ namespace DataReef.TM.Api.Controllers
                 int finOptId = Int32.Parse(quoteRequest.SetupInfo.FinOptId);
                 Guid legionPropertyID = quoteRequest.LegionPropertyID;
                 Guid newestProposalID = _proposalService.List(filter: String.Format("PropertyID={0}", legionPropertyID)).OrderByDescending(p => p.DateLastModified).First().Guid;
-                Proposal newestProposal = await _proposalService.Get(newestProposalID, include: "SolarSystem,SolarSystem.FinancePlans");
+                Proposal newestProposal = _proposalService.Get(newestProposalID, include: "SolarSystem,SolarSystem.FinancePlans");
 
                 var planID = newestProposal
                                     .SolarSystem
@@ -175,7 +175,7 @@ namespace DataReef.TM.Api.Controllers
 
             Models.Spruce.QuoteResponse quoteResponse = _spruceQuoteResponseService.List(filter: String.Format("QuoteNumber={0}", request.QuoteNumber)).First();
 
-            Models.Spruce.QuoteRequest quoteRequest = await _spruceQuoteRequestService.Get(quoteResponse.Guid);
+            Models.Spruce.QuoteRequest quoteRequest = _spruceQuoteRequestService.Get(quoteResponse.Guid);
 
 
             if (quoteRequest == null)

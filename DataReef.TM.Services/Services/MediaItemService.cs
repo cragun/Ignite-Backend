@@ -11,8 +11,6 @@ using System.ServiceModel;
 using DataReef.Core.Services;
 using System.Collections.Generic;
 using DataReef.Core.Infrastructure.Repository;
-using System.Threading.Tasks;
-using System.Data.Entity;
 
 namespace DataReef.TM.Services
 {
@@ -26,22 +24,22 @@ namespace DataReef.TM.Services
         {
         }
 
-        public override async Task<MediaItem> Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override MediaItem Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             // first try to retrieve an OUMediaItem that matches the uniqueId.
             // if we find one, replace the uniqueId w/ the MediaId.
             using (var dataContext = new DataContext())
             {
-                var oumi = await dataContext
-                            .OUMediaItems.AsNoTracking()
-                            .FirstOrDefaultAsync(omi => omi.Guid == uniqueId);
+                var oumi = dataContext
+                            .OUMediaItems
+                            .FirstOrDefault(omi => omi.Guid == uniqueId);
                 if (oumi != null)
                 {
                     uniqueId = oumi.MediaID;
                 }
             }
 
-            return await base.Get(uniqueId, include, exclude, fields, deletedItems);
+            return base.Get(uniqueId, include, exclude, fields, deletedItems);
         }
 
         public override ICollection<MediaItem> GetMany(IEnumerable<Guid> uniqueIds, string include = "", string exclude = "", string fields = "", bool deletedItems = false)

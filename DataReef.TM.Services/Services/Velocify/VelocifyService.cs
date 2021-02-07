@@ -169,7 +169,7 @@ namespace DataReef.TM.Services.Services
             if (!ouSettings.Any()) return url;
 
             var ouid = ouSettings.FirstOrDefault().OUID;
-            var velocifySettings = Task.Run(() => _ouSettingService.GetSettings(ouid, OUSettingGroupType.HiddenConfigs)).Result;
+            var velocifySettings = _ouSettingService.GetSettings(ouid, OUSettingGroupType.HiddenConfigs);
             if (!velocifySettings.ContainsKey(VelocifyOuSettings.VelocifyBaseAddress) ||
                 !velocifySettings.ContainsKey(VelocifyOuSettings.VelocifyParameters))
                 return url;

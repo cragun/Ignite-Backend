@@ -286,9 +286,9 @@ internal static class DataViewExtensions
         if (contractorSetting != null)
         {
             // Get First ContractorID going up, to see if it's the same
-            var setting = Task.Run(() => OUSettingService
-                                .GetOuSettings(ouid).Result?
-                                .FirstOrDefault(s => s.Name == OUSetting.Solar_ContractorID)).Result;
+            var setting = OUSettingService
+                                .GetOuSettings(ouid)?
+                                .FirstOrDefault(s => s.Name == OUSetting.Solar_ContractorID);
 
             if (setting == null)
             {

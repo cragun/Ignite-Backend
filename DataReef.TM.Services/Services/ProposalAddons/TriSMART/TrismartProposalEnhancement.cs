@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 {
@@ -110,7 +109,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             decimal? overridenUtilityRate = null, overridenUtilityBaseRate = null;
             if (param.Proposal.OUID.HasValue && param.Proposal != null && param.Proposal.Tariff != null)
             {
-                var orgSettings = Task.Run(() => _settingsService.GetSettings(param.Proposal.OUID.Value, null)).Result;
+                var orgSettings = _settingsService.GetSettings(param.Proposal.OUID.Value, null);
                 List<CustomUtilityRate> customUtilityRates = null;
 
                 var sett = orgSettings.GetByKey(OUSetting.Utility_Rates);

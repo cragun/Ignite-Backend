@@ -109,7 +109,8 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> OrderWorkflowCompleted([FromBody] dynamic body)
         {
 
-         
+          await  Task.Factory.StartNew(() =>
+            {
 
                 string json = Convert.ToString(body);
                 JObject jo = JObject.Parse(json);
@@ -118,14 +119,14 @@ namespace DataReef.TM.Api.Controllers
 
                 //first thing we need to do is get the order and update it
 
-                Order order = await _orderService.Get(g, "Details");
+                Order order = _orderService.Get(g, "Details");
 
                 if (order != null)
                 {
                     //first get all the finished data from workflow
 
                     JObject ingress = _solarCloudService.GetIngressWithResults(g);
-                    if (ingress == null || ingress["Results"] == null || ingress["Results"].Count() == 0) return null;
+                    if (ingress == null || ingress["Results"] == null || ingress["Results"].Count() == 0) return;
 
                     Guid userID = new Guid(ingress["Results"][0]["User"]["UserID"].ToString());
                     SmartPrincipal.ImpersonateUser(userID, Guid.NewGuid());
@@ -158,7 +159,7 @@ namespace DataReef.TM.Api.Controllers
                     _orderService.Update(order);
                     NotifyWebClients(order);
                 }
-        
+            });
 
             return Ok();
 

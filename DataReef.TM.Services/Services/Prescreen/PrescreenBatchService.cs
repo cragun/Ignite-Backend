@@ -83,7 +83,7 @@ namespace DataReef.TM.Services.Services
             entity.PersonID = userID;
 
             //check to see if they have any balance first
-            TokenLedger ledger = Task.Run(() => tokensProvider.GetDefaultLedgerForPerson(userID)).Result;
+            TokenLedger ledger = tokensProvider.GetDefaultLedgerForPerson(userID);
 
             //if ledger == null then the user has no credits available, no ledger=no credits
             if (ledger == null)
@@ -91,14 +91,14 @@ namespace DataReef.TM.Services.Services
                 throw new ApplicationException("Insufficient Credits Available");
             }
 
-            double balance = Task.Run(() => tokensProvider.GetBalanceForLedger(ledger.Guid)).Result;
+            double balance = tokensProvider.GetBalanceForLedger(ledger.Guid);
             if (balance <= 0)
             {
                 throw new ApplicationException("Insufficient Credits Available");
             }
 
             //next we need to get the WKT associated with the Territory
-            Territory territory = Task.Run(() => this.territoryService.Get(entity.TerritoryID, "Shapes")).Result;
+            Territory territory = this.territoryService.Get(entity.TerritoryID, "Shapes");
 
             if (territory == null)
             {
@@ -255,12 +255,12 @@ namespace DataReef.TM.Services.Services
                 entity.Status = newStatus;
 
                 var personID = entity.PersonID;
-                var territory = Task.Run(() => territoryService.Get(entity.TerritoryID)).Result;
+                var territory = territoryService.Get(entity.TerritoryID);
                 if (territory == null)
                 {
                     throw new ApplicationException("Invalid territory");
                 }
-                var ledger = Task.Run(() => tokensProvider.GetDefaultLedgerForPerson(personID)).Result;
+                var ledger = tokensProvider.GetDefaultLedgerForPerson(personID);
                 if (ledger == null)
                 {
                     throw new ApplicationException("Invalid ledger");

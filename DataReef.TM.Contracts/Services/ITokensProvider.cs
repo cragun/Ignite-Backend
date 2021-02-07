@@ -14,13 +14,13 @@ namespace DataReef.TM.Contracts.Services
     public interface ITokensProvider
     {
         [OperationContract]
-        Task<double> GetBalanceForLedger(Guid ledgerID);
+        double GetBalanceForLedger(Guid ledgerID);
 
         [OperationContract]
-        Task<TokenLedger> GetDefaultLedgerForPerson(Guid personID);
+        TokenLedger GetDefaultLedgerForPerson(Guid personID);
 
         [OperationContract]
-        Task<LedgerDataView> GetLedgerDataViewForPerson(Guid personID);
+        LedgerDataView GetLedgerDataViewForPerson(Guid personID);
 
         [OperationContract]
         void PerformTransfers(IEnumerable<TransferDataCommand> transfers);

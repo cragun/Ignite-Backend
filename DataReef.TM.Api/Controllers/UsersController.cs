@@ -38,7 +38,7 @@ namespace DataReef.TM.Api.Controllers
         {
 
             List<Territory> ret = new List<Territory>();
-            Person person = await personService.Get(userID, "Assignments.Territory");
+            Person person = personService.Get(userID, "Assignments.Territory");
 
             if (person == null || person.Assignments==null )
             {
@@ -65,7 +65,7 @@ namespace DataReef.TM.Api.Controllers
 
             Territory ret = null;
 
-            Person person = await personService.Get(userID, "Assignments.Territory");
+            Person person = personService.Get(userID, "Assignments.Territory");
 
             if (person == null || person.Assignments == null)
             {
@@ -90,8 +90,8 @@ namespace DataReef.TM.Api.Controllers
         [Route("{userID:guid}/territories/access/{territoryID:guid}")]
         public async Task<IHttpActionResult> GetUserHasTerritoryAccess(Guid userID, Guid territoryID)
         {
-            Person person = await personService.Get(userID, "Assignments.Territory, OUAssociations.OURole");
-            Territory territory  = await territoryService.Get(territoryID, "OU");
+            Person person               = personService.Get(userID, "Assignments.Territory, OUAssociations.OURole");
+            Territory territory         = territoryService.Get(territoryID, "OU");
 
             if (person == null || person.IsDeleted || territory == null || territory.IsDeleted || territory.OU == null || territory.OU.IsDeleted)
             {
@@ -108,7 +108,7 @@ namespace DataReef.TM.Api.Controllers
             {
                 while (ou.ParentID.HasValue)
                 {
-                    ou = await this._ouService.Get(ou.ParentID.Value);
+                    ou = this._ouService.Get(ou.ParentID.Value);
                     if(!ou.IsDeleted)
                     {
                         ouIDs.Add(ou.Guid);
@@ -129,7 +129,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("")]
         public async Task<User> Get()
         {
-            var user = await userDataService.Get(SmartPrincipal.UserId, "Person");
+            var user = userDataService.Get(SmartPrincipal.UserId, "Person");
             if (user == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             return user;

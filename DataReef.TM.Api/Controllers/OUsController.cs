@@ -118,7 +118,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID:guid}/financeplandefinitions")]
         public async Task<IHttpActionResult> GetFinancePlanDefinitions(Guid ouID, string include = "", string exclude = "", string fields = "")
         {
-            var result = await ouService.GetFinancePlanDefinitions(ouID, include, exclude, fields);
+            var result = ouService.GetFinancePlanDefinitions(ouID, include, exclude, fields);
             return Ok(result);
         }
 
@@ -128,7 +128,7 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous,InjectAuthPrincipal]
         public async Task<IHttpActionResult> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
         {
-            var result =  ouService.GetFinancePlanDefinitionsProposal(proposalid, include, exclude, fields);
+            var result = ouService.GetFinancePlanDefinitionsProposal(proposalid, include, exclude, fields);
             return Ok(result);
         }
 
@@ -148,7 +148,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetAllSubOUsOfSpecifiedOus(string ouIDs)
         {
             if (String.IsNullOrWhiteSpace(ouIDs)) return BadRequest();
-            return Ok(await ouService.GetAllSubOUIdsAndNamesOfSpecifiedOus(ouIDs));
+            return Ok(ouService.GetAllSubOUIdsAndNamesOfSpecifiedOus(ouIDs));
         }
 
         [HttpGet]
@@ -216,7 +216,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
         public async Task<IHttpActionResult> GetAllSettings(Guid ouID, OUSettingGroupType? group = null)
         {
-            var data = await settingsService.GetSettings(ouID, group);
+            var data =  settingsService.GetSettings(ouID, group);
             return Ok(data);
         }
 

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System;
 using DataReef.Core.Enums;
 using DataReef.TM.Models.PushNotifications;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -14,7 +13,7 @@ namespace DataReef.TM.Contracts.Services
     public interface IDeviceService : IDataService<Device>
     {
         [OperationContract]
-        Task<bool> Validate();
+        bool Validate();
 
         [OperationContract]
         void RegisterAPNDeviceToken(string deviceToken);

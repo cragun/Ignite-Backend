@@ -8,7 +8,6 @@ using DataReef.TM.Contracts.Services;
 using System.Net;
 using System.Web.Http.Description;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.ClientApi.Controllers
 {
@@ -57,7 +56,7 @@ namespace DataReef.TM.ClientApi.Controllers
                     }
 
 
-                    var settings = Task.Run(() => _ouSettingService.GetSettings(ouID.Value, null)).Result;
+                    var settings = _ouSettingService.GetSettings(ouID.Value, null);
                     var adderSetting = settings.FirstOrDefault(s => s.Key == "Adders");
 
                     var json = adderSetting.Value;

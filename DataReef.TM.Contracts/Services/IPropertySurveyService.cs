@@ -8,7 +8,6 @@ using DataReef.TM.Models.Solar;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using DataReef.TM.Models;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -17,7 +16,7 @@ namespace DataReef.TM.Contracts.Services
     public interface IPropertySurveyService : IDataService<PropertySurvey>
     {
         [OperationContract]
-        Task<IEnumerable<PropertySurveyDTO>> GetPropertySurveysForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20);
+        IEnumerable<PropertySurveyDTO> GetPropertySurveysForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20);
 
         [OperationContract]
         PropertySurveyDTO GetPropertySurveyDTO(Guid propertySurveyID);

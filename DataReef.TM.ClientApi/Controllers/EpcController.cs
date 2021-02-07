@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataReef.Core.Infrastructure.Authorization;
@@ -33,7 +32,7 @@ namespace DataReef.TM.ClientApi.Controllers
         {
             var ouid = SmartPrincipal.OuId;
 
-            var ouSettings = Task.Run(() => _ouSettingServiceFactory().GetSettings(ouid, null)).Result;
+            var ouSettings = _ouSettingServiceFactory().GetSettings(ouid, null);
             if (!ouSettings.ContainsKey(TM.Models.OUSetting.Epc_Statuses))
                 return Ok(new GenericResponse<List<string>>(new List<string>()));
 
