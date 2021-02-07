@@ -239,7 +239,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act, assert
-            Assert.Throws<ArgumentException>(() => service.SyncProperty(Guid.Empty));
+            Assert.Throws<ArgumentException>(() => Task.Run(() => service.SyncProperty(Guid.Empty)).GetAwaiter().GetResult());
         }
 
         [Test]
@@ -250,7 +250,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act, assert
-            Assert.Throws<ApplicationException>(() => service.SyncProperty(Guid.NewGuid()));
+            Assert.Throws<ApplicationException>(() => Task.Run(() => service.SyncProperty(Guid.NewGuid())).GetAwaiter().GetResult());
         }
 
         [Test]
@@ -265,7 +265,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            service.SyncProperty(property.Object.Guid);
+            Task.Run(() => service.SyncProperty(property.Object.Guid)).GetAwaiter().GetResult();
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Never);
@@ -285,7 +285,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-            service.SyncProperty(property.Object.Guid);
+            Task.Run(() => service.SyncProperty(property.Object.Guid)).GetAwaiter().GetResult();
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Never);

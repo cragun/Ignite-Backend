@@ -150,7 +150,7 @@ namespace DataReef.TM.Services
 
             if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && territory.OU != null)
             {
-                OUService.PopulateOUSummary(territory.OU);
+                await OUService.PopulateOUSummary(territory.OU);
             }
 
             return territory;
@@ -173,7 +173,7 @@ namespace DataReef.TM.Services
             {
                 if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && territory.OU != null)
                 {
-                    OUService.PopulateOUSummary(territory.OU);
+                    await OUService.PopulateOUSummary(territory.OU);
                 }
             }
 
@@ -193,7 +193,7 @@ namespace DataReef.TM.Services
             {
                 if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && territory.OU != null)
                 {
-                    OUService.PopulateOUSummary(territory.OU);
+                    Task.Run(() => OUService.PopulateOUSummary(territory.OU)).GetAwaiter().GetResult();
                 }
             }
 
@@ -270,7 +270,7 @@ namespace DataReef.TM.Services
 
                 foreach (var territory in ouTerritories.Where(territory => include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && territory.OU != null))
                 {
-                    OUService.PopulateOUSummary(territory.OU);
+                    Task.Run(() => OUService.PopulateOUSummary(territory.OU)).GetAwaiter().GetResult();
                 }
 
                 return ouTerritories;

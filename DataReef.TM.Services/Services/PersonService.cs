@@ -186,7 +186,7 @@ namespace DataReef.TM.Services
             Person ret = await base.Get(uniqueId, include, exclude, fields, deletedItems);
             if (mayEdit)
             {
-                _ouAssociationService.PopulatePersonMayEdit(new List<Person> { ret });
+                await _ouAssociationService.PopulatePersonMayEdit(new List<Person> { ret });
             }
             PopulateSummary(ret);
             return ret;
@@ -1098,7 +1098,7 @@ namespace DataReef.TM.Services
 
         public PersonDTO GetPersonDTO(Guid personID, string include = "")
         {
-            var person = Get(personID, include: include);
+            var person = Task.Run(() => Get(personID, include: include)).Result;
             var roleType = OURoleType.None;
             var permissionType = PermissionType.None;
             var currentUsersAssociations = Task.Run(() => _ouAssociationService.SmartList(filter: $"Personid={personID}")).Result;

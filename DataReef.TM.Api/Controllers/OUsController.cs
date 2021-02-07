@@ -216,7 +216,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(Dictionary<string, ValueTypePair<SettingValueType, string>>))]
         public async Task<IHttpActionResult> GetAllSettings(Guid ouID, OUSettingGroupType? group = null)
         {
-            var data = settingsService.GetSettings(ouID, group);
+            var data = await settingsService.GetSettings(ouID, group);
             return Ok(data);
         }
 

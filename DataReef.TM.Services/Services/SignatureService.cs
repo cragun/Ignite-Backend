@@ -271,7 +271,7 @@ namespace DataReef.TM.Services.Services
 
                 proposal = financePlan.SolarSystem.Proposal;
 
-                var settings = _ouSettingsService.GetSettings(ouid, OUSettingGroupType.ConfigurationFile);
+                var settings = Task.Run(() => _ouSettingsService.GetSettings(ouid, OUSettingGroupType.ConfigurationFile)).Result;
             }
 
             var hostNotifier = new HostNotifier();

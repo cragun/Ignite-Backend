@@ -141,7 +141,7 @@ namespace DataReef.TM.Services.Services
         // These method calls to bring as much data as possible in a single request will increase complexity and may cause performance issues
         // it would have been way better to have the app make a request for a person details when displaying its properties window and to have the server populate the MayEdit property only on that request, 
         // as that's the only place where the user may want to edit the properties and only for that specific person...
-        public async void PopulatePersonMayEdit(ICollection<Person> people)
+        public async Task PopulatePersonMayEdit(ICollection<Person> people)
         {
             if (people == null || !people.Any()) return;
             var currentUsersAssociations = await SmartList(include: "OURole,OU,OU.RootOrganization", filter: String.Format("Personid={0}", SmartPrincipal.UserId));

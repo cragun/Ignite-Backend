@@ -267,7 +267,7 @@ namespace DataReef.TM.Api.Controllers
         {
             var data = _service.GetOrderDetails(orderID, SmartPrincipal.UserId, 0, 100000);
 
-            var order = _service.Get(orderID, fields: "Id");
+            var order = await _service.Get(orderID, fields: "Id");
 
             data.Data.ForEach(od => od.DeSerializeDetails = true);
             var orderDetails = data

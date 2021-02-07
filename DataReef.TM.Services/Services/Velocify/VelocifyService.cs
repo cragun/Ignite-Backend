@@ -12,6 +12,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.PRMI;
 using Newtonsoft.Json;
 using DataReef.Core.Infrastructure.Authorization;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
@@ -168,7 +169,7 @@ namespace DataReef.TM.Services.Services
             if (!ouSettings.Any()) return url;
 
             var ouid = ouSettings.FirstOrDefault().OUID;
-            var velocifySettings = _ouSettingService.GetSettings(ouid, OUSettingGroupType.HiddenConfigs).Result;
+            var velocifySettings = Task.Run(() => _ouSettingService.GetSettings(ouid, OUSettingGroupType.HiddenConfigs)).Result;
             if (!velocifySettings.ContainsKey(VelocifyOuSettings.VelocifyBaseAddress) ||
                 !velocifySettings.ContainsKey(VelocifyOuSettings.VelocifyParameters))
                 return url;

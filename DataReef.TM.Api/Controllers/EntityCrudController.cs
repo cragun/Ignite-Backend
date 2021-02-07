@@ -175,7 +175,7 @@ namespace DataReef.TM.Api.Controllers
             //var additionalInclude = string.IsNullOrWhiteSpace(include) ? collectionPropertyInfo.Name : collectionPropertyInfo.Name + "." + include;
 
 
-            var entity = this._dataService.Get(guid, includeBuilder.ToString(), exclude, fields, deletedItems);
+            var entity = await this._dataService.Get(guid, includeBuilder.ToString(), exclude, fields, deletedItems);
 
             if (entity == null)
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.NotFound));

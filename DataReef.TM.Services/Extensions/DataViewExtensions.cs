@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 
 internal static class DataViewExtensions
 {
@@ -285,9 +286,9 @@ internal static class DataViewExtensions
         if (contractorSetting != null)
         {
             // Get First ContractorID going up, to see if it's the same
-            var setting = OUSettingService
+            var setting = Task.Run(() => OUSettingService
                                 .GetOuSettings(ouid).Result?
-                                .FirstOrDefault(s => s.Name == OUSetting.Solar_ContractorID);
+                                .FirstOrDefault(s => s.Name == OUSetting.Solar_ContractorID)).Result;
 
             if (setting == null)
             {

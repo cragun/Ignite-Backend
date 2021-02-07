@@ -147,7 +147,7 @@ namespace DataReef.TM.Services.Services
             return results;
         }
 
-        internal static async void PopulateOUSummary(OU ou)
+        internal static async Task PopulateOUSummary(OU ou)
         {
             using (DataContext dc = new DataContext())
             {
@@ -294,7 +294,7 @@ namespace DataReef.TM.Services.Services
 
         public OU OUBuilder(OU ou, string include = "", string exclude = "", string fields = "", bool ancestors = false, bool includeDeleted = false)
         {
-             PopulateOUSummary(ou);
+             Task.Run(() => PopulateOUSummary(ou)).GetAwaiter().GetResult();
 
             if (include.IndexOf("territories", StringComparison.OrdinalIgnoreCase) >= 0
                 && ou.Territories != null
@@ -395,7 +395,7 @@ namespace DataReef.TM.Services.Services
                         else
                             child.IsFavourite = false;
 
-                        PopulateOUSummary(child);
+                        Task.Run(() => PopulateOUSummary(child)).GetAwaiter().GetResult();
                     }
                 }
 
@@ -529,7 +529,7 @@ namespace DataReef.TM.Services.Services
 
             if (include.Contains("OU"))
             {
-                PopulateAssociationsOUs(asses);
+                Task.Run(()=>PopulateAssociationsOUs(asses)).GetAwaiter().GetResult();
             }
 
             List<Guid> ouGuids = new List<Guid>();
@@ -937,7 +937,7 @@ namespace DataReef.TM.Services.Services
 
                 foreach (OU ou in ret)
                 {
-                    OUService.PopulateOUSummary(ou);
+                    Task.Run(() => OUService.PopulateOUSummary(ou)).GetAwaiter().GetResult();
                 }
             }
 
@@ -2307,7 +2307,7 @@ namespace DataReef.TM.Services.Services
                 {
                     foreach (var child in ou.Children)
                     {
-                        PopulateOUSummary(child);
+                        Task.Run(() => PopulateOUSummary(child)).GetAwaiter().GetResult();
                     }
                 }
             }
@@ -2711,7 +2711,7 @@ namespace DataReef.TM.Services.Services
 
                     if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && ouTerritories.OU != null)
                     {
-                        OUService.PopulateOUSummary(ouTerritories.OU);
+                        Task.Run(() => OUService.PopulateOUSummary(ouTerritories.OU)).GetAwaiter().GetResult();
                     }
 
                     territory.Add(ouTerritories);

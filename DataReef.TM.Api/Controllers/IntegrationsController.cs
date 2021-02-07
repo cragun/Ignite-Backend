@@ -488,7 +488,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetManualpresolarcostData(Guid proposalID)
         {
-            var proposal = _manualProposalService.Get(proposalID);
+            var proposal = await _manualProposalService.Get(proposalID);
 
             if (proposal == null)
             {

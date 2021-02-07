@@ -70,7 +70,7 @@ namespace DataReef.TM.Api.Controllers
 
                 string serviceUrl = System.Configuration.ConfigurationManager.AppSettings["SpruceUrl"].ToString();
 
-                var user = _userService.Get(quoteRequest.CreatedByID.Value, "ExternalCredentials");
+                var user = await _userService.Get(quoteRequest.CreatedByID.Value, "ExternalCredentials");
 
                 Integrations.Spruce.DTOs.GenDocsRequest genDocsRequest = new DataReef.Integrations.Spruce.DTOs.GenDocsRequest();
                 Models.Spruce.GenDocsRequest genDocsModel = quoteRequest.GenDocsRequest;

@@ -116,8 +116,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var proposal = financePlan.SolarSystem.Proposal;
             var ouid = proposal.Property.Territory.OUID;
-
-            EnsureInitialized(ouid);
+            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
+            
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -212,7 +212,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                             .FirstOrDefault(fp => fp.Guid == propertyID);
 
             var ouid = property.Territory.OUID;
-            EnsureInitialized(ouid);
+
+            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -305,7 +306,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         public SBIntegrationLoginModel GetSBToken(Guid ouid)
         {
-            EnsureInitialized(ouid);
+            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -388,7 +389,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             {
                 throw new ApplicationException("Orgainization Not Found");
             }
-            EnsureInitialized(ouid.Value);
+            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -500,7 +501,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 var ouid = ret.FirstOrDefault().Guid;
 
-                EnsureInitialized(ouid);
+                Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
 
                 var integrationSettings = new IntegrationOptionSettings
                 {
@@ -557,7 +558,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return;
             }
 
-            EnsureInitialized(ouid.Value);
+            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -625,7 +626,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return;
             }
 
-            EnsureInitialized(ouid.Value);
+            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -693,7 +694,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return null;
             }
 
-            EnsureInitialized(ouid.Value);
+            Task.Run(() => EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -831,7 +832,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 return null;
             }
 
-            EnsureInitialized(ouid.Value);
+            Task.Run(()=>EnsureInitialized(ouid.Value)).GetAwaiter().GetResult();
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -890,7 +891,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         public string DismissNotification(Guid ouid, string smartboardNotificationID)
         {
-            EnsureInitialized(ouid);
+            Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
 
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -997,7 +998,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
                 var ouid = ret.FirstOrDefault().Guid;
 
-                EnsureInitialized(ouid);
+                Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
 
                 var integrationSettings = new IntegrationOptionSettings
                 {
@@ -1058,7 +1059,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 //1202823E-7C9C-47D9-8D0F-F0F4F588AA3D - Trismart solar 
                 Guid ouid = Guid.Parse("1202823E-7C9C-47D9-8D0F-F0F4F588AA3D");
 
-                EnsureInitialized(ouid);
+                Task.Run(() => EnsureInitialized(ouid)).GetAwaiter().GetResult();
                 var integrationSettings = new IntegrationOptionSettings
                 {
                     Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),

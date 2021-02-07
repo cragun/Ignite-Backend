@@ -1632,7 +1632,7 @@ namespace DataReef.TM.Services.Services
                 var proposalDV = new Proposal2DataView(param, roundAmounts);
 
                 // get the OU settings
-                var settings = Task.Run(() => OUSettingService.GetOuSettings(proposal.Property.Territory.OUID)).Result;
+                var settings =  await OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
 
                 // Based on settings, add additional information to the proposal
                 var summaryFeature = settings?.FirstOrDefault(sett => sett.Name == OUSetting.Proposal_Features_Summary);
