@@ -30,7 +30,7 @@ namespace DataReef.TM.API.Controllers
         public async Task<IHttpActionResult> Get()
         {
             Guid userID = SmartPrincipal.UserId;
-            LedgerDataView ret = await this.tokensProvider.GetLedgerDataViewForPerson(userID);
+            LedgerDataView ret = this.tokensProvider.GetLedgerDataViewForPerson(userID);
             return Ok<LedgerDataView>(ret);
         }
 
@@ -38,7 +38,7 @@ namespace DataReef.TM.API.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetForPerson(Guid personId)
         {
-            LedgerDataView ret = await this.tokensProvider.GetLedgerDataViewForPerson(personId);
+            LedgerDataView ret = this.tokensProvider.GetLedgerDataViewForPerson(personId);
             return Ok<LedgerDataView>(ret);
         }
 

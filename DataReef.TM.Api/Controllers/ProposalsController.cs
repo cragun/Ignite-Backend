@@ -45,7 +45,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<Proposal2DataView> GetProposalData(Guid proposalDataId, double? utilityInflationRate, bool roundAmounts = false)
         {
-            var response =  await _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts);
+            var response =  _proposalService.GetProposalDataView(proposalDataId, utilityInflationRate, roundAmounts);
             return response;
         }
 
@@ -145,7 +145,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(List<DocType>))]
         public async Task<IHttpActionResult> GetOuDocumentType(Guid ouid)
         {
-            var response = await _proposalService.GetOuDocumentType(ouid);
+            var response = _proposalService.GetOuDocumentType(ouid);
             return Ok(response.DocumentType);
         }
 

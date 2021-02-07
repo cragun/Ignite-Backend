@@ -19,7 +19,7 @@ namespace DataReef.TM.Contracts.Services
         Task<TerritorySummary> PopulateTerritorySummary(Territory territory, bool includePropertyCount = true);
 
         [OperationContract]
-        Task<ICollection<Territory>> GetForCurrentUserAndOU(Guid ouID, Guid personID, string include = "", string exclude = "", string fields = "");
+        ICollection<Territory> GetForCurrentUserAndOU(Guid ouID, Guid personID, string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
         int GetPropertiesCount(Territory territory);

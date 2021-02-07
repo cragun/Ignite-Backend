@@ -28,7 +28,7 @@ namespace DataReef.TM.Services.Services
 
         public void UploadEpcStatuses(Guid ouid, List<EpcStatusInput> epcStatuses)
         {
-            var ouSettings = _ouSettingServiceFactory().GetSettings(ouid, null).Result;
+            var ouSettings = _ouSettingServiceFactory().GetSettings(ouid, null);
             if (!ouSettings.ContainsKey(OUSetting.Epc_Statuses))
                 return;
 

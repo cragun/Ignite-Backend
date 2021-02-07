@@ -9,8 +9,6 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Core.Infrastructure.Repository;
-using System.Threading.Tasks;
-using System.Data.Entity;
 
 namespace DataReef.TM.Services.Services
 {
@@ -32,7 +30,7 @@ namespace DataReef.TM.Services.Services
             return associations;
         }
 
-        public async Task<ICollection<OUAssociation>> SmartList(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
+        public ICollection<OUAssociation> SmartList(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
         {
             // Returned associations need to contain OU & OURole. We need to inject them in include if they are not present
             var includes = (include ?? string.Empty).Split(',', '|').ToList();
@@ -70,7 +68,7 @@ namespace DataReef.TM.Services.Services
 
                         do
                         {
-                            currentParentOU = await dc.OUs.AsNoTracking().SingleOrDefaultAsync(o => o.Guid == currentParentID);
+                            currentParentOU = dc.OUs.SingleOrDefault(o => o.Guid == currentParentID);
                             if (currentParentOU == null) break;
                             if (currentParentOU.IsDeleted)
                             {
@@ -97,20 +95,20 @@ namespace DataReef.TM.Services.Services
                     if (includes.Contains("OU.Settings", StringComparer.InvariantCultureIgnoreCase))
                     {
 
-                        association.OU.Settings = await OUSettingService.GetOuSettings(association.OUID);
+                        association.OU.Settings = OUSettingService.GetOuSettings(association.OUID);
                         
                     }
 
                     if (association.OU.RootOrganization != null && includes.Contains("OU.RootOrganization.Settings", StringComparer.InvariantCultureIgnoreCase))
                     {
-                        association.OU.RootOrganization.Settings = await OUSettingService.GetOuSettings(association.OU.RootOrganization.Guid);
+                        association.OU.RootOrganization.Settings = OUSettingService.GetOuSettings(association.OU.RootOrganization.Guid);
                      }
 
                     if(association.OU.Settings != null)
                     {
                         using (DataContext dc = new DataContext())
                         {
-                            var leftmenusetting = await dc.OUSettings.Where(x => x.Name == "Legion.LeftMenu.WebViewItems" && x.IsDeleted == false).AsNoTracking().FirstOrDefaultAsync();
+                            var leftmenusetting = dc.OUSettings.Where(x => x.Name == "Legion.LeftMenu.WebViewItems" && x.IsDeleted == false).FirstOrDefault();
                             association.OU.Settings.Add(leftmenusetting);
                         }
 
@@ -141,10 +139,10 @@ namespace DataReef.TM.Services.Services
         // These method calls to bring as much data as possible in a single request will increase complexity and may cause performance issues
         // it would have been way better to have the app make a request for a person details when displaying its properties window and to have the server populate the MayEdit property only on that request, 
         // as that's the only place where the user may want to edit the properties and only for that specific person...
-        public async void PopulatePersonMayEdit(ICollection<Person> people)
+        public void PopulatePersonMayEdit(ICollection<Person> people)
         {
             if (people == null || !people.Any()) return;
-            var currentUsersAssociations = await SmartList(include: "OURole,OU,OU.RootOrganization", filter: String.Format("Personid={0}", SmartPrincipal.UserId));
+            var currentUsersAssociations = SmartList(include: "OURole,OU,OU.RootOrganization", filter: String.Format("Personid={0}", SmartPrincipal.UserId));
 
             using (DataContext dc = new DataContext())
             {

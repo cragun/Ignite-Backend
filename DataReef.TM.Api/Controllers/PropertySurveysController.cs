@@ -45,7 +45,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAllForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20)
         {
-            var result = await _propertySurveyService.GetPropertySurveysForUser(userID, pageIndex, itemsPerPage);
+            var result = _propertySurveyService.GetPropertySurveysForUser(userID, pageIndex, itemsPerPage);
 
             return Ok(result);
         }
@@ -62,7 +62,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAllForCurrentUser(int pageIndex = 0, int itemsPerPage = 20)
         {
-            var result = await _propertySurveyService.GetPropertySurveysForUser(SmartPrincipal.UserId, pageIndex, itemsPerPage);
+            var result = _propertySurveyService.GetPropertySurveysForUser(SmartPrincipal.UserId, pageIndex, itemsPerPage);
 
             return Ok(result);
         }

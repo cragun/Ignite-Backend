@@ -22,7 +22,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
@@ -237,7 +236,7 @@ namespace DataReef.TM.Services.Services
 
         public List<OUSetting> GetSettingsByOUID(Guid ouId, OUSettingGroupType? group = null)
         {
-            return GetOuSettings(ouId, group).Result;
+            return GetOuSettings(ouId, group);
         }
 
         public void UpdateSBSettings()
@@ -317,7 +316,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
 
-                return GetOuSettings(prop.Territory.OUID, group, dc).Result;
+                return GetOuSettings(prop.Territory.OUID, group, dc);
             }
         }
 
@@ -336,7 +335,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
 
-                var settings = GetOuSettings(ouid.Value).Result;
+                var settings = GetOuSettings(ouid.Value);
                 return settings?
                             .FirstOrDefault(s => s.Name == settingName)?
                             .GetValue(type);
@@ -358,14 +357,14 @@ namespace DataReef.TM.Services.Services
                     return default(T);
                 }
 
-                var settings = GetOuSettings(ouid.Value).Result;
+                var settings = GetOuSettings(ouid.Value);
                 return settings?
                             .FirstOrDefault(s => s.Name == settingName)?
                             .GetValue<T>();
             }
         }
 
-        public static async Task<List<OUSetting>> GetOuSettings(Guid ouId, OUSettingGroupType? group = null, DataContext dc = null, bool includeDeleted = false)
+        public static List<OUSetting> GetOuSettings(Guid ouId, OUSettingGroupType? group = null, DataContext dc = null, bool includeDeleted = false)
         {
             var result = new List<OUSetting>();
 
@@ -373,10 +372,10 @@ namespace DataReef.TM.Services.Services
 
             dc = dc ?? new DataContext();
 
-            var settings = await dc
+            var settings = dc
                         .Database
                         .SqlQuery<OUSetting>("exec proc_OUSettings @ouid, @IncludeDeleted", new SqlParameter("@ouid", ouId), new SqlParameter("@IncludeDeleted", includeDeleted))
-                        .ToListAsync();
+                        .ToList();
 
             if (group.HasValue)
             {
@@ -474,9 +473,9 @@ namespace DataReef.TM.Services.Services
             return result;
         }
 
-        public async Task<Dictionary<string, ValueTypePair<SettingValueType, string>>> GetSettings(Guid ouid, OUSettingGroupType? group)
+        public Dictionary<string, ValueTypePair<SettingValueType, string>> GetSettings(Guid ouid, OUSettingGroupType? group)
         {
-            var data = await GetOuSettings(ouid, group);
+            var data = GetOuSettings(ouid, group);
             return data.ToDictionary(d => d.Name, d => new ValueTypePair<SettingValueType, string>(d.ValueType, d.Value));
         }
 

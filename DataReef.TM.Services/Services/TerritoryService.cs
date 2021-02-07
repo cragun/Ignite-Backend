@@ -120,7 +120,7 @@ namespace DataReef.TM.Services
         {
             var result = new List<InquiryStatisticsForOrganization>();
 
-            var territory = Get(territoryId).Result;
+            var territory = Get(territoryId);
             if(territory != null)
             {
                 //if no settings are supplied, try to get them from the db for the ou
@@ -141,9 +141,9 @@ namespace DataReef.TM.Services
             return result;
         }
 
-        public override async Task<Territory> Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override Territory Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
-            Territory territory = await base.Get(uniqueId, include, exclude, fields, deletedItems);
+            Territory territory = base.Get(uniqueId, include, exclude, fields, deletedItems);
             if (territory == null) return null;
 
             territory.Summary = PopulateTerritorySummary(territory).Result;
@@ -156,18 +156,18 @@ namespace DataReef.TM.Services
             return territory;
         }
 
-        public async Task<ICollection<Territory>> GetForCurrentUserAndOU(Guid ouID, Guid personID, string include = "", string exclude = "", string fields = "")
+        public ICollection<Territory> GetForCurrentUserAndOU(Guid ouID, Guid personID, string include = "", string exclude = "", string fields = "")
         {
             IEnumerable<Guid> territoryIds;
             using (DataContext dc = new DataContext())
             {
-                territoryIds = dc.Territories.Where(t => t.OUID == ouID && t.Assignments.Any(ta => ta.PersonID == personID) && !t.IsArchived).AsNoTracking().Select(t => t.Guid);
+                territoryIds = dc.Territories.Where(t => t.OUID == ouID && t.Assignments.Any(ta => ta.PersonID == personID) && !t.IsArchived).Select(t => t.Guid).ToList();
             }
             if (territoryIds == null || !territoryIds.Any()) return new List<Territory>();
             var territories = base.GetMany(territoryIds, include, exclude, fields);
             if (territories == null) return new List<Territory>();
 
-            territories = await PopulateTerritoriesSummary(territories);
+            territories = PopulateTerritoriesSummary(territories).Result;
 
             foreach (var territory in territories)
             {

@@ -69,7 +69,7 @@ namespace DataReef.TM.Services.Services
             Guid userID = SmartPrincipal.UserId;
 
             //check to see if they have any balance first
-            TokenLedger ledger = _tokensProvider.GetDefaultLedgerForPerson(userID).Result;
+            TokenLedger ledger = _tokensProvider.GetDefaultLedgerForPerson(userID);
 
             //if ledger == null then the user has no credits available, no ledger=no credits
             if (ledger == null)
@@ -87,7 +87,7 @@ namespace DataReef.TM.Services.Services
             int exclusiveMonths = request.LengthOfExclusivity / 30;
             int tokensRequired = request.MaxNumberOfLeads * exclusiveMonths; ;
 
-            double balance = _tokensProvider.GetBalanceForLedger(ledger.Guid).Result;
+            double balance = _tokensProvider.GetBalanceForLedger(ledger.Guid);
             if (balance < tokensRequired)
             {
                 throw new ApplicationException("Insufficient Credits Available");
@@ -194,11 +194,11 @@ namespace DataReef.TM.Services.Services
 
         public double GetTokensBalance(Guid userId)
         {
-            var ledger = _tokensProvider.GetDefaultLedgerForPerson(userId).Result;
+            var ledger = _tokensProvider.GetDefaultLedgerForPerson(userId);
             if (ledger == null)
                 return 0;
 
-            var balance = _tokensProvider.GetBalanceForLedger(ledger.Guid).Result;
+            var balance = _tokensProvider.GetBalanceForLedger(ledger.Guid);
             return balance;
         }
 
@@ -236,7 +236,7 @@ namespace DataReef.TM.Services.Services
             Guid userID = SmartPrincipal.UserId;
 
             //check to see if they have any balance first
-            TokenLedger ledger = _tokensProvider.GetDefaultLedgerForPerson(userID).Result;
+            TokenLedger ledger = _tokensProvider.GetDefaultLedgerForPerson(userID);
 
             //if ledger == null then the user has no credits available, no ledger=no credits
             if (ledger == null)
@@ -252,7 +252,7 @@ namespace DataReef.TM.Services.Services
 
             int tokensRequired = request.UploadedLeads.Count;
 
-            double balance = _tokensProvider.GetBalanceForLedger(ledger.Guid).Result;
+            double balance = _tokensProvider.GetBalanceForLedger(ledger.Guid);
             if (balance < tokensRequired)
             {
                 throw new ApplicationException("Insufficient Credits Available");

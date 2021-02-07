@@ -24,7 +24,6 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using Newtonsoft.Json.Linq;
 using DataReef.TM.Models.FinancialIntegration;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
@@ -94,7 +93,7 @@ namespace DataReef.TM.Services.Services
                     lon = property.Longitude ?? (left + right) / 2;
                     lat = property.Latitude ?? (top + bottom) / 2;
 
-                    var ouSettings = _ouSettingServiceFactory().GetSettings(property.Territory.OUID, null).Result;
+                    var ouSettings = _ouSettingServiceFactory().GetSettings(property.Territory.OUID, null);
                     if (ouSettings != null && ouSettings.ContainsKey(OUSetting.LegionOUFreeHiResImages))
                     {
                         string tokenizeHiResSetting = ouSettings[OUSetting.LegionOUFreeHiResImages].Value;
@@ -114,10 +113,10 @@ namespace DataReef.TM.Services.Services
 #endif
                 if (!freeHiResImages)
                 {
-                    ledger = _tokensProvider.GetDefaultLedgerForPerson(userID).Result;
+                    ledger = _tokensProvider.GetDefaultLedgerForPerson(userID);
                     if (ledger == null) throw new ApplicationException("No Token Ledger Exists For This User");
 
-                    double balance = _tokensProvider.GetBalanceForLedger(ledger.Guid).Result;
+                    double balance = _tokensProvider.GetBalanceForLedger(ledger.Guid);
                     if (balance < tokenCost) throw new ApplicationException("Insufficient Tokens");
                 }
 
@@ -191,7 +190,7 @@ namespace DataReef.TM.Services.Services
                     }
                     else // metadata exists
                     {
-                        hiResImageContent =  _blobService.DownloadByName(hiResImg.Guid.ToString(), _s3BucketName).Result;
+                        hiResImageContent = _blobService.DownloadByName(hiResImg.Guid.ToString(), _s3BucketName);
                         imageWasCached = true;
                         if (hiResImageContent == null) // binary doesn't actually exists on amazon even though we have meta data. We could have deleted the s3 files or something
                         {
@@ -265,21 +264,21 @@ namespace DataReef.TM.Services.Services
             return hiResImageContent;
         }
 
-        public async Task<BlobModel> GetExistingHiResImageForProperty(Guid propertyID, double top, double left, double bottom, double right, string direction)
+        public BlobModel GetExistingHiResImageForProperty(Guid propertyID, double top, double left, double bottom, double right, string direction)
         {
             HighResImage hiResImg = null;
             ImagePurchase purchase = null;
 
             using (var dc = new DataContext())
             {
-                purchase = await dc.ImagePurchases.Where(ip => ip.PropertyID == propertyID && ip.ImageType == direction && !ip.IsDeleted).AsNoTracking().OrderByDescending(ip => ip.DateCreated).FirstOrDefaultAsync();
+                purchase = dc.ImagePurchases.Where(ip => ip.PropertyID == propertyID && ip.ImageType == direction && !ip.IsDeleted).OrderByDescending(ip => ip.DateCreated).FirstOrDefault();
                 if (purchase == null) throw new ApplicationException("PurchaseNotFound");
 
                 hiResImg = _geoBridge.GetHiResImageById(purchase.ImageID);
                 if (hiResImg == null) throw new ApplicationException("HighResImageNotFound");
             }
 
-            BlobModel hiResImageContent = await _blobService.DownloadByName(hiResImg.Guid.ToString(), _s3BucketName);
+            BlobModel hiResImageContent = _blobService.DownloadByName(hiResImg.Guid.ToString(), _s3BucketName);
             if (hiResImageContent == null) return null; // got deleted, go get it again
 
             var croppedImage = CropImage(hiResImg, hiResImageContent, top, left, bottom, right);

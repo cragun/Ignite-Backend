@@ -33,7 +33,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(LoanResponse))]
         public async Task<IHttpActionResult> CalculateLoan(Guid financePlanId, LoanRequest request)
         {
-            var data = await financePlanDefinitionService.Get(financePlanId, "Details");
+            var data = financePlanDefinitionService.Get(financePlanId, "Details");
             LoanResponse response = null;
             switch (data.Type)
             {

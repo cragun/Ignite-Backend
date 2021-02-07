@@ -2,7 +2,6 @@
 using DataReef.TM.Models;
 using System;
 using System.ServiceModel;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -11,7 +10,7 @@ namespace DataReef.TM.Contracts.Services
     public interface IAppSettingService : IDataService<AppSetting>
     {
         [OperationContract]
-        Task<string> GetValue(string key);
+        string GetValue(string key);
 
         [OperationContract]
         void SetValue(string key, string value);

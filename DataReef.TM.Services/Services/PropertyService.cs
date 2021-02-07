@@ -156,7 +156,7 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
-        public override async Task<Property> Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
+        public override Property Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
         {
             var includeString = string.Empty;
             if (string.IsNullOrEmpty(include))
@@ -175,7 +175,7 @@ namespace DataReef.TM.Services.Services
                 }
 
             }
-            var ret = await base.Get(uniqueId, includeString, exclude, fields, deletedItems);
+            var ret = base.Get(uniqueId, includeString, exclude, fields, deletedItems);
             ret.PropertyNotesCount = ret.PropertyNotes?.Where(x => !x.IsDeleted)?.Count();
 
             if (include.Contains("PropertyNotes"))
@@ -1266,7 +1266,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public async Task<Property> SyncProperty(Guid propertyID, string include = "")
+        public Property SyncProperty(Guid propertyID, string include = "")
         {
             if (propertyID == Guid.Empty)
                 throw new ArgumentException($"Invalid {nameof(propertyID)}");
@@ -1294,11 +1294,11 @@ namespace DataReef.TM.Services.Services
                 var query = uow.Get<Property>();
                 AssignIncludes(include, ref query);
 
-                var property = await query
+                var property = query
                     .Include(p => p.Attributes)
                     .Include(p => p.PropertyBag)
                     .Include(p => p.Occupants.Select(o => o.PropertyBag))
-                    .FirstOrDefaultAsync(p => p.Guid == propertyID);
+                    .FirstOrDefault(p => p.Guid == propertyID);
 
                 if (property == null)
                     throw new ApplicationException("Invalid property");
@@ -1372,14 +1372,14 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public async Task<Property> PropertyBagsbyID(Guid propertyID)
+        public Property PropertyBagsbyID(Guid propertyID)
         {
             if (propertyID == Guid.Empty)
                 throw new ArgumentException($"Invalid {nameof(propertyID)}");
 
             using (var db = new DataContext())
             {
-                var property =  await db.Properties.Include(p => p.PropertyBag).AsNoTracking().FirstOrDefaultAsync(p => p.Guid == propertyID);
+                var property = db.Properties.Include(p => p.PropertyBag).FirstOrDefault(p => p.Guid == propertyID);
 
                 if (property == null)
                     throw new ApplicationException("Invalid property");
@@ -1394,7 +1394,6 @@ namespace DataReef.TM.Services.Services
             {
                 var property = uow
                                 .Get<Property>()
-                                .AsNoTracking()
                                 .FirstOrDefault(p => p.GenabilityProviderAccountID == id);
                 if (property == null)
                 {
@@ -1407,7 +1406,6 @@ namespace DataReef.TM.Services.Services
                                  && p.Tariff != null
                                  && p.Tariff.TariffName != null)
                         .Select(p => p.Tariff)
-                        .AsNoTracking()
                         .FirstOrDefault();
             }
         }

@@ -164,7 +164,7 @@ namespace DataReef.TM.Api.Controllers.Web
         [HttpGet]
         public ActionResult PasswordReset(Guid guid)
         {
-            var resetItem = _resetService.Value.Get(guid).Result;
+            var resetItem = _resetService.Value.Get(guid);
 
             if (resetItem == null)
             {

@@ -120,7 +120,7 @@ namespace DataReef.Application.Services
         {
             try
             {
-                PasswordReset reset = _resetService.Value.Get(resetGuid).Result;
+                PasswordReset reset = _resetService.Value.Get(resetGuid);
 
                 if (reset == null)
                 {

@@ -218,7 +218,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                Property property = await this.propertyService.Get(propertyID, "Inquiries");
+                Property property = this.propertyService.Get(propertyID, "Inquiries");
                 if (property == null || property.Inquiries == null)
                 {
                     return NotFound();
@@ -241,7 +241,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                Property property = await this.propertyService.Get(propertyID, "Inquiries");
+                Property property = this.propertyService.Get(propertyID, "Inquiries");
                 if (property == null || property.Inquiries == null)
                 {
                     return NotFound();
@@ -263,7 +263,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetPropertyPowerConsumptions(Guid propertyID)
         {
-            var property = await propertyService.Get(propertyID, "PowerConsumptions");
+            var property = propertyService.Get(propertyID, "PowerConsumptions");
             if (property?.PowerConsumptions == null)
                 return NotFound();
 

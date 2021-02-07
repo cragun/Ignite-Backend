@@ -36,7 +36,7 @@ namespace DataReef.TM.Services.InternalServices.Settings.EventHandlers
             {
                 //set the latest appoitnment to cancelled
                 var propertyService = ServiceLocator.Current.GetInstance<IPropertyService>();
-                var property = propertyService.Get(inquiry.PropertyID, "Appointments").Result;
+                var property = propertyService.Get(inquiry.PropertyID, "Appointments");
                 if(property != null)
                 {
                     var latestAppointment = property.GetLatestAppointment();

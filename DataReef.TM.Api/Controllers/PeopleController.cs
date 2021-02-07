@@ -99,7 +99,7 @@ namespace DataReef.TM.Api.Controllers
             {
                 Guid guid = Guid.Parse(personID);
 
-                var blob = await blobService.Download(guid);
+                var blob = blobService.Download(guid);
 
                 if (blob == null || blob.Content == null || blob.Content.Length == 0)
                     throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -160,7 +160,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(Person))]
         public async Task<IHttpActionResult> GetMayEdit(Guid guid, string include = "", string exclude = "", string fields = "")
         {
-            var ret = await peopleService.GetMayEdit(guid, true, include, exclude, fields);
+            var ret = peopleService.GetMayEdit(guid, true, include, exclude, fields);
             ret.RemoveDefaultExcludedProperties("MayEdit");
             return Ok(ret);
         }

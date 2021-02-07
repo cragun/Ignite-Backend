@@ -47,7 +47,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAllForProperty(Guid propertyID)
         {
-            var result = await _propertyNoteService.GetNotesByPropertyID(propertyID);
+            var result = _propertyNoteService.GetNotesByPropertyID(propertyID);
 
             return Ok(result);
         }
@@ -85,7 +85,7 @@ namespace DataReef.TM.Api.Controllers
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
-            var result = await _propertyNoteService.GetAllNotesForProperty(leadId, igniteId, DecyptApiKey);
+            var result = _propertyNoteService.GetAllNotesForProperty(leadId, igniteId, DecyptApiKey);
 
             return Ok(result);
         }

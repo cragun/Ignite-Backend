@@ -56,7 +56,7 @@ namespace DataReef.TM.ClientApi.Controllers
                     }
 
 
-                    var settings = _ouSettingService.GetSettings(ouID.Value, null).Result;
+                    var settings = _ouSettingService.GetSettings(ouID.Value, null);
                     var adderSetting = settings.FirstOrDefault(s => s.Key == "Adders");
 
                     var json = adderSetting.Value;

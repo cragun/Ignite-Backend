@@ -13,7 +13,6 @@ using DataReef.TM.Models.Reporting.Settings;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -40,7 +39,7 @@ namespace DataReef.TM.Contracts.Services
         OU OUBuilder(OU ou, string include = "", string exclude = "", string fields = "", bool ancestors = false, bool includeDeleted = false);
 
         [OperationContract]
-        Task<ICollection<OUAssociation>> PopulateAssociationsOUs(ICollection<OUAssociation> associations);
+        ICollection<OUAssociation> PopulateAssociationsOUs(ICollection<OUAssociation> associations);
 
         [OperationContract]
         ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganization(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
@@ -68,7 +67,7 @@ namespace DataReef.TM.Contracts.Services
         ICollection<Guid> GetHierarchicalOrganizationGuids(ICollection<Guid> parentOUs, ICollection<Guid> excludeOUs = null);
 
         [OperationContract]
-        Task<List<GuidNamePair>> GetAllSubOUIdsAndNamesOfSpecifiedOus(string ouIDs);
+        List<GuidNamePair> GetAllSubOUIdsAndNamesOfSpecifiedOus(string ouIDs);
 
         [OperationContract]
         ICollection<Guid> GetOUAndChildrenGuids(Guid ouid);
@@ -80,7 +79,7 @@ namespace DataReef.TM.Contracts.Services
         float GetTokenPriceInDollars(Guid ouid);
 
         [OperationContract]
-        Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "");
+        ICollection<FinancePlanDefinition> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
         ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "");

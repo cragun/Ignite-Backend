@@ -108,7 +108,7 @@ namespace DataReef.TM.Services.Services
                                     .Select(f => f.Value)
                                     .FirstOrDefault();
 
-                var settings = _ouSettingsService.GetSettings(ouid, OUSettingGroupType.ConfigurationFile).Result;
+                var settings = _ouSettingsService.GetSettings(ouid, OUSettingGroupType.ConfigurationFile);
                 var key = documentType.GetTemplateName();
                 var fileNames = new List<string>();
 
@@ -141,7 +141,7 @@ namespace DataReef.TM.Services.Services
                     byte[] templateByteArray;
                     try
                     {
-                        var blob = _blobService.DownloadByName(templatePath, BlobService.S3SourceDocumentsBucket).Result;
+                        var blob = _blobService.DownloadByName(templatePath, BlobService.S3SourceDocumentsBucket);
                         templateByteArray = blob.Content;
                     }
                     catch
@@ -695,7 +695,7 @@ namespace DataReef.TM.Services.Services
         private BlobModel DownloadPDF(string url, string bucketName = null)
         {
             var documentName = new Uri(url).AbsolutePath.Replace(bucketName, "").TrimStart('/');
-            var document = _blobService.DownloadByName(documentName, bucketName).Result;
+            var document = _blobService.DownloadByName(documentName, bucketName);
             return document;
         }
     }
