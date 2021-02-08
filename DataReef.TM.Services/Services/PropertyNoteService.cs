@@ -493,15 +493,15 @@ namespace DataReef.TM.Services.Services
 
                         if (not.PersonID != user.Guid)
                         {
-                            if (noteRequest.IsSendEmail)
-                            {
+                            //if (noteRequest.IsSendEmail)
+                            //{
                                 SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
-                            }
+                            //}
 
-                            if (noteRequest.IsSendSMS)
-                            {
-                                _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
-                            }
+                            //if (noteRequest.IsSendSMS)
+                            //{
+                            //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                            //}
                         }
                     }
                 }
@@ -529,17 +529,17 @@ namespace DataReef.TM.Services.Services
                         List<string> sendemails = new List<string>();
                         foreach (var item in noteRequest.TaggedUsers)
                         {
-                            if (item.IsSendEmail)
-                            {
+                            //if (item.IsSendEmail)
+                            //{
                                 sendemails.Add(item.email);
-                            }
+                            //}
 
-                            if (item.IsSendSMS)
-                            {
-                                _smsService
-                             .Value
-                             .SendSms("You received new notes", item.PhoneNumber);
-                            }
+                            //if (item.IsSendSMS)
+                            //{
+                            //    _smsService
+                            // .Value
+                            // .SendSms("You received new notes", item.PhoneNumber);
+                            //}
                         }
 
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
@@ -629,15 +629,15 @@ namespace DataReef.TM.Services.Services
 
                         if (not.PersonID != user.Guid)
                         {
-                            if (noteRequest.IsSendEmail)
-                            {
+                            //if (noteRequest.IsSendEmail)
+                            //{
                                 SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
-                            }
+                            //}
 
-                            if (noteRequest.IsSendSMS)
-                            {
-                                _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
-                            }
+                            //if (noteRequest.IsSendSMS)
+                            //{
+                            //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                            //}
                         }
 
                     }
@@ -662,17 +662,17 @@ namespace DataReef.TM.Services.Services
                         List<string> sendemails = new List<string>();
                         foreach (var item in noteRequest.TaggedUsers)
                         {
-                            if (item.IsSendEmail)
-                            {
+                            //if (item.IsSendEmail)
+                            //{
                                 sendemails.Add(item.email);
-                            }
+                            //}
 
-                            if (item.IsSendSMS)
-                            {
-                                _smsService
-                             .Value
-                             .SendSms("You received new notes", item.PhoneNumber);
-                            }
+                            //if (item.IsSendSMS)
+                            //{
+                            //    _smsService
+                            // .Value
+                            // .SendSms("You received new notes", item.PhoneNumber);
+                            //}
                         }
 
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
