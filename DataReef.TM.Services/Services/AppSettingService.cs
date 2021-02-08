@@ -27,6 +27,7 @@ namespace DataReef.TM.Services.Services
             _loanPalBridge = loanPalBridge;
         }
 
+
         public string GetValue(string key)
         {
             if (string.IsNullOrEmpty(key))
