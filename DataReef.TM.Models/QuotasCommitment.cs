@@ -1,4 +1,5 @@
 ﻿using DataReef.TM.Models.DTOs.Inquiries;
+using DataReef.TM.Models.DTOs.QuotasCommitments;
 using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace DataReef.TM.Models
         public string dispositions { get; set; }
 
         [NotMapped]
-        public List<CRMDisposition> Disposition { get; set; }
+        public List<QuotaCommitementsDisposition> Disposition { get; set; }
 
         [NotMapped]
         public string week { get; set; }
