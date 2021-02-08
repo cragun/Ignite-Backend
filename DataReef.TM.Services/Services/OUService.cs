@@ -2724,7 +2724,6 @@ namespace DataReef.TM.Services.Services
 
         public string InsertMasterTerritory()
         {
-
             using (var dc = new DataContext())
             {
                 using (var transaction = dc.Database.BeginTransaction())
