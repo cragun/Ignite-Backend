@@ -145,7 +145,6 @@ namespace DataReef.TM.Services.Services
 
             return results;
         }
-
         internal static void PopulateOUSummary(OU ou)
         {
             using (DataContext dc = new DataContext())
