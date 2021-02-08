@@ -667,6 +667,7 @@ namespace DataReef.TM.Services.Services
                                 sendemails.Add(item.email);
                             //}
 
+
                             //if (item.IsSendSMS)
                             //{
                             //    _smsService
