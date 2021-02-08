@@ -441,6 +441,130 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        //public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
+        //{
+        //    using (var dc = new DataContext())
+        //    {
+        //        //first get the property
+        //        if (!noteRequest.LeadID.HasValue || !noteRequest.IgniteID.HasValue)
+        //        {
+        //            throw new Exception("LeadID or IgniteID is required");
+        //        }
+        //        var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
+
+        //        //get user by the the smartboardId
+        //        //var user = dc.People.FirstOrDefault(x => !x.IsDeleted && (noteRequest.UserID != null &&  x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+        //        //                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
+
+        //        var user = dc.People.FirstOrDefault(x => !x.IsDeleted
+        //                                              && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+        //                                                    || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
+        //        if (user == null)
+        //        {
+        //            throw new Exception("User with the specified ID was not found");
+        //        }
+
+
+        //        var note = new PropertyNote
+        //        {
+        //            CreatedByID = user.Guid,
+        //            CreatedByName = user.FullName,
+        //            PersonID = user.Guid,
+        //            Content = noteRequest.Content,
+        //            Attachments = noteRequest.Attachments,
+        //            PropertyID = property.Guid
+        //        };
+
+        //        //if reply type is comment
+        //        if (noteRequest.ContentType == "Comment")
+        //        {
+        //            note.ContentType = noteRequest.ContentType;
+        //            note.ParentID = noteRequest.ParentID;
+
+        //            var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+
+        //            not.Updated(user.Guid, user?.Name);
+        //            dc.SaveChanges();
+
+        //            if (not != null && property != null)
+        //            {
+        //                NotifyComment(not.PersonID, not, property, dc);
+        //                var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+
+        //                if (not.PersonID != user.Guid)
+        //                {
+        //                    //if (noteRequest.IsSendEmail)
+        //                    //{
+        //                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+        //                    //}
+
+        //                    //if (noteRequest.IsSendSMS)
+        //                    //{
+        //                    //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+        //                    //}
+        //                }
+        //            }
+        //        }
+
+        //        dc.PropertyNotes.Add(note);
+        //        dc.SaveChanges();
+
+        //        //send notifications to the tagged users
+        //        var taggedPersons = GetTaggedPersons(note.Content);
+        //        if (taggedPersons?.Any() == true)
+        //        {
+        //            var emails = taggedPersons?.Select(x => x.EmailAddressString);
+        //            var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+        //            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
+        //            //if (emails?.Any() == true)
+        //            //{
+        //            //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
+        //            //}
+
+        //            NotifyTaggedUsers(taggedPersons, note, property, dc);
+
+        //            //email / sms to tagged users
+        //            if (noteRequest.TaggedUsers.Count > 0)
+        //            {
+        //                List<string> sendemails = new List<string>();
+        //                foreach (var item in noteRequest.TaggedUsers)
+        //                {
+        //                    //if (item.IsSendEmail)
+        //                    //{
+        //                        sendemails.Add(item.email);
+        //                    //}
+
+        //                    //if (item.IsSendSMS)
+        //                    //{
+        //                    //    _smsService
+        //                    // .Value
+        //                    // .SendSms("You received new notes", item.PhoneNumber);
+        //                    //}
+        //                }
+
+        //                SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+        //            }
+        //        }
+
+
+
+        //        return new SBNoteDTO
+        //        {
+        //            Guid = note.Guid,
+        //            PropertyID = property.Guid,
+        //            LeadID = property.SmartBoardId,
+        //            Content = note.Content,
+        //            DateCreated = note.DateCreated,
+        //            DateLastModified = note.DateLastModified,
+        //            UserID = user.SmartBoardID,
+        //            Email = user.EmailAddressString,
+        //            ContentType = noteRequest.ContentType,
+        //            Attachments = noteRequest.Attachments,
+        //            ParentID = noteRequest.ParentID
+        //        };
+        //    }
+        //}
+
         public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             using (var dc = new DataContext())
@@ -463,7 +587,6 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("User with the specified ID was not found");
                 }
-
 
                 var note = new PropertyNote
                 {
@@ -493,9 +616,13 @@ namespace DataReef.TM.Services.Services
 
                         if (not.PersonID != user.Guid)
                         {
+                            SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
+
+                            _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+
                             //if (noteRequest.IsSendEmail)
                             //{
-                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            //    SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
                             //}
 
                             //if (noteRequest.IsSendSMS)
@@ -505,9 +632,9 @@ namespace DataReef.TM.Services.Services
                         }
                     }
                 }
-
                 dc.PropertyNotes.Add(note);
                 dc.SaveChanges();
+
 
                 //send notifications to the tagged users
                 var taggedPersons = GetTaggedPersons(note.Content);
@@ -516,37 +643,35 @@ namespace DataReef.TM.Services.Services
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-                    //if (emails?.Any() == true)
-                    //{
-                    //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
-                    //}
+
+                    if (emails?.Any() == true)
+                    {
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                    }
+
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
-                    if (noteRequest.TaggedUsers.Count > 0)
-                    {
-                        List<string> sendemails = new List<string>();
-                        foreach (var item in noteRequest.TaggedUsers)
-                        {
-                            //if (item.IsSendEmail)
-                            //{
-                                sendemails.Add(item.email);
-                            //}
+                    //if (noteRequest.TaggedUsers.Count > 0)
+                    //{
+                    //    List<string> sendemails = new List<string>();
+                    //    foreach (var item in noteRequest.TaggedUsers)
+                    //    {
+                    //        if (item.IsSendEmail)
+                    //        {
+                    //            sendemails.Add(item.email);
+                    //        }
 
-                            //if (item.IsSendSMS)
-                            //{
-                            //    _smsService
-                            // .Value
-                            // .SendSms("You received new notes", item.PhoneNumber);
-                            //}
-                        }
+                    //        if (item.IsSendSMS)
+                    //        {
+                    //            _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
+                    //        }
+                    //    }
 
-                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
-                    }
+                    //    SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                    //}
                 }
-
-              
 
                 return new SBNoteDTO
                 {
@@ -594,6 +719,11 @@ namespace DataReef.TM.Services.Services
 
                 //get user by the the smartboardId
                 var smartboardUserID = noteRequest.UserID;
+                if (!String.IsNullOrEmpty(noteRequest.Attachments))
+                {
+                    note.Attachments = noteRequest.Attachments;
+                }
+
                 Person user = null;
                 if (!string.IsNullOrEmpty(noteRequest.UserID) || !string.IsNullOrEmpty(noteRequest.Email))
                 {
@@ -625,13 +755,17 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, property, dc);
 
-                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
                         if (not.PersonID != user.Guid)
                         {
+                            SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
+
+                            _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+
                             //if (noteRequest.IsSendEmail)
                             //{
-                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            //    SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
                             //}
 
                             //if (noteRequest.IsSendSMS)
@@ -639,7 +773,6 @@ namespace DataReef.TM.Services.Services
                             //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
                             //}
                         }
-
                     }
                 }
 
@@ -649,39 +782,34 @@ namespace DataReef.TM.Services.Services
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-                    //if (emails?.Any() == true)
-                    //{
-                    //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
-                    //}
+
+                    if (emails?.Any() == true)
+                    {
+                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
+                    }
 
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
-                    if (noteRequest.TaggedUsers.Count > 0)
-                    {
-                        List<string> sendemails = new List<string>();
-                        foreach (var item in noteRequest.TaggedUsers)
-                        {
-                            //if (item.IsSendEmail)
-                            //{
-                                sendemails.Add(item.email);
-                            //}
+                    //if (noteRequest.TaggedUsers.Count > 0)
+                    //{
+                    //    List<string> sendemails = new List<string>();
+                    //    foreach (var item in noteRequest.TaggedUsers)
+                    //    {
+                    //        if (item.IsSendEmail)
+                    //        {
+                    //            sendemails.Add(item.email);
+                    //        }
 
+                    //        if (item.IsSendSMS)
+                    //        {
+                    //            _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
+                    //        }
+                    //    }
 
-                            //if (item.IsSendSMS)
-                            //{
-                            //    _smsService
-                            // .Value
-                            // .SendSms("You received new notes", item.PhoneNumber);
-                            //}
-                        }
-
-                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
-                    }
+                    //    SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                    //}
                 }
-
-
-
                 dc.SaveChanges();
 
                 return new SBNoteDTO
@@ -695,10 +823,146 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = note.DateLastModified,
                     UserID = smartboardUserID,
                     ContentType = noteRequest.ContentType,
-                    ParentID = noteRequest.ParentID
+                    ParentID = noteRequest.ParentID,
+                    Attachments = noteRequest.Attachments
                 };
             }
         }
+
+        //public SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
+        //{
+        //    using (var dc = new DataContext())
+        //    {
+        //        if (!noteRequest.Guid.HasValue)
+        //        {
+        //            throw new Exception("The note Guid is required");
+        //        }
+
+        //        //get the note
+        //        var note = dc
+        //            .PropertyNotes
+        //            .Include(x => x.Property)
+        //            .Include(x => x.Person)
+        //            .FirstOrDefault(x => x.Guid == noteRequest.Guid);
+        //        if (note == null)
+        //        {
+        //            throw new Exception("The note with the specified Guid was not found");
+        //        }
+
+        //        //get the property
+        //        var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
+        //        if (property == null)
+        //        {
+        //            throw new Exception("The lead was not found");
+        //        }
+
+        //        //get user by the the smartboardId
+        //        var smartboardUserID = noteRequest.UserID;
+        //        Person user = null;
+        //        if (!string.IsNullOrEmpty(noteRequest.UserID) || !string.IsNullOrEmpty(noteRequest.Email))
+        //        {
+        //            user = dc.People.FirstOrDefault(x => !x.IsDeleted
+        //                                                   && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
+        //                                                    || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email, StringComparison.InvariantCultureIgnoreCase))));
+        //            if (user == null)
+        //            {
+        //                throw new Exception("User with the specified ID was not found");
+        //            }
+        //            note.Updated(user?.Guid, user.Name);
+        //        }
+        //        else
+        //        {
+        //            smartboardUserID = note.Person?.SmartBoardID;
+        //        }
+
+        //        note.Content = noteRequest.Content;
+
+        //        //if reply type is comment
+        //        if (noteRequest.ContentType == "Comment")
+        //        {
+        //            var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+
+        //            not.Updated(user.Guid, user?.Name);
+        //            dc.SaveChanges();
+
+        //            if (not != null && property != null)
+        //            {
+        //                NotifyComment(not.PersonID, not, property, dc);
+
+        //                 var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+
+        //                if (not.PersonID != user.Guid)
+        //                {
+        //                    //if (noteRequest.IsSendEmail)
+        //                    //{
+        //                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+        //                    //}
+
+        //                    //if (noteRequest.IsSendSMS)
+        //                    //{
+        //                    //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+        //                    //}
+        //                }
+
+        //            }
+        //        }
+
+        //        var taggedPersons = GetTaggedPersons(note.Content);
+        //        if (taggedPersons?.Any() == true)
+        //        {
+        //            var emails = taggedPersons?.Select(x => x.EmailAddressString);
+        //            var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+        //            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
+        //            //if (emails?.Any() == true)
+        //            //{
+        //            //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
+        //            //}
+
+        //            NotifyTaggedUsers(taggedPersons, note, property, dc);
+
+        //            //email / sms to tagged users
+        //            if (noteRequest.TaggedUsers.Count > 0)
+        //            {
+        //                List<string> sendemails = new List<string>();
+        //                foreach (var item in noteRequest.TaggedUsers)
+        //                {
+        //                    //if (item.IsSendEmail)
+        //                    //{
+        //                        sendemails.Add(item.email);
+        //                    //}
+
+
+        //                    //if (item.IsSendSMS)
+        //                    //{
+        //                    //    _smsService
+        //                    // .Value
+        //                    // .SendSms("You received new notes", item.PhoneNumber);
+        //                    //}
+        //                }
+
+        //                SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+        //            }
+        //        }
+
+
+
+        //        dc.SaveChanges();
+
+        //        return new SBNoteDTO
+        //        {
+        //            Guid = note.Guid,
+        //            PropertyID = property.Guid,
+        //            LeadID = property.SmartBoardId,
+        //            Email = user.EmailAddressString,
+        //            Content = note.Content,
+        //            DateCreated = note.DateCreated,
+        //            DateLastModified = note.DateLastModified,
+        //            UserID = smartboardUserID,
+        //            ContentType = noteRequest.ContentType,
+        //            ParentID = noteRequest.ParentID
+        //        };
+        //    }
+        //}
 
         public SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
         {
