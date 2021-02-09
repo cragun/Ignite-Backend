@@ -51,9 +51,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             {
                 JobNimbusLeadRequestData req = new JobNimbusLeadRequestData();
 
-                string number = property.GetMainPhoneNumber()?.Replace("-", "");
-                string email = property.GetMainEmailAddress();
-
                 Geo geo = new Geo();                
                 geo.lat = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude));
                 geo.lon = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
@@ -70,10 +67,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + AuthTokenApikey);
 
-                var response = client.Execute(request);
-               // var json = new JavaScriptSerializer().Serialize(req);
-                var resp = new JavaScriptSerializer().Serialize(response);
+                var json = new JavaScriptSerializer().Serialize(req);
+                SaveRequest(JsonConvert.SerializeObject(request), "response", url + "/api1/contacts", null, AuthTokenApikey);
 
+                var response = client.Execute(request);                
+                var resp = new JavaScriptSerializer().Serialize(response);
+                SaveRequest(JsonConvert.SerializeObject(request), response, url + "/api1/contacts", null, AuthTokenApikey);
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
@@ -87,6 +86,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 }
                 catch (Exception)
                 {
+                    throw new ApplicationException($"CreateJobNimbusLead Failed.");
                 }
 
                 var content = response.Content;
