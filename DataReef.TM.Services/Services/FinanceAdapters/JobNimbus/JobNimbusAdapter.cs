@@ -50,7 +50,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             using (var dc = new DataContext())
             {
                 JobNimbusLeadRequestData req = new JobNimbusLeadRequestData();
-
                 Geo geo = new Geo();                
                 geo.lat = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude));
                 geo.lon = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
