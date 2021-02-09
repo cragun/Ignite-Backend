@@ -229,6 +229,7 @@
     <Compile Include="InternalServices\Geo\MockGeoProvider.cs" />
     <Compile Include="InternalServices\IUtilServices.cs" />
     <Compile Include="InternalServices\Tokens\TokensProvider.cs" />
+    <Compile Include="Services\FinanceAdapters\JobNimbus\JobNimbusAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\Sunnova\SunnovaAdapter.cs" />
     <Compile Include="Services\QuotasCommitmentsService.cs" />
     <Compile Include="Services\CRUDAuditService.cs" />

@@ -18,13 +18,13 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid);
 
         [OperationContract]
-        QuotasCommitment InsertQuotas(QuotasCommitment request); 
+        QuotasCommitment InsertQuotas(QuotasCommitment request);
 
         [OperationContract]
         List<List<object>> GetQuotasReport();
 
         [OperationContract]
-        List<List<object>> GetQuotasReportByPerson(QuotasCommitment req);  
+        List<List<object>> GetQuotasReportByPerson(QuotasCommitment req);
 
         [OperationContract]
         List<List<object>> GetQuotasCommitementsReport(QuotasCommitment request);
@@ -33,10 +33,10 @@ namespace DataReef.TM.Contracts.Services
         QuotasCommitment InsertCommitments(QuotasCommitment request);
 
         [OperationContract]
-        List<QuotasCommitment> GetQuotasDateRange(QuotasCommitment request);
+        List<object> GetQuotasDateRange(QuotasCommitment request);
 
         [OperationContract]
         bool IsCommitmentsSetByUser(QuotasCommitment request);
-        
+
     }
 }

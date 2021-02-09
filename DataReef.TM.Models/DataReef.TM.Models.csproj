@@ -103,6 +103,8 @@
   <ItemGroup>
     <Compile Include="ApiKey.cs" />
     <Compile Include="DTOs\QuotasCommitments\AdminQuotas.cs" />
+    <Compile Include="DTOs\Solar\Finance\JobNimbusContacts.cs" />
+    <Compile Include="DTOs\Solar\Finance\JobNimbusLead.cs" />
     <Compile Include="DTOs\Solar\Finance\SunnovaLeadSystem.cs" />
     <Compile Include="DTOs\Solar\Finance\SunnovaContacts.cs" />
     <Compile Include="DTOs\Solar\Finance\SunnovaLead.cs" />

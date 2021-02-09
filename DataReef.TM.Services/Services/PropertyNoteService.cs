@@ -499,7 +499,12 @@ namespace DataReef.TM.Services.Services
 
                             if (noteRequest.IsSendSMS)
                             {
-                                _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                                string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                               // _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
                             }
                         }
                     }
@@ -530,7 +535,12 @@ namespace DataReef.TM.Services.Services
 
                             if (item.IsSendSMS)
                             {
-                                _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
+                                string number = item.PhoneNumber;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                               // _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
                             }
                         }
 
@@ -631,7 +641,12 @@ namespace DataReef.TM.Services.Services
 
                             if (noteRequest.IsSendSMS)
                             {
-                                _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                                string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                                //_smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
                             }
                         }
 
@@ -660,7 +675,12 @@ namespace DataReef.TM.Services.Services
 
                             if (item.IsSendSMS)
                             {
-                                _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
+                                string number = item.PhoneNumber;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                               // _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
                             }
                         }
 

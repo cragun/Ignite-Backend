@@ -336,16 +336,15 @@ namespace DataReef.TM.Services
             }
         }
 
-        public List<QuotasCommitment> GetQuotasDateRange(QuotasCommitment req)
+        public List<object> GetQuotasDateRange(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
             {
                 req.EndDate = req.CurrentDate.AddMonths(3);
 
                 var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.EndDate <= req.EndDate && a.PersonID == req.PersonID).ToList();
-                List<List<object>> report = new List<List<object>>();
+                List<QuotaCommitementsDisposition> allDispositions = new List<QuotaCommitementsDisposition>();
 
-              
                 var quotas = data.Where(a => a.Flags == 1 && a.Type == 1).ToList();
                 foreach (var item in quotas)
                 {
@@ -403,21 +402,30 @@ namespace DataReef.TM.Services
                                 disposition.RangeCommitments = "0";
                             }
 
-                            var commitments = new List<object>{
-                                disposition.Disposition,
-                                disposition.TodayQuotas,
-                                disposition.TodayCommitments,
-                                disposition.WeekQuotas,
-                                disposition.WeekCommitments,
-                                disposition.RangeQuotas,
-                                disposition.RangeCommitments,
-                            };
-
-                            report.Add(commitments);
+                            allDispositions.Add(disposition);
                         }
                     }
                 }
 
+                var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
+
+                List<object> reportDateRange = new List<object>();
+
+                foreach (var item in dispositions)
+                {
+                    reportDateRange.Add(allDispositions.Where(a => a.Disposition == item.Disposition).GroupBy(r => r.Disposition)
+                                                    .Select(group => new
+                                                    {
+                                                        DisplayName = group.Key,
+                                                        Disposition = group.Key,
+                                                        TodayQuotas = group.Sum(rp => Convert.ToInt32(rp.TodayQuotas)).ToString(),
+                                                        WeekQuotas = group.Sum(rp => Convert.ToInt32(rp.WeekQuotas)).ToString(),
+                                                        RangeQuotas = group.Sum(rp => Convert.ToInt32(rp.RangeQuotas)).ToString(),
+                                                        TodayCommitments = group.Sum(rp => Convert.ToInt32(rp.TodayCommitments)).ToString(),
+                                                        WeekCommitments = group.Sum(rp => Convert.ToInt32(rp.WeekCommitments)).ToString(),
+                                                        RangeCommitments = group.Sum(rp => Convert.ToInt32(rp.RangeCommitments)).ToString()
+                                                    }));
+                }
 
                 List<object> header = new List<object>();
                 header.Add("Metric");
@@ -428,9 +436,9 @@ namespace DataReef.TM.Services
                 header.Add("Quota (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
                 header.Add("Commitment (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
 
-                report.Add(header);
+                reportDateRange.Add(header);
 
-                return data;
+                return reportDateRange;
             }
         }
 
