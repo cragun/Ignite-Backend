@@ -11,9 +11,6 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     public interface IJobNimbusAdapter
     {
         [OperationContract]
-        List<JobNimbusLead> CreateJobNimbusLead(Property property);
-
-        //[OperationContract]
-        //string GetJobNimbusToken();
+        JobNimbusLeadResponseData CreateJobNimbusLead(Property property);
     }
 }

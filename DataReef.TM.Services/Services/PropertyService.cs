@@ -65,6 +65,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IInquiryService> _inquiryService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
         private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
+        private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
         private readonly Lazy<ISmsService> _smsService;
         private readonly IPersonService _peopleService;
 
@@ -91,6 +92,7 @@ namespace DataReef.TM.Services.Services
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Lazy<ISunlightAdapter> sunlightAdapter,
             Lazy<ISunnovaAdapter> sunnovaAdapter,
+            Lazy<IJobNimbusAdapter> jobNimbusAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
@@ -106,6 +108,7 @@ namespace DataReef.TM.Services.Services
             _sbAdapter = sbAdapter;
             _sunlightAdapter = sunlightAdapter;
             _sunnovaAdapter = sunnovaAdapter;
+            _jobNimbusAdapter = jobNimbusAdapter;
             _ouService = ouService;
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
@@ -329,6 +332,7 @@ namespace DataReef.TM.Services.Services
             });
 
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
+            AddLeadJobNimbus(ret.Guid);
             return prop;
         }
 
@@ -540,9 +544,9 @@ namespace DataReef.TM.Services.Services
                             }
                         }
                     }
-
                 }
 
+                AddLeadJobNimbus(ret.Guid);
                 return ret;
             }
         }
@@ -1709,6 +1713,22 @@ namespace DataReef.TM.Services.Services
 
                 return territories;
             }
+        }
+
+        public async Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid)
+        {
+            JobNimbusLeadResponseData lead = new JobNimbusLeadResponseData();
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null)
+                {
+                    lead = _jobNimbusAdapter.Value.CreateJobNimbusLead(prop);
+                    prop.JobNimbusLeadID = lead != null ? lead.jnid : "";
+                    dataContext.SaveChanges();
+                }
+            }
+            return lead;
         }
     }
 }

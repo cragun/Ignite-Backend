@@ -104,6 +104,10 @@ namespace DataReef.TM.Models
         [StringLength(200)]
         public string SunnovaLeadID { get; set; }
 
+        [DataMember]
+        [StringLength(200)]
+        public string JobNimbusLeadID { get; set; }
+
 
         #region Navigation
 
