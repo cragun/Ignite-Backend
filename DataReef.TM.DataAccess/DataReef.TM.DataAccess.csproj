@@ -1259,6 +1259,10 @@
     <Compile Include="Migrations\202101291616066_migration.Designer.cs">
       <DependentUpon>202101291616066_migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102091506408_Add jobnimbus field.cs" />
+    <Compile Include="Migrations\202102091506408_Add jobnimbus field.Designer.cs">
+      <DependentUpon>202102091506408_Add jobnimbus field.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2162,6 +2166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101291616066_migration.resx">
       <DependentUpon>202101291616066_migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102091506408_Add jobnimbus field.resx">
+      <DependentUpon>202102091506408_Add jobnimbus field.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
