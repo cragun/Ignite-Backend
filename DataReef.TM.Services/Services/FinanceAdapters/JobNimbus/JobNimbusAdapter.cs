@@ -71,17 +71,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 var response = client.Execute(request);                
                 var resp = new JavaScriptSerializer().Serialize(response);
-                SaveRequest(JsonConvert.SerializeObject(request), response, url + "/api1/contacts", null, AuthTokenApikey);
+                SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/api1/contacts", null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
                     throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}");
                 }
 
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/api1/contacts", null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
                 }
                 catch (Exception)
                 {

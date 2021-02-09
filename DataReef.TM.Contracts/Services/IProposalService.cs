@@ -108,5 +108,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         string Getproposalpdftest(string s);
 
+        [OperationContract]
+        string SendProposalEmailToEC(Guid ProposalID);
+
     }
 }
