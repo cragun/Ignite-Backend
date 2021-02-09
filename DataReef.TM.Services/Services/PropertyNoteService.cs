@@ -796,7 +796,6 @@ namespace DataReef.TM.Services.Services
                     {
                         SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
-
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
