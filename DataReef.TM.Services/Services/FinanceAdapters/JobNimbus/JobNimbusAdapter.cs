@@ -65,6 +65,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.last_name = name?.LastName == null ? "" : name?.LastName;
                 req.record_type_name = "Customer";
                 req.status_name = "Lead";
+                req.geo = geo;
                 
                 var request = new RestRequest($"/api1/contacts", Method.POST);
                 request.AddJsonBody(req);
