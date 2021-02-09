@@ -618,7 +618,11 @@ namespace DataReef.TM.Services.Services
                         {
                             SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
 
-                            _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                            //string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
+                            //if(!string.IsNullOrEmpty(number))
+                            //{
+                            //    _smsService.Value.SendSms("You received new notes", number);
+                            //}                            
 
                             //if (noteRequest.IsSendEmail)
                             //{
@@ -762,7 +766,11 @@ namespace DataReef.TM.Services.Services
                         {
                             SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
 
-                            _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                            //string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
+                            //if (!string.IsNullOrEmpty(number))
+                            //{
+                            //    _smsService.Value.SendSms("You received new notes", number);
+                            //}
 
                             //if (noteRequest.IsSendEmail)
                             //{
