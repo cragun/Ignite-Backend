@@ -2580,7 +2580,7 @@ namespace DataReef.TM.Services.Services
                         .ForEach(d =>
                         {
                             var pdfContent = _utilServices.Value.GetPDF(d.Url);
-
+                            d.Description = $"{d.Name} [{planName.AsFileName()}]";
                             d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
                                  new BlobModel
                                  {
@@ -2632,7 +2632,7 @@ namespace DataReef.TM.Services.Services
                     var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
                     var to = salesRepEmailAddress;
 
-                    //Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                    Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
 
                     Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                 });
