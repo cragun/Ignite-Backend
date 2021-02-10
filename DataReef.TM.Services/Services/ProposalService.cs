@@ -2446,8 +2446,6 @@ namespace DataReef.TM.Services.Services
                 {
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
                 }
-
-
             }
         }
         public int GetProposalCount(Guid PropertyID)
