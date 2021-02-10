@@ -42,17 +42,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             {
                 return new RestClient(url);
             }
-        }        
+        }
 
         public JobNimbusLeadResponseData CreateJobNimbusLead(Property property)
         {
             using (var dc = new DataContext())
             {
                 JobNimbusLeadRequestData req = new JobNimbusLeadRequestData();
-                Geo geo = new Geo();                
+                Geo geo = new Geo();
                 geo.lat = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude));
                 geo.lon = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
-                                                                                                                       
+
                 var name = property.GetMainOccupant();
 
                 req.first_name = name?.FirstName == null ? "" : name?.FirstName;
@@ -60,7 +60,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.record_type_name = "Customer";
                 req.status_name = "Lead";
                 req.geo = geo;
-                
+
                 var request = new RestRequest($"/api1/contacts", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + AuthTokenApikey);
@@ -68,7 +68,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 var json = new JavaScriptSerializer().Serialize(req);
                 SaveRequest(JsonConvert.SerializeObject(request), "response", url + "/api1/contacts", null, AuthTokenApikey);
 
-                var response = client.Execute(request);                
+                var response = client.Execute(request);
                 var resp = new JavaScriptSerializer().Serialize(response);
                 SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
 
@@ -92,6 +92,55 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 var JobNimbusLeadID = ret != null ? ret.jnid : "";
 
                 //GetJobNimbusContacts(JobNimbusLeadID);
+
+                return ret;
+            }
+        }
+
+        public AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Appointment appointment)
+        {
+            using (var dc = new DataContext())
+            {
+                AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData();
+
+                var prop = dc.Properties.FirstOrDefault(p => p.Guid == appointment.PropertyID);
+                req.related = prop.Name;
+                req.record_type_name = "Appointment";
+                req.title = appointment.Details;
+                req.date_start = appointment.StartDate;
+                req.date_end = appointment.EndDate;
+
+                var request = new RestRequest($"/api1/tasks", Method.POST);
+                request.AddJsonBody(req);
+                request.AddHeader("Authorization", "Bearer " + AuthTokenApikey);
+
+
+                var json = new JavaScriptSerializer().Serialize(req);
+                SaveRequest(JsonConvert.SerializeObject(request), "response", url + "/api1/tasks", null, AuthTokenApikey);
+
+                var response = client.Execute(request);
+                var resp = new JavaScriptSerializer().Serialize(response);
+                SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/tasks", null, AuthTokenApikey);
+
+                if (response.StatusCode != HttpStatusCode.Created)
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/tasks", null, AuthTokenApikey);
+                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}");
+                }
+
+
+                try
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/tasks", null, AuthTokenApikey);
+                }
+                catch (Exception)
+                {
+                    throw new ApplicationException($"CreateJobNimbusLead Failed.");
+                }
+
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<AppointmentJobNimbusLeadResponseData>(content);
+                var JobNimbusLeadID = ret != null ? ret.jnid : "";
 
                 return ret;
             }
@@ -147,5 +196,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

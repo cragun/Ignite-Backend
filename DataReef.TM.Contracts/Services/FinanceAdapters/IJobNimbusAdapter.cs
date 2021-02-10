@@ -12,5 +12,8 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     {
         [OperationContract]
         JobNimbusLeadResponseData CreateJobNimbusLead(Property property);
+
+        [OperationContract]
+        AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Appointment appointment);
     }
 }

@@ -4,12 +4,14 @@ using DataReef.Core.Infrastructure.Repository;
 using DataReef.Core.Logging;
 using DataReef.TM.Classes;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.Contracts.Services.FinanceAdapters;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.FinanceAdapters.SST;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using System;
@@ -19,6 +21,7 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -36,6 +39,7 @@ namespace DataReef.TM.Services
         private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISmsService> _smsService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
         public AppointmentService(ILogger logger,
             IOUAssociationService ouAssociationService,
             Lazy<IOUService> ouService,
@@ -46,6 +50,7 @@ namespace DataReef.TM.Services
             Lazy<IPersonService> personService,
             Lazy<ISmsService> smsService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+             Lazy<IJobNimbusAdapter> jobNimbusAdapter,
             Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
         {
             _ouAssociationService = ouAssociationService;
@@ -57,6 +62,7 @@ namespace DataReef.TM.Services
             _personService = personService;
             _smsService = smsService;
             _sbAdapter = sbAdapter;
+            _jobNimbusAdapter = jobNimbusAdapter;
         }
 
         public Appointment SetAppointmentStatus(Guid appointmentID, AppointmentStatus status)
@@ -523,10 +529,26 @@ namespace DataReef.TM.Services
             if (ret == null)
             {
                 entity.SaveResult = SaveResult.SuccessfulInsert;
+                AddAppointmentLeadJobNimbus(entity.Guid);
                 return entity;
             }
 
             return ret;
+        }
+
+        public async Task<AppointmentJobNimbusLeadResponseData> AddAppointmentLeadJobNimbus(Guid propertyid)
+        {
+            AppointmentJobNimbusLeadResponseData lead = new AppointmentJobNimbusLeadResponseData();
+            using (var dataContext = new DataContext())
+            {
+                var appointmentdata = dataContext.Appointments.Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (appointmentdata != null)
+                {
+                    lead = _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata);
+                    dataContext.SaveChanges();
+                }
+            }
+            return lead;
         }
 
         public void VerifyUserAssignmentAndInvite(IEnumerable<Appointment> entities)
