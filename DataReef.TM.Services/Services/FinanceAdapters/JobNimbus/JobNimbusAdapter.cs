@@ -90,8 +90,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<JobNimbusLeadResponseData>(content);
                 var JobNimbusLeadID = ret != null ? ret.jnid : "";
-
-                //GetJobNimbusContacts(JobNimbusLeadID);
+                property.JobNimbusLeadID = JobNimbusLeadID;
 
                 return ret;
             }
@@ -104,7 +103,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData();
 
                 var prop = dc.Properties.FirstOrDefault(p => p.Guid == appointment.PropertyID);
-                req.related = prop.Name;
+
+                req.related = prop.JobNimbusLeadID;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
                 req.date_start = appointment.StartDate;
@@ -128,7 +128,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                     throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}");
                 }
 
-
                 try
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/tasks", null, AuthTokenApikey);
@@ -141,7 +140,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<AppointmentJobNimbusLeadResponseData>(content);
                 var JobNimbusLeadID = ret != null ? ret.jnid : "";
-
+ 
                 return ret;
             }
         }

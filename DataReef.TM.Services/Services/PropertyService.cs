@@ -550,6 +550,8 @@ namespace DataReef.TM.Services.Services
                 }
 
                 AddLeadJobNimbus(ret.Guid);
+
+
                 return ret;
             }
         }
