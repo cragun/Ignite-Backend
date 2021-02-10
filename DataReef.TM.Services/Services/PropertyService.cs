@@ -270,9 +270,6 @@ namespace DataReef.TM.Services.Services
             }
 
             //send new lead to SMARTBOARD
-
-
-
             //update territory date modified because a new property was added
             using (var dataContext = new DataContext())
             {
