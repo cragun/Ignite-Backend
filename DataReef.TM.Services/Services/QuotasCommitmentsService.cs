@@ -336,7 +336,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public List<object> GetQuotasDateRange(QuotasCommitment req)
+        public List<List<object>> GetQuotasDateRange(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
             {
@@ -409,24 +409,7 @@ namespace DataReef.TM.Services
 
                 var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
 
-                List<object> reportDateRange = new List<object>();
-
-                foreach (var item in dispositions)
-                {
-                    reportDateRange.Add(allDispositions.Where(a => a.Disposition == item.Disposition).GroupBy(r => r.Disposition)
-                                                    .Select(group => new
-                                                    {
-                                                        DisplayName = group.Key,
-                                                        Disposition = group.Key,
-                                                        TodayQuotas = group.Sum(rp => Convert.ToInt32(rp.TodayQuotas)).ToString(),
-                                                        WeekQuotas = group.Sum(rp => Convert.ToInt32(rp.WeekQuotas)).ToString(),
-                                                        RangeQuotas = group.Sum(rp => Convert.ToInt32(rp.RangeQuotas)).ToString(),
-                                                        TodayCommitments = group.Sum(rp => Convert.ToInt32(rp.TodayCommitments)).ToString(),
-                                                        WeekCommitments = group.Sum(rp => Convert.ToInt32(rp.WeekCommitments)).ToString(),
-                                                        RangeCommitments = group.Sum(rp => Convert.ToInt32(rp.RangeCommitments)).ToString()
-                                                    }));
-                }
-
+                List<List<object>> reportSet = new List<List<object>>();
                 List<object> header = new List<object>();
                 header.Add("Metric");
                 header.Add("Quota Today");
@@ -436,9 +419,34 @@ namespace DataReef.TM.Services
                 header.Add("Quota (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
                 header.Add("Commitment (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
 
-                reportDateRange.Add(header);
+                reportSet.Add(header);
 
-                return reportDateRange;
+                foreach (var item in dispositions)
+                {
+                    var itemDis = allDispositions.Where(a => a.Disposition == item.Disposition).GroupBy(r => r.Disposition)
+                                                    .Select(group => new
+                                                    {
+                                                        Disposition = group.Key,
+                                                        TodayQuotas = group.Sum(rp => Convert.ToInt32(rp.TodayQuotas)).ToString(),
+                                                        WeekQuotas = group.Sum(rp => Convert.ToInt32(rp.WeekQuotas)).ToString(),
+                                                        RangeQuotas = group.Sum(rp => Convert.ToInt32(rp.RangeQuotas)).ToString(),
+                                                        TodayCommitments = group.Sum(rp => Convert.ToInt32(rp.TodayCommitments)).ToString(),
+                                                        WeekCommitments = group.Sum(rp => Convert.ToInt32(rp.WeekCommitments)).ToString(),
+                                                        RangeCommitments = group.Sum(rp => Convert.ToInt32(rp.RangeCommitments)).ToString()
+                                                    }).FirstOrDefault();
+
+                    reportSet.Add(new List<object>{
+                        itemDis.Disposition,
+                        itemDis.TodayQuotas,
+                        itemDis.WeekQuotas,
+                        itemDis.RangeQuotas,
+                        itemDis.TodayCommitments,
+                        itemDis.WeekCommitments,
+                        itemDis.RangeCommitments
+                    });
+                }
+
+                return reportSet;
             }
         }
 
