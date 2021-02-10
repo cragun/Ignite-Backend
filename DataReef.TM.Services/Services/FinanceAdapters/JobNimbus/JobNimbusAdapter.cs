@@ -90,7 +90,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<JobNimbusLeadResponseData>(content);
                 var JobNimbusLeadID = ret != null ? ret.jnid : "";
-                property.JobNimbusLeadID = JobNimbusLeadID;
+
+                var dcprop=dc.Properties.FirstOrDefault(p => p.Guid == property.Guid);
+                dcprop.JobNimbusLeadID = JobNimbusLeadID;
+                dc.SaveChanges();
 
                 return ret;
             }
