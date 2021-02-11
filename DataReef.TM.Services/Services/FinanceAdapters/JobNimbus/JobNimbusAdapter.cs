@@ -115,13 +115,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.related = relate;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
-                req.date_start = Convert.ToInt32(appointment.StartDate);
-                req.date_end = Convert.ToInt32(appointment.EndDate);
+                req.date_start = appointment.StartDate;
+                req.date_end = appointment.EndDate;
 
                 var request = new RestRequest($"/api1/tasks", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + AuthTokenApikey);
-
 
                 var json = new JavaScriptSerializer().Serialize(req);
                 SaveRequest(JsonConvert.SerializeObject(request), "response", url + "/api1/tasks", null, AuthTokenApikey);
@@ -145,10 +144,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                     throw new ApplicationException($"CreateJobNimbusLead Failed.");
                 }
 
+
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<AppointmentJobNimbusLeadResponseData>(content);
                 var JobNimbusLeadID = ret != null ? ret.jnid : "";
- 
+
                 return ret;
             }
         }
