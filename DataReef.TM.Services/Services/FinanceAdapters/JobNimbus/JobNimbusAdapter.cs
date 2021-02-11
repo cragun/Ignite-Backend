@@ -115,8 +115,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.related = relate;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
-                req.date_start = appointment.StartDate;
-                req.date_end = appointment.EndDate;
+                req.date_start = Convert.ToInt32(appointment.StartDate);
+                req.date_end = Convert.ToInt32(appointment.EndDate);
 
                 var request = new RestRequest($"/api1/tasks", Method.POST);
                 request.AddJsonBody(req);
