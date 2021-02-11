@@ -532,7 +532,7 @@ namespace DataReef.TM.Services
                 AddAppointmentLeadJobNimbus(entity.Guid);
                 return entity;
             }
-
+            AddAppointmentLeadJobNimbus(entity.Guid);
             return ret;
         }
 
