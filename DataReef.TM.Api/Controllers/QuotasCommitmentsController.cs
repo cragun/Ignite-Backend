@@ -99,7 +99,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetQuotasDateRange(QuotasCommitment request)
         {
             var ret = quotasCommitmentsService.GetQuotasDateRange(request);
-            return Ok(ret);
+            return Ok(new { Response = ret });
         }
 
         [HttpPost, Route("isSetCommitments")]
