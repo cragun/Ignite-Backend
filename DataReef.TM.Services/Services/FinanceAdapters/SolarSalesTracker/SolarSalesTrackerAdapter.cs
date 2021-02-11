@@ -249,8 +249,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             //                    .Get<Person>()
             //                    .FirstOrDefault(p => p.Guid == overrideEC);
 
-            //assign email to closer who is currently logged in if overrideEC is null
-
+            //assign email to closer who is currently logged in if overrideEC is null 
             var closer = overrideEC == null
               ? dealer
               : overrideEC.Value == SmartPrincipal.UserId
