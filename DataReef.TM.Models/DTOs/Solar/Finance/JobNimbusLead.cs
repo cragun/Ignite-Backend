@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace DataReef.TM.Models.DTOs.Solar.Finance
 {
     public class Geo
@@ -77,7 +78,8 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public DateTime? date_end { get; set; }
         public string title { get; set; }
         public string record_type_name { get; set; }
-        public string related { get; set; }
+        public string[] related { get; set; }
+        //public string related { get; set; }
     }
 
     public class AppointmentJobNimbusLeadResponseData
@@ -96,7 +98,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public int date_end { get; set; }
         public List<object> tags { get; set; }
         public int recid { get; set; }
-        public string related { get; set; }
+        public string[] related { get; set; }
         public int estimated_time { get; set; }
         public int actual_time { get; set; }
         public string title { get; set; }

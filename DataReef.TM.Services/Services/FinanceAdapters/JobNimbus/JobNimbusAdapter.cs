@@ -105,7 +105,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 var prop = dc.Properties.FirstOrDefault(p => p.Guid == appointment.PropertyID);
 
-                req.related = prop.JobNimbusLeadID;
+
+                string[] relatedarray=new string[] {prop.JobNimbusLeadID};
+                req.related = relatedarray;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
                 req.date_start = appointment.StartDate;
