@@ -27,6 +27,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["JobNimbus.Auth.Username"];
         private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["JobNimbus.Auth.Password"];
         private static readonly string AuthTokenApikey = System.Configuration.ConfigurationManager.AppSettings["JobNimbus.Auth.TokenApikey"];
+        private string id;
+
         //private static readonly string url = "https://app.jobnimbus.com";
         //private static readonly string AuthUsername = "hevin.android@gmail.com";
         //private static readonly string AuthPassword = "Hevin@123";
@@ -105,9 +107,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 var prop = dc.Properties.FirstOrDefault(p => p.Guid == appointment.PropertyID);
 
+                List<related> relate = new List<related>();
+                related rlat = new related();
+                rlat.id = prop.JobNimbusLeadID;
 
-                string[] relatedarray=new string[] {prop.JobNimbusLeadID};
-                req.related = relatedarray;
+                relate.Add(rlat);
+                req.related = relate;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
                 req.date_start = appointment.StartDate;

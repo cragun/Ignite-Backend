@@ -72,14 +72,21 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public bool is_user { get; set; }
     }
 
+    public class related
+    {
+        public string id { get; set; }
+    }
+
     public class AppointmentJobNimbusLeadRequestData
     {
-        public DateTime date_start { get; set; }
-        public DateTime? date_end { get; set; }
-        public string title { get; set; }
-        public string record_type_name { get; set; }
-        public string[] related { get; set; }
-        //public string related { get; set; }
+       
+            public DateTime date_start { get; set; }
+            public DateTime? date_end { get; set; }
+            public string title { get; set; }
+            public List<related> related { get; set; }
+            public int record_type { get; set; }
+            public string record_type_name { get; set; }
+
     }
 
     public class AppointmentJobNimbusLeadResponseData
@@ -87,6 +94,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string jnid { get; set; }
         public string customer { get; set; }
         public string type { get; set; }
+        public List<related> related { get; set; }
         public Location location { get; set; }
         public string created_by { get; set; }
         public string created_by_name { get; set; }
@@ -98,7 +106,6 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public int date_end { get; set; }
         public List<object> tags { get; set; }
         public int recid { get; set; }
-        public string[] related { get; set; }
         public int estimated_time { get; set; }
         public int actual_time { get; set; }
         public string title { get; set; }
