@@ -505,6 +505,8 @@ namespace DataReef.TM.Api.Controllers
             return results;
         }
 
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
         [HttpPost, Route("{proposalId}/SendProposalEmailToEC")]
         public async Task<IHttpActionResult> SendProposalEmailToEC(Guid proposalId)
         {
