@@ -923,6 +923,7 @@ namespace DataReef.TM.Services.Services
             return typeList;
         }
 
+
         public SBPropertyDTO CreatePropertyFromSmartBoard(SBCreatePropertyRequest request, string apiKey)
         {
             using (var dc = new DataContext())
