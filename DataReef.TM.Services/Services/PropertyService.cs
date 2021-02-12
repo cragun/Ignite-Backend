@@ -1383,14 +1383,14 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public Property PropertyBagsbyID(Guid propertyID)
+        public async Task<Property> PropertyBagsbyID(Guid propertyID)
         {
             if (propertyID == Guid.Empty)
                 throw new ArgumentException($"Invalid {nameof(propertyID)}");
 
             using (var db = new DataContext())
             {
-                var property = db.Properties.Include(p => p.PropertyBag).FirstOrDefault(p => p.Guid == propertyID);
+                var property =  await db.Properties.Include(p => p.PropertyBag).AsNoTracking().FirstOrDefaultAsync(p => p.Guid == propertyID);
 
                 if (property == null)
                     throw new ApplicationException("Invalid property");

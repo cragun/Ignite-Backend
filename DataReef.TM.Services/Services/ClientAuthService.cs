@@ -116,8 +116,8 @@ namespace DataReef.Application.Services
 
                 var associations = _ouAssociationService
                                         .Value
-                                        .SmartList(filter: $"PersonID={token.UserId}", itemsPerPage: 1000)
-                                        .ToList();
+                                        .SmartList(filter: $"PersonID={token.UserId}", itemsPerPage: 1000);
+                                       
                 var userData = associations.Select(a => new
                 {
                     OUID = a.OUID,

@@ -156,18 +156,19 @@ namespace DataReef.TM.Services
             return territory;
         }
 
-        public ICollection<Territory> GetForCurrentUserAndOU(Guid ouID, Guid personID, string include = "", string exclude = "", string fields = "")
+        public async Task<ICollection<Territory>> GetForCurrentUserAndOU(Guid ouID, Guid personID, string include = "", string exclude = "", string fields = "")
         {
             IEnumerable<Guid> territoryIds;
             using (DataContext dc = new DataContext())
             {
-                territoryIds = dc.Territories.Where(t => t.OUID == ouID && t.Assignments.Any(ta => ta.PersonID == personID) && !t.IsArchived).Select(t => t.Guid).ToList();
+                territoryIds = await dc.Territories.Where(t => t.OUID == ouID && t.Assignments.Any(ta => ta.PersonID == personID) && !t.IsArchived).AsNoTracking()
+                    .Select(t => t.Guid).ToListAsync();
             }
             if (territoryIds == null || !territoryIds.Any()) return new List<Territory>();
             var territories = base.GetMany(territoryIds, include, exclude, fields);
             if (territories == null) return new List<Territory>();
 
-            territories = PopulateTerritoriesSummary(territories).Result;
+            territories = await PopulateTerritoriesSummary(territories);
 
             foreach (var territory in territories)
             {

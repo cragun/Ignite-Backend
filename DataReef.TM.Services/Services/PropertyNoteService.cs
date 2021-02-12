@@ -68,15 +68,15 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public IEnumerable<PropertyNote> GetNotesByPropertyID(Guid propertyID)
+        public async Task<IEnumerable<PropertyNote>> GetNotesByPropertyID(Guid propertyID)
         {
             using (var dc = new DataContext())
             {
                 //get property along with the notes
-                var notesList = dc
-                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted)
+                var notesList = await dc
+                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted).AsNoTracking()
                     .OrderByDescending(p => p.DateCreated)
-                    .ToList();
+                    .ToListAsync();
 
                 return notesList ?? new List<PropertyNote>();
             }
@@ -631,7 +631,7 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, property, dc);
 
-                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
                         if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
@@ -928,7 +928,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
                 //first get the property
-                var property = dc.Properties
+                var property = dc.Properties                    
                     .Include(x => x.Territory)
                     .Include(x => x.PropertyNotes)
                     .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);

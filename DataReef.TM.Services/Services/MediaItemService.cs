@@ -31,7 +31,7 @@ namespace DataReef.TM.Services
             using (var dataContext = new DataContext())
             {
                 var oumi = dataContext
-                            .OUMediaItems
+                            .OUMediaItems.AsNoTracking()
                             .FirstOrDefault(omi => omi.Guid == uniqueId);
                 if (oumi != null)
                 {

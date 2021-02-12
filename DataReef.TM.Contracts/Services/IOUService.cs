@@ -13,6 +13,7 @@ using DataReef.TM.Models.Reporting.Settings;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -67,7 +68,7 @@ namespace DataReef.TM.Contracts.Services
         ICollection<Guid> GetHierarchicalOrganizationGuids(ICollection<Guid> parentOUs, ICollection<Guid> excludeOUs = null);
 
         [OperationContract]
-        List<GuidNamePair> GetAllSubOUIdsAndNamesOfSpecifiedOus(string ouIDs);
+        Task<List<GuidNamePair>> GetAllSubOUIdsAndNamesOfSpecifiedOus(string ouIDs);
 
         [OperationContract]
         ICollection<Guid> GetOUAndChildrenGuids(Guid ouid);
@@ -79,7 +80,7 @@ namespace DataReef.TM.Contracts.Services
         float GetTokenPriceInDollars(Guid ouid);
 
         [OperationContract]
-        ICollection<FinancePlanDefinition> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "");
+        Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
         ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "");

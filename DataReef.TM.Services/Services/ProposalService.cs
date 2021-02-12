@@ -1643,7 +1643,7 @@ namespace DataReef.TM.Services.Services
                     proposalDV.BasicInfo.CompanyLogoUrl = logoUrl;
                 }
 
-                var proposalSettings = settings?.Where(s => s.Name.StartsWith("Proposal.", StringComparison.OrdinalIgnoreCase))?.ToList();
+                var proposalSettings = settings?.Where(s => s.Name.StartsWith("Proposal.", StringComparison.OrdinalIgnoreCase));
 
                 if (proposalSettings != null)
                 {

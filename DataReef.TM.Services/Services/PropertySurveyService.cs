@@ -45,22 +45,21 @@ namespace DataReef.TM.Services.Services
             
         }
 
-        public IEnumerable<PropertySurveyDTO> GetPropertySurveysForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20)
+        public async Task<IEnumerable<PropertySurveyDTO>> GetPropertySurveysForUser(Guid userID, int pageIndex = 0, int itemsPerPage = 20)
         {
-            using(var dc = new DataContext())
+            using (var dc = new DataContext())
             {
-                var matchingSurveys = dc
+                var matchingSurveys =  await dc
                     .PropertySurveys
                     .Where(x => !x.IsDeleted && x.PersonID == userID)
                     ?.GroupBy(x => x.PropertyID)
                     ?.Select(x => x.OrderByDescending(p => p.DateCreated).FirstOrDefault())
                     ?.OrderByDescending(x => x.DateCreated)
                     ?.Skip(pageIndex * itemsPerPage)
-                    ?.Take(itemsPerPage)
-                    ?.ToList();
+                    ?.Take(itemsPerPage).AsNoTracking().ToListAsync();
 
                 var propertyIds = matchingSurveys?.Select(x => x.PropertyID) ?? new List<Guid>();
-                var matchingProperties = dc.Properties.Where(x => propertyIds.Contains(x.Guid)).ToList();
+                var matchingProperties = await dc.Properties.Where(x => propertyIds.Contains(x.Guid)).AsNoTracking().ToListAsync();
 
                 return matchingSurveys?.Select(x =>
                 {
@@ -69,6 +68,7 @@ namespace DataReef.TM.Services.Services
                     return new PropertySurveyDTO(x);
                 });
             }
+      
         }
 
         public PropertySurveyDTO GetPropertySurveyDTO(Guid propertySurveyID)

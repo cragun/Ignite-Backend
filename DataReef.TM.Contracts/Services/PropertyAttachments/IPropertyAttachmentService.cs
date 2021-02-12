@@ -4,6 +4,7 @@ using DataReef.TM.Models.PropertyAttachments;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -37,7 +38,7 @@ namespace DataReef.TM.Contracts.Services
         bool ReviewPropertyAttachment(Guid guid, PropertyAttachmentSubmitReviewRequest request);
 
         [OperationContract]
-        ICollection<ExtendedPropertyAttachmentDTO> GetPagedPropertyAttachments(int pageIndex, int pageSize, string query);
+        Task<ICollection<ExtendedPropertyAttachmentDTO>> GetPagedPropertyAttachments(int pageIndex, int pageSize, string query);
 
         [OperationContract]
         bool SubmitPropertyAttachmentSection(Guid guid, string sectionId);

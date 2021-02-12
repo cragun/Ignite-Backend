@@ -96,7 +96,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> CountUnreadForPerson(Guid personID)
         {
-            var result = _notificationService.CountUnreadNotifications(personID);
+            var result = await _notificationService.CountUnreadNotifications(personID);
 
             return Ok(new GenericResponse<int> { Response = result });
         }

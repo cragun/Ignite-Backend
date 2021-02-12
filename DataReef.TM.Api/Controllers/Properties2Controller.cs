@@ -82,7 +82,7 @@ namespace DataReef.TM.Api.Controllers
 
             string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
 
-            var rd = response.PropertyBag.ToList();
+            var rd = response.PropertyBag;
             List<Models.Geo.Field> propbags = new List<Models.Geo.Field>();
             foreach (string propname in queryString.Split(','))
             {
@@ -95,7 +95,7 @@ namespace DataReef.TM.Api.Controllers
             }
 
             var temp = propbags;
-            propbags.AddRange(rd.Except(temp).ToList());
+            propbags.AddRange(rd.Except(temp));
             response.PropertyBag = propbags;            
 
             return Ok(response);
@@ -109,12 +109,12 @@ namespace DataReef.TM.Api.Controllers
             if (propertyID == Guid.Empty)
                 return BadRequest($"Invalid {nameof(propertyID)}");
 
-            var response = _propertyServiceFactory().PropertyBagsbyID(propertyID);
+            var response = await _propertyServiceFactory().PropertyBagsbyID(propertyID);
 
 
             string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
 
-            var rd = response.PropertyBag.ToList();
+            var rd = response.PropertyBag;
             List<Models.Geo.Field> propbags = new List<Models.Geo.Field>();
             foreach (string propname in queryString.Split(','))
             {
@@ -127,7 +127,7 @@ namespace DataReef.TM.Api.Controllers
             }
 
             var temp = propbags;
-            propbags.AddRange(rd.Except(temp).ToList());
+            propbags.AddRange(rd.Except(temp));
             response.PropertyBag = propbags;
 
             return Ok(response);
@@ -301,7 +301,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("attachments")]
         public async Task<IHttpActionResult> GetAllPropertyAttachments(int pageIndex = 0, int itemsPerPage = 20, string query = "")
         {
-            var response = _propertyAttachmentServiceFactory().GetPagedPropertyAttachments(pageIndex, itemsPerPage, query);
+            var response = await _propertyAttachmentServiceFactory().GetPagedPropertyAttachments(pageIndex, itemsPerPage, query);
 
             return Ok(response);
         }
