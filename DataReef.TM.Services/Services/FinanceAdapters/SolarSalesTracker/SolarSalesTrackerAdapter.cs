@@ -250,7 +250,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             //                    .Get<Person>()
             //                    .FirstOrDefault(p => p.Guid == overrideEC);
 
-
             var closer = overrideEC == null
              ? dealer
              : overrideEC.Value == SmartPrincipal.UserId
