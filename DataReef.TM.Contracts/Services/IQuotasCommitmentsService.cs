@@ -18,6 +18,9 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid);
 
         [OperationContract]
+        IEnumerable<Person> GetUsersFromRoleType1(Guid roleid);
+
+        [OperationContract]
         QuotasCommitment InsertQuotas(QuotasCommitment request);
 
         [OperationContract]

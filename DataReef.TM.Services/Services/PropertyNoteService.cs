@@ -490,7 +490,7 @@ namespace DataReef.TM.Services.Services
                         NotifyComment(not.PersonID, not, property, dc);
                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
-                        if (not.PersonID != user.Guid)
+                        if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
                             if (noteRequest.IsSendEmail)
                             {
@@ -633,7 +633,7 @@ namespace DataReef.TM.Services.Services
 
                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
-                        if (not.PersonID != user.Guid)
+                        if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
                             if (noteRequest.IsSendEmail)
                             {

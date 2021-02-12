@@ -64,6 +64,16 @@ namespace DataReef.TM.Services
             }
         }
 
+        public IEnumerable<Person> GetUsersFromRoleType1(Guid roleid)
+        {
+            using (DataContext dc = new DataContext())
+            {
+                var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OURoleID == roleid).Select(y => y.PersonID);
+                var peoples = dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList();
+                return peoples;
+            }
+        }
+
         public QuotasCommitment InsertQuotas(QuotasCommitment entity)
         {
             entity.CreatedByID = SmartPrincipal.UserId;

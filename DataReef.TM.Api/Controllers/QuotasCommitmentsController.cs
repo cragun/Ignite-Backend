@@ -55,6 +55,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new { Response = ret });
         }
 
+        [HttpPost, AllowAnonymous, InjectAuthPrincipal]
+        [Route("roles/users1")]
+        public async Task<IHttpActionResult> GetUsersFromRoleType1(QuotasCommitment request)
+        {
+            var ret = quotasCommitmentsService.GetUsersFromRoleType1(request.RoleID);
+            return Ok(new { Response = ret });
+        }
+
         //add quotas by admin
         [HttpPost, Route("addQuotas")]
         public async Task<IHttpActionResult> InsertQuotas(QuotasCommitment request)
