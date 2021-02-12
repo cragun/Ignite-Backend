@@ -752,7 +752,6 @@ namespace DataReef.TM.Services.Services
                 if (noteRequest.ContentType == "Comment")
                 {
                     var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
-
                     not.Updated(user.Guid, user?.Name);
                     dc.SaveChanges();
 
