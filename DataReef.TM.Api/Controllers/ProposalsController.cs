@@ -511,7 +511,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> SendProposalEmailToEC(Guid proposalId)
         {
             var cnt = _proposalService.SendProposalEmailToEC(proposalId);
-            return Ok(cnt);
+            return Ok(new GenericResponse<string> { Response = cnt });
         }
 
 
