@@ -236,7 +236,7 @@ namespace DataReef.TM.Services.Services
                         {
                             entity.Guid = existingProp.Guid;
                             _inquiryService.Value.UpdatePersonClockTime(entity.Guid);
-                            AddLeadJobNimbus(ret.Guid);
+                            //AddLeadJobNimbus(ret.Guid);
                             return Update(entity);
                         }
                     }
@@ -244,7 +244,7 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property>(1) { entity }).FirstOrDefault();
-            AddLeadJobNimbus(ret.Guid);
+            //AddLeadJobNimbus(ret.Guid);
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
@@ -305,7 +305,7 @@ namespace DataReef.TM.Services.Services
             {
                 //person clocktime 
                 _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
-                AddLeadJobNimbus(ret.Guid);
+                //AddLeadJobNimbus(ret.Guid);
                 using (var uow = UnitOfWorkFactory())
                 {
                     var property = uow
@@ -331,7 +331,7 @@ namespace DataReef.TM.Services.Services
             });
 
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
-            AddLeadJobNimbus(ret.Guid);
+            //AddLeadJobNimbus(ret.Guid);
             return prop;
         }
 
@@ -417,7 +417,7 @@ namespace DataReef.TM.Services.Services
                             _peopleService.UpdateStartDate();
                             //person clocktime 
                             _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
-                            AddLeadJobNimbus(ret.Guid);
+                            //AddLeadJobNimbus(ret.Guid);
                         }
                         if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
                         ret.SBLeadError = "";
@@ -550,7 +550,7 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
-                AddLeadJobNimbus(ret.Guid);
+                //AddLeadJobNimbus(ret.Guid);
 
 
                 return ret;
