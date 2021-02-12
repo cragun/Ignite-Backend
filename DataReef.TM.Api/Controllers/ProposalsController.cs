@@ -512,8 +512,6 @@ namespace DataReef.TM.Api.Controllers
         {
             var cnt = _proposalService.SendProposalEmailToEC(proposalId);
             return Ok(new GenericResponse<string> { Response = cnt });
-        }
-
-
+        } 
     }
 }
