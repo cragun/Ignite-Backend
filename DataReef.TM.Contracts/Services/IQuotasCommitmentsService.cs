@@ -38,6 +38,5 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         bool IsCommitmentsSetByUser(QuotasCommitment request);
-
     }
 }
