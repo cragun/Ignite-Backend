@@ -55,22 +55,17 @@ namespace DataReef.TM.Services
             return response;
         }
 
-        public IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid)
-        {
-            using (DataContext dc = new DataContext())
-            {
-                var users = dc.UserInvitations.Where(a => a.RoleID == roleid).ToList();
-                return users;
-            }
-        }
-
-        public IEnumerable<Person> GetUsersFromRoleType1(Guid roleid)
+        public IEnumerable<GuidNamePair> GetUsersFromRoleType(Guid roleid)
         {
             using (DataContext dc = new DataContext())
             {
                 var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OURoleID == roleid).Select(y => y.PersonID);
                 var peoples = dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList();
-                return peoples;
+                return peoples.Select(a => new GuidNamePair
+                {
+                    Name = a.FirstName + " " + a.LastName,
+                    Guid = a.Guid,
+                });
             }
         }
 

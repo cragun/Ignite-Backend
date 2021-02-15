@@ -1,4 +1,5 @@
 ﻿using DataReef.TM.Models;
+using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Inquiries;
 using DataReef.TM.Models.DTOs.QuotasCommitments;
 using System;
@@ -15,10 +16,7 @@ namespace DataReef.TM.Contracts.Services
         AdminQuotas GetQuotasType();
 
         [OperationContract]
-        IEnumerable<UserInvitation> GetUsersFromRoleType(Guid roleid);
-
-        [OperationContract]
-        IEnumerable<Person> GetUsersFromRoleType1(Guid roleid);
+        IEnumerable<GuidNamePair> GetUsersFromRoleType(Guid roleid); 
 
         [OperationContract]
         QuotasCommitment InsertQuotas(QuotasCommitment request);
@@ -40,6 +38,5 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         bool IsCommitmentsSetByUser(QuotasCommitment request);
-
     }
 }
