@@ -281,7 +281,6 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
-
             if (entity.SaveResult != null && !String.IsNullOrWhiteSpace(entity.SaveResult.ExceptionMessage))
             {
                 var msg = entity.SaveResult.ExceptionMessage;
