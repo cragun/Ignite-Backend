@@ -47,7 +47,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAllForProperty(Guid propertyID)
         {
-            var result = await _propertyNoteService.GetNotesByPropertyID(propertyID);
+            var result = _propertyNoteService.GetNotesByPropertyID(propertyID);
 
             return Ok(result);
         }

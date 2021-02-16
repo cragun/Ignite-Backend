@@ -1374,10 +1374,8 @@ namespace DataReef.TM.Services.Services
                     ouids.AddRange(ids);
                 }
 
-                return (await dataContext
-                           .OUs
-                           .Where(o => !o.IsDeleted && ouids.Contains(o.Guid)).AsNoTracking()
-                           .ToListAsync()).Select(o => new GuidNamePair { Guid = o.Guid, Name = o.Name }).ToList();
+                return (dataContext.OUs.Where(o => !o.IsDeleted && ouids.Contains(o.Guid)).AsNoTracking()
+                           .ToList()).Select(o => new GuidNamePair { Guid = o.Guid, Name = o.Name }).ToList();
             }
         }
 
@@ -1497,11 +1495,11 @@ namespace DataReef.TM.Services.Services
                                 .ToList();
 
                 // get Financing Options OU Settings for all ancestors
-                var allOUSettings = (await dataContext
+                var allOUSettings = (dataContext
                                 .OUSettings
                                 .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
                                 .AsNoTracking()
-                                .ToListAsync()).OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID));
+                                .ToList()).OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID));
 
               
                 // convert ousettings to a dictionary of OUID : FinancingSettingDataView List
