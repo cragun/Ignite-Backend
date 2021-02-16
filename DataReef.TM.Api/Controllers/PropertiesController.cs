@@ -432,6 +432,7 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+
         /// get territories from address
         [Route("addproperty")]
         [HttpPost]
