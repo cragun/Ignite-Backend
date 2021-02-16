@@ -92,7 +92,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<Territory> GetTerritoriesFromAddress(Property req);
-        
 
+        [OperationContract]
+        Property AddProperty(Property req);
+        
     }
 }

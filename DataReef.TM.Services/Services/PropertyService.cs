@@ -236,7 +236,7 @@ namespace DataReef.TM.Services.Services
                         {
                             entity.Guid = existingProp.Guid;
                             _inquiryService.Value.UpdatePersonClockTime(entity.Guid);
-                            AddLeadJobNimbus(ret.Guid);
+                            //AddLeadJobNimbus(ret.Guid);
                             return Update(entity);
                         }
                     }
@@ -244,7 +244,7 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property>(1) { entity }).FirstOrDefault();
-            AddLeadJobNimbus(ret.Guid);
+            //AddLeadJobNimbus(ret.Guid);
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
@@ -281,6 +281,7 @@ namespace DataReef.TM.Services.Services
                 }
             }
 
+
             if (entity.SaveResult != null && !String.IsNullOrWhiteSpace(entity.SaveResult.ExceptionMessage))
             {
                 var msg = entity.SaveResult.ExceptionMessage;
@@ -304,7 +305,7 @@ namespace DataReef.TM.Services.Services
             {
                 //person clocktime 
                 _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
-                AddLeadJobNimbus(ret.Guid);
+                //AddLeadJobNimbus(ret.Guid);
                 using (var uow = UnitOfWorkFactory())
                 {
                     var property = uow
@@ -330,7 +331,7 @@ namespace DataReef.TM.Services.Services
             });
 
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
-            AddLeadJobNimbus(ret.Guid);
+            //AddLeadJobNimbus(ret.Guid);
             return prop;
         }
 
@@ -416,7 +417,7 @@ namespace DataReef.TM.Services.Services
                             _peopleService.UpdateStartDate();
                             //person clocktime 
                             _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
-                            AddLeadJobNimbus(ret.Guid);
+                            //AddLeadJobNimbus(ret.Guid);
                         }
                         if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
                         ret.SBLeadError = "";
@@ -452,7 +453,7 @@ namespace DataReef.TM.Services.Services
                                 DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
 
                                 _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
-                                 stDate.Year + "/" + stDate.Month + "/" + stDate.Day, entity.GetMainPhoneNumber()); 
+                                 stDate.Year + "/" + stDate.Month + "/" + stDate.Day, entity.GetMainPhoneNumber());
                             }
 
                             if (fstAppoint?.SendSmsToEC == true)
@@ -549,14 +550,12 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
-                AddLeadJobNimbus(ret.Guid);
+                //AddLeadJobNimbus(ret.Guid);
 
 
                 return ret;
             }
         }
-
-
 
         public override ICollection<Property> InsertMany(ICollection<Property> entities)
         {
@@ -1391,7 +1390,7 @@ namespace DataReef.TM.Services.Services
 
             using (var db = new DataContext())
             {
-                var property =  await db.Properties.Include(p => p.PropertyBag).AsNoTracking().FirstOrDefaultAsync(p => p.Guid == propertyID);
+                var property = await db.Properties.Include(p => p.PropertyBag).AsNoTracking().FirstOrDefaultAsync(p => p.Guid == propertyID);
 
                 if (property == null)
                     throw new ApplicationException("Invalid property");
@@ -1448,7 +1447,7 @@ namespace DataReef.TM.Services.Services
 
         public async Task<IEnumerable<Territories>> GetTerritoryListbyApikey(string apiKey, double Lat, double Long)
         {
-            using (var dc = new DataContext()) 
+            using (var dc = new DataContext())
             {
                 //var TerritoriesList = dc.Database.SqlQuery<Territories>("exec usp_GetTerritoryListByapiKeyOnly @apiKey", new SqlParameter("@apiKey", apiKey)).ToList();
 
@@ -1737,6 +1736,26 @@ namespace DataReef.TM.Services.Services
                 }
             }
             return lead;
+        }
+
+        public Property AddProperty(Property entity)
+        {
+            Property ret = null;
+
+            entity.PrepareNavigationProperties(SmartPrincipal.UserId); 
+          
+            if (!string.IsNullOrWhiteSpace(entity.ExternalID))
+            {
+                using (var dataContext = new DataContext())
+                {
+
+                    ret = base.Update(entity, dataContext);
+                    if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage); 
+                }
+            }
+            AddLeadJobNimbus(ret.Guid); 
+ 
+            return ret;
         }
     }
 }
