@@ -1742,19 +1742,17 @@ namespace DataReef.TM.Services.Services
         {
             Property ret = null;
 
-            entity.PrepareNavigationProperties(SmartPrincipal.UserId); 
-          
-            if (!string.IsNullOrWhiteSpace(entity.ExternalID))
-            {
-                using (var dataContext = new DataContext())
-                {
+            entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
-                    ret = base.Update(entity, dataContext);
-                    if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage); 
-                }
+
+            using (var dataContext = new DataContext())
+            {
+
+                ret = base.Update(entity, dataContext);
+                if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
             }
-            AddLeadJobNimbus(ret.Guid); 
- 
+            AddLeadJobNimbus(ret.Guid);
+
             return ret;
         }
     }
