@@ -1374,8 +1374,10 @@ namespace DataReef.TM.Services.Services
                     ouids.AddRange(ids);
                 }
 
-                return (dataContext.OUs.Where(o => !o.IsDeleted && ouids.Contains(o.Guid)).AsNoTracking()
-                           .ToList()).Select(o => new GuidNamePair { Guid = o.Guid, Name = o.Name }).ToList();
+                return (await dataContext
+                          .OUs
+                          .Where(o => !o.IsDeleted && ouids.Contains(o.Guid)).AsNoTracking()
+                          .ToListAsync()).Select(o => new GuidNamePair { Guid = o.Guid, Name = o.Name }).ToList();
             }
         }
 
