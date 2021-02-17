@@ -1495,11 +1495,11 @@ namespace DataReef.TM.Services.Services
                                 .ToList();
 
                 // get Financing Options OU Settings for all ancestors
-                var allOUSettings = (dataContext
+                var allOUSettings = (await dataContext
                                 .OUSettings
                                 .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
                                 .AsNoTracking()
-                                .ToList()).OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID));
+                                .ToListAsync()).OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID));
 
               
                 // convert ousettings to a dictionary of OUID : FinancingSettingDataView List
