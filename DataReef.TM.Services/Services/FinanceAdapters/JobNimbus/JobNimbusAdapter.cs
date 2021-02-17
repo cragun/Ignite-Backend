@@ -15,6 +15,7 @@ using System.Web.Script.Serialization;
 using DataReef.TM.Services;
 using DataReef.TM.Contracts.Services;
 using System.Linq;
+using DataReef.Core.Infrastructure.Authorization;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 {
@@ -72,6 +73,19 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 var response = client.Execute(request);
                 var resp = new JavaScriptSerializer().Serialize(response);
+                 
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = SmartPrincipal.UserId.ToString();
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentType = "Job Nimbus";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = request.ToString();
+                apilog.ResponseContentBody = resp;
+
+                dc.ApiLogEntries.Add(apilog);
+                dc.SaveChanges();
+
                 SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
 
                 if (response.StatusCode != HttpStatusCode.Created)
