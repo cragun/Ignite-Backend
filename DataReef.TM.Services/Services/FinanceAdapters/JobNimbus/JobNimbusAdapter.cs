@@ -83,6 +83,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 apilog.RequestUri = request.ToString();
                 apilog.ResponseContentBody = resp;
 
+
                 dc.ApiLogEntries.Add(apilog);
                 dc.SaveChanges();
 
