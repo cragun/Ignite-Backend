@@ -1378,8 +1378,9 @@ namespace DataReef.TM.Services.Services
                           .OUs
                           .Where(o => !o.IsDeleted && ouids.Contains(o.Guid)).AsNoTracking()
                           .ToListAsync()).Select(o => new GuidNamePair { Guid = o.Guid, Name = o.Name }).ToList();
-            }
+            } 
         }
+
 
         public static ICollection<Guid> GetOUTree(Guid ouid)
         {
