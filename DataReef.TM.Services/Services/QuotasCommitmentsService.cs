@@ -45,14 +45,12 @@ namespace DataReef.TM.Services
             var ouRoles = _ouService.SBGetOuRoles();
             var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
 
-            var response = new AdminQuotas
+            return new AdminQuotas
             {
                 type = typeList,
                 user_type = ouRoles,
                 dispositions = dispositions
             };
-
-            return response;
         }
 
         public IEnumerable<GuidNamePair> GetUsersFromRoleType(Guid roleid)
@@ -63,7 +61,7 @@ namespace DataReef.TM.Services
                 var peoples = dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList();
                 return peoples.Select(a => new GuidNamePair
                 {
-                    Name = a.FirstName + " " + a.LastName,
+                    Name = $"{a.FirstName} {a.LastName}",
                     Guid = a.Guid,
                 });
             }
@@ -92,7 +90,7 @@ namespace DataReef.TM.Services
                 List<List<object>> report = new List<List<object>>();
 
                 List<object> header = new List<object>();
-                header.Add("Q1 " + DateTime.Now.Year);
+                header.Add($"Q1 {DateTime.Now.Year}");
                 header.Add("Start");
                 header.Add("End");
                 header.Add("Duration(Days)");
@@ -113,7 +111,7 @@ namespace DataReef.TM.Services
                 for (int i = 0; i < data.Count; i++)
                 {
                     data[i].durations = Convert.ToInt32(data[i].EndDate.Subtract(data[i].StartDate).TotalDays);
-                    data[i].week = "Week " + i;
+                    data[i].week = $"Week {i}";
                     data[i].Types = data[i].Type == 1 ? "Quota" : "Commitment";
 
                     var quota = new List<object>{
@@ -159,8 +157,8 @@ namespace DataReef.TM.Services
                     header.Add("Commitment Today");
                     header.Add("Quota This Week");
                     header.Add("Commitment This Week");
-                    header.Add("Quota (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
-                    header.Add("Commitment (" + req.StartDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
+                    header.Add($"Quota ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})");
+                    header.Add($"Commitment ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})");
 
                     report.Add(header);
 
@@ -245,19 +243,17 @@ namespace DataReef.TM.Services
 
             foreach (var item in entity.commitments)
             {
-                var commitments = new QuotaCommitementsDisposition
+                dispositions.Add(new QuotaCommitementsDisposition
                 {
-                    DisplayName = item[0].ToString(),
-                    Disposition = item[0].ToString(),
-                    TodayQuotas = item[1].ToString(),
-                    TodayCommitments = item[2].ToString(),
-                    WeekQuotas = item[3].ToString(),
-                    WeekCommitments = item[4].ToString(),
-                    RangeQuotas = item[5].ToString(),
-                    RangeCommitments = item[6].ToString(),
-                };
-
-                dispositions.Add(commitments);
+                    DisplayName = item[0]?.ToString(),
+                    Disposition = item[0]?.ToString(),
+                    TodayQuotas = item[1]?.ToString(),
+                    TodayCommitments = item[2]?.ToString(),
+                    WeekQuotas = item[3]?.ToString(),
+                    WeekCommitments = item[4]?.ToString(),
+                    RangeQuotas = item[5]?.ToString(),
+                    RangeCommitments = item[6]?.ToString(),
+                });
             }
 
             entity.dispositions = JsonConvert.SerializeObject(dispositions);
@@ -284,12 +280,7 @@ namespace DataReef.TM.Services
 
                 if (data.Count > 0)
                 {
-                    List<object> header = new List<object>();
-                    header.Add("UserName");
-                    header.Add("Position");
-                    header.Add("Type");
-                    header.Add("Start");
-                    header.Add("End");
+                    List<object> header = new List<object>() { "UserName", "Position", "Type", "Start", "End" };
 
                     var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
                     dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
@@ -316,7 +307,7 @@ namespace DataReef.TM.Services
                         data[i].Types,
                         data[i].StartDate.ToShortDateString(),
                         data[i].EndDate.ToShortDateString(),
-                    };
+                        };
 
                         data[i].Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(data[i].dispositions);
                         data[i].Disposition = data[i].Disposition.OrderBy(a => a.Disposition).ToList();
@@ -342,7 +333,7 @@ namespace DataReef.TM.Services
         }
 
         public List<List<object>> GetQuotasDateRange(QuotasCommitment req)
-        { 
+        {
             try
             {
                 using (DataContext dc = new DataContext())
@@ -418,14 +409,7 @@ namespace DataReef.TM.Services
 
                     var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
 
-                    List<object> header = new List<object>();
-                    header.Add("Metric");
-                    header.Add("Quota Today");
-                    header.Add("Commitment Today");
-                    header.Add("Quota This Week");
-                    header.Add("Commitment This Week");
-                    header.Add("Quota (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
-                    header.Add("Commitment (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")");
+                    List<object> header = new List<object>() { "Metric" , "Quota Today" , "Commitment Today" , "Quota This Week"  , "Commitment This Week" , "Quota (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")" , "Commitment (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")" }; 
 
                     reportSet.Add(header);
 
@@ -460,7 +444,7 @@ namespace DataReef.TM.Services
             catch (Exception ex)
             {
                 return new List<List<object>>();
-            } 
+            }
         }
 
         public bool IsCommitmentsSetByUser(QuotasCommitment req)

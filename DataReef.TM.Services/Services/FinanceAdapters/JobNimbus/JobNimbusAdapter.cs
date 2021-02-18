@@ -47,17 +47,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-        public JobNimbusLeadResponseData CreateJobNimbusLead(Property property)
+        public JobNimbusLeadResponseData CreateJobNimbusLead(Property property) 
         {
             using (var dc = new DataContext())
             {
-                JobNimbusLeadRequestData req = new JobNimbusLeadRequestData();
+
                 Geo geo = new Geo();
                 geo.lat = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude));
                 geo.lon = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
 
                 var name = property.GetMainOccupant();
 
+                JobNimbusLeadRequestData req = new JobNimbusLeadRequestData();
                 req.first_name = name?.FirstName == null ? "" : name?.FirstName;
                 req.last_name = name?.LastName == null ? "" : name?.LastName;
                 req.record_type_name = "Customer";
@@ -65,49 +66,30 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.geo = geo;
 
                 var request = new RestRequest($"/api1/contacts", Method.POST);
-                request.AddJsonBody(req);
-                request.AddHeader("Authorization", "Bearer " + AuthTokenApikey);
-
-                var json = new JavaScriptSerializer().Serialize(req);
+                request.AddHeader("Authorization", $"Bearer {AuthTokenApikey}");
+                request.AddHeader("Content-Type", "application/json");
+                request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
+ 
                 SaveRequest(JsonConvert.SerializeObject(request), "response", url + "/api1/contacts", null, AuthTokenApikey);
 
                 var response = client.Execute(request);
-                var resp = new JavaScriptSerializer().Serialize(response);
-                 
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = SmartPrincipal.UserId.ToString();
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentType = "Job Nimbus";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = request.ToString();
-                apilog.ResponseContentBody = resp;
-
-
-                dc.ApiLogEntries.Add(apilog);
-                dc.SaveChanges();
-
-                SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
+                var resp = new JavaScriptSerializer().Serialize(response);  
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), resp , url + "/api1/contacts", null, AuthTokenApikey);
                     throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}");
                 } 
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), resp, url + "/api1/contacts", null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), resp , url + "/api1/contacts", null, AuthTokenApikey);
                 }
                 catch (Exception)
                 {
                     throw new ApplicationException($"CreateJobNimbusLead Failed.");
                 }
-
-                var content = response.Content;
-                var ret = JsonConvert.DeserializeObject<JobNimbusLeadResponseData>(content);
-                var JobNimbusLeadID = ret != null ? ret.jnid : "";
-                property.JobNimbusLeadID = JobNimbusLeadID;
-               
+                 
+                var ret = JsonConvert.DeserializeObject<JobNimbusLeadResponseData>(response.Content); 
 
                 return ret;
             }

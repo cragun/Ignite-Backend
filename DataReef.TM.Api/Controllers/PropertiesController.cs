@@ -439,9 +439,8 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> AddProperty(Property req)
         {
             try
-            {
-                var result = propertyService.AddProperty(req);
-                return Ok(result);
+            { 
+                return Ok(propertyService.AddProperty(req));
             }
             catch (Exception ex)
             {

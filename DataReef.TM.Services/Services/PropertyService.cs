@@ -1742,15 +1742,14 @@ namespace DataReef.TM.Services.Services
         {
             Property ret = null;
 
-            entity.PrepareNavigationProperties(SmartPrincipal.UserId);
-
+            entity.PrepareNavigationProperties(SmartPrincipal.UserId); 
 
             using (var dataContext = new DataContext())
-            {
-
+            { 
                 ret = base.Update(entity, dataContext);
-                if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
+                if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
             }
+
             AddLeadJobNimbus(ret.Guid);
 
             return ret;
