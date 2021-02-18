@@ -59,6 +59,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 var name = property.GetMainOccupant();
 
                 JobNimbusLeadRequestData req = new JobNimbusLeadRequestData();
+
                 req.first_name = name?.FirstName == null ? "" : name?.FirstName;
                 req.last_name = name?.LastName == null ? "" : name?.LastName;
                 req.display_name = property.Name;
