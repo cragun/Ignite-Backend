@@ -62,6 +62,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 JobNimbusLeadRequestData req = new JobNimbusLeadRequestData();
                 req.first_name = name?.FirstName == null ? "" : name?.FirstName;
                 req.last_name = name?.LastName == null ? "" : name?.LastName;
+                req.display_name = $"{req.first_name} {req.last_name}";
                 req.record_type_name = "Customer";
                 req.status_name = "Lead";
                 req.geo = geo;

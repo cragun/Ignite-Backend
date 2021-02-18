@@ -17,6 +17,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
         public string first_name { get; set; }
         public string last_name { get; set; }
+        public string display_name { get; set; } 
         public string record_type_name { get; set; }
         public string status_name { get; set; }
         public Geo geo { get; set; }
