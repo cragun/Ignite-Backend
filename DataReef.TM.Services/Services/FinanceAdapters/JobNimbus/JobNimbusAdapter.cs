@@ -105,8 +105,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         {
             using (var dc = new DataContext())
             {
-                AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData();
-
+                AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData(); 
                 var prop = dc.Properties.FirstOrDefault(p => p.Guid == appointment.PropertyID);
 
                 List<related> relate = new List<related>();
