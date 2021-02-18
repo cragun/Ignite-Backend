@@ -45,8 +45,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             {
                 return new RestClient(url);
             }
-        } 
-
+        }  
 
         public JobNimbusLeadResponseData CreateJobNimbusLead(Property property)
         {
