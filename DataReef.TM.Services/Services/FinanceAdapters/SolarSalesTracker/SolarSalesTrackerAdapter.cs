@@ -242,13 +242,21 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                             .FirstOrDefault(p => p.Guid == SmartPrincipal.UserId);
 
             //set another person as Energy Consultant, not the one from the appointment. Spare going to the db if user is the same as dealer
+            //var closer = overrideEC == null
+            //    ? null
+            //    : overrideEC.Value == SmartPrincipal.UserId
+            //        ? dealer
+            //        : repository
+            //                    .Get<Person>()
+            //                    .FirstOrDefault(p => p.Guid == overrideEC);
+
             var closer = overrideEC == null
-                ? null
-                : overrideEC.Value == SmartPrincipal.UserId
-                    ? dealer
-                    : repository
-                                .Get<Person>()
-                                .FirstOrDefault(p => p.Guid == overrideEC);
+             ? dealer
+             : overrideEC.Value == SmartPrincipal.UserId
+                 ? dealer
+                 : repository
+                             .Get<Person>()
+                             .FirstOrDefault(p => p.Guid == overrideEC);
 
             //var mainOccupant = property.GetMainOccupant();
             var appointment = property.GetLatestAppointment();
