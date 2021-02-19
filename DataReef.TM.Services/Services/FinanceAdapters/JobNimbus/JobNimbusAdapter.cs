@@ -142,8 +142,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 catch (Exception)
                 {
                     throw new ApplicationException($"CreateJobNimbusLead Failed.");
-                } 
-
+                }  
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<AppointmentJobNimbusLeadResponseData>(content);
                 var JobNimbusLeadID = ret != null ? ret.jnid : "";
