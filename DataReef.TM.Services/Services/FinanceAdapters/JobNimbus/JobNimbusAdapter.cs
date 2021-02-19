@@ -116,8 +116,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.related = relate;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
-                req.date_start = (long)(appointment.StartDate - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-                req.date_end = (long)(appointment.EndDate - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+                req.date_start = (long)(appointment.StartDate - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds; 
 
                 var request = new RestRequest($"/api1/tasks", Method.POST); 
                 request.AddHeader("Authorization", $"Bearer {AuthTokenApikey}");
