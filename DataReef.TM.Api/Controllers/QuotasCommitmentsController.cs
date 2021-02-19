@@ -23,6 +23,9 @@ using System.Threading.Tasks;
 using DataReef.Auth.Helpers;
 using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Models.DTOs.QuotasCommitments;
+//using Serilog;
+//using Serilog.Context;
+//using System.Web;
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -30,7 +33,7 @@ namespace DataReef.TM.Api.Controllers
     public class QuotasCommitmentsController : EntityCrudController<QuotasCommitment>
     {
         private readonly IQuotasCommitmentsService quotasCommitmentsService;
-        public QuotasCommitmentsController(IQuotasCommitmentsService quotasCommitmentsService, ILogger logger) : base(quotasCommitmentsService, logger)
+        public QuotasCommitmentsController(IQuotasCommitmentsService quotasCommitmentsService, Core.Logging.ILogger logger) : base(quotasCommitmentsService, logger)
         {
             this.quotasCommitmentsService = quotasCommitmentsService;
         }
@@ -43,6 +46,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(quotasCommitmentsService.GetQuotasType());
         }
 
+
         [HttpPost, AllowAnonymous, InjectAuthPrincipal]
         [Route("roles/users")]
         public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
@@ -50,7 +54,6 @@ namespace DataReef.TM.Api.Controllers
             var ret = quotasCommitmentsService.GetUsersFromRoleType(request.RoleID);
             return Ok(new { Response = ret });
         }
-
 
         //add quotas by admin
         [HttpPost, Route("addQuotas")]
@@ -60,32 +63,50 @@ namespace DataReef.TM.Api.Controllers
             return Ok(ret);
         }
 
-
         [HttpGet]
-        //[Route("quota/report")]
-        [ResponseType(typeof(List<AdminQuotas>))]
+        [Route("quota/report")]
         public async Task<IHttpActionResult> GetQuotasReport()
         {
             var ret = quotasCommitmentsService.GetQuotasReport();
             return Ok(new { Response = ret });
         }
 
-        
-        //[HttpPost]
-        //[Route("commitement/report")]
-        //public async Task<IHttpActionResult> GetCommitementsReport(QuotasCommitment req)
-        //{
-        //    var ret = quotasCommitmentsService.GetQuotasCommitementsReport(req);
-        //    return Ok(new { Response = ret });
-        //}
+        [HttpPost]
+        [Route("person/report")]
+        public async Task<IHttpActionResult> GetQuotasReportByPerson(QuotasCommitment req)
+        {
+            var ret = quotasCommitmentsService.GetQuotasReportByPerson(req);
+            return Ok(new { Response = ret });
+        }
 
+        [HttpPost]
+        [Route("commitement/report")]
+        public async Task<IHttpActionResult> GetCommitementsReport(QuotasCommitment req)
+        {
+            var ret = quotasCommitmentsService.GetQuotasCommitementsReport(req);
+            return Ok(new { Response = ret });
+        }
 
-        ////add Commitments by user
-        //[HttpPost, Route("addCommitments")]
-        //public async Task<IHttpActionResult> InsertCommitments(QuotasCommitment request)
-        //{
-        //    var ret = quotasCommitmentsService.InsertCommitments(request);
-        //    return Ok(ret);
-        //}
+        //add Commitments by user
+        [HttpPost, Route("addCommitments")]
+        public async Task<IHttpActionResult> InsertCommitments(QuotasCommitment request)
+        {
+            var ret = quotasCommitmentsService.InsertCommitments(request);
+            return Ok(ret);
+        }
+
+        [HttpPost, Route("daterange")]
+        public async Task<IHttpActionResult> GetQuotasDateRange(QuotasCommitment request)
+        {
+            var ret = quotasCommitmentsService.GetQuotasDateRange(request);
+            return Ok(new { Response = ret });
+        }
+
+        [HttpPost, Route("isSetCommitments")]
+        public async Task<IHttpActionResult> IsCommitmentsSetByUser(QuotasCommitment request)
+        {
+            var ret = quotasCommitmentsService.IsCommitmentsSetByUser(request);
+            return Ok(new { Response = ret });
+        }
     }
 }

@@ -109,12 +109,12 @@ namespace DataReef.TM.Api.Controllers
             if (propertyID == Guid.Empty)
                 return BadRequest($"Invalid {nameof(propertyID)}");
 
-            var response = _propertyServiceFactory().PropertyBagsbyID(propertyID);
+            var response = await _propertyServiceFactory().PropertyBagsbyID(propertyID);
 
 
             string queryString = "Own or Rent,Length of Residence,Year Built,Income Level,Home Size,Bedrooms on Record,Bathrooms on Record,Phone Number,Home Phone Number";
 
-            var rd = response.PropertyBag.ToList();
+            var rd = response.PropertyBag;
             List<Models.Geo.Field> propbags = new List<Models.Geo.Field>();
             foreach (string propname in queryString.Split(','))
             {

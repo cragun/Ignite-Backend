@@ -67,15 +67,15 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public IEnumerable<PropertyNote> GetNotesByPropertyID(Guid propertyID)
+        public async Task<IEnumerable<PropertyNote>> GetNotesByPropertyID(Guid propertyID)
         {
             using (var dc = new DataContext())
             {
                 //get property along with the notes
-                var notesList = dc
-                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted)
+                var notesList = await dc
+                    .PropertyNotes.Where(p => p.PropertyID == propertyID && !p.IsDeleted).AsNoTracking()
                     .OrderByDescending(p => p.DateCreated)
-                    .ToList();
+                    .ToListAsync();
 
                 return notesList ?? new List<PropertyNote>();
             }
@@ -616,24 +616,25 @@ namespace DataReef.TM.Services.Services
 
                         if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
-                            SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
+                            if (noteRequest.IsSendEmail)
+                            {
+                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            }
 
-                            //string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
-                            //if(!string.IsNullOrEmpty(number))
-                            //{
-                            //    _smsService.Value.SendSms("You received new notes", number);
-                            //}                            
-
-                            //if (noteRequest.IsSendEmail)
-                            //{
-                            //    SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
-                            //}
-
-                            //if (noteRequest.IsSendSMS)
-                            //{
-                            //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
-                            //}
+                            if (noteRequest.IsSendSMS)
+                            {
+                                string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                            }
                         }
+
+                        //if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
+                        //{
+                        //    SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
+                        //}
                     }
                 }
                 dc.PropertyNotes.Add(note);
@@ -652,29 +653,31 @@ namespace DataReef.TM.Services.Services
                     {
                         SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
                     }
-
-
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
-                    //if (noteRequest.TaggedUsers.Count > 0)
-                    //{
-                    //    List<string> sendemails = new List<string>();
-                    //    foreach (var item in noteRequest.TaggedUsers)
-                    //    {
-                    //        if (item.IsSendEmail)
-                    //        {
-                    //            sendemails.Add(item.email);
-                    //        }
+                    if (noteRequest.TaggedUsers.Count > 0)
+                    {
+                        List<string> sendemails = new List<string>();
+                        foreach (var item in noteRequest.TaggedUsers)
+                        {
+                            if (item.IsSendEmail)
+                            {
+                                sendemails.Add(item.email);
+                            }
 
-                    //        if (item.IsSendSMS)
-                    //        {
-                    //            _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
-                    //        }
-                    //    }
+                            if (item.IsSendSMS)
+                            {
+                                string number = item.PhoneNumber;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                            }
+                        }
 
-                    //    SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
-                    //}
+                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                    }
                 }
 
                 return new SBNoteDTO
@@ -763,23 +766,19 @@ namespace DataReef.TM.Services.Services
 
                         if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
-                            SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
+                            if (noteRequest.IsSendEmail)
+                            {
+                                SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
+                            }
 
-                            //string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
-                            //if (!string.IsNullOrEmpty(number))
-                            //{
-                            //    _smsService.Value.SendSms("You received new notes", number);
-                            //}
-
-                            //if (noteRequest.IsSendEmail)
-                            //{
-                            //    SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
-                            //}
-
-                            //if (noteRequest.IsSendSMS)
-                            //{
-                            //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
-                            //}
+                            if (noteRequest.IsSendSMS)
+                            {
+                                string number = personemail?.PhoneNumbers?.FirstOrDefault()?.Number;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                            }
                         }
                     }
                 }
@@ -798,24 +797,28 @@ namespace DataReef.TM.Services.Services
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
-                    //if (noteRequest.TaggedUsers.Count > 0)
-                    //{
-                    //    List<string> sendemails = new List<string>();
-                    //    foreach (var item in noteRequest.TaggedUsers)
-                    //    {
-                    //        if (item.IsSendEmail)
-                    //        {
-                    //            sendemails.Add(item.email);
-                    //        }
+                    if (noteRequest.TaggedUsers.Count > 0)
+                    {
+                        List<string> sendemails = new List<string>();
+                        foreach (var item in noteRequest.TaggedUsers)
+                        {
+                            if (item.IsSendEmail)
+                            {
+                                sendemails.Add(item.email);
+                            }
 
-                    //        if (item.IsSendSMS)
-                    //        {
-                    //            _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
-                    //        }
-                    //    }
+                            if (item.IsSendSMS)
+                            {
+                                string number = item.PhoneNumber;
+                                if (!string.IsNullOrEmpty(number))
+                                {
+                                    _smsService.Value.SendSms("You received new notes", number);
+                                }
+                            }
+                        }
 
-                    //    SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
-                    //}
+                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                    }
                 }
                 dc.SaveChanges();
 
@@ -1497,7 +1500,7 @@ namespace DataReef.TM.Services.Services
                                     apilog.Machine = Environment.MachineName;
                                     apilog.RequestContentType = "Update All Smartboard IDS";
                                     apilog.RequestTimestamp = DateTime.UtcNow;
-                                    apilog.RequestUri = "SunnovaCallBackApi";
+                                    apilog.RequestUri = "UpdateSmartboardIdByEmail";
                                     apilog.ResponseContentBody = "IGNITE-SmartBoardID " + currentPerson.SmartBoardID + " SmartBoardID " + item.id;
 
                                     dc.ApiLogEntries.Add(apilog);

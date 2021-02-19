@@ -9,6 +9,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Core.Infrastructure.Repository;
+using System.Data.Entity;
 
 namespace DataReef.TM.Services.Services
 {
@@ -68,7 +69,7 @@ namespace DataReef.TM.Services.Services
 
                         do
                         {
-                            currentParentOU = dc.OUs.SingleOrDefault(o => o.Guid == currentParentID);
+                            currentParentOU = dc.OUs.AsNoTracking().SingleOrDefault(o => o.Guid == currentParentID);
                             if (currentParentOU == null) break;
                             if (currentParentOU.IsDeleted)
                             {
@@ -108,7 +109,7 @@ namespace DataReef.TM.Services.Services
                     {
                         using (DataContext dc = new DataContext())
                         {
-                            var leftmenusetting = dc.OUSettings.Where(x => x.Name == "Legion.LeftMenu.WebViewItems" && x.IsDeleted == false).FirstOrDefault();
+                            var leftmenusetting = dc.OUSettings.Where(x => x.Name == "Legion.LeftMenu.WebViewItems" && x.IsDeleted == false).AsNoTracking().FirstOrDefault();
                             association.OU.Settings.Add(leftmenusetting);
                         }
 

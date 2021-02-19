@@ -37,6 +37,7 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
@@ -1367,9 +1368,9 @@ namespace DataReef.TM.Services.Services
             return response.Distinct().ToList();
         }
 
-        public List<GuidNamePair> GetAllSubOUIdsAndNamesOfSpecifiedOus(string ouIDs)
+        public async Task<List<GuidNamePair>> GetAllSubOUIdsAndNamesOfSpecifiedOus(string ouIDs)
         {
-            var ouIDsList = ouIDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ouid => new Guid(ouid)).ToList();
+            var ouIDsList = ouIDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(ouid => new Guid(ouid));
 
             using (DataContext dataContext = new DataContext())
             {
@@ -1380,18 +1381,16 @@ namespace DataReef.TM.Services.Services
                                 .Database
                                 .SqlQuery<OU>("exec [proc_SelectOUHierarchy] {0}", ouid)
                                 .Where(o => !o.IsDeleted && !o.IsArchived)
-                                .Select(o => o.Guid)
-                                .ToList();
+                                .Select(o => o.Guid);
+
 
                     ouids.AddRange(ids);
                 }
 
-                return dataContext
-                            .OUs
-                            .Where(o => !o.IsDeleted && ouids.Contains(o.Guid))
-                            .ToList()
-                            .Select(o => new GuidNamePair { Guid = o.Guid, Name = o.Name })
-                            .ToList();
+                return (await dataContext
+                          .OUs
+                          .Where(o => !o.IsDeleted && ouids.Contains(o.Guid)).AsNoTracking()
+                          .ToListAsync()).Select(o => new GuidNamePair { Guid = o.Guid, Name = o.Name }).ToList();
             }
         }
 
@@ -1500,7 +1499,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public ICollection<FinancePlanDefinition> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "")
+        public async Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "")
         {
             using (var dataContext = new DataContext())
             {
@@ -1511,29 +1510,28 @@ namespace DataReef.TM.Services.Services
                                 .ToList();
 
                 // get Financing Options OU Settings for all ancestors
-                var allOUSettings = dataContext
+                var allOUSettings = (await dataContext
                                 .OUSettings
                                 .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
                                 .AsNoTracking()
-                                .ToList()
-                                .OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID))
-                                .ToList();
+                                .ToListAsync()).OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID));
+
 
                 // convert ousettings to a dictionary of OUID : FinancingSettingDataView List
                 var financingOptions = allOUSettings
                                         .Select(s => new { ouid = s.OUID, setts = s.GetValue<List<FinancingSettingsDataView>>() })
-                                        .Where(s => s.setts?.Count > 0)
-                                        .ToList();
+                                        .Where(s => s.setts?.Count > 0);
 
-                List<FinancePlanDefinition> result = null;
+
+                ICollection<FinancePlanDefinition> result = null;
 
                 // if non of the ancestors (including current OU) have a Financing Option setting
                 // we return all the finance plans
-                if (allOUSettings == null || allOUSettings?.Count == 0)
+                if (allOUSettings == null || allOUSettings.Count() == 0)
                 {
                     result = _financePlanDefinitionService
-                                .List(itemsPerPage: 3000, include: include, exclude: exclude, fields: fields)
-                                .ToList();
+                                .List(itemsPerPage: 3000, include: include, exclude: exclude, fields: fields);
+
                 }
                 else
                 {
@@ -1545,10 +1543,10 @@ namespace DataReef.TM.Services.Services
                                                 || (finOptions.ouid != ouid
                                                      && s.GetIsEnabled())
                                            )
-                                    .Select(fo => fo.PlanID)
-                                    .ToList();
+                                    .Select(fo => fo.PlanID);
 
-                    result = _financePlanDefinitionService.GetMany(planIds, include, exclude, fields).ToList();
+
+                    result = _financePlanDefinitionService.GetMany(planIds, include, exclude, fields);
                 }
 
                 //var settings = _settingsService.Value.GetSettings(ouid, null);

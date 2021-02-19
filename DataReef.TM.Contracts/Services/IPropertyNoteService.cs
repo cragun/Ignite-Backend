@@ -6,6 +6,7 @@ using DataReef.TM.Models.Commerce;
 using DataReef.TM.Models.DTOs.Commerce;
 using DataReef.TM.Models.DTOs.Common;
 using DataReef.TM.Models.DTOs;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -14,7 +15,7 @@ namespace DataReef.TM.Contracts.Services
     public interface IPropertyNoteService : IDataService<PropertyNote>
     {
         [OperationContract]
-        IEnumerable<PropertyNote> GetNotesByPropertyID(Guid propertyID);
+        Task<IEnumerable<PropertyNote>> GetNotesByPropertyID(Guid propertyID);
 
         [OperationContract]
         string getApiKey(long? smartboardLeadID, long? igniteID, string apiKey);

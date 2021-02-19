@@ -794,20 +794,20 @@ namespace DataReef.TM.Services.Services
 
                 if (person.Count > 0)
                 {
-                    //var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                    //var personClockTime = dc.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
 
                     
                         var personClockTime = new PersonClockTime();
                         using (DataContext dh = new DataContext())
                         {
-                            personClockTime = dh.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                            personClockTime = dh.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
                         }
 
                         if (personClockTime != null && personClockTime.Id > 0)
                         {
                             if (personClockTime.ClockType == "ClockIn")
                             {
-                                TimeSpan timespan = DateTime.Now - personClockTime.StartDate.Value;
+                                TimeSpan timespan = DateTime.UtcNow - personClockTime.StartDate.Value;
                                 long diffMin = (long)Math.Floor(timespan.TotalMinutes);
                                 personClockTime.ClockMin = personClockTime.ClockMin + diffMin;
                                 TimeSpan spWorkMin = TimeSpan.FromMinutes(personClockTime.ClockMin);
@@ -815,11 +815,11 @@ namespace DataReef.TM.Services.Services
                                 personClockTime.ClockHours = Convert.ToInt64(Math.Round(personClockTime.ClockMin / (double)60));
                             }
                             personClockTime.ClockDiff = 0;
-                            personClockTime.StartDate = DateTime.Now;
-                            personClockTime.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
+                            personClockTime.StartDate = DateTime.UtcNow;
+                            personClockTime.EndDate = (DateTime.UtcNow).AddMinutes(PersonClockSetting.ClockTimeInMin);
                             personClockTime.ClockType = "ClockIn";
                             personClockTime.Version += 1;
-                            personClockTime.DateLastModified = DateTime.Now;
+                            personClockTime.DateLastModified = DateTime.UtcNow;
                             personClockTime.IsRemainFiveMin = false;
                             using (DataContext ds = new DataContext())
                             {
@@ -831,16 +831,16 @@ namespace DataReef.TM.Services.Services
                         {
                             using (DataContext db = new DataContext())
                             {
-                                var personclk = db.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.Now.Date).FirstOrDefault();
+                                var personclk = db.PersonClockTime.Where(p => p.PersonID == SmartPrincipal.UserId).ToList().Where(p => p.DateCreated.Date == DateTime.UtcNow.Date).FirstOrDefault();
 
                                 if (personclk == null)
                                 {
                                     PersonClockTime personClock = new PersonClockTime();
                                     personClock.Guid = Guid.NewGuid();
                                     personClock.PersonID = SmartPrincipal.UserId;
-                                    personClock.DateCreated = DateTime.Now;
-                                    personClock.StartDate = DateTime.Now;
-                                    personClock.EndDate = (DateTime.Now).AddMinutes(PersonClockSetting.ClockTimeInMin);
+                                    personClock.DateCreated = DateTime.UtcNow;
+                                    personClock.StartDate = DateTime.UtcNow;
+                                    personClock.EndDate = (DateTime.UtcNow).AddMinutes(PersonClockSetting.ClockTimeInMin);
                                     personClock.ClockDiff = 0;
                                     personClock.ClockMin = 0;
                                     personClock.ClockHours = 0;

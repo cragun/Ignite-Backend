@@ -393,5 +393,20 @@ namespace DataReef.TM.Api.Controllers
                 throw ex;
             }
         }
+
+        ///// get territories from address
+        //[Route("addproperty")]
+        //[HttpPost]
+        //public async Task<IHttpActionResult> AddProperty(Property req)
+        //{
+        //    try
+        //    {
+        //        return Ok(propertyService.AddProperty(req));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }

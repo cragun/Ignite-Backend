@@ -14,6 +14,7 @@ using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs.Common;
 using DataReef.TM.Models.DTOs.Inquiries;
 using DataReef.TM.Models.DTOs.Persons;
+using DataReef.TM.Models.DTOs.QuotasCommitments;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Services.Extensions;
 using DataReef.TM.Services.Services;
@@ -511,40 +512,37 @@ namespace DataReef.TM.Services
             return distinctDispositions.ToList();
         }
 
-
-        public List<CRMDisposition> CRMGetAvailableDispositionsQuotas()
+        public List<QuotaCommitementsDisposition> CRMGetAvailableDispositionsQuotas()
         {
-            // Get all the OUs for the logged in user
-
-            //var rootGuids = _ouService.Value.ListRootGuidsForPerson(Guid.Parse("b3db3e22-7aed-4daa-888c-850b8c8ee0f2"));
-
-            //var settings = _ouSettingsService
-            //            .Value
-            //            .GetOuSettingsMany(rootGuids)?
-            //            .SelectMany(os => os.Value)?
-            //            .ToList();
-            //var dispSettings = settings?
-            //        .Where(s => s.Name == OUSetting.NewDispositions)?
-            //        .ToList();
-
-            //var dispositions = dispSettings?
-            //        .SelectMany(s => JsonConvert.DeserializeObject<List<DispositionV2DataView>>(s.Value))?
-            //        .Select(d => new CRMDisposition { Disposition = d.Name, DisplayName = d.DisplayName, Quota = "" , Commitments = "" })?
-            //        .ToList() ?? new List<CRMDisposition>();
-
-            var distinctDispositions = new HashSet<CRMDisposition>();
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Hours Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Doors Knocked", DisplayName = "Doors Knocked", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Approach Delivered", DisplayName = "Approach Delivered", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "New Contact", DisplayName = "New Contact", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments Set", DisplayName = "Appointments Set", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "CAPP", DisplayName = "CAPP", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "SS", DisplayName = "SS", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "FD", DisplayName = "FD", Quota = "", Commitments = "" });
-            distinctDispositions.Add(new CRMDisposition { Disposition = "INS", DisplayName = "INS", Quota = "", Commitments = "" });
+            var distinctDispositions = new HashSet<QuotaCommitementsDisposition>();
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "Hours Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "Doors Knocked", DisplayName = "Doors Knocked", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "Approach Delivered", DisplayName = "Approach Delivered", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "New Contact", DisplayName = "New Contact", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "Appointments Set", DisplayName = "Appointments Set", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "CAPP", DisplayName = "CAPP", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "SS", DisplayName = "SS", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "FD", DisplayName = "FD", Quota = "", Commitments = "" });
+            distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "INS", DisplayName = "INS", Quota = "", Commitments = "" });
 
             return distinctDispositions.ToList();
         }
+
+        //public List<CRMDisposition> CRMGetAvailableDispositionsQuotas()
+        //{
+        //    var distinctDispositions = new HashSet<CRMDisposition>();
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "Hours Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "Doors Knocked", DisplayName = "Doors Knocked", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "Approach Delivered", DisplayName = "Approach Delivered", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "New Contact", DisplayName = "New Contact", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "Appointments Set", DisplayName = "Appointments Set", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "CAPP", DisplayName = "CAPP", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "SS", DisplayName = "SS", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "FD", DisplayName = "FD", Quota = "", Commitments = "" });
+        //    distinctDispositions.Add(new CRMDisposition { Disposition = "INS", DisplayName = "INS", Quota = "", Commitments = "" });
+
+        //    return distinctDispositions.ToList();
+        //}
 
 
         public List<CRMLeadSource> CRMGetAvailableLeadSources(Guid ouid)

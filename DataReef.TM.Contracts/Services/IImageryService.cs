@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -51,7 +52,7 @@ namespace DataReef.TM.Contracts.Services
         /// <param name="direction">Direction of Image.  Default is Down=Orthogonal</param>
         /// <returns></returns>
         [OperationContract]
-        BlobModel GetExistingHiResImageForProperty(Guid propertyID, double top, double left, double bottom, double right, string direction);
+        Task<BlobModel> GetExistingHiResImageForProperty(Guid propertyID, double top, double left, double bottom, double right, string direction);
 
         [OperationContract]
         void MigrateHiResImages();

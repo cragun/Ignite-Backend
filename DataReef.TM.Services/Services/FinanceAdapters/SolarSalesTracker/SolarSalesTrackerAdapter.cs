@@ -1056,7 +1056,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             using (DataContext dc = new DataContext())
             {
                 //1202823E-7C9C-47D9-8D0F-F0F4F588AA3D - Trismart solar 
-                Guid ouid = Guid.Parse("1202823E-7C9C-47D9-8D0F-F0F4F588AA3D");
+                // 7749729d-787e-49d2-83f1-e070597a152e -  Training Only
+                Guid ouid = Guid.Parse("7749729d-787e-49d2-83f1-e070597a152e");
 
                 EnsureInitialized(ouid);
                 var integrationSettings = new IntegrationOptionSettings

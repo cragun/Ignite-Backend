@@ -2551,5 +2551,99 @@ namespace DataReef.TM.Services.Services
             return "send";
         }
 
+        public string SendProposalEmailToEC(Guid proposalDataId)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var data = dataContext
+                            .ProposalData
+                            .FirstOrDefault(pd => pd.Guid == proposalDataId);
+
+                if (data == null)
+                {
+                    throw new ApplicationException("Could not find Proposal Data!");
+                }
+
+                var financePlan = dataContext
+               .FinancePlans
+               .FirstOrDefault(fp => fp.Guid == data.FinancePlanID);
+
+                var proposal = dataContext
+                              .Proposal
+                              .Include(fp => fp.Property.Territory)
+                              .FirstOrDefault(p => p.Guid == financePlan.SolarSystemID);
+
+                var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+
+                var contractorID = data.ContractorID;
+                var documentUrls = GetProposalURLs(contractorID, data.Guid, null, ouSettings);
+                var planName = financePlan.Name;
+
+                var attachmentPDFs = new List<Tuple<byte[], string>>();
+                documentUrls?
+                        .ForEach(d =>
+                        {
+                            var pdfContent = _utilServices.Value.GetPDF(d.Url);
+                            d.Description = $"{d.Name} [{planName.AsFileName()}]";
+                            d.PDFUrl = _blobService.Value.UploadByNameGetFileUrl($"proposal-data/{data.Guid}/documents/{DateTime.UtcNow.Ticks}.pdf",
+                                 new BlobModel
+                                 {
+                                     Content = pdfContent,
+                                     ContentType = "application/pdf"
+                                 }, BlobAccessRights.PublicRead);
+
+                            attachmentPDFs.Add(new Tuple<byte[], string>(pdfContent, $"{d.Description}.pdf"));
+                        });
+
+
+                // send the email
+                var property = proposal.Property;
+
+                var propertyAddress = proposal.GetPropertyAddress();
+
+                var salesRepEmailAddress = dataContext
+                                    .People
+                                    .Where(p => p.Guid == data.SalesRepID)
+                                    .Select(p => p.EmailAddressString)
+                                    .SingleOrDefault();
+
+                var disableSendingToCustomer = ouSettings?
+                                    .FirstOrDefault(os => os.Name == OUSetting.Proposal_Features_SendEmailToCustomer_Disabled)?
+                                    .Value == "1";
+
+                var homeOwnerName = property.Name;
+
+                string ccEmails = ouSettings?.FirstOrDefault(os => os.Name == OUSetting.Proposal_Features_EmailsToCC)?.Value;
+
+                //var planName = financePlan.Name;
+
+                var documentsLinks = string.Join("<br/>", documentUrls.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for {homeOwnerName}<a/>"));
+
+                Task.Factory.StartNew(() =>
+                {
+                    var mediaItems = GetProposalMediaItemsAsShareableLinks(proposal.Guid);
+
+                    List<System.Net.Mail.Attachment> attachments = null;
+                    if (attachmentPDFs.Count > 0)
+                    {
+                        attachments = attachmentPDFs
+                                        .Select(pdf => new System.Net.Mail.Attachment(new MemoryStream(pdf.Item1), pdf.Item2))
+                                        .ToList();
+                    }
+                    var mediaItemLinks = string.Join("<br/>", mediaItems.Select(mi => $"<a target='_blank' href='{mi.Value}'>{mi.Key}</a>"));
+                    var mediaItemsBody = mediaItems.Count == 0 ? "" : $"<br/>Attached documents and images: <br/>{mediaItemLinks}";
+
+                    var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
+                    var to = salesRepEmailAddress;
+
+                    Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+
+                    Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                });
+            }
+
+            return "send";
+        }
+
     }
 }

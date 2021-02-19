@@ -4,6 +4,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Common;
 using DataReef.TM.Models.DTOs.Inquiries;
 using DataReef.TM.Models.DTOs.Persons;
+using DataReef.TM.Models.DTOs.QuotasCommitments;
 using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace DataReef.TM.Contracts.Services
         List<CRMDisposition> CRMGetAvailableNewDispositions();
 
         [OperationContract]
-        List<CRMDisposition> CRMGetAvailableDispositionsQuotas(); 
+        List<QuotaCommitementsDisposition> CRMGetAvailableDispositionsQuotas(); 
 
         [OperationContract]
         List<CRMLeadSource> CRMGetAvailableLeadSources(Guid ouid);

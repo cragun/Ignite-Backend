@@ -24,6 +24,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using Newtonsoft.Json.Linq;
 using DataReef.TM.Models.FinancialIntegration;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services
 {
@@ -264,14 +265,14 @@ namespace DataReef.TM.Services.Services
             return hiResImageContent;
         }
 
-        public BlobModel GetExistingHiResImageForProperty(Guid propertyID, double top, double left, double bottom, double right, string direction)
+        public async Task<BlobModel> GetExistingHiResImageForProperty(Guid propertyID, double top, double left, double bottom, double right, string direction)
         {
             HighResImage hiResImg = null;
             ImagePurchase purchase = null;
 
             using (var dc = new DataContext())
             {
-                purchase = dc.ImagePurchases.Where(ip => ip.PropertyID == propertyID && ip.ImageType == direction && !ip.IsDeleted).OrderByDescending(ip => ip.DateCreated).FirstOrDefault();
+                purchase = await dc.ImagePurchases.Where(ip => ip.PropertyID == propertyID && ip.ImageType == direction && !ip.IsDeleted).OrderByDescending(ip => ip.DateCreated).AsNoTracking().FirstOrDefaultAsync();
                 if (purchase == null) throw new ApplicationException("PurchaseNotFound");
 
                 hiResImg = _geoBridge.GetHiResImageById(purchase.ImageID);

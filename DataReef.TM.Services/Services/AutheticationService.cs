@@ -294,7 +294,7 @@ namespace DataReef.Application.Services
 
                             using (DataContext db = new DataContext())
                             {
-                                var per = db.People.Where(p => p.Guid == c.UserID).FirstOrDefault();
+                                var per = db.People.Where(p => p.Guid == c.User.PersonID).FirstOrDefault();
                                 if (per != null)
                                 {
                                     per.ModifiedTime = DateTime.UtcNow;
