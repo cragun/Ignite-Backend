@@ -131,7 +131,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url + "/api1/tasks", null, AuthTokenApikey);
-                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}");
+                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.ErrorMessage}");
                 }
 
                 try
