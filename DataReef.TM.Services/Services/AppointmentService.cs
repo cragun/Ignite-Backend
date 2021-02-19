@@ -551,6 +551,7 @@ namespace DataReef.TM.Services
             return lead;
         }
 
+
         public void VerifyUserAssignmentAndInvite(IEnumerable<Appointment> entities)
         {
             if (entities?.Any() != true)
