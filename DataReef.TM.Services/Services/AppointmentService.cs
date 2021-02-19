@@ -536,7 +536,7 @@ namespace DataReef.TM.Services
             return ret;
         }
 
-        public async Task<AppointmentJobNimbusLeadResponseData> AddAppointmentLeadJobNimbus(Guid propertyid)
+        public AppointmentJobNimbusLeadResponseData AddAppointmentLeadJobNimbus(Guid propertyid)
         {
             AppointmentJobNimbusLeadResponseData lead = new AppointmentJobNimbusLeadResponseData();
             using (var dataContext = new DataContext())
@@ -723,5 +723,6 @@ namespace DataReef.TM.Services
                 .Value
                 .SendSms("New Appointment is created!", mobile_number);
         }
+     
     }
 }
