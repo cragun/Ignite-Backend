@@ -133,7 +133,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url + "/api1/tasks", null, AuthTokenApikey);
                     throw new ApplicationException($"CreateJobNimbusLead Failed. {response.ErrorMessage}");
                 }
-
                 try
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url + "/api1/tasks", null, AuthTokenApikey);
