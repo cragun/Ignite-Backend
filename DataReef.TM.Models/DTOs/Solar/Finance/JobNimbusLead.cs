@@ -90,8 +90,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             public string title { get; set; }
             public List<related> related { get; set; }
             public int record_type { get; set; }
-            public string record_type_name { get; set; }
-
+            public string record_type_name { get; set; } 
     }
 
     public class AppointmentJobNimbusLeadResponseData
