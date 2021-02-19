@@ -88,7 +88,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
        
             public long date_start { get; set; }
-            public DateTime? date_end { get; set; }
+            public long date_end { get; set; }
             public string title { get; set; }
             public List<related> related { get; set; }
             public int record_type { get; set; }
