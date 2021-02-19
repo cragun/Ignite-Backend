@@ -110,13 +110,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 List<related> relate = new List<related>();
                 related rlat = new related();
-                rlat.id = prop.JobNimbusLeadID;
+                rlat.id = prop.JobNimbusLeadID; 
 
                 relate.Add(rlat);
                 req.related = relate;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
-                req.date_start = appointment.StartDate;
+                req.date_start = (long)(appointment.StartDate - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
                 req.date_end = appointment.EndDate;
 
                 var request = new RestRequest($"/api1/tasks", Method.POST); 
