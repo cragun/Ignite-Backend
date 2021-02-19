@@ -70,7 +70,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
-
         /// <summary>
         /// Mark Notification as read
         /// </summary>
