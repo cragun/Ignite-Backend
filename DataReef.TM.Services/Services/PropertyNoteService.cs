@@ -648,11 +648,6 @@ namespace DataReef.TM.Services.Services
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-
-                    if (emails?.Any() == true)
-                    {
-                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
-                    }
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
@@ -789,11 +784,6 @@ namespace DataReef.TM.Services.Services
                     var emails = taggedPersons?.Select(x => x.EmailAddressString);
                     var taggedPersonIds = taggedPersons.Select(x => x.Guid);
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-
-                    if (emails?.Any() == true)
-                    {
-                        SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid);
-                    }
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
