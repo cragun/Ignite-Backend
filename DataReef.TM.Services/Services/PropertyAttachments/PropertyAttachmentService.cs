@@ -555,6 +555,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                     return false;
                 }
 
+
                 var definitionItems = GetDefinitionTuple(entity.PropertyID, entity.AttachmentTypeID);
                 var definition = definitionItems.definition;
                 var userName = _authService.Value.GetCurrentUserFullName();
