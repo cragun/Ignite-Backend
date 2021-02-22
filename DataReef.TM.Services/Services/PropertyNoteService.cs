@@ -651,7 +651,7 @@ namespace DataReef.TM.Services.Services
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
-                    if (noteRequest.TaggedUsers.Count > 0)
+                    if (noteRequest.TaggedUsers?.Count > 0)
                     {
                         List<string> sendemails = new List<string>();
                         foreach (var item in noteRequest.TaggedUsers)
@@ -788,7 +788,7 @@ namespace DataReef.TM.Services.Services
                     NotifyTaggedUsers(taggedPersons, note, property, dc);
 
                     //email / sms to tagged users
-                    if (noteRequest.TaggedUsers.Count > 0)
+                    if (noteRequest.TaggedUsers?.Count > 0)
                     {
                         List<string> sendemails = new List<string>();
                         foreach (var item in noteRequest.TaggedUsers)
