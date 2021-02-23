@@ -37,19 +37,11 @@ namespace DataReef.TM.Services
 
         public AdminQuotas GetQuotasType()
         {
-            List<Models.DTOs.QuotasCommitments.Type> typeList = new List<Models.DTOs.QuotasCommitments.Type>();
-
-            typeList.Add(new Models.DTOs.QuotasCommitments.Type() { Id = 1, Name = "Quotas" });
-            typeList.Add(new Models.DTOs.QuotasCommitments.Type() { Id = 2, Name = "Commitments" });
-
-            var ouRoles = _ouService.SBGetOuRoles();
-            var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
-
             return new AdminQuotas
             {
-                type = typeList,
-                user_type = ouRoles,
-                dispositions = dispositions
+                type = new List<Types>(2) { new Types() { Id = 1, Name = "Quotas" }, new Types() { Id = 2, Name = "Commitments" } },
+                user_type = _ouService.SBGetOuRoles(),
+                dispositions = _personService.CRMGetAvailableDispositionsQuotas()
             };
         }
 
@@ -58,8 +50,7 @@ namespace DataReef.TM.Services
             using (DataContext dc = new DataContext())
             {
                 var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OURoleID == roleid).Select(y => y.PersonID);
-                var peoples = dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList();
-                return peoples.Select(a => new GuidNamePair
+                return dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).Select(a => new GuidNamePair
                 {
                     Name = $"{a.FirstName} {a.LastName}",
                     Guid = a.Guid,
@@ -89,15 +80,12 @@ namespace DataReef.TM.Services
             {
                 List<List<object>> report = new List<List<object>>();
 
-                List<object> header = new List<object>();
-                header.Add($"Q1 {DateTime.Now.Year}");
-                header.Add("Start");
-                header.Add("End");
-                header.Add("Duration(Days)");
-                header.Add("Type");
-
                 var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
                 dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
+
+                List<object> header = new List<object>(5 + dispositions.Count) {
+                    $"Q1 {DateTime.Now.Year}", "Start","End","Duration(Days)" , "Type"
+                };
 
                 foreach (var item in dispositions)
                 {
@@ -132,7 +120,6 @@ namespace DataReef.TM.Services
 
                     report.Add(quota);
                 }
-
                 return report;
             }
         }
@@ -151,16 +138,15 @@ namespace DataReef.TM.Services
                     quota.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(quota.dispositions);
                     quota.Disposition = quota.Disposition.OrderBy(a => a.Disposition).ToList();
 
-                    List<object> header = new List<object>();
-                    header.Add("Metric");
-                    header.Add("Quota Today");
-                    header.Add("Commitment Today");
-                    header.Add("Quota This Week");
-                    header.Add("Commitment This Week");
-                    header.Add($"Quota ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})");
-                    header.Add($"Commitment ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})");
-
-                    report.Add(header);
+                    report.Add(new List<object>(7) {
+                        "Metric",
+                        "Quota Today",
+                        "Commitment Today",
+                        "Quota This Week",
+                        "Commitment This Week",
+                        $"Quota ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})",
+                        $"Commitment ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})"
+                    });
 
                     var isUserSetCommitment = dc.QuotasCommitments.FirstOrDefault(a => a.Flags == 2 && a.Type == 2 && a.StartDate == req.StartDate && a.EndDate == req.EndDate && a.PersonID == req.PersonID);
 
@@ -245,14 +231,14 @@ namespace DataReef.TM.Services
             {
                 dispositions.Add(new QuotaCommitementsDisposition
                 {
-                    DisplayName = item[0]?.ToString(),
-                    Disposition = item[0]?.ToString(),
-                    TodayQuotas = item[1]?.ToString(),
-                    TodayCommitments = item[2]?.ToString(),
-                    WeekQuotas = item[3]?.ToString(),
-                    WeekCommitments = item[4]?.ToString(),
-                    RangeQuotas = item[5]?.ToString(),
-                    RangeCommitments = item[6]?.ToString(),
+                    DisplayName = Convert.ToString(item[0]),
+                    Disposition = Convert.ToString(item[0]),
+                    TodayQuotas = Convert.ToString(item[1]),
+                    TodayCommitments = Convert.ToString(item[2]),
+                    WeekQuotas = Convert.ToString(item[3]),
+                    WeekCommitments = Convert.ToString(item[4]),
+                    RangeQuotas = Convert.ToString(item[5]),
+                    RangeCommitments = Convert.ToString(item[6]),
                 });
             }
 
@@ -280,11 +266,10 @@ namespace DataReef.TM.Services
 
                 if (data.Count > 0)
                 {
-                    List<object> header = new List<object>() { "UserName", "Position", "Type", "Start", "End" };
-
                     var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
                     dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
 
+                    List<object> header = new List<object>(5 + dispositions.Count) { "UserName", "Position", "Type", "Start", "End" };
                     foreach (var item in dispositions)
                     {
                         header.Add(item.Disposition);
@@ -371,6 +356,8 @@ namespace DataReef.TM.Services
 
                             foreach (var disposition in item.Disposition)
                             {
+                                if (string.IsNullOrEmpty(disposition.Quota))
+                                    disposition.Quota = "0";
 
                                 disposition.TodayQuotas = (Convert.ToInt32(disposition.Quota) / Convert.ToInt32(item.EndDate.Subtract(item.StartDate).TotalDays)).ToString();
                                 disposition.WeekQuotas = disposition.Quota;
@@ -380,6 +367,9 @@ namespace DataReef.TM.Services
                                 {
                                     var adminCommitment = isAdminSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == disposition.Disposition);
 
+                                    if (string.IsNullOrEmpty(adminCommitment.Commitments))
+                                        adminCommitment.Commitments = "0";
+
                                     disposition.TodayCommitments = (Convert.ToInt32(adminCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
 
                                     disposition.WeekCommitments = adminCommitment.Commitments;
@@ -388,6 +378,9 @@ namespace DataReef.TM.Services
                                 else if (isUserSetCommitment != null)
                                 {
                                     var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == disposition.Disposition);
+
+                                    if (string.IsNullOrEmpty(userCommitment.Commitments))
+                                        userCommitment.Commitments = "0";
 
                                     disposition.TodayCommitments = (Convert.ToInt32(userCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
 
@@ -403,15 +396,12 @@ namespace DataReef.TM.Services
 
                                 allDispositions.Add(disposition);
                             }
-
                         }
                     }
 
                     var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
 
-                    List<object> header = new List<object>() { "Metric" , "Quota Today" , "Commitment Today" , "Quota This Week"  , "Commitment This Week" , "Quota (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")" , "Commitment (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")" }; 
-
-                    reportSet.Add(header);
+                    reportSet.Add(new List<object>(7) { "Metric", "Quota Today", "Commitment Today", "Quota This Week", "Commitment This Week", $"Quota ({req.CurrentDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})", $"Commitment ({req.CurrentDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})" });
 
                     foreach (var item in dispositions)
                     {
@@ -427,7 +417,7 @@ namespace DataReef.TM.Services
                                                             RangeCommitments = group.Sum(rp => Convert.ToInt32(rp.RangeCommitments)).ToString()
                                                         }).FirstOrDefault();
 
-                        reportSet.Add(new List<object>{
+                        reportSet.Add(new List<object>(7){
                         item.Disposition,
                         itemDis?.TodayQuotas != null ? itemDis?.TodayQuotas : "0",
                         itemDis?.WeekQuotas  != null ? itemDis?.WeekQuotas : "0",
