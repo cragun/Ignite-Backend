@@ -222,8 +222,7 @@ namespace DataReef.TM.Services
 
         public QuotasCommitment InsertCommitments(QuotasCommitment entity)
         {
-            entity.CreatedByID = SmartPrincipal.UserId;
-
+            entity.CreatedByID = SmartPrincipal.UserId; 
             List<QuotaCommitementsDisposition> dispositions = new List<QuotaCommitementsDisposition>();
 
             foreach (var item in entity.commitments)
