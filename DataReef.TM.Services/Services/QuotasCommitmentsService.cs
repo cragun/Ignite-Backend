@@ -47,6 +47,7 @@ namespace DataReef.TM.Services
 
         public IEnumerable<GuidNamePair> GetUsersFromRoleType(Guid roleid)
         {
+
             using (DataContext dc = new DataContext())
             {
                 var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OURoleID == roleid).Select(y => y.PersonID);
