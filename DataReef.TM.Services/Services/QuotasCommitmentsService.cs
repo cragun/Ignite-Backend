@@ -127,8 +127,7 @@ namespace DataReef.TM.Services
         public List<List<object>> GetQuotasCommitementsReport(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
-            {
-
+            { 
                 var quota = dc.QuotasCommitments.FirstOrDefault(a => a.Flags == 1 && a.Type == 1 && a.StartDate == req.StartDate && a.EndDate == req.EndDate);
 
                 List<List<object>> report = new List<List<object>>();
