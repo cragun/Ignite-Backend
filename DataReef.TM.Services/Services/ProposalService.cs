@@ -680,7 +680,6 @@ namespace DataReef.TM.Services.Services
                 }
 
                 dataContext.ProposalData.Add(data);
-
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
 
                 dataContext.SaveChanges();
