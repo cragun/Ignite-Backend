@@ -39,7 +39,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPost]
         [Route("getproperties")]
-        public async Task<IHttpActionResult> GetProperties([FromBody]GetPropertiesRequest propertiesRequest)
+        public async Task<IHttpActionResult> GetProperties([FromBody] GetPropertiesRequest propertiesRequest)
         {
             if (propertiesRequest == null ||
                 (propertiesRequest.GeoPropertiesRequest == null && propertiesRequest.PropertiesRequest == null) ||
@@ -56,7 +56,7 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> GetPropertiesSearch(Guid territoryid, string searchvalue)
         {
             if (string.IsNullOrEmpty(searchvalue))
-                return BadRequest($"Invalid searchvalue.");    
+                return BadRequest($"Invalid searchvalue.");
 
             var response = _propertyServiceFactory().GetPropertiesSearch(territoryid, searchvalue);
 
@@ -88,7 +88,7 @@ namespace DataReef.TM.Api.Controllers
             {
                 var propbg = rd.Where(x => x.DisplayName == propname).FirstOrDefault();
 
-                if(propbg != null)
+                if (propbg != null)
                 {
                     propbags.Add(propbg);
                 }
@@ -96,7 +96,7 @@ namespace DataReef.TM.Api.Controllers
 
             var temp = propbags;
             propbags.AddRange(rd.Except(temp));
-            response.PropertyBag = propbags;            
+            response.PropertyBag = propbags;
 
             return Ok(response);
         }
@@ -164,7 +164,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/image/upload")]
         [Route("attachments/uploadimage")]
-        public async Task<IHttpActionResult> UploadImage([FromBody]UploadImageToPropertyAttachmentRequest uploadImageRequest)
+        public async Task<IHttpActionResult> UploadImage([FromBody] UploadImageToPropertyAttachmentRequest uploadImageRequest)
         {
             if (uploadImageRequest == null ||
                 string.IsNullOrEmpty(uploadImageRequest.ItemID) ||
@@ -187,7 +187,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, HttpDelete]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/image/delete")]
-        public async Task<IHttpActionResult> DeleteAttachmentImage([FromBody]DeleteImageFromPropertyAttachmentRequest request)
+        public async Task<IHttpActionResult> DeleteAttachmentImage([FromBody] DeleteImageFromPropertyAttachmentRequest request)
         {
             if (request == null)
             {
@@ -202,7 +202,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPatch]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/image/editnotes")]
-        public async Task<IHttpActionResult> EditNotesForImage([FromBody]EditPropertyAttachmentImageNotesRequest request)
+        public async Task<IHttpActionResult> EditNotesForImage([FromBody] EditPropertyAttachmentImageNotesRequest request)
         {
             if (request == null)
             {
@@ -218,7 +218,7 @@ namespace DataReef.TM.Api.Controllers
         [Obsolete("Will be removed. Replaced by the DELETE method")]
         [ResponseType(typeof(PropertyAttachmentItemDTO))]
         [Route("attachments/deleteImage")]
-        public async Task<IHttpActionResult> DeleteImage([FromBody]DeleteImageFromPropertyAttachmentRequest request)
+        public async Task<IHttpActionResult> DeleteImage([FromBody] DeleteImageFromPropertyAttachmentRequest request)
         {
             if (request == null)
             {
@@ -232,7 +232,7 @@ namespace DataReef.TM.Api.Controllers
 
         [HttpPatch]
         [Route("attachments/{guid}/edit")]
-        public async Task<IHttpActionResult> EditAttachment(Guid guid, [FromBody]EditPropertyAttachmentRequest request)
+        public async Task<IHttpActionResult> EditAttachment(Guid guid, [FromBody] EditPropertyAttachmentRequest request)
         {
             _propertyAttachmentServiceFactory().UpdatePropertyAttachment(guid, request);
             return Ok();
@@ -342,9 +342,9 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, Route("sb/leadname/{leadId}")]
         [ResponseType(typeof(SBPropertyDTO))]
         [AllowAnonymous, InjectAuthPrincipal]
-        public async Task<IHttpActionResult> ChangePropertyNameFromSB(long leadId, [FromBody]SBPropertyNameDTO request)
+        public async Task<IHttpActionResult> ChangePropertyNameFromSB(long leadId, [FromBody] SBPropertyNameDTO request)
         {
-            var result = _propertyServiceFactory().EditPropertyNameFromSB(leadId,request);
+            var result = _propertyServiceFactory().EditPropertyNameFromSB(leadId, request);
 
             return Ok(result);
         }
