@@ -50,7 +50,7 @@ namespace DataReef.TM.Services
             using (DataContext dc = new DataContext())
             {
                 var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OURoleID == roleid).Select(y => y.PersonID);
-                return dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).Select(a => new GuidNamePair
+                return dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList().Select(a => new GuidNamePair
                 {
                     Name = $"{a.FirstName} {a.LastName}",
                     Guid = a.Guid,
