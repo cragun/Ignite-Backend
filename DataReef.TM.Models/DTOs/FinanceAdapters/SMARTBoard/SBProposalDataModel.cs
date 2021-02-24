@@ -85,7 +85,6 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
                             })?
                             .ToList();
 
-
             IncentivesData = proposal
                             .SolarSystem
                             .AdderItems?
