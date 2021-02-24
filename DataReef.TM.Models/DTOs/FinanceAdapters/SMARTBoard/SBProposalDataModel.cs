@@ -129,9 +129,11 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             FinanceType = financePlan?.FinancePlanType.ToString();
             Lender = financePlan?.FinancePlanDefinition?.Provider?.Name;
             LenderID = financeMeta?.SBMeta?.LenderID;
+            LenderFee = financePlan?.FinancePlanDefinition?.LenderFee;
             LeasePricePerKWH = loanRequest?.LeaseParams?.PricePerkWh;
             LeaseEscalator = loanRequest?.LeaseParams?.Escalator;
-            FinanceTerm = financePlan?.FinancePlanDefinition?.GetTermInMonths();
+            //FinanceTerm = financePlan?.FinancePlanDefinition?.GetTermInMonths();
+            FinanceTerm = financePlan.FinancePlanDefinition?.TermInYears ?? 0;
             DealerFee = loanRequest?.DealerFee;
             FinanceAPR = financePlan?.FinancePlanDefinition?.Apr;
             FinanceLabel = financePlan?.FinancePlanDefinition?.Name;
@@ -223,6 +225,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public int? FinanceTerm { get; set; }
         public double? FinanceAPR { get; set; }
         public decimal? DealerFee { get; set; }
+        public double? LenderFee { get; set; }
         public string FinanceLabel { get; set; }
         public decimal? InitialLoanAmount { get; set; }
         public decimal? StandardPayment1_18 { get; set; }

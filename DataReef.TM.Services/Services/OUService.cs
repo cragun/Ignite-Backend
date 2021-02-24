@@ -1762,7 +1762,7 @@ namespace DataReef.TM.Services.Services
                                     .GroupBy(i => i.Model)
                                     .Select(g => g.FirstOrDefault())
                                     .ToList()
-                                    .Select(sp => new GuidNamePair(sp.Guid, $"{sp.Name}"))
+                                    .Select(sp => new GuidNamePair(sp.Guid, $"{sp.Name} - {sp.Model}"))
                                     .OrderBy(gnp => gnp.Name)
                                     .ToList();
 
