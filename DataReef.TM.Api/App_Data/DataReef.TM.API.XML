@@ -535,6 +535,14 @@
             Use this controller for all authentication request.. creating a user, resetting password. etc.  this controller does not require an auth header for some actions
             </summary>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.GetHash(System.String,System.String)">
+            <summary>
+            Get Hash by old password and salt
+            </summary>
+            <param name="oldpwd"></param>
+            <param name="salt"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.AuthenticationController.Authenticate(DataReef.TM.Api.Classes.AuthenticationPost)">
             <summary>
             Authenticates UserName and Password and returns an Authentication Token

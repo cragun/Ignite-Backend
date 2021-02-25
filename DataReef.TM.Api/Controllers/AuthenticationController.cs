@@ -40,6 +40,28 @@ namespace DataReef.TM.Api.Controllers
         }
 
         /// <summary>
+        /// Get Hash by old password and salt
+        /// </summary>
+        /// <param name="oldpwd"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        [Route("GetHash")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> GetHash(string oldpwd, string salt)
+        {
+            try
+            {
+                string hash = DataReef.Auth.Helpers.CryptographyHelper.ComputePasswordHash(oldpwd, salt);
+                return Ok(hash);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(ex.Message) });
+            }
+        }
+
+        /// <summary>
         /// Authenticates UserName and Password and returns an Authentication Token
         /// </summary>
         /// <param name="post"></param>
@@ -229,7 +251,7 @@ namespace DataReef.TM.Api.Controllers
 
         }
 
-
+        
         [GenericRoute("changepassword")]
         [HttpPut]
         [AllowAnonymous]

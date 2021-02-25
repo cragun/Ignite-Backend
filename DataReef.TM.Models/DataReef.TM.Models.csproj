@@ -101,6 +101,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveDeactiveUserLog.cs" />
     <Compile Include="ApiKey.cs" />
     <Compile Include="DTOs\QuotasCommitments\AdminQuotas.cs" />
     <Compile Include="DTOs\Solar\Finance\JobNimbusContacts.cs" />
