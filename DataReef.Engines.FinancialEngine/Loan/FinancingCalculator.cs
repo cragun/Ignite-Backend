@@ -154,7 +154,6 @@ namespace DataReef.Engines.FinancialEngine.Loan
 
             #endregion
 
-
             var years = CreateYears(months);
 
             var firstYear = years.First();
