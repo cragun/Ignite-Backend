@@ -179,9 +179,9 @@ namespace DataReef.Engines.FinancialEngine.Loan
                 PaymentFactorsFirstPeriod = amortizationData.PaymentFactorsFirstPeriod,
                 MainLoanPeriodInMonths = mainLoanPeriodInMonths,
 
-                IntroMonthlyPayment = introMonthlyPayment.RoundValue(),
-                MonthlyPayment = mainLoanMonthlyPayment.RoundValue(),
-                MonthlyPaymentNoITC = mainLoanMonthlyPaymentNoITC.RoundValue(),
+                IntroMonthlyPayment = introMonthlyPayment.RoundToUpparValue(),
+                MonthlyPayment = mainLoanMonthlyPayment.RoundToUpparValue(),
+                MonthlyPaymentNoITC = mainLoanMonthlyPaymentNoITC.RoundToUpparValue(),
 
                 TotalFederalTaxIncentive = (years.Sum(y => y.FederalTaxIncentive) + unappliedITC).RoundValue(),
                 TotalStateTaxIncentive = years.Sum(y => y.StateTaxIncentive).RoundValue(),

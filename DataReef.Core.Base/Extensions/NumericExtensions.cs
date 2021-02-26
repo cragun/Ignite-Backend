@@ -95,5 +95,10 @@ namespace DataReef.Core.Extensions
         {
             return value + (value * percentage / 100);
         }
+
+        public static decimal RoundToUpparValue(this decimal value)
+        {
+            return Math.Ceiling(value);
+        }
     }
 }
