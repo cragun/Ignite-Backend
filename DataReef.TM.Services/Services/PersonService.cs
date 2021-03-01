@@ -126,7 +126,7 @@ namespace DataReef.TM.Services
 
         public Person Updateactivity(Person prsn)
         {
-            if(prsn.SmartBoardID != null)
+            if (prsn.SmartBoardID != null)
             {
                 using (DataContext dc = new DataContext())
                 {
@@ -159,9 +159,9 @@ namespace DataReef.TM.Services
 
                 if (!string.IsNullOrEmpty(prsndetails.SmartBoardID))
                 {
-                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID , prsndetails.ActivityName , prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid, prsndetails.StartDate);
+                    _sbAdapter.Value.SBUpdateactivityUser(prsn.SmartBoardID, prsndetails.ActivityName, prsndetails.BuildVersion, prsndetails.LastActivityDate, prsndetails.Guid, prsndetails.StartDate);
                 }
-               
+
                 return ret;
             }
 
@@ -281,7 +281,6 @@ namespace DataReef.TM.Services
         /// <param name="environment"></param>
         public void Reactivate(Guid personId, string smartBoardId)
         {
-
             using (DataContext dc = new DataContext())
             {
                 var person = dc.People.Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true).FirstOrDefault();
@@ -291,21 +290,18 @@ namespace DataReef.TM.Services
                     throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
 
+                string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
+
                 person.IsDeleted = false;
                 person.ModifiedTime = DateTime.UtcNow;
 
-                var user = dc
-                            .Users
-                            .SingleOrDefault(p => p.Guid == person.Guid);
+                var user = dc.Users.SingleOrDefault(p => p.Guid == person.Guid);
                 if (user != null && user.IsDeleted)
                 {
                     user.IsDeleted = false;
                 }
 
-                var credentials = dc
-                                    .Credentials
-                                    .Where(c => c.UserID == person.Guid)
-                                    .ToList();
+                var credentials = dc.Credentials.Where(c => c.UserID == person.Guid).ToList();
                 if (credentials != null && credentials.Any())
                 {
                     credentials.ForEach(c => c.IsDeleted = false);
@@ -318,6 +314,9 @@ namespace DataReef.TM.Services
                 }
 
                 dc.SaveChanges();
+
+                // insert log for users activate - deactivate 
+                InsertActiveDeactiveUserLog(person.EmailAddressString, "Reactivate Api", oldstate, "Active", "IgniteApi-" + SmartPrincipal.UserId.ToString());
 
                 if (string.IsNullOrEmpty(smartBoardId))
                 {
@@ -360,6 +359,9 @@ namespace DataReef.TM.Services
                 {
                     throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
+                string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
+                InsertActiveDeactiveUserLog(person.EmailAddressString, "DeactivateUser Api", oldstate, "DeActive", "IgniteApi-" + SmartPrincipal.UserId.ToString());
+
                 Delete(person.Guid);
             }
         }
@@ -374,6 +376,10 @@ namespace DataReef.TM.Services
                 {
                     throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
+
+                string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
+                InsertActiveDeactiveUserLog(person.EmailAddressString, "SBDeactivate Api", oldstate, "DeActive", "SBApi-" + SmartPrincipal.UserId.ToString());
+
                 _sbAdapter.Value.SBActiveDeactiveUser(true, person.SmartBoardID);
             }
         }
@@ -515,7 +521,7 @@ namespace DataReef.TM.Services
 
 
         public List<QuotaCommitementsDisposition> CRMGetAvailableDispositionsQuotas()
-        { 
+        {
             var distinctDispositions = new HashSet<QuotaCommitementsDisposition>();
             distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "Hours Knocked", DisplayName = "Hours Knocked", Quota = "", Commitments = "" });
             distinctDispositions.Add(new QuotaCommitementsDisposition { Disposition = "Doors Knocked", DisplayName = "Doors Knocked", Quota = "", Commitments = "" });
@@ -1230,8 +1236,8 @@ namespace DataReef.TM.Services
                     .ToList();
 
                     var favouritePeopleIds = (from oua in dc.AppointmentFavouritePersons
-                                           where oua.PersonID == SmartPrincipal.UserId
-                                           select oua.FavouritePersonID).Distinct().ToList();
+                                              where oua.PersonID == SmartPrincipal.UserId
+                                              select oua.FavouritePersonID).Distinct().ToList();
                     foreach (var item in peoples)
                     {
                         item.IsFavourite = favouritePeopleIds.Contains(item.Guid);
@@ -1291,6 +1297,30 @@ namespace DataReef.TM.Services
 
                 dc.AppointmentFavouritePersons.Remove(FavouritePerson);
                 dc.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// This method insert Person active deactive log
+        /// </summary>
+        public ActiveDeactiveUserLog InsertActiveDeactiveUserLog(string username, string reason, string oldstate, string newstate, string changer)
+        {
+            using (var dc = new DataContext())
+            {
+                var usrlog = new ActiveDeactiveUserLog
+                {
+                    Username = username,
+                    Reason = reason,
+                    OldState = oldstate,
+                    NewState = newstate,
+                    Changer = changer
+                   // Changer = SmartPrincipal.UserId.ToString(),
+                };
+
+                dc.ActiveDeactiveUserLog.Add(usrlog);
+                dc.SaveChanges();
+
+                return usrlog;
             }
         }
     }

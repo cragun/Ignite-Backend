@@ -97,5 +97,8 @@ namespace DataReef.TM.Contracts.Services
         
         [OperationContract]
         Person Updateactivity(Person prsn);
+
+        [OperationContract]
+        ActiveDeactiveUserLog InsertActiveDeactiveUserLog(string username, string reason, string oldstate, string newstate, string changer);
     }
 }
