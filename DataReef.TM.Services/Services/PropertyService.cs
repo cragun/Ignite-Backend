@@ -1730,7 +1730,7 @@ namespace DataReef.TM.Services.Services
                 var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null)
                 {
-                    lead = _jobNimbusAdapter.Value.CreateJobNimbusLead(prop);
+                    lead = _jobNimbusAdapter.Value.CreateJobNimbusLead(prop, true);
                     prop.JobNimbusLeadID = lead != null ? lead.jnid : "";
                     dataContext.SaveChanges();
                 }
@@ -1738,14 +1738,30 @@ namespace DataReef.TM.Services.Services
             return lead;
         }
 
+        //public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
+        //{
+        //    using (var dataContext = new DataContext())
+        //    {
+        //        var prop = dataContext.PropertyNotes.FirstOrDefault(x => x.Guid == propertyid);
+        //        //if (prop != null)
+        //        //{
+        //        var lead = await _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+        //        prop.JobNimbusID = lead != null ? lead.jnid : "";
+        //        dataContext.SaveChanges();
+
+        //        return lead;
+        //        //}
+        //    }
+        //}
+
         public Property AddProperty(Property entity)
         {
             Property ret = null;
 
-            entity.PrepareNavigationProperties(SmartPrincipal.UserId); 
+            entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
             using (var dataContext = new DataContext())
-            { 
+            {
                 ret = base.Update(entity, dataContext);
                 if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
             }

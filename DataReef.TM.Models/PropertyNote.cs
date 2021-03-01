@@ -43,6 +43,12 @@ namespace DataReef.TM.Models
         [DataMember]
         public string Attachments { get; set; }
 
+        [DataMember]
+        public string JobNimbusID { get; set; }
+
+        [DataMember]
+        public string JobNimbusLeadID { get; set; }
+
         #endregion
 
         #region Navigation

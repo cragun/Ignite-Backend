@@ -544,7 +544,8 @@ namespace DataReef.TM.Services
                 var appointmentdata = dataContext.Appointments.Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (appointmentdata != null)
                 {
-                    lead = _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata);
+                    lead = _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata , true);
+                    appointmentdata.JobNimbusID = lead != null ? lead.jnid : "";
                     dataContext.SaveChanges();
                 }
             }

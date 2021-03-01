@@ -33,6 +33,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public string dispositions { get; set; }
 
+        [DataMember]
+        public bool IsCommitmentSet { get; set; }
+
         [NotMapped]
         public List<QuotaCommitementsDisposition> Disposition { get; set; }
 

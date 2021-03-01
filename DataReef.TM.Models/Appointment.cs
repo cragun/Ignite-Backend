@@ -59,7 +59,13 @@ namespace DataReef.TM.Models
 
         [DataMember]
         [StringLength(250)]
-        public string TimeZone { get; set; }
+        public string TimeZone { get; set; } 
+
+        [DataMember]
+        public string JobNimbusID { get; set; }
+
+        [DataMember]
+        public string JobNimbusLeadID { get; set; }
 
         #region Navigation Properties
 
