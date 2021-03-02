@@ -461,8 +461,8 @@ namespace DataReef.TM.Services
         {
             using (DataContext dc = new DataContext())
             {
-                bool isSet = false;
-                var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.EndDate <= req.StartDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
+                bool isSet = false; 
+                var data = dc.QuotasCommitments.Where(a => req.CurrentDate.Date >= a.StartDate && req.CurrentDate.Date <= a.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
                 if (data.Count > 0)
                 {
                     isSet = true;
