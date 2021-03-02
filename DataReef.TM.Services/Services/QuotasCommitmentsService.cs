@@ -154,8 +154,8 @@ namespace DataReef.TM.Services
                         "Commitment Today",
                         "Quota This Week",
                         "Commitment This Week",
-                        $"Quota ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})",
-                        $"Commitment ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})"
+                        $"Quota ({quota.StartDate.ToShortDateString()} - {quota.EndDate.ToShortDateString()})",
+                        $"Commitment ({quota.StartDate.ToShortDateString()} - {quota.EndDate.ToShortDateString()})"
                     });
 
                         var isUserSetCommitment = data.FirstOrDefault(a => a.Flags == 2 && a.Type == 2);
