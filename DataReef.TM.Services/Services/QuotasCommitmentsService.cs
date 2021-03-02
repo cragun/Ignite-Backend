@@ -194,8 +194,7 @@ namespace DataReef.TM.Services
                                 if (string.IsNullOrEmpty(adminCommitment.Commitments))
                                 {
                                     adminCommitment.Commitments = "0";
-                                }
-
+                                } 
 
                                 item.TodayCommitments = Convert.ToString(Math.Round(Convert.ToDouble(adminCommitment.Commitments) / Convert.ToDouble(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)));
 
