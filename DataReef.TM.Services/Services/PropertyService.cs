@@ -1769,8 +1769,7 @@ namespace DataReef.TM.Services.Services
                 if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
             }
 
-            AddLeadJobNimbus(ret.Guid);
-
+            AddLeadJobNimbus(ret.Guid); 
             return ret;
         }
     }
