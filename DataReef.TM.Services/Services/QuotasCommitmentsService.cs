@@ -193,7 +193,7 @@ namespace DataReef.TM.Services
 
                                 item.TodayCommitments = Convert.ToString(Convert.ToInt32(adminCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays));
 
-                                item.WeekCommitments = adminCommitment.Commitments;
+                                item.WeekCommitments = Convert.ToString(Convert.ToInt32(item.TodayCommitments) * 7);
                                 item.RangeCommitments = adminCommitment.Commitments;
                             }
                             else if (isUserSetCommitment != null)
@@ -202,7 +202,7 @@ namespace DataReef.TM.Services
 
                                 item.TodayCommitments = (Convert.ToInt32(userCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
 
-                                item.WeekCommitments = userCommitment.Commitments;
+                                item.WeekCommitments = Convert.ToString(Convert.ToInt32(item.TodayCommitments) * 7);
                                 item.RangeCommitments = userCommitment.Commitments;
                             }
                             else
@@ -334,8 +334,8 @@ namespace DataReef.TM.Services
                 using (DataContext dc = new DataContext())
                 { 
                     List<List<object>> reportSet = new List<List<object>>();
-
-                    var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.EndDate <= req.CurrentDate.AddMonths(3) && a.PersonID == req.PersonID).AsNoTracking().ToList();
+                    req.EndDate = req.CurrentDate.AddMonths(3);
+                    var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.EndDate <= req.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
                     List<QuotaCommitementsDisposition> allDispositions = new List<QuotaCommitementsDisposition>();
 
                     var quotas = data.Where(a => a.Flags == 1 && a.Type == 1).ToList();
@@ -369,7 +369,7 @@ namespace DataReef.TM.Services
                                     disposition.Quota = "0";
 
                                 disposition.TodayQuotas = (Convert.ToInt32(disposition.Quota) / Convert.ToInt32(item.EndDate.Subtract(item.StartDate).TotalDays)).ToString();
-                                disposition.WeekQuotas = disposition.Quota;
+                                disposition.WeekQuotas = Convert.ToString(Convert.ToInt32(disposition.TodayQuotas) * 7);
                                 disposition.RangeQuotas = disposition.Quota;
 
                                 if (isAdminSetCommitment != null && isUserSetCommitment == null)
@@ -381,7 +381,7 @@ namespace DataReef.TM.Services
 
                                     disposition.TodayCommitments = (Convert.ToInt32(adminCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
 
-                                    disposition.WeekCommitments = adminCommitment.Commitments;
+                                    disposition.WeekCommitments = Convert.ToString(Convert.ToInt32(disposition.TodayCommitments) * 7);
                                     disposition.RangeCommitments = adminCommitment.Commitments;
                                 }
                                 else if (isUserSetCommitment != null)
@@ -393,7 +393,7 @@ namespace DataReef.TM.Services
 
                                     disposition.TodayCommitments = (Convert.ToInt32(userCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
 
-                                    disposition.WeekCommitments = userCommitment.Commitments;
+                                    disposition.WeekCommitments = Convert.ToString(Convert.ToInt32(disposition.TodayCommitments) * 7);
                                     disposition.RangeCommitments = userCommitment.Commitments;
                                 }
                                 else
@@ -430,10 +430,10 @@ namespace DataReef.TM.Services
                         reportSet.Add(new List<object>(7){
                         item.Disposition,
                         itemDis?.TodayQuotas != null ? itemDis?.TodayQuotas : "0",
-                        itemDis?.TodayCommitments  != null ? itemDis?.WeekQuotas : "0",
-                        itemDis?.WeekQuotas  != null ? itemDis?.RangeQuotas : "0",
-                        itemDis?.WeekCommitments  != null ? itemDis?.TodayCommitments : "0",
-                        itemDis?.RangeQuotas  != null ? itemDis?.WeekCommitments : "0",
+                        itemDis?.TodayCommitments  != null ? itemDis?.TodayCommitments : "0",
+                        itemDis?.WeekQuotas  != null ? itemDis?.WeekQuotas : "0",
+                        itemDis?.WeekCommitments  != null ? itemDis?.WeekCommitments : "0",
+                        itemDis?.RangeQuotas  != null ? itemDis?.RangeQuotas : "0",
                         itemDis?.RangeCommitments  != null ? itemDis?.RangeCommitments : "0"
                     });
                     }
