@@ -1772,5 +1772,21 @@ namespace DataReef.TM.Services.Services
             AddLeadJobNimbus(ret.Guid); 
             return ret;
         }
+
+        public async Task<List<SunnovaLeadCredit>> SendLeadCreditSunnova(Guid propertyid)
+        {
+            List<SunnovaLeadCredit> lead = new List<SunnovaLeadCredit>();
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null && prop.SunnovaLeadID != null)
+                {
+                    lead = _sunnovaAdapter.Value.PassSunnovaLeadCredit(prop);
+                    dataContext.SaveChanges();
+                }
+            }
+
+            return lead;
+        }
     }
 }

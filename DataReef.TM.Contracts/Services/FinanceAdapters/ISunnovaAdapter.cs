@@ -14,6 +14,9 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
         List<SunnovaLead> CreateSunnovaLead(Property property);
 
         [OperationContract]
+        List<SunnovaLeadCredit> PassSunnovaLeadCredit(Property property);
+
+        [OperationContract]
         string GetSunnovaToken();
     }
 }

@@ -62,6 +62,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             public string external_id { get; set; }
         }
 
+        public class SunnovaCredit
+        {
+
+        }
 
         public string GetSunnovaToken()
         {
@@ -187,10 +191,67 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<List<SunnovaContacts>>(content);
 
+                ApiLogEntry apilog = new ApiLogEntry();
+                apilog.Id = Guid.NewGuid();
+                apilog.User = "Sunnova";
+                apilog.Machine = Environment.MachineName;
+                apilog.RequestContentBody = SunnovaLeadID;
+                apilog.RequestContentType = "";
+                apilog.RequestTimestamp = DateTime.UtcNow;
+                apilog.RequestUri = "Sunnova";
+                apilog.ResponseContentBody = content;
+
+                dc.ApiLogEntries.Add(apilog);
+                dc.SaveChanges();
+
                 return ret;
             }
 
         }
+
+        public List<SunnovaLeadCredit> PassSunnovaLeadCredit(Property property)
+        {
+
+            using (var dc = new DataContext())
+            {
+                var SunnovaLeadID = property.SunnovaLeadID;
+
+                var SunnovaData = dc.ApiLogEntries.SingleOrDefault(r => r.RequestContentBody == SunnovaLeadID);
+                var SunnovaDatas = SunnovaData != null ? SunnovaData.ResponseContentBody : String.Empty;
+
+                SunnovaLeadCredit SunnovaContact = JsonConvert.DeserializeObject<SunnovaLeadCredit>(SunnovaDatas);
+
+                var SunnovaContactId = SunnovaContact.Contacts;
+                SunnovaCredit req = new SunnovaCredit();
+
+                string token = GetSunnovaToken();
+                var request = new RestRequest($"/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=email", Method.POST);
+                request.AddJsonBody(req);
+                request.AddHeader("Authorization", "Bearer " + token);
+
+                var response = client.Execute(request);
+
+                if (response.StatusCode != HttpStatusCode.Created)
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=email", null, token);
+                    throw new ApplicationException($"passSunnovaLeadCredit Failed. {response.Content}");
+                }
+
+                try
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=email", null, token);
+                }
+                catch (Exception)
+                {
+                }
+
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<List<SunnovaLeadCredit>>(content);
+
+                return ret;
+            }
+        }
+
         public override string GetBaseUrl(Guid ouid)
         {
             throw new NotImplementedException();
