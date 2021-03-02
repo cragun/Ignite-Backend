@@ -133,8 +133,8 @@ namespace DataReef.TM.Services
         {
             using (DataContext dc = new DataContext())
             {
-                var data = dc.QuotasCommitments.Where(a => req.StartDate.Date >= a.StartDate &&
-                req.StartDate.Date <= a.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
+                var data = dc.QuotasCommitments.Where(a => req.StartDate.Date == a.StartDate &&
+                req.EndDate.Date == a.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
 
                 List<List<object>> report = new List<List<object>>();
 
@@ -444,17 +444,16 @@ namespace DataReef.TM.Services
         //    }
         //} 
 
-        public bool IsCommitmentsSetByUser(QuotasCommitment req)
+        public QuotasCommitment IsCommitmentsSetByUser(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
-            {
-                bool isSet = false;
-                var data = dc.QuotasCommitments.Where(a => req.CurrentDate.Date >= a.StartDate && req.CurrentDate.Date <= a.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
-                if (data.Count > 0)
+            {  
+                var data = dc.QuotasCommitments.Where(a => req.CurrentDate.Date >= a.StartDate && req.CurrentDate.Date <= a.EndDate && a.PersonID == req.PersonID).AsNoTracking().FirstOrDefault();
+                if (data != null)
                 {
-                    isSet = true;
+                    data.IsQuotatSet = true; 
                 }
-                return isSet;
+                return data;
             }
         }
     }

@@ -1744,7 +1744,7 @@ namespace DataReef.TM.Services.Services
                 var prop = dataContext.PropertyNotes.FirstOrDefault(x => x.Guid == propertyid);
                 if (prop != null)
                 {
-                    var lead = await _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+                    var lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
                     prop.JobNimbusID = lead != null ? lead.jnid : "";
                     dataContext.SaveChanges();
 

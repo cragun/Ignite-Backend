@@ -63,6 +63,8 @@ namespace DataReef.TM.Models
         [NotMapped]
         public DateTime CurrentDate { get; set; }
 
+        [NotMapped]
+        public bool IsQuotatSet { get; set; }
 
         #region Navigation Properties
 

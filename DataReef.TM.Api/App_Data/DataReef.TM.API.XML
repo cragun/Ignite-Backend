@@ -834,6 +834,9 @@
         <member name="M:DataReef.TM.Api.Controllers.PropertiesController.AddProperty(DataReef.TM.Models.Property)">
             get territories from address
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertiesController.AddPropertyNote(DataReef.TM.Models.PropertyNote)">
+            get territories from address
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.SignaturesController.SignCompleted">
             <summary>
             The requests should not reach this endpoint, as the client app should intercept the RightSignature redirect and close the signature screen.

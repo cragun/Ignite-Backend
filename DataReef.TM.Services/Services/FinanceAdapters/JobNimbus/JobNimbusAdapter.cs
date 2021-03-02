@@ -143,7 +143,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-        public async Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note)
+        public NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note)
         {
             using (var dc = new DataContext())
             {
