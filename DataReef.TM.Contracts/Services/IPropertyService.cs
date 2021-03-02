@@ -95,6 +95,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         Property AddProperty(Property req);
+
+        [OperationContract]
+        Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid);
         
     }
 }

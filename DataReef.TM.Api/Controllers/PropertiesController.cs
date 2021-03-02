@@ -447,5 +447,21 @@ namespace DataReef.TM.Api.Controllers
                 throw ex;
             }
         }
+
+
+        /// get territories from address
+        [Route("addpropertynote")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddPropertyNote(PropertyNote req)
+        {
+            try
+            {
+               return Ok(propertyService.AddJobNimbusNote(req.Guid));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
