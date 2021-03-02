@@ -218,8 +218,7 @@ namespace DataReef.TM.Services
                         item.WeekCommitments,
                         item.RangeQuotas,
                         item.RangeCommitments,
-                    };
-
+                    }; 
                             report.Add(commitments);
                         }
                     }
