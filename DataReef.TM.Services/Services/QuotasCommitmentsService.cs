@@ -77,8 +77,7 @@ namespace DataReef.TM.Services
             }
 
             return entity;
-        }
-
+        } 
 
         public List<List<object>> GetQuotasReport()
         {
