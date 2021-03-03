@@ -225,7 +225,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 SunnovaCredit req = new SunnovaCredit();
 
                 string token = GetSunnovaToken();
-                var request = new RestRequest($"/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=email", Method.POST);
+                var request = new RestRequest($"/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=email", Method.PATCH);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
 
