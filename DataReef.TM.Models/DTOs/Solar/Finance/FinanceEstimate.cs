@@ -141,8 +141,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
                 //{
                 //    return 0;  
                 //} 
-
-
+                 
                 if (BaseLoanAmount != 0)
                 {
                     return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
