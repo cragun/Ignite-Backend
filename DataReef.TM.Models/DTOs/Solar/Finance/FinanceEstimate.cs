@@ -26,6 +26,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             LoanPayment = plan.Type != FinancePlanType.Mortgage ? response.MonthlyPayment : 0;
             InterestRate = response.StatedApr;
             MortgagePayment = mortgagePayment;
+           
             switch (plan.Type)
             {
                 case FinancePlanType.PPA:
@@ -54,7 +55,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             TotalSavings = response.TotalSavings;
 
             TakeHomeIncentives = response.TotalTakeHomeIncentives;
-
+            TotalAddersCosts = response.TotalAddersCosts;
             Name = plan.Type == FinancePlanType.Mortgage ? $"Mortgage {Terms} / {InterestRate.ToString("n2")}%" : plan.Name;
 
             TotalInterestPayment = response.TotalInterestPayment;
@@ -87,7 +88,8 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public decimal TotalInterestPayment { get; set; }
 
         public decimal TakeHomeIncentives { get; set; }
-
+        public decimal TotalAddersCosts { get; set; }
+        
         /// <summary>
         /// In Years
         /// </summary>
