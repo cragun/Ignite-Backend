@@ -60,7 +60,11 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
             TotalInterestPayment = response.TotalInterestPayment;
             LenderFee = plan.LenderFee != null ? plan.LenderFee.Value : 0;
-            PPW = plan.PPW != null ? plan.PPW.Value : 0;
+            //PPW = plan.PPW != null ? plan.PPW.Value : 0;
+            PPW = Convert.ToDouble(Lcoe);
+
+
+            
         }
 
         public Guid FinancePlanDefinitionId { get; set; }
