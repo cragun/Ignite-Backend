@@ -88,6 +88,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public decimal TotalInterestPayment { get; set; }
 
         public decimal TakeHomeIncentives { get; set; }
+
         public decimal TotalAddersCosts { get; set; }
         
         /// <summary>
