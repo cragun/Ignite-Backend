@@ -46,7 +46,7 @@ namespace DataReef.TM.Services
             _inquiryService = inquiryService;
         }
 
-        public ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay , DateTime? EndRangeDay )
+        public ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay)
         {
             var results = new List<OrganizationReportRow>();
 
@@ -91,7 +91,7 @@ namespace DataReef.TM.Services
                         .Value
                         .ConditionalGetActivePeopleIDsForCurrentAndSubOUs(ou.Guid, true)
                         .Distinct();
-                        
+
 
 
                     var reportRow = new OrganizationReportRow
@@ -108,7 +108,7 @@ namespace DataReef.TM.Services
             return results;
         }
 
-        public ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, string proptype)
+        public async Task<ICollection<SalesRepresentativeReportRow>> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, string proptype)
         {
             var results = new List<SalesRepresentativeReportRow>();
 
@@ -139,7 +139,7 @@ namespace DataReef.TM.Services
                         ?.FirstOrDefault(s => s.Name == OUSetting.OU_Reporting_Settings)
                         ?.GetValue<OUReportingSettings>();
 
-            var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
+            var inquiryStatistics = await _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct();
 
             var peopleIdsWithOuAss = _personService.Value.GetMany(peopleIds, "OUAssociations", "", "", true).Where(p => !repExclusionList.Contains(p.Guid));
@@ -182,7 +182,7 @@ namespace DataReef.TM.Services
                     return new List<OrganizationSelfTrackedReportRow>();
                 }
 
-                return  (await context
+                return (await context
                          .OUs
                          .Where(o => (o.Guid == startOUID || o.ParentID == startOUID)).AsNoTracking().ToListAsync())
                          .Select(ou => new OrganizationSelfTrackedReportRow
@@ -267,7 +267,7 @@ namespace DataReef.TM.Services
             }
             foreach (var col in settings.PersonReportItems)
             {
-                var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);               
+                var matchingStat = stats?.FirstOrDefault(x => x.Name == col.ColumnName);
 
                 if (matchingStat != null)
                 {
@@ -275,7 +275,7 @@ namespace DataReef.TM.Services
                     {
                         if(!string.IsNullOrEmpty(proptype))
                         {
-                        	long isitzero = Convert.ToInt64(matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions));
+                            long isitzero = Convert.ToInt64(matchingStat.Actions.GetType().GetProperty(proptype).GetValue(matchingStat.Actions));
                             isallZeroproptype = isallZeroproptype && (isitzero == 0);
                             long isitzeroa = Convert.ToInt64(matchingStat.DaysActive.GetType().GetProperty(proptype).GetValue(matchingStat.DaysActive));
                             isallZeroproptype = isallZeroproptype && (isitzeroa == 0);
@@ -284,7 +284,7 @@ namespace DataReef.TM.Services
                         {
                             isallZeroproptype = false;
                         }
-                        
+
                         isallZero = isallZero && matchingStat.Actions.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.Actions) as int?), 0));
                         isallZero = isallZero && matchingStat.DaysActive.GetType().GetProperties().All(p => int.Equals((p.GetValue(matchingStat.DaysActive) as int?), 0));
                     }
@@ -297,7 +297,7 @@ namespace DataReef.TM.Services
 
                         if (ApptsCAPP != null && OPP != null)
                         {
-                        	  row.InquiryStatistics.Add(new Models.DataViews.Inquiries.InquiryStatisticsForPerson
+                            row.InquiryStatistics.Add(new Models.DataViews.Inquiries.InquiryStatisticsForPerson
                             {
                                 PersonId = personId,
                                 Name = col.ColumnName,
@@ -329,7 +329,7 @@ namespace DataReef.TM.Services
                     else
                     {
                         row.InquiryStatistics.Add(matchingStat);
-                    }                    
+                    }
                 }
                 else {
                     //add the object with default values

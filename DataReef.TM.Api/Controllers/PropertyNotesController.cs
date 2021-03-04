@@ -63,7 +63,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> QueryUsersForProperty(Guid propertyID, [FromBody]PropertyNoteUserQueryRequest request)
         {
-            var result = _propertyNoteService.QueryForPerson(propertyID, request?.Email, request?.Name);
+            var result = await _propertyNoteService.QueryForPerson(propertyID, request?.Email, request?.Name);
 
             return Ok(result);
         }
@@ -161,13 +161,13 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
         public async Task<IHttpActionResult> CreateNoteFromSmartboard([FromBody]SBNoteDTO request, string apiKey)
-         {
+        {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
             var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
 
             return Ok(result);
-        } 
+        }
 
         public class testmodel
         {
@@ -226,7 +226,7 @@ namespace DataReef.TM.Api.Controllers
 
             return Ok(result);
         }
-  
+
         /// <summary>
         /// deletes a note by its specified id
         /// </summary>

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace DataReef.TM.Api.Controllers
-{    
+{
     [RoutePrefix("api/v1/reports")]
     public class ReportsController : ApiController
     {
@@ -44,7 +44,7 @@ namespace DataReef.TM.Api.Controllers
                 switch (reportName)
                 {
                     case "OrganizationReport": return Ok<ICollection<OrganizationReportRow>>(_reportingService.GetOrganizationReport(ouID, specifiedDay, StartRangeDay, EndRangeDay));
-                    case "SalesRepresentativeReport": return Ok<ICollection<SalesRepresentativeReportRow>>(_reportingService.GetSalesRepresentativeReport(ouID, specifiedDay, StartRangeDay, EndRangeDay, proptype));
+                    case "SalesRepresentativeReport": return Ok<ICollection<SalesRepresentativeReportRow>>(await _reportingService.GetSalesRepresentativeReport(ouID, specifiedDay, StartRangeDay, EndRangeDay, proptype));
                     case "OrganizationSelfTrackedReport": return Ok<ICollection<OrganizationSelfTrackedReportRow>>(await _reportingService.GetOrganizationSelfTrackedReport(ouID, specifiedDay));
                     default: return BadRequest();
                 }
@@ -57,14 +57,14 @@ namespace DataReef.TM.Api.Controllers
 
 
         [HttpGet]
-        [Route("csv")]                                                      
+        [Route("csv")]
         public async Task<IHttpActionResult> GenerateCsvReport(CsvReportType reportType, Guid ouID, ReportingPeriod reportingPeriod, DateTime? specifiedDay = null)
         {
             byte[] fileBytes;
             try
             {
                 switch (reportType)
-                {                    
+                {
                     case CsvReportType.OrganizationSelfTrackedReport:
                         fileBytes = _csvReportingService.GenerateOrganizationSelfTrackedReport(ouID, specifiedDay, reportingPeriod);
                         break;

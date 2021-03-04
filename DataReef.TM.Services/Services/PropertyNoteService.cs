@@ -82,20 +82,20 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public IEnumerable<Person> QueryForPerson(Guid propertyID, string email, string name)
+        public async Task<IEnumerable<Person>> QueryForPerson(Guid propertyID, string email, string name)
         {
             using (var dc = new DataContext())
             {
-                var property = dc
+                var property = await dc
                     .Properties
-                    .Include(x => x.Territory)
-                    .FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == propertyID);
+                    .Include(x => x.Territory).AsNoTracking()
+                    .FirstOrDefaultAsync(x => !x.IsDeleted && !x.IsArchive && x.Guid == propertyID);
                 if (property?.Territory?.OUID == null)
                 {
                     return new List<Person>();
                 }
 
-                return _ouService.Value.GetPersonsAssociatedWithOUOrAncestor(property.Territory.OUID, email, name);
+                return await _ouService.Value.GetPersonsAssociatedWithOUOrAncestor(property.Territory.OUID, email, name);
             }
         }
 
@@ -504,7 +504,7 @@ namespace DataReef.TM.Services.Services
                                 {
                                     _smsService.Value.SendSms("You received new notes", number);
                                 }
-                               // _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
+                                // _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
                             }
                         }
                     }
@@ -540,14 +540,14 @@ namespace DataReef.TM.Services.Services
                                 {
                                     _smsService.Value.SendSms("You received new notes", number);
                                 }
-                               // _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
+                                // _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
                             }
                         }
 
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
                     }
                 }
-                 
+
                 return new SBNoteDTO
                 {
                     Guid = note.Guid,
@@ -618,7 +618,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 note.Content = noteRequest.Content;
-                
+
                 //if reply type is comment
                 if (noteRequest.ContentType == "Comment")
                 {
@@ -631,7 +631,7 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, property, dc);
 
-                         var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
 
                         if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
@@ -681,7 +681,7 @@ namespace DataReef.TM.Services.Services
                                 {
                                     _smsService.Value.SendSms("You received new notes", number);
                                 }
-                               // _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
+                                // _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
                             }
                         }
 
@@ -928,7 +928,7 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
                 //first get the property
-                var property = dc.Properties                    
+                var property = dc.Properties
                     .Include(x => x.Territory)
                     .Include(x => x.PropertyNotes)
                     .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
@@ -1168,7 +1168,7 @@ namespace DataReef.TM.Services.Services
                 smartboardNotificationID = _sbAdapter.Value.AddUserTaggingNotification(property, note.CreatedByID.Value, prsnid);
                 smartboardNotificationID = smartboardNotificationID.Replace("\"", string.Empty);
             }
-            catch { } 
+            catch { }
             Notification Notification = new Notification
             {
                 Value = note.Guid,
