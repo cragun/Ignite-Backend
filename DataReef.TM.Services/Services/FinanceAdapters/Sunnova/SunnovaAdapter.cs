@@ -209,7 +209,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
         }
 
-        public List<SunnovaLeadCredit> PassSunnovaLeadCredit(Property property)
+        public SunnovaLeadCreditResponse PassSunnovaLeadCredit(Property property)
         {
 
             using (var dc = new DataContext())
@@ -246,7 +246,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 }
 
                 var content = response.Content;
-                var ret = JsonConvert.DeserializeObject<List<SunnovaLeadCredit>>(content);
+                var ret = JsonConvert.DeserializeObject<SunnovaLeadCreditResponse>(content);
 
                 return ret;
             }

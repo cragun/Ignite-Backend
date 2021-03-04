@@ -3,6 +3,7 @@ using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Finance;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services.FinanceAdapters
 {
@@ -14,7 +15,7 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
         List<SunnovaLead> CreateSunnovaLead(Property property);
 
         [OperationContract]
-        List<SunnovaLeadCredit> PassSunnovaLeadCredit(Property property);
+        SunnovaLeadCreditResponse PassSunnovaLeadCredit(Property property);
 
         [OperationContract]
         string GetSunnovaToken();

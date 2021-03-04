@@ -100,7 +100,7 @@ namespace DataReef.TM.Contracts.Services
         Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid);
 
         [OperationContract]
-        Task<List<SunnovaLeadCredit>> SendLeadCreditSunnova(Guid propertyid);
+        Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid);
 
     }
 }

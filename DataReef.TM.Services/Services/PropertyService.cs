@@ -1773,20 +1773,27 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
-        public async Task<List<SunnovaLeadCredit>> SendLeadCreditSunnova(Guid propertyid)
+        public async Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid)
         {
-            List<SunnovaLeadCredit> lead = new List<SunnovaLeadCredit>();
+
             using (var dataContext = new DataContext())
             {
                 var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null && prop.SunnovaLeadID != null)
                 {
-                    lead = _sunnovaAdapter.Value.PassSunnovaLeadCredit(prop);
+                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCredit(prop);
+                    //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
                     dataContext.SaveChanges();
+
+                    return lead;
+                }
+                else
+                {
+                    return new SunnovaLeadCreditResponse();
                 }
             }
 
-            return lead;
+
         }
     }
 }

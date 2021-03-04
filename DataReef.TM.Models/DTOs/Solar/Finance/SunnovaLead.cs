@@ -62,13 +62,21 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public object Longitude { get; set; }
     }
 
-    public class ContactId
+    public class Contact_Id
     {
         public string id { get; set; }
     }
 
     public class SunnovaLeadCredit
     {
-        public ContactId Contacts { get; set; }
+        public Contact_Id Contacts { get; set; }
     }
+
+    public class SunnovaLeadCreditResponse
+    {
+        public string Contact_Id { get; set; }
+        public string Message { get; set; }
+        public object Signing_URL { get; set; }
+    }
+
 }
