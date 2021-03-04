@@ -206,7 +206,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 return ret;
             }
-
         }
 
         public SunnovaLeadCreditResponse PassSunnovaLeadCredit(Property property)
