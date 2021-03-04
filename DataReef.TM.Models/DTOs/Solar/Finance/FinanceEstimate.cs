@@ -160,17 +160,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public decimal FinalLoanAmount
         {
             get
-            {
-                //if (LoanPayment != 0)
-                //{ 
-                //    return Math.Round(LoanPayment * ((LoanPayment / (LoanPayment * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
-                //}
-                //else
-                //{
-                //    return 0;  
-                //} 
-
-
+            {  
                 if (BaseLoanAmount != 0)
                 {
                     return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(DealerFee) / 100))))), 2); ;
