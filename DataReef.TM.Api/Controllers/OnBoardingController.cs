@@ -49,7 +49,7 @@ namespace DataReef.TM.Api.Controllers
             }
             req.Validate(true);
 
-            await ouService.CreateNewOU(req);
+            ouService.CreateNewOU(req);
             return Ok();
         }
 
@@ -63,7 +63,7 @@ namespace DataReef.TM.Api.Controllers
             }
             req.Validate(false);
 
-            await ouService.EditOU(ouid, req);
+            ouService.EditOU(ouid, req);
             return Ok();
         }
 
@@ -76,7 +76,7 @@ namespace DataReef.TM.Api.Controllers
                 throw new ApplicationException("Invalid request. No data!");
             }
 
-            await ouService.EditOUSettings(ouid, req);
+            ouService.EditOUSettings(ouid, req);
             return Ok();
         }
 
@@ -84,7 +84,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("lookup/{parentID?}")]
         public async Task<IHttpActionResult> GetOnboardingLookupData(Guid? parentID)
         {
-            return Ok(await ouService.GetOnboardingLookupData(parentID));
+            return Ok(ouService.GetOnboardingLookupData(parentID));
         }
 
 
@@ -92,7 +92,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("oustest")]
         public async Task<IHttpActionResult> AddOUSettingsTest()
         {
-            await ouService.AddOUSettingsTest();
+            ouService.AddOUSettingsTest();
             return Ok("success");
         }
 
@@ -100,7 +100,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("genericproposal/settings")]
         public async Task<IHttpActionResult> AddGenericProposalOUSettings()
         {
-            await ouService.AddGenericProposalOUSettings();
+            ouService.AddGenericProposalOUSettings();
             return Ok("success");
         }
 

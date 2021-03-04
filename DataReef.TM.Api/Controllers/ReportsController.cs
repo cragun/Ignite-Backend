@@ -44,7 +44,7 @@ namespace DataReef.TM.Api.Controllers
                 switch (reportName)
                 {
                     case "OrganizationReport": return Ok<ICollection<OrganizationReportRow>>(_reportingService.GetOrganizationReport(ouID, specifiedDay, StartRangeDay, EndRangeDay));
-                    case "SalesRepresentativeReport": return Ok<ICollection<SalesRepresentativeReportRow>>(await _reportingService.GetSalesRepresentativeReport(ouID, specifiedDay, StartRangeDay, EndRangeDay, proptype));
+                    case "SalesRepresentativeReport": return Ok<ICollection<SalesRepresentativeReportRow>>(_reportingService.GetSalesRepresentativeReport(ouID, specifiedDay, StartRangeDay, EndRangeDay, proptype));
                     case "OrganizationSelfTrackedReport": return Ok<ICollection<OrganizationSelfTrackedReportRow>>(await _reportingService.GetOrganizationSelfTrackedReport(ouID, specifiedDay));
                     default: return BadRequest();
                 }

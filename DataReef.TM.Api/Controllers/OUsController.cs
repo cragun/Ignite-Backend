@@ -83,7 +83,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID:guid}/users")]
         public async Task<IHttpActionResult> GetAllUsersForCurrentAndSubOUs(Guid ouID, string include = "", string fields = "", bool deepSearch = true)
         {
-            var userIds = await this.ouService.ConditionalGetActiveUserIDsForCurrentAndSubOUs(ouID, deepSearch);
+            var userIds = this.ouService.ConditionalGetActiveUserIDsForCurrentAndSubOUs(ouID, deepSearch);
             var ret = userService.GetMany(userIds, include, fields);
             SetupSerialization(ret, include, string.Empty, fields);
             return Ok<ICollection<User>>(ret);
@@ -94,7 +94,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID:guid}/users/active")]
         public async Task<HttpResponseMessage> GetActiveUsers(Guid ouID)
         {
-            var data = await ouService.GetActiveUsersCSV(ouID);
+            var data = ouService.GetActiveUsersCSV(ouID);
 
             MemoryStream ms = new MemoryStream(data.ActiveUsersCSV);
             HttpResponseMessage response = new HttpResponseMessage { Content = new StreamContent(ms) };
@@ -109,7 +109,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID:guid}/ouassociations")]
         public async Task<IHttpActionResult> GetOUAssociations(Guid ouID, string include = "", string exclude = "", string fields = "", bool deepSearch = true)
         {
-            var ouAssociationIds = await this.ouService.ConditionalGetActiveOUAssociationIDsForCurrentAndSubOUs(ouID, deepSearch);
+            var ouAssociationIds = this.ouService.ConditionalGetActiveOUAssociationIDsForCurrentAndSubOUs(ouID, deepSearch);
             var ret = associationService.GetMany(ouAssociationIds, include, exclude, fields);
             SetupSerialization(ret, include, exclude, fields);
             return Ok<ICollection<OUAssociation>>(ret);
@@ -130,7 +130,7 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous,InjectAuthPrincipal]
         public async Task<IHttpActionResult> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
         {
-            var result = await ouService.GetFinancePlanDefinitionsProposal(proposalid, include, exclude, fields);
+            var result = ouService.GetFinancePlanDefinitionsProposal(proposalid, include, exclude, fields);
             return Ok(result);
         }
 
@@ -162,7 +162,7 @@ namespace DataReef.TM.Api.Controllers
             {
                 return BadRequest();
             }
-            return Ok(await ouService.GetSubOUsForOuSetting(ouID, settingName));
+            return Ok(ouService.GetSubOUsForOuSetting(ouID, settingName));
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID:guid}/move")]
         public async Task<IHttpActionResult> MoveOU(Guid ouID, Guid newParentOUID)
         {
-            await ouService.MoveOU(ouID, newParentOUID);
+            ouService.MoveOU(ouID, newParentOUID);
             return Ok();
         }
 
@@ -270,7 +270,7 @@ namespace DataReef.TM.Api.Controllers
             bool checkTime = CryptographyHelper.checkTime(apikey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apikey);
 
-            string ret = await ouService.InsertApikeyForOU(request, DecyptApiKey);
+            string ret = ouService.InsertApikeyForOU(request, DecyptApiKey);
             return Ok(ret); 
         }
 
@@ -289,7 +289,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("{ouID:guid}/tokenPrice")]
         public async Task<IHttpActionResult> GetTokenPriceInDollars(Guid ouID)
         {
-            var tokenPriceInDollars = await this.ouService.GetTokenPriceInDollars(ouID);
+            var tokenPriceInDollars = this.ouService.GetTokenPriceInDollars(ouID);
             return Ok(new { PricePerToken = tokenPriceInDollars });
         }
 
@@ -318,7 +318,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(OUChildrenAndTerritories))]
         public async Task<OUChildrenAndTerritories> GetWithChildrenAndTerritories(Guid ouid)
         {
-            return await ouService.GetOUWithChildrenAnTerritories(ouid);
+            return ouService.GetOUWithChildrenAnTerritories(ouid);
         }
 
 
@@ -328,7 +328,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("tree/{personID}")]
         public async Task<IHttpActionResult> TestOUTree(Guid personID)
         {
-            var result = await ouService.GetOUsRoleTree(personID);
+            var result = ouService.GetOUsRoleTree(personID);
             //var result = personService.CRMGetProperties(new Models.DTOs.Inquiries.CRMFilterRequest());
             return Ok(result);
         }
@@ -342,7 +342,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(IEnumerable<SBOURoleDTO>))]
         public async Task<IEnumerable<SBOURoleDTO>> GetRoles(string apiKey)
         {
-            return await ouService.GetAllRoles(apiKey);
+            return ouService.GetAllRoles(apiKey);
         }
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(SBOUDTO))]
         public async Task<SBOUDTO> GetOus(Guid ouID, string apiKey)
         {
-            return await ouService.GetSmartboardOus(ouID, apiKey);
+            return ouService.GetSmartboardOus(ouID, apiKey);
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(IEnumerable<SBOUDTO>))]
         public async Task<IEnumerable<SBOUDTO>> GetAllAccessibleOus(string apiKey)
         {
-            return await ouService.GetSmartboardAllOus(apiKey);
+            return ouService.GetSmartboardAllOus(apiKey);
         }
 
 
@@ -398,7 +398,7 @@ namespace DataReef.TM.Api.Controllers
                 zapierOusModel zapierou = new zapierOusModel();
                 zapierou.Latitude = (float)latlong.Latitude;
                 zapierou.Longitude = (float)latlong.Longitude;
-                zapierou.ouslist = await ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
+                zapierou.ouslist = ouService.GetzapierOusList((float)latlong.Latitude, (float)latlong.Longitude, " ");
                 return Ok(zapierou);
             }
             catch (System.Exception ex)
@@ -427,8 +427,8 @@ namespace DataReef.TM.Api.Controllers
             {
                 TerritoryModel teritory = new TerritoryModel();
                 teritory.apikey = ouService.GetApikeyByOU(ouid);
-                teritory.TerritorieswithLatLong = await ouService.GetTerritoriesListByOu(latitude, longitude, ouid);
-                teritory.Territories = await ouService.GetTerritoriesListByOu(0, 0, ouid);
+                teritory.TerritorieswithLatLong = ouService.GetTerritoriesListByOu(latitude, longitude, ouid);
+                teritory.Territories = ouService.GetTerritoriesListByOu(0, 0, ouid);
                 return Ok(teritory);
             }
             catch (System.Exception)
@@ -490,7 +490,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(IEnumerable<OURole>))]
         public async Task<IEnumerable<OURole>> GetOuRoles()
         {
-            return await ouService.GetOuRoles();
+            return ouService.GetOuRoles();
         }
 
         public override async Task<OU> Get(Guid guid, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
@@ -523,7 +523,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> UpdateOuRolesPermission(List<OURole> roles)
         {
-           var response = await ouService.UpdateOuRolesPermission(roles);
+           var response = ouService.UpdateOuRolesPermission(roles);
             return Ok(new GenericResponse<bool> { Response = response });
         }
          
@@ -532,7 +532,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> UpdateOuPermissions(List<OU> ous)
         {
-            var response = await ouService.UpdateOuPermissions(ous);
+            var response = ouService.UpdateOuPermissions(ous);
             return Ok(new GenericResponse<bool> { Response = response });
         }
 
@@ -542,7 +542,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(OU))]
         public async Task<OU> InheritsParentOuPermissions(OU ou)
         {
-            var response = await ouService.InheritsParentOuPermissions(ou);
+            var response = ouService.InheritsParentOuPermissions(ou);
             return response;
         }
 
@@ -560,7 +560,7 @@ namespace DataReef.TM.Api.Controllers
                 throw new ApplicationException("Invalid request. No OU Role Name!");
             }
 
-            await ouService.CreateNewOURole(req);
+            ouService.CreateNewOURole(req);
             return Ok();
         }
 
@@ -569,7 +569,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("getourole/{roleID}")]
         public async Task<IHttpActionResult> GetOURole(Guid? roleID)
         {
-                return Ok(await ouService.GetOuRoleByID(roleID));
+                return Ok(ouService.GetOuRoleByID(roleID));
         }
 
         [HttpPatch]
@@ -581,7 +581,7 @@ namespace DataReef.TM.Api.Controllers
                 throw new ApplicationException("Invalid request. No data!");
             }
 
-            await ouService.EditOURole(ouid, req);
+            ouService.EditOURole(ouid, req);
             return Ok();
         }
 
@@ -600,7 +600,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("addFavourite")]
         public async Task<IHttpActionResult> InsertFavouriteOu(FavouriteOu request)
         {
-            var territory = await ouService.InsertFavouriteOu(request.OUID, request.PersonID);
+            var territory = ouService.InsertFavouriteOu(request.OUID, request.PersonID);
             return Ok(new GenericResponse<string> { Response = "added successfully" });
         }
 
@@ -608,7 +608,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("removeFavourite")]
         public async Task<IHttpActionResult> RemoveFavouriteOu(FavouriteOu request)
         {
-            await ouService.RemoveFavouriteOu(request.OUID, request.PersonID);
+            ouService.RemoveFavouriteOu(request.OUID, request.PersonID);
             return Ok(new GenericResponse<string> { Response = "removed successfully" });
         }
          
@@ -617,8 +617,8 @@ namespace DataReef.TM.Api.Controllers
         [AllowAnonymous, InjectAuthPrincipal] 
         public async Task<IHttpActionResult> FavouriteOusList(FavouriteOu request)
         {
-            var ousList = await ouService.FavouriteOusList(request.PersonID);
-            var territoriesList = await ouService.FavouriteTerritoriesList(request.PersonID);
+            var ousList = ouService.FavouriteOusList(request.PersonID);
+            var territoriesList = ouService.FavouriteTerritoriesList(request.PersonID);
 
 
             var response = new
@@ -638,7 +638,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("addMasterTerritory")]
         public async Task<IHttpActionResult> InsertMasterTerritory()
         {
-            var res = await ouService.InsertMasterTerritory();
+            var res = ouService.InsertMasterTerritory();
             return Ok(new GenericResponse<string> { Response = res });
         }
 

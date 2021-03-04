@@ -82,20 +82,20 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public async Task<IEnumerable<Person>> QueryForPerson(Guid propertyID, string email, string name)
+        public IEnumerable<Person> QueryForPerson(Guid propertyID, string email, string name)
         {
             using (var dc = new DataContext())
             {
-                var property = await dc
+                var property = dc
                     .Properties
-                    .Include(x => x.Territory).AsNoTracking()
-                    .FirstOrDefaultAsync(x => !x.IsDeleted && !x.IsArchive && x.Guid == propertyID);
+                    .Include(x => x.Territory)
+                    .FirstOrDefault(x => !x.IsDeleted && !x.IsArchive && x.Guid == propertyID);
                 if (property?.Territory?.OUID == null)
                 {
                     return new List<Person>();
                 }
 
-                return await _ouService.Value.GetPersonsAssociatedWithOUOrAncestor(property.Territory.OUID, email, name);
+                return _ouService.Value.GetPersonsAssociatedWithOUOrAncestor(property.Territory.OUID, email, name);
             }
         }
 
