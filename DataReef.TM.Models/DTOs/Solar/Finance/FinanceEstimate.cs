@@ -60,6 +60,8 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
             TotalInterestPayment = response.TotalInterestPayment;
             LenderFee = plan.LenderFee != null ? plan.LenderFee.Value : 0;
+            DealerFee = plan.DealerFee != null ? plan.DealerFee.Value : 0;
+            
             PPW = plan.PPW != null ? plan.PPW.Value : 0;
 
             //new calc
@@ -128,6 +130,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// </summary>
         public bool CanBuild { get; set; }
         public double LenderFee { get; set; } 
+        public double DealerFee { get; set; } 
         public double PPW { get; set; }
         public decimal LenderFeesInAmount
         {
@@ -144,7 +147,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
                  
                 if (BaseLoanAmount != 0)
                 {
-                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
+                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(DealerFee) / 100)))) - 1), 2); ;
                 }
                 else
                 {
@@ -170,7 +173,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
                 if (BaseLoanAmount != 0)
                 {
-                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(LenderFee) / 100))))), 2); ;
+                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(DealerFee) / 100))))), 2); ;
                 }
                 else
                 {
