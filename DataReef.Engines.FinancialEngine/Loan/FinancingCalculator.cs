@@ -208,7 +208,8 @@ namespace DataReef.Engines.FinancialEngine.Loan
 
                 TotalInterestPayment = years.Sum(y => y.InterestCharge).RoundValue(),
                 TotalSolarPaymentsCost = (years.Sum(y => y.PaymentAmount) + request.DownPayment + request.UpfrontRebate).RoundValue(),
-                TotalSavings = (years.Sum(y => y.Savings) - request.DownPayment + unappliedITC).RoundValue(),
+                TotalSavings = (years.Sum(y => y.Savings) - request.DownPayment + unappliedITC).RoundValue(), 
+
             };
 
             //TODO: Check w/ Jason if we need to subtract incentives from total principal
@@ -776,7 +777,7 @@ namespace DataReef.Engines.FinancialEngine.Loan
                             clonedRequest.DownPayment = clonedRequest.AmountToFinance;
 
                             var cashResponse = CalculateLoan(clonedRequest, financePlanDefinition);
-                            var cashEstimate = new FinanceEstimate(cashResponse, financePlanDefinition, currentMortgagePayment);
+                            var cashEstimate = new FinanceEstimate(cashResponse, financePlanDefinition, currentMortgagePayment, clonedRequest);
 
                             result.Add(cashEstimate);
                             break;
@@ -793,7 +794,7 @@ namespace DataReef.Engines.FinancialEngine.Loan
                                     loanResponse.MonthlyPayment = enhancedResponse.MonthlyPayment;
                                 }
 
-                                var loanEstimate = new FinanceEstimate(loanResponse, financePlanDefinition, currentMortgagePayment);
+                                var loanEstimate = new FinanceEstimate(loanResponse, financePlanDefinition, currentMortgagePayment , clonedRequest);
 
                                 result.Add(loanEstimate);
                             }
@@ -808,7 +809,7 @@ namespace DataReef.Engines.FinancialEngine.Loan
                             try
                             {
                                 var leaseResponse = CalculateLease(clonedRequest);
-                                var leaseEstimate = new FinanceEstimate(leaseResponse, financePlanDefinition, currentMortgagePayment);
+                                var leaseEstimate = new FinanceEstimate(leaseResponse, financePlanDefinition, currentMortgagePayment, clonedRequest);
 
                                 result.Add(leaseEstimate);
                             }
@@ -838,7 +839,7 @@ namespace DataReef.Engines.FinancialEngine.Loan
                                     // TakeHomeIncentives should be taken from the Entire Mortgage calculation
                                     solarMortgageResponse.TotalTakeHomeIncentives = entireMortgageResponse.TotalTakeHomeIncentives;
 
-                                    var mortgageEstimate = new FinanceEstimate(solarMortgageResponse, financePlanDefinition, entireMortgageResponse.MonthlyPayment);
+                                    var mortgageEstimate = new FinanceEstimate(solarMortgageResponse, financePlanDefinition, entireMortgageResponse.MonthlyPayment , clonedRequest);
 
                                     // Calculate the difference between current mortgage total Interest & proposed mortgage iterest 
                                     mortgageEstimate.MortgageInterestSavings = currentMortgage.TotalInterest - entireMortgageResponse.TotalInterestPayment;

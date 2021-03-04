@@ -61,6 +61,13 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             TotalInterestPayment = response.TotalInterestPayment;
             LenderFee = plan.LenderFee != null ? plan.LenderFee.Value : 0;
             PPW = plan.PPW != null ? plan.PPW.Value : 0;
+
+            //new calc
+            BaseLoanAmount = ((Convert.ToDecimal(PPW) * Convert.ToDecimal(request?.SystemSize)) + request.TotalAddersCosts) - request.UpfrontRebate - request.DownPayment;
+
+
+            FinalPPW = Math.Round((FinalLoanAmount + request.DownPayment) / request.SystemSize , 2);
+            PPW = Convert.ToDouble(FinalPPW);
         }
 
         public Guid FinancePlanDefinitionId { get; set; }
@@ -90,6 +97,10 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public decimal TakeHomeIncentives { get; set; }
 
         public decimal TotalAddersCosts { get; set; }
+
+
+        public decimal BaseLoanAmount { get; set; }
+        public decimal FinalPPW { get; set; }
         
         /// <summary>
         /// In Years
@@ -122,14 +133,49 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         {
             get
             {
-                if (LoanPayment != 0)
-                { 
-                    return Math.Round(LoanPayment * ((LoanPayment / (LoanPayment * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
+                //if (LoanPayment != 0)
+                //{ 
+                //    return Math.Round(LoanPayment * ((LoanPayment / (LoanPayment * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
+                //}
+                //else
+                //{
+                //    return 0;  
+                //} 
+                 
+                if (BaseLoanAmount != 0)
+                {
+                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
                 }
                 else
                 {
-                    return 0;  
-                } 
+                    return 0;
+                }
+            }
+        }
+
+
+        public decimal FinalLoanAmount
+        {
+            get
+            {
+                //if (LoanPayment != 0)
+                //{ 
+                //    return Math.Round(LoanPayment * ((LoanPayment / (LoanPayment * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
+                //}
+                //else
+                //{
+                //    return 0;  
+                //} 
+
+
+                if (BaseLoanAmount != 0)
+                {
+                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(LenderFee) / 100))))), 2); ;
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
     }
