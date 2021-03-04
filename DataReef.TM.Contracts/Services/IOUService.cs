@@ -46,16 +46,16 @@ namespace DataReef.TM.Contracts.Services
         ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganization(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
 
         [OperationContract]
-        ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
+        Task<ICollection<InquiryStatisticsForPerson>> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, IEnumerable<Guid> excludedReps = null);
 
         [OperationContract]
-        ICollection<Guid> ConditionalGetActiveUserIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch);
+        Task<ICollection<Guid>> ConditionalGetActiveUserIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch);
 
         [OperationContract]
         ICollection<Guid> ConditionalGetActivePeopleIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch);
 
         [OperationContract]
-        ICollection<Guid> ConditionalGetActiveOUAssociationIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch);
+        Task<ICollection<Guid>> ConditionalGetActiveOUAssociationIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch);
 
         [OperationContract]
         ICollection<Territory> GetOUTreeTerritories(Guid ouID, string territoryName, bool deletedItems);
@@ -74,79 +74,79 @@ namespace DataReef.TM.Contracts.Services
         ICollection<Guid> GetOUAndChildrenGuids(Guid ouid);
 
         [OperationContract]
-        void MoveOU(Guid ouID, Guid newParentOUID);
+        Task MoveOU(Guid ouID, Guid newParentOUID);
 
         [OperationContract]
-        float GetTokenPriceInDollars(Guid ouid);
+        Task<float> GetTokenPriceInDollars(Guid ouid);
 
         [OperationContract]
         Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
-        ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "");
+        Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "");
 
         [OperationContract]
         OU GetByShapesVersion(Guid ouid, ICollection<OuShapeVersion> ouShapeVersions, bool deletedItems = false, string include = "");
 
         [OperationContract]
-        LookupDataView GetOnboardingLookupData(Guid? parentId);
+        Task<LookupDataView> GetOnboardingLookupData(Guid? parentId);
 
         [OperationContract]
-        void CreateNewOU(OnboardingOUDataView req);
+        Task CreateNewOU(OnboardingOUDataView req);
 
         [OperationContract]
-        void EditOU(Guid ouid, OnboardingOUDataView req);
+        Task EditOU(Guid ouid, OnboardingOUDataView req);
 
         [OperationContract]
-        void EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req);
+        Task EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req);
 
         [OperationContract]
-        void AddOUSettingsTest();
+        Task AddOUSettingsTest();
 
         [OperationContract]
-        void AddGenericProposalOUSettings(); 
+        Task AddGenericProposalOUSettings(); 
 
         [OperationContract]
         OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false);
 
         [OperationContract]
-        List<OUsAndRoleTree> GetOUsRoleTree(Guid personID);
+        Task<List<OUsAndRoleTree>> GetOUsRoleTree(Guid personID);
 
         [OperationContract]
         bool ProcessEvent(EventMessage eventMessage);
 
         [OperationContract]
-        List<OUWithAncestors> GetSubOUsForOuSetting(Guid parentOUID, string settingName);
+        Task<List<OUWithAncestors>> GetSubOUsForOuSetting(Guid parentOUID, string settingName);
 
         [OperationContract]
-        Tuple<string, List<ActiveUserDTO>> GetActiveUsersForOrgID(Guid ouid);
+        Task<Tuple<string, List<ActiveUserDTO>>> GetActiveUsersForOrgID(Guid ouid);
 
         [OperationContract]
-        OUActiveUsersCSV GetActiveUsersCSV(Guid ouid);
+        Task<OUActiveUsersCSV> GetActiveUsersCSV(Guid ouid);
 
         [OperationContract]
-        SBOUDTO GetSmartboardOus(Guid ouID, string apiKey);
+        Task<SBOUDTO> GetSmartboardOus(Guid ouID, string apiKey);
 
         [OperationContract]
-        IEnumerable<SBOUDTO> GetSmartboardAllOus(string apiKey);
+        Task<IEnumerable<SBOUDTO>> GetSmartboardAllOus(string apiKey);
 
         [OperationContract]
-        OUChildrenAndTerritories GetOUWithChildrenAnTerritories(Guid ouID);
+        Task<OUChildrenAndTerritories> GetOUWithChildrenAnTerritories(Guid ouID);
 
         [OperationContract]
         List<GuidNamePair> GetAncestorsForOU(Guid ouID);
 
         [OperationContract]
-        IEnumerable<Person> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email);
+        Task<IEnumerable<Person>> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email);
 
         [OperationContract]
-        IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey);
+        Task<IEnumerable<SBOURoleDTO>> GetAllRoles(string apiKey);
 
         [OperationContract]
-        IEnumerable<zapierOus> GetzapierOusList(float? Lat, float? Lon, string apiKey );
+        Task<IEnumerable<zapierOus>> GetzapierOusList(float? Lat, float? Lon, string apiKey );
 
         [OperationContract]
-        IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid);
+        Task<IEnumerable<Territories>> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid);
 
         [OperationContract]
         string GetApikeyByOU(Guid ouid);
@@ -156,48 +156,48 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SBOU> GetOusList(string name);
 
         [OperationContract]
-        string InsertApikeyForOU(SBOUID request, string apikey);
+        Task<string> InsertApikeyForOU(SBOUID request, string apikey);
 
         [OperationContract]
-        IEnumerable<OURole> GetOuRoles();
+        Task<IEnumerable<OURole>> GetOuRoles();
 
         [OperationContract]
         void UpdateOuRoles(List<OURole> roles);
 
         [OperationContract]
-        bool UpdateOuRolesPermission(List<OURole> roles);
+        Task<bool> UpdateOuRolesPermission(List<OURole> roles);
 
         [OperationContract]
-        bool UpdateOuPermissions(List<OU> ous);
+        Task<bool> UpdateOuPermissions(List<OU> ous);
 
         [OperationContract]
-        OU InheritsParentOuPermissions(OU ou); 
+        Task<OU> InheritsParentOuPermissions(OU ou); 
 
         [OperationContract]
-        OURole GetOuRoleByID(Guid? ouid);
+        Task<OURole> GetOuRoleByID(Guid? ouid);
 
         [OperationContract]
-        void CreateNewOURole(OURole req);
+        Task CreateNewOURole(OURole req);
 
         [OperationContract]
         IEnumerable<GuidNamePair> SBGetOuRoles();
 
         [OperationContract]
-        void EditOURole(Guid ouid, OURole req);
+        Task EditOURole(Guid ouid, OURole req);
 
         [OperationContract]
-        FavouriteOu InsertFavouriteOu(Guid ouId, Guid personID);
+        Task<FavouriteOu> InsertFavouriteOu(Guid ouId, Guid personID);
 
         [OperationContract]
-        void RemoveFavouriteOu(Guid ouId, Guid personID);
+        Task RemoveFavouriteOu(Guid ouId, Guid personID);
 
         [OperationContract]
-        List<OU> FavouriteOusList(Guid personID, bool deletedItems = false);
+        Task<List<OU>> FavouriteOusList(Guid personID, bool deletedItems = false);
 
         [OperationContract]
-        List<Territory> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens"); 
+        Task<List<Territory>> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens"); 
 
         [OperationContract]
-        string InsertMasterTerritory();
+        Task<string> InsertMasterTerritory();
     }
 }

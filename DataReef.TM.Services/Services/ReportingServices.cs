@@ -108,7 +108,7 @@ namespace DataReef.TM.Services
             return results;
         }
 
-        public ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, string proptype)
+        public async Task<ICollection<SalesRepresentativeReportRow>> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, string proptype)
         {
             var results = new List<SalesRepresentativeReportRow>();
 
@@ -139,7 +139,7 @@ namespace DataReef.TM.Services
                         ?.FirstOrDefault(s => s.Name == OUSetting.OU_Reporting_Settings)
                         ?.GetValue<OUReportingSettings>();
 
-            var inquiryStatistics = _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
+            var inquiryStatistics = await _ouService.Value.GetInquiryStatisticsForSalesPeople(startOUID, reportSettings, specifiedDay, StartRangeDay, EndRangeDay, repExclusionList);
             var peopleIds = inquiryStatistics.Select(i => i.PersonId).Distinct();
 
             var peopleIdsWithOuAss = _personService.Value.GetMany(peopleIds, "OUAssociations", "", "", true).Where(p => !repExclusionList.Contains(p.Guid));

@@ -63,7 +63,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> QueryUsersForProperty(Guid propertyID, [FromBody]PropertyNoteUserQueryRequest request)
         {
-            var result = _propertyNoteService.QueryForPerson(propertyID, request?.Email, request?.Name);
+            var result = await _propertyNoteService.QueryForPerson(propertyID, request?.Email, request?.Name);
 
             return Ok(result);
         }

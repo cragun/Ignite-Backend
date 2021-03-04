@@ -157,7 +157,7 @@ namespace DataReef.TM.Services.Services
 
         public ICollection<InquiryStatisticsForOrganization> GetInquiryStatisticsForOrganization(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
         {
-            var result = new List<InquiryStatisticsForOrganization>();
+            ICollection<InquiryStatisticsForOrganization> result = new List<InquiryStatisticsForOrganization>();
 
             //if no settings are supplied, try to get them from the db for the ou 
             if (reportSettings == null)
@@ -200,13 +200,13 @@ namespace DataReef.TM.Services.Services
                 return result;
             }
 
-            result = _inquiryService.GetInquiryStatisticsForOrganizationTerritories(territoryIds, reportSettings.ReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
+            result = _inquiryService.GetInquiryStatisticsForOrganizationTerritories(territoryIds, reportSettings.ReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps);
             return result;
         }
 
-        public ICollection<InquiryStatisticsForPerson> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
+        public async Task<ICollection<InquiryStatisticsForPerson>> GetInquiryStatisticsForSalesPeople(Guid ouId, OUReportingSettings reportSettings, DateTime? specifiedDay, DateTime? StartRangeDay, DateTime? EndRangeDay, IEnumerable<Guid> excludedReps = null)
         {
-            var result = new List<InquiryStatisticsForPerson>();
+            ICollection<InquiryStatisticsForPerson> result = new List<InquiryStatisticsForPerson>();
 
             //if no settings are supplied, try to get them from the db for the ou
             if (reportSettings == null)
@@ -231,8 +231,8 @@ namespace DataReef.TM.Services.Services
             List<Guid> associatedPersonIds;
             using (DataContext dc = new DataContext())
             {
-                territoryIds = dc.Territories.Where(t => ouIds.Contains(t.OUID) && !t.IsArchived).Select(t => t.Guid).ToList();
-                associatedPersonIds = dc.OUAssociations.Where(a => !a.IsDeleted && ouIds.Contains(a.OUID)).Select(a => a.PersonID).ToList();
+                territoryIds = await dc.Territories.Where(t => ouIds.Contains(t.OUID) && !t.IsArchived).AsNoTracking().Select(t => t.Guid).ToListAsync();
+                associatedPersonIds = await dc.OUAssociations.Where(a => !a.IsDeleted && ouIds.Contains(a.OUID)).AsNoTracking().Select(a => a.PersonID).ToListAsync();
             }
 
             //return empty result if there's nothing to show for it
@@ -248,12 +248,12 @@ namespace DataReef.TM.Services.Services
 
             if (associatedPersonIds?.Any() == true)
             {
-                result = _personKPIService.Value.GetSelfTrackedStatisticsForSalesPeopleTerritories(associatedPersonIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
+                result = _personKPIService.Value.GetSelfTrackedStatisticsForSalesPeopleTerritories(associatedPersonIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps);
             }
 
             if (territoryIds?.Any() == true)
             {
-                var inquiries = _inquiryService.GetInquiryStatisticsForSalesPeopleTerritories(territoryIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps).ToList();
+                var inquiries = _inquiryService.GetInquiryStatisticsForSalesPeopleTerritories(territoryIds, reportSettings.PersonReportItems, specifiedDay, StartRangeDay, EndRangeDay, excludedReps);
 
                 foreach (var inquiryResult in inquiries)
                 {
@@ -402,20 +402,20 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public IEnumerable<SBOURoleDTO> GetAllRoles(string apiKey)
+        public async Task<IEnumerable<SBOURoleDTO>> GetAllRoles(string apiKey)
         {
             using (var dc = new DataContext())
             {
-                return dc.OURoles.Select(x => new SBOURoleDTO
+                return await dc.OURoles.AsNoTracking().Select(x => new SBOURoleDTO
                 {
                     Guid = x.Guid,
                     Name = x.Name
-                }).ToList();
+                }).ToListAsync();
             }
         }
 
 
-        public SBOUDTO GetSmartboardOus(Guid ouID, string apiKey)
+        public async Task<SBOUDTO> GetSmartboardOus(Guid ouID, string apiKey)
         {
             using (var dc = new DataContext())
             {
@@ -433,25 +433,25 @@ namespace DataReef.TM.Services.Services
                 {
                     return null;
                 }
-                var ou = dc.
+                var ou = await dc.
                     OUs
                     ?.Include(o => o.Children)
                     ?.Include(o => o.Children.Select(x => x.Children))
-                    ?.Include(o => o.Territories)
-                    ?.FirstOrDefault(o => o.Guid == ouID && !o.IsDeleted && !o.IsDisabled && !o.IsArchived);
+                    ?.Include(o => o.Territories).AsNoTracking()
+                    ?.FirstOrDefaultAsync(o => o.Guid == ouID && !o.IsDeleted && !o.IsDisabled && !o.IsArchived);
 
                 return ou == null ? null : new SBOUDTO(ou);
             }
         }
 
-        public IEnumerable<SBOUDTO> GetSmartboardAllOus(string apiKey)
+        public async Task<IEnumerable<SBOUDTO>> GetSmartboardAllOus(string apiKey)
         {
             using (var dc = new DataContext())
             {
-                var matchingSettings = dc
+                var matchingSettings = await dc
                     .OUSettings?
-                    .Where(x => x.Name == SolarTrackerResources.SelectedSettingName)?
-                    .ToList();
+                    .Where(x => x.Name == SolarTrackerResources.SelectedSettingName).AsNoTracking()?
+                    .ToListAsync();
 
                 if (matchingSettings.Any() != true)
                 {
@@ -477,13 +477,13 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
 
-                var ous = dc.
+                var ous = await dc.
                     OUs
                     ?.Include(o => o.Children)
                     ?.Include(o => o.Children.Select(x => x.Children))
                     ?.Include(o => o.Territories)
-                    ?.Where(o => o.Guid == rootOUID && !o.IsDeleted && !o.IsDisabled && !o.IsArchived)
-                    ?.ToList();
+                    ?.Where(o => o.Guid == rootOUID && !o.IsDeleted && !o.IsDisabled && !o.IsArchived).AsNoTracking()
+                    ?.ToListAsync();
 
                 if (ous?.Any() != true)
                 {
@@ -878,15 +878,14 @@ namespace DataReef.TM.Services.Services
 
                         //// cascade activate
                         //var guids = GetOUAndChildrenGuids(ou.Guid);
-                        var guids = ou.Children.Select(o => o.Guid).ToList();
+                        var guids = ou.Children.Select(o => o.Guid);
 
                         // remove current OU
                         guids = guids
                                         .Distinct()
-                                        .Except(new Guid[] { ou.Guid })
-                                        .ToList();
+                                        .Except(new Guid[] { ou.Guid });
 
-                        if (guids.Count > 0)
+                        if (guids.Count() > 0)
                         {
                             var data = ActivateMany(guids.ToArray());
 
@@ -967,7 +966,7 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public string InsertApikeyForOU(SBOUID request, string apikey)
+        public async Task<string> InsertApikeyForOU(SBOUID request, string apikey)
         {
             string ret = "";
             try
@@ -1000,7 +999,7 @@ namespace DataReef.TM.Services.Services
                         ValueType = SettingValueType.JSON,
                     };
                     uow.Add(newSetting);
-                    uow.SaveChanges();
+                    await uow.SaveChangesAsync();
                 }
 
                 ret = "Success";
@@ -1031,15 +1030,15 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<OUsAndRoleTree> GetOUsRoleTree(Guid personID)
+        public async Task<List<OUsAndRoleTree>> GetOUsRoleTree(Guid personID)
         {
             using (var uow = UnitOfWorkFactory())
             {
-                var ouAssociations = uow
+                var ouAssociations = await uow
                                         .Get<OUAssociation>()
                                         .Where(oua => !oua.IsDeleted && oua.PersonID == personID)
-                                        .OrderByDescending(oua => oua.OU.ParentID.HasValue)
-                                        .ToList();
+                                        .OrderByDescending(oua => oua.OU.ParentID.HasValue).AsNoTracking()
+                                        .ToListAsync();
                 var result = new List<OUsAndRoleTree>();
 
                 foreach (var assoc in ouAssociations)
@@ -1071,7 +1070,7 @@ namespace DataReef.TM.Services.Services
         public ICollection<Guid> ListRootGuidsForPerson(Guid personID)
         {
             string f = String.Format("PersonID={0}", personID);
-            List<OUAssociation> asses = _associationService.List(false, 1, 100, f).ToList();
+            var asses = _associationService.List(false, 1, 100, f);
 
             List<Guid> rootGuids = new List<Guid>();
             List<Guid> finalGuids = new List<Guid>();
@@ -1199,16 +1198,16 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public ICollection<Guid> ConditionalGetActiveOUAssociationIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch)
+        public async Task<ICollection<Guid>> ConditionalGetActiveOUAssociationIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch)
         {
             List<Guid> ouAssociationIds;
             var organizationIds = deepSearch ? GetHierarchicalOrganizationGuids(new List<Guid> { ouID }) : new List<Guid> { ouID };
 
             using (DataContext dc = new DataContext())
             {
-                ouAssociationIds = dc.OUAssociations.Where(oua => !oua.IsDeleted && !oua.Person.IsDeleted &&
-                                                                                            organizationIds.Contains(oua.OUID))
-                                             .Select(oua => oua.Guid).Distinct().ToList();
+                ouAssociationIds = await dc.OUAssociations.Where(oua => !oua.IsDeleted && !oua.Person.IsDeleted &&
+                                                                                            organizationIds.Contains(oua.OUID)).AsNoTracking()
+                                             .Select(oua => oua.Guid).Distinct().ToListAsync();
             }
 
             return ouAssociationIds;
@@ -1222,23 +1221,23 @@ namespace DataReef.TM.Services.Services
             using (DataContext dc = new DataContext())
             {
                 peopleIds = dc.OUAssociations.Where(oua => !oua.IsDeleted && !oua.Person.IsDeleted &&
-                                                                                            organizationIds.Contains(oua.OUID))
+                                                                                            organizationIds.Contains(oua.OUID)).AsNoTracking()
                                              .Select(oua => oua.PersonID).Distinct().ToList();
             }
 
             return peopleIds;
         }
 
-        public ICollection<Guid> ConditionalGetActiveUserIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch)
+        public async Task<ICollection<Guid>> ConditionalGetActiveUserIDsForCurrentAndSubOUs(Guid ouID, bool deepSearch)
         {
             List<Guid> userIds;
             var organizationIds = deepSearch ? GetHierarchicalOrganizationGuids(new List<Guid> { ouID }) : new List<Guid> { ouID };
 
             using (DataContext dc = new DataContext())
             {
-                userIds = dc.Users.Where(u => u.IsDeleted == false && u.Person.IsDeleted == false &&
-                                         u.Person.OUAssociations.Any(oua => organizationIds.Contains(oua.OUID)))
-                                  .Select(u => u.Guid).Distinct().ToList();
+                userIds = await dc.Users.Where(u => u.IsDeleted == false && u.Person.IsDeleted == false &&
+                                         u.Person.OUAssociations.Any(oua => organizationIds.Contains(oua.OUID))).AsNoTracking()
+                                  .Select(u => u.Guid).Distinct().ToListAsync();
             }
             return userIds;
         }
@@ -1283,10 +1282,9 @@ namespace DataReef.TM.Services.Services
                                                   (!h.EventAction.HasValue ||
                                                         (h.EventAction.HasValue && ((h.EventAction.Value & eventMessage.EventAction) != 0))
                                                   )
-                                              )?
-                                                .ToList();
+                                              );
 
-            if ((matchingHandlers?.Count ?? 0) == 0)
+            if ((matchingHandlers?.Count() ?? 0) == 0)
             {
                 // no handlers to match against
                 return false;
@@ -1434,11 +1432,11 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public OUChildrenAndTerritories GetOUWithChildrenAnTerritories(Guid ouID)
+        public async Task<OUChildrenAndTerritories> GetOUWithChildrenAnTerritories(Guid ouID)
         {
             using (var dc = new DataContext())
             {
-                var userAssociations = dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId).ToList();
+                var userAssociations = await dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId).ToListAsync();
                 var canViewAll = false;
                 var found = false;
                 foreach (var ua in userAssociations)
@@ -1459,12 +1457,12 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
 
-                var ou = dc
+                var ou = await dc
                     .OUs
                     .Include(o => o.Children)
                     .Include(o => o.Territories)
                     .Include(o => o.Territories.Select(x => x.Assignments))
-                    .FirstOrDefault(o => !o.IsDeleted && o.Guid == ouID);
+                    .FirstOrDefaultAsync(o => !o.IsDeleted && o.Guid == ouID);
 
                 if (ou == null)
                 {
@@ -1556,15 +1554,15 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public ICollection<FinancePlanDefinition> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
+        public async Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitionsProposal(Guid proposalid, string include = "", string exclude = "", string fields = "")
         {
             using (var dataContext = new DataContext())
             {
-                var proposalData = dataContext
+                var proposalData = await dataContext
                                     .ProposalData
-                                    .FirstOrDefault(pd => pd.Guid == proposalid);
+                                    .FirstOrDefaultAsync(pd => pd.Guid == proposalid);
 
-                var proposal = dataContext.Proposal.FirstOrDefault(a => a.Guid == proposalData.ProposalID);
+                var proposal = await dataContext.Proposal.FirstOrDefaultAsync(a => a.Guid == proposalData.ProposalID);
                 Guid? ouid = Guid.Empty;
                 if (proposal != null)
                 {
@@ -1578,28 +1576,27 @@ namespace DataReef.TM.Services.Services
                                 .ToList();
 
                 // get Financing Options OU Settings for all ancestors
-                var allOUSettings = dataContext
+                var allOUSettings = (await dataContext
                                 .OUSettings
                                 .Where(ous => allAncestorIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options && !ous.IsDeleted)
-                                .ToList()
-                                .OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID))
-                                .ToList();
+                                .ToListAsync())
+                                .OrderBy(ous => allAncestorIDs.IndexOf(ous.OUID));
+                                
 
                 // convert ousettings to a dictionary of OUID : FinancingSettingDataView List
                 var financingOptions = allOUSettings
                                         .Select(s => new { ouid = s.OUID, setts = s.GetValue<List<FinancingSettingsDataView>>() })
-                                        .Where(s => s.setts?.Count > 0)
-                                        .ToList();
+                                        .Where(s => s.setts?.Count > 0);
 
-                List<FinancePlanDefinition> result = null;
+                ICollection<FinancePlanDefinition> result = null;
 
                 // if non of the ancestors (including current OU) have a Financing Option setting
                 // we return all the finance plans
-                if (allOUSettings == null || allOUSettings?.Count == 0)
+                if (allOUSettings == null || allOUSettings?.Count() == 0)
                 {
                     result = _financePlanDefinitionService
-                                .List(itemsPerPage: 3000, include: include, exclude: exclude, fields: fields)
-                                .ToList();
+                                .List(itemsPerPage: 3000, include: include, exclude: exclude, fields: fields);
+                                
                 }
                 else
                 {
@@ -1611,10 +1608,10 @@ namespace DataReef.TM.Services.Services
                                                 || (finOptions.ouid != ouid
                                                      && s.GetIsEnabled())
                                            )
-                                    .Select(fo => fo.PlanID)
-                                    .ToList();
+                                    .Select(fo => fo.PlanID);
+                                    
 
-                    result = _financePlanDefinitionService.GetMany(planIds, include, exclude, fields).ToList();
+                    result = _financePlanDefinitionService.GetMany(planIds, include, exclude, fields);
                 }
 
                 //var settings = _settingsService.Value.GetSettings(ouid, null);
@@ -1635,32 +1632,32 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public float GetTokenPriceInDollars(Guid ouid)
+        public async Task<float> GetTokenPriceInDollars(Guid ouid)
         {
             using (DataContext dataContext = new DataContext())
             {
-                var rootOU = dataContext.OUs.SingleOrDefault(ou => ou.Guid == ouid);
-                if (rootOU.RootOrganizationID.Value != ouid) rootOU = dataContext.OUs.SingleOrDefault(ou => ou.Guid == rootOU.RootOrganizationID.Value);
+                var rootOU = await dataContext.OUs.SingleOrDefaultAsync(ou => ou.Guid == ouid);
+                if (rootOU.RootOrganizationID.Value != ouid) rootOU = await dataContext.OUs.SingleOrDefaultAsync(ou => ou.Guid == rootOU.RootOrganizationID.Value);
                 return rootOU.TokenPriceInDollars ?? 0;
             }
         }
 
-        public void MoveOU(Guid ouID, Guid newParentOUID)
+        public async Task MoveOU(Guid ouID, Guid newParentOUID)
         {
             using (DataContext dataContext = new DataContext())
             {
-                OU ou = dataContext.OUs.FirstOrDefault(o => o.Guid.Equals(ouID));
-                OU newParent = dataContext.OUs.FirstOrDefault(o => o.Guid.Equals(newParentOUID));
+                OU ou = await dataContext.OUs.FirstOrDefaultAsync(o => o.Guid.Equals(ouID));
+                OU newParent = await dataContext.OUs.FirstOrDefaultAsync(o => o.Guid.Equals(newParentOUID));
 
                 if (ou != null && !ou.IsDeleted && !ou.ParentID.Equals(newParentOUID) && newParent != null && !newParent.IsDeleted)
                 {
                     ou.ParentID = newParentOUID;
-                    dataContext.SaveChanges();
+                    await dataContext.SaveChangesAsync();
                 }
             }
         }
 
-        public LookupDataView GetOnboardingLookupData(Guid? parentId)
+        public async Task<LookupDataView> GetOnboardingLookupData(Guid? parentId)
         {
             var dt = SmartPrincipal.DeviceType;
             var ret = new LookupDataView();
@@ -1671,13 +1668,13 @@ namespace DataReef.TM.Services.Services
 
                 if (parentId.HasValue)
                 {
-                    ret.States = dc
+                    ret.States = await dc
                                 .OUShapes
                                 .Where(s => s.OUID == parentId
                                             && s.ShapeTypeID == "state"
                                             && s.Name != "New OUShape")
                                 .Select(s => s.Name)
-                                .ToList();
+                                .ToListAsync();
 
                     ret.Ancestors = GetAncestors(parentId.Value, dc);
 
@@ -1686,12 +1683,12 @@ namespace DataReef.TM.Services.Services
                                         .Select(a => a.Guid)
                                         .ToList();
 
-                    ret.AncestorsCustomProposalFlow = dc
+                    ret.AncestorsCustomProposalFlow = (await dc
                                 .OUs
                                 .Include("FinanceAssociations.FinancePlanDefinition.Provider")
                                 .Where(o => ancestorIds.Contains(o.Guid))
                                 .Where(o => o.FinanceAssociations.Any(fa => fa.FinancePlanDefinition.Provider.ProposalFlowType != FinanceProviderProposalFlowType.None))
-                                .ToList()?
+                                .ToListAsync())?
                                 .OrderBy(o => ancestorIds.IndexOf(o.Guid))?
                                 .FirstOrDefault()?
                                 .FinanceAssociations?
@@ -1720,10 +1717,10 @@ namespace DataReef.TM.Services.Services
                     //    financePlans = settings.GetByKey<List<FinancingSettingsDataView>>(OUSetting.Financing_Options) ?? financePlans;
                     //}
                     var financePlanIds = financePlans
-                                            .Select(fp => fp.PlanID)
-                                            .ToList();
+                                            .Select(fp => fp.PlanID);
+                                            
 
-                    ret.Panels = dc
+                    ret.Panels = (await dc
                                 .SolarPanel
                                 .Where(sp => !sp.IsDeleted
                                             // if any of ancestors has a list of panels, restrict the result to that list
@@ -1734,12 +1731,12 @@ namespace DataReef.TM.Services.Services
                                                 )
                                 .GroupBy(sp => sp.Description)
                                 .Select(g => g.FirstOrDefault())
-                                .ToList()
+                                .ToListAsync())
                                 .Select(sp => new GuidNamePair(sp.Guid, $"{sp.Name} - {sp.Description} [{sp.Watts} watts]"))
                                 .OrderBy(gnp => gnp.Name)
                                 .ToList();
 
-                    ret.Inverters = dc
+                    ret.Inverters = (await dc
                                     .Inverters
                                     .Where(i => !i.IsDeleted
                                             && (
@@ -1748,18 +1745,18 @@ namespace DataReef.TM.Services.Services
                                                 )
                                     .GroupBy(i => i.Model)
                                     .Select(g => g.FirstOrDefault())
-                                    .ToList()
+                                    .ToListAsync())
                                     .Select(sp => new GuidNamePair(sp.Guid, $"{sp.Name} - {sp.Model}"))
                                     .OrderBy(gnp => gnp.Name)
                                     .ToList();
 
-                    ret.FinancePlans = dc
+                    ret.FinancePlans = (await dc
                                     .FinancePlaneDefinitions
                                     .Include(fp => fp.Provider)
                                     .Where(pd => (!pd.IsDeleted && !pd.IsDisabled)
                                                 && ((pd.Type == FinancePlanType.Cash || pd.Type == FinancePlanType.Mortgage)
-                                                || ((financePlanIds.Count > 0 && financePlanIds.Contains(pd.Guid)) || financePlanIds.Count == 0)))
-                                    .ToList()
+                                                || ((financePlanIds.Count() > 0 && financePlanIds.Contains(pd.Guid)) || financePlanIds.Count() == 0)))
+                                    .ToListAsync())
                                     .Select(sp => new FinancePlanDataView
                                     {
                                         Guid = sp.Guid,
@@ -1774,7 +1771,7 @@ namespace DataReef.TM.Services.Services
                                     .ToList();
                 }
 
-                ret.Templates = new List<GuidNamePair>
+                ret.Templates = new List<GuidNamePair>(2)
                 {
                     new GuidNamePair{
                         Guid = Guid.Parse("b41eda2d-416b-4ba2-8c24-c83eeee65d35"),
@@ -1790,7 +1787,7 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
-        public void CreateNewOU(OnboardingOUDataView req)
+        public async Task CreateNewOU(OnboardingOUDataView req)
         {
             // TODO: add validations
             // Use the generic proposal template guid
@@ -1837,16 +1834,16 @@ namespace DataReef.TM.Services.Services
 
                         dc.OUs.Add(ou);
 
-                        var wkt = HandleOUStates(ou.Guid, req.BasicInfo.States, dc);
+                        var wkt = await HandleOUStates(ou.Guid, req.BasicInfo.States, dc);
                         if (!string.IsNullOrWhiteSpace(wkt))
                         {
                             ou.WellKnownText = wkt;
                         }
 
-                        var existingSettings = dc
+                        var existingSettings = await dc
                                         .OUSettings
                                         .Where(s => s.OUID == ou.Guid)
-                                        .ToList();
+                                        .ToListAsync();
 
                         req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
 
@@ -1857,7 +1854,7 @@ namespace DataReef.TM.Services.Services
                             dc.OUSettings.AddRange(settings);
                         }
 
-                        dc.SaveChanges();
+                        await dc.SaveChangesAsync();
 
                         var firstName = req?.BasicInfo?.OwnerFirstName;
 
@@ -1887,13 +1884,13 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req)
+        public async Task EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req)
         {
             using (var dc = new DataContext())
             {
-                var ou = dc
+                var ou = await dc
                             .OUs
-                            .FirstOrDefault(o => o.Guid == ouID
+                            .FirstOrDefaultAsync(o => o.Guid == ouID
                                               && !o.IsDeleted);
 
                 if (ou == null)
@@ -1901,10 +1898,10 @@ namespace DataReef.TM.Services.Services
                     throw new ApplicationException("OU does not exist!");
                 }
 
-                var existingSettings = dc
+                var existingSettings = await dc
                     .OUSettings
                     .Where(s => s.OUID == ou.Guid)
-                    .ToList();
+                    .ToListAsync();
 
                 var settings = req.HandleSettingsLite(ou.Guid, existingSettings, _auditService, _blobService);
 
@@ -1913,27 +1910,27 @@ namespace DataReef.TM.Services.Services
                     dc.OUSettings.AddRange(settings);
                 }
 
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
             }
         }
 
 
-        public void AddOUSettingsTest()
+        public async Task AddOUSettingsTest()
         {
             using (var dc = new DataContext())
             {
                 Guid igniteid = Guid.Parse("3F78B1B0-C0C5-4987-A5D5-32EE1C893460");
                 Guid sbclientsid = Guid.Parse("9E0D3BE2-40CC-4FD5-BDB5-3BAAB201BD8C");
-                var ignite = dc
+                var ignite = await dc
                     .OUSettings
                     .Where(s => s.OUID == igniteid)
-                    .ToList();
+                    .ToListAsync();
 
 
-                var sbclients = dc
+                var sbclients = await dc
                  .OUSettings
                  .Where(s => s.OUID == sbclientsid)
-                 .ToList();
+                 .ToListAsync();
 
                 foreach (var item in ignite)
                 {
@@ -1952,11 +1949,11 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
             }
         }
 
-        public void AddGenericProposalOUSettings()
+        public async Task AddGenericProposalOUSettings()
         {
             using (var dc = new DataContext())
             {
@@ -1964,7 +1961,7 @@ namespace DataReef.TM.Services.Services
                 {
                     try
                     {
-                        var ignite = dc.OUs.ToList();
+                        var ignite = await dc.OUs.ToListAsync();
 
                         foreach (var item in ignite)
                         {
@@ -1989,7 +1986,7 @@ namespace DataReef.TM.Services.Services
                             dc.OUSettings.Add(generic);
                         }
 
-                        dc.SaveChanges();
+                        await dc.SaveChangesAsync();
 
                         transaction.Commit();
                     }
@@ -2002,13 +1999,13 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public void EditOU(Guid ouid, OnboardingOUDataView req)
+        public async Task EditOU(Guid ouid, OnboardingOUDataView req)
         {
             using (var dc = new DataContext())
             {
-                var ou = dc
+                var ou = await dc
                             .OUs
-                            .FirstOrDefault(o => o.Guid == ouid
+                            .FirstOrDefaultAsync(o => o.Guid == ouid
                                               && !o.IsDeleted);
 
                 if (ou == null)
@@ -2028,17 +2025,17 @@ namespace DataReef.TM.Services.Services
                 ou.MinModule = req.BasicInfo.MinModule;
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
-                var wkt = HandleOUStates(ouid, req.BasicInfo.States, dc);
+                var wkt = await HandleOUStates(ouid, req.BasicInfo.States, dc);
                 if (!string.IsNullOrWhiteSpace(wkt))
                 {
                     ou.WellKnownText = wkt;
                     ou.ShapesVersion += 1;
                 }
 
-                var existingSettings = dc
+                var existingSettings = await dc
                     .OUSettings
                     .Where(s => s.OUID == ou.Guid)
-                    .ToList();
+                    .ToListAsync();
 
                 req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
 
@@ -2049,7 +2046,7 @@ namespace DataReef.TM.Services.Services
                     dc.OUSettings.AddRange(settings);
                 }
 
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
             }
         }
 
@@ -2060,50 +2057,46 @@ namespace DataReef.TM.Services.Services
         /// <param name="states"></param>
         /// <param name="dc"></param>
         /// <returns></returns>
-        private string HandleOUStates(Guid ouid, List<string> states, DataContext dc)
+        private async Task<string> HandleOUStates(Guid ouid, List<string> states, DataContext dc)
         {
-            var ouShapeNames = new HashSet<string>(dc
+            var ouShapeNames = new HashSet<string>(await dc
                                                     .OUShapes
                                                     .Where(ous => ous.OUID == ouid && !ous.IsDeleted)
                                                     .Select(ous => ous.Name)
-                                                    .ToList());
+                                                    .ToListAsync());
             if (ouShapeNames.SequenceEqual(states))
             {
                 return null;
             }
 
 
-            var ouStates = dc
+            var ouStates = await dc
                                 .OUShapes
                                 .Where(s => s.OUID == ouid
                                         && !s.IsDeleted
                                         && (s.ShapeTypeID == "state" || s.ShapeTypeID == "country")
                                         && s.Name != "New OUShape")
-                                .ToList();
+                                .ToListAsync();
 
             var ouStateNames = ouStates
-                                .Select(os => os.Name)
-                                .ToList();
+                                .Select(os => os.Name);
 
             var statesToRemove = ouStates
-                                    .Where(s => !states.Contains(s.Name, StringComparer.OrdinalIgnoreCase))
-                                    .ToList();
+                                    .Where(s => !states.Contains(s.Name, StringComparer.OrdinalIgnoreCase));
 
             var statesLeftAfterRemoval = ouStates
-                                            .Where(s => !statesToRemove.Contains(s))
-                                            .ToList();
+                                            .Where(s => !statesToRemove.Contains(s)).ToList();
             var statesToAdd = states
-                                .Where(s => !ouStateNames.Contains(s, StringComparer.OrdinalIgnoreCase))
-                                .ToList();
+                                .Where(s => !ouStateNames.Contains(s, StringComparer.OrdinalIgnoreCase)).ToList();
 
-            var shapesUpdated = statesToRemove.Count > 0 || statesToAdd.Count > 0;
+            var shapesUpdated = statesToRemove.Count() > 0 || statesToAdd.Count() > 0;
 
             foreach (var state in statesToRemove)
             {
                 dc.OUShapes.Remove(state);
             }
 
-            if (statesToAdd.Count > 0)
+            if (statesToAdd.Count() > 0)
             {
                 var geoStates = _geoBridge.Value.GetShapesForStates(statesToAdd);
                 var stateShapes = geoStates
@@ -2130,7 +2123,7 @@ namespace DataReef.TM.Services.Services
 
                 // add shapes in master territories 
 
-                var masterterritory = dc.Territories.Include(t => t.Shapes).FirstOrDefault(a => a.OUID == ouid && a.Status == TerritoryStatus.Master);
+                var masterterritory = await dc.Territories.Include(t => t.Shapes).FirstOrDefaultAsync(a => a.OUID == ouid && a.Status == TerritoryStatus.Master);
                 if (masterterritory != null)
                 {
                     var masterterritoryShapes = geoStates
@@ -2234,14 +2227,14 @@ namespace DataReef.TM.Services.Services
             return result;
         }
 
-        public IEnumerable<Person> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email)
+        public async Task<IEnumerable<Person>> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email)
         {
             using (var dc = new DataContext())
             {
-                var allAncestorIDs = dc
+                var allAncestorIDs = await dc
                                 .Database
                                 .SqlQuery<Guid>($"select * from OUTreeUP('{ouID}')")
-                                .ToList();
+                                .ToListAsync();
 
                 var associationsQuery = dc
                                     .OUAssociations
@@ -2258,12 +2251,12 @@ namespace DataReef.TM.Services.Services
                     associationsQuery = associationsQuery.Where(x => x.Person.Name.Contains(name));
                 }
 
-                var result = associationsQuery
+                var result = await associationsQuery.AsNoTracking()
                             .Select(a => a.Person)
                             .Where(p => !p.IsDeleted)
                             .Distinct()
                             .OrderBy(p => p.Name)
-                            .ToList();
+                            .ToListAsync();
 
 
                 return result;
@@ -2302,7 +2295,7 @@ namespace DataReef.TM.Services.Services
             return ou;
         }
 
-        public List<OUWithAncestors> GetSubOUsForOuSetting(Guid parentOUID, string settingName)
+        public async Task<List<OUWithAncestors>> GetSubOUsForOuSetting(Guid parentOUID, string settingName)
         {
             using (DataContext dataContext = new DataContext())
             {
@@ -2311,7 +2304,7 @@ namespace DataReef.TM.Services.Services
                 var ids = GetOUAndChildrenGuids(parentOUID);
                 ids?.Remove(parentOUID);
 
-                var ouSettings = dataContext.OUSettings.Where(o => ids.Contains(o.OUID) && o.Name.Equals(settingName) && !o.IsDeleted).ToList();
+                var ouSettings = await dataContext.OUSettings.Where(o => ids.Contains(o.OUID) && o.Name.Equals(settingName) && !o.IsDeleted).AsNoTracking().ToListAsync();
 
                 return userOus
                     .Where(o => ids?.Contains(o.Guid) == true && ouSettings?.Any(os => os.OUID == o.Guid) == true)
@@ -2324,12 +2317,12 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public Tuple<string, List<ActiveUserDTO>> GetActiveUsersForOrgID(Guid ouid)
+        public async Task<Tuple<string, List<ActiveUserDTO>>> GetActiveUsersForOrgID(Guid ouid)
         {
 
             using (DataContext dataContext = new DataContext())
             {
-                var activeUsers = dataContext
+                var activeUsers = await dataContext
                          .Database
                          .SqlQuery<ActiveUserDTO>(@"SELECT P.Guid AS Guid, FirstName, LastName, P.Name, EmailAddressString, R.Name AS RoleName
                                                     FROM People P
@@ -2348,21 +2341,21 @@ namespace DataReef.TM.Services.Services
                                         )
                                         AND P.IsDeleted = 0 AND OUA.IsDeleted = 0
                                         Order by Name", ouid)
-                        .ToList();
+                        .ToListAsync();
 
                 var users = activeUsers
                         .GroupBy(au => au.Guid)
                         .Select(g => g.HighestRole())
                         .ToList();
 
-                var ouName = dataContext.OUs.FirstOrDefault(o => o.Guid == ouid)?.Name;
+                var ouName = (await dataContext.OUs.AsNoTracking().FirstOrDefaultAsync(o => o.Guid == ouid))?.Name;
                 return new Tuple<string, List<ActiveUserDTO>>(ouName, users);
             }
         }
 
-        public OUActiveUsersCSV GetActiveUsersCSV(Guid ouid)
+        public async Task<OUActiveUsersCSV> GetActiveUsersCSV(Guid ouid)
         {
-            var data = GetActiveUsersForOrgID(ouid);
+            var data = await GetActiveUsersForOrgID(ouid);
 
             var response = new OUActiveUsersCSV
             {
@@ -2392,15 +2385,15 @@ namespace DataReef.TM.Services.Services
         //}
 
 
-        public IEnumerable<zapierOus> GetzapierOusList(float? Lat, float? Lon, string apiKey)
+        public async Task<IEnumerable<zapierOus>> GetzapierOusList(float? Lat, float? Lon, string apiKey)
         {
             using (var dc = new DataContext())
             {
                 //-- exec usp_GetOUIdsNameForGeoCoordinates 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
-                var zapierOusList = dc
+                var zapierOusList = await dc
              .Database
              .SqlQuery<zapierOus>("exec usp_GetOUIdsNameForGeoCoordinates @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", apiKey))
-             .ToList();
+             .ToListAsync();
 
                 return zapierOusList;
             }
@@ -2421,27 +2414,27 @@ namespace DataReef.TM.Services.Services
             return sbSettings.ApiKey;
         }
 
-        public IEnumerable<Territories> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
+        public async Task<IEnumerable<Territories>> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
         {
             Lat = Lat == null ? 0 : Lat;
             Lon = Lon == null ? 0 : Lon;
             using (var dc = new DataContext())
             {
                 //-- exec usp_GetTerritoryIdsNameByapiKey 29.920071,-95.498855,NULL,'1E9E5809-45F2-4CEE-AACB-6617DD232A40'
-                var TerritoriesList = dc
+                var TerritoriesList = await dc
              .Database
              .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey, @ouid", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", "NULL"), new SqlParameter("@ouid", ouid))
-             .ToList();
+             .ToListAsync();
 
                 return TerritoriesList;
             }
         }
 
-        public IEnumerable<OURole> GetOuRoles()
+        public async Task<IEnumerable<OURole>> GetOuRoles()
         {
             using (var dc = new DataContext())
             {
-                var ouRoles = dc.OURoles.Where(a => a.IsActive == true).ToList();
+                var ouRoles = await dc.OURoles.Where(a => a.IsActive == true).AsNoTracking().ToListAsync();
                 return ouRoles;
             }
         }
@@ -2476,11 +2469,11 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public OURole GetOuRoleByID(Guid? roleid)
+        public async Task<OURole> GetOuRoleByID(Guid? roleid)
         {
             using (var dc = new DataContext())
             {
-                var ouRoles = dc.OURoles.FirstOrDefault(a => a.Guid == roleid);
+                var ouRoles = await dc.OURoles.FirstOrDefaultAsync(a => a.Guid == roleid);
                 if (ouRoles == null)
                 {
                     throw new ApplicationException("OU does not exist!");
@@ -2490,7 +2483,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public bool UpdateOuRolesPermission(List<OURole> roles)
+        public async Task<bool> UpdateOuRolesPermission(List<OURole> roles)
         {
             try
             {
@@ -2498,12 +2491,12 @@ namespace DataReef.TM.Services.Services
                 {
                     foreach (var role in roles)
                     {
-                        var ourole = dc.OURoles.FirstOrDefault(a => a.Guid == role.Guid);
+                        var ourole = await dc.OURoles.FirstOrDefaultAsync(a => a.Guid == role.Guid);
                         ourole.Permissions = role.Permissions;
                         ourole.Updated(ourole.Guid);
                     }
 
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
 
                     return true;
                 }
@@ -2514,7 +2507,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public bool UpdateOuPermissions(List<OU> ous)
+        public async Task<bool> UpdateOuPermissions(List<OU> ous)
         {
             try
             {
@@ -2522,12 +2515,12 @@ namespace DataReef.TM.Services.Services
                 {
                     foreach (var item in ous)
                     {
-                        var ou = dc.OUs.FirstOrDefault(a => a.Guid == item.Guid);
+                        var ou = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == item.Guid);
                         ou.Permissions = item.Permissions;
                         ou.Updated(ou.Guid);
                     }
 
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
 
                     return true;
                 }
@@ -2538,22 +2531,22 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public OU InheritsParentOuPermissions(OU request)
+        public async Task<OU> InheritsParentOuPermissions(OU request)
         {
             try
             {
                 using (var dc = new DataContext())
                 {
-                    var ou = dc.OUs.FirstOrDefault(a => a.Guid == request.Guid);
+                    var ou = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == request.Guid);
 
-                    var parentOu = dc.OUs.FirstOrDefault(a => a.Guid == ou.ParentID);
+                    var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
                     if (parentOu != null)
                     {
                         ou.Permissions = parentOu.Permissions;
                     }
 
                     ou.Updated(ou.Guid);
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
 
                     return ou;
                 }
@@ -2565,7 +2558,7 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public void CreateNewOURole(OURole req)
+        public async Task CreateNewOURole(OURole req)
         {
             using (var dc = new DataContext())
             {
@@ -2582,7 +2575,7 @@ namespace DataReef.TM.Services.Services
                         };
 
                         dc.OURoles.Add(ourole);
-                        dc.SaveChanges();
+                        await dc.SaveChangesAsync();
 
                         transaction.Commit();
                     }
@@ -2596,13 +2589,13 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public void EditOURole(Guid ouid, OURole req)
+        public async Task EditOURole(Guid ouid, OURole req)
         {
             using (var dc = new DataContext())
             {
-                var role = dc
+                var role = await dc
                             .OURoles
-                            .FirstOrDefault(o => o.Guid == ouid);
+                            .FirstOrDefaultAsync(o => o.Guid == ouid);
 
                 if (role == null)
                 {
@@ -2614,18 +2607,18 @@ namespace DataReef.TM.Services.Services
                 role.IsAdmin = req.IsAdmin;
                 role.Updated(SmartPrincipal.UserId, "InternalPortal");
 
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
             }
         }
 
         /// <summary>
         /// This method insert Ou as a Favorite 
         /// </summary>
-        public FavouriteOu InsertFavouriteOu(Guid ouID, Guid personID)
+        public async Task<FavouriteOu> InsertFavouriteOu(Guid ouID, Guid personID)
         {
             using (var dc = new DataContext())
             {
-                var FavouriteOu = dc.FavouriteOus.FirstOrDefault(x => x.PersonID == personID && x.OUID == ouID);
+                var FavouriteOu = await dc.FavouriteOus.FirstOrDefaultAsync(x => x.PersonID == personID && x.OUID == ouID);
 
                 if (FavouriteOu != null)
                     throw new ApplicationException("Already Favourited");
@@ -2638,7 +2631,7 @@ namespace DataReef.TM.Services.Services
                 };
 
                 dc.FavouriteOus.Add(ou);
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
 
                 return ou;
             }
@@ -2647,25 +2640,25 @@ namespace DataReef.TM.Services.Services
         /// <summary>
         /// This method remove Ou as a Favorite 
         /// </summary>
-        public void RemoveFavouriteOu(Guid ouID, Guid personID)
+        public async Task RemoveFavouriteOu(Guid ouID, Guid personID)
         {
             using (var dc = new DataContext())
             {
-                var FavouriteOu = dc.FavouriteOus.FirstOrDefault(x => x.PersonID == personID && x.OUID == ouID);
+                var FavouriteOu = await dc.FavouriteOus.FirstOrDefaultAsync(x => x.PersonID == personID && x.OUID == ouID);
 
                 if (FavouriteOu == null)
                     throw new ApplicationException("OU not found");
 
                 dc.FavouriteOus.Remove(FavouriteOu);
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
             }
         }
 
-        public List<OU> FavouriteOusList(Guid personID, bool deletedItems = false)
+        public async Task<List<OU>> FavouriteOusList(Guid personID, bool deletedItems = false)
         {
             using (var dc = new DataContext())
             {
-                var FavoriteOUS = dc.FavouriteOus.Where(x => x.PersonID == personID).Select(a => a.OUID).ToList();
+                var FavoriteOUS = await dc.FavouriteOus.Where(x => x.PersonID == personID).AsNoTracking().Select(a => a.OUID).ToListAsync();
 
                 List<OU> ous = new List<OU>();
                 foreach (var item in FavoriteOUS)
@@ -2682,18 +2675,18 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<Territory> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens,OU")
+        public async Task<List<Territory>> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens,OU")
         {
             using (var context = new DataContext())
             {
-                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
+                var favouriteTerritories = await context.FavouriteTerritories.Where(f => f.PersonID == personID).AsNoTracking().ToListAsync();
                 List<Territory> territory = new List<Territory>();
                 foreach (var item in favouriteTerritories)
                 {
                     var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.TerritoryID && !t.IsDeleted);
 
                     AssignIncludes(include, ref ouTerritoriesQuery);
-                    var ouTerritories = ouTerritoriesQuery.FirstOrDefault();
+                    var ouTerritories = await ouTerritoriesQuery.AsNoTracking().FirstOrDefaultAsync();
 
                     ouTerritories.IsFavourite = true;
                     ouTerritories.shapeWKT = ouTerritories.WellKnownText;
@@ -2709,7 +2702,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string InsertMasterTerritory()
+        public async Task<string> InsertMasterTerritory()
         {
 
             using (var dc = new DataContext())
@@ -2720,7 +2713,7 @@ namespace DataReef.TM.Services.Services
                     {
                         //var Ous = dc.OUs.Include(a => a.Shapes).ToList();
                         Guid ouid = Guid.Parse("7749729D-787E-49D2-83F1-E070597A152E");
-                        var Ous = dc.OUs.Include(a => a.Shapes).Where(x => x.Guid == ouid).ToList();
+                        var Ous = await dc.OUs.Include(a => a.Shapes).Where(x => x.Guid == ouid).ToListAsync();
 
                         foreach (var entity in Ous)
                         {
