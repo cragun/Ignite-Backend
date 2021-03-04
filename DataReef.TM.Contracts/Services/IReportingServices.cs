@@ -14,7 +14,7 @@ namespace DataReef.TM.Contracts.Services
         ICollection<OrganizationReportRow> GetOrganizationReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null);
 
         [OperationContract]
-        ICollection<SalesRepresentativeReportRow> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, string proptype = null);
+        Task<ICollection<SalesRepresentativeReportRow>> GetSalesRepresentativeReport(Guid startOUID, DateTime? specifiedDay = null, DateTime? StartRangeDay = null, DateTime? EndRangeDay = null, string proptype = null);
 
         [OperationContract]
         Task<ICollection<OrganizationSelfTrackedReportRow>> GetOrganizationSelfTrackedReport(Guid startOUID, DateTime? specifiedDay);

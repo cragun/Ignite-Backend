@@ -30,7 +30,7 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
-        SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey); 
+        SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
         IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey);
@@ -43,15 +43,15 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO request,DateTime fromDate,DateTime toDate);
 
         [OperationContract]
-        IEnumerable<Models.Person> QueryForPerson(Guid propertyID, string email, string name);
+        Task<IEnumerable<Models.Person>> QueryForPerson(Guid propertyID, string email, string name);
 
         [OperationContract]
         SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
 
         [OperationContract]
-        string SendNotification(string fcm_token); 
+        string SendNotification(string fcm_token);
 
         [OperationContract]
-        string UpdateSmartboardIdByEmail(); 
+        string UpdateSmartboardIdByEmail();
     }
 }
