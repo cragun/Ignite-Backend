@@ -137,7 +137,6 @@ namespace DataReef.TM.Services
                 req.EndDate.Date == a.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
 
                 List<List<object>> report = new List<List<object>>();
-
                 if (data.Count > 0)
                 {
                     var quota = data.FirstOrDefault(a => a.Flags == 1 && a.Type == 1);
