@@ -138,7 +138,7 @@ namespace DataReef.TM.Services
 
                 List<List<object>> report = new List<List<object>>();
 
-                if (data != null)
+                if (data.Count > 0)
                 {
                     var quota = data.FirstOrDefault(a => a.Flags == 1 && a.Type == 1);
 
@@ -195,7 +195,7 @@ namespace DataReef.TM.Services
                                 item.WeekCommitments = Convert.ToString(Convert.ToDouble(item.TodayCommitments) * 7);
                                 item.RangeCommitments = adminCommitment.Commitments;
                             }
-                            else if (isUserSetCommitment == null && isAdminSetCommitment == null)
+                            else if (isUserSetCommitment != null && isAdminSetCommitment == null)
                             {
                                 var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
 
