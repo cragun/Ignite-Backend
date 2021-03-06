@@ -199,5 +199,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         Task<string> InsertMasterTerritory();
+
+        [OperationContract]
+        Task<OU> GetOuPermissions(Guid ouid);
+        
     }
 }

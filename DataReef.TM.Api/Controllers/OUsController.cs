@@ -641,6 +641,14 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = res });
         }
 
+        [HttpGet]
+        [Route("{ouid}/permissions")]
+        public async Task<IHttpActionResult> GetOuPermissions(Guid ouid)
+        {
+            var res = await ouService.GetOuPermissions(ouid);
+            return Ok(new { Response = res });
+        }
+
         [HttpPost]
         public override async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
         {

@@ -2771,6 +2771,14 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async Task<OU> GetOuPermissions(Guid ouid)
+        {
+            using (var dc = new DataContext())
+            { 
+                return await dc.OUs.FirstOrDefaultAsync(x => x.Guid == ouid);
+            }
+        }
+
         //public void UpdateFinancing()
         //{
         //    using (var dc = new DataContext())
