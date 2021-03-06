@@ -255,6 +255,7 @@ namespace DataReef.TM.Services
                         RangeCommitments = Convert.ToString(item[6]),
                     });
                 }
+
                 entity.dispositions = JsonConvert.SerializeObject(dispositions);
 
                 var data = dc.QuotasCommitments.FirstOrDefault(a => entity.StartDate.Date == a.StartDate &&
