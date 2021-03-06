@@ -653,8 +653,7 @@ namespace DataReef.TM.Api.Controllers
         public override async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
         {
             return await base.ActivateByGuid(guid);
-        }
-
+        } 
 
         public override async Task<OU> Post(OU item)
         {
