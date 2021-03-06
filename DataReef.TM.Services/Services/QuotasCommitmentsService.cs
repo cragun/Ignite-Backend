@@ -65,18 +65,27 @@ namespace DataReef.TM.Services
 
         public QuotasCommitment InsertQuotas(QuotasCommitment entity)
         {
-            entity.CreatedByID = SmartPrincipal.UserId;
-            entity.Flags = 1;
-            entity.dispositions = JsonConvert.SerializeObject(entity.Disposition);
-            var ret = base.Insert(entity);
-
-            if (ret == null)
+            using (DataContext dc = new DataContext())
             {
-                entity.SaveResult = SaveResult.SuccessfulInsert;
+                var data = dc.QuotasCommitments.FirstOrDefault(a => entity.StartDate.Date == a.StartDate &&
+            entity.EndDate.Date == a.EndDate && a.PersonID == entity.PersonID && a.Type == entity.Type && a.Flags == 1);
+
+                entity.dispositions = JsonConvert.SerializeObject(entity.Disposition);
+
+                if (data != null)
+                {
+                    data.dispositions = entity.dispositions;
+                    base.Update(data);
+                }
+                else
+                {
+                    entity.CreatedByID = SmartPrincipal.UserId;
+                    entity.Flags = 1; 
+                    base.Insert(entity);
+                }
+
                 return entity;
             }
-
-            return entity;
         }
 
         public List<List<object>> GetQuotasReport()
@@ -169,7 +178,7 @@ namespace DataReef.TM.Services
                             isAdminSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isAdminSetCommitment.dispositions);
                             isAdminSetCommitment.Disposition = isAdminSetCommitment.Disposition.OrderBy(a => a.Disposition).ToList();
                         }
- 
+
                         foreach (var item in quota.Disposition)
                         {
                             if (string.IsNullOrEmpty(item.Quota))
@@ -217,7 +226,7 @@ namespace DataReef.TM.Services
                         item.WeekCommitments,
                         item.RangeQuotas,
                         item.RangeCommitments,
-                    }; 
+                    };
                             report.Add(commitments);
                         }
                     }
@@ -228,37 +237,45 @@ namespace DataReef.TM.Services
 
         public QuotasCommitment InsertCommitments(QuotasCommitment entity)
         {
-            entity.CreatedByID = SmartPrincipal.UserId;
-            List<QuotaCommitementsDisposition> dispositions = new List<QuotaCommitementsDisposition>();
-
-            foreach (var item in entity.commitments)
+            using (DataContext dc = new DataContext())
             {
-                dispositions.Add(new QuotaCommitementsDisposition
+                List<QuotaCommitementsDisposition> dispositions = new List<QuotaCommitementsDisposition>();
+
+                foreach (var item in entity.commitments)
                 {
-                    DisplayName = Convert.ToString(item[0]),
-                    Disposition = Convert.ToString(item[0]),
-                    TodayQuotas = Convert.ToString(item[1]),
-                    TodayCommitments = Convert.ToString(item[2]),
-                    WeekQuotas = Convert.ToString(item[3]),
-                    WeekCommitments = Convert.ToString(item[4]),
-                    RangeQuotas = Convert.ToString(item[5]),
-                    RangeCommitments = Convert.ToString(item[6]),
-                });
-            }
+                    dispositions.Add(new QuotaCommitementsDisposition
+                    {
+                        DisplayName = Convert.ToString(item[0]),
+                        Disposition = Convert.ToString(item[0]),
+                        TodayQuotas = Convert.ToString(item[1]),
+                        TodayCommitments = Convert.ToString(item[2]),
+                        WeekQuotas = Convert.ToString(item[3]),
+                        WeekCommitments = Convert.ToString(item[4]),
+                        RangeQuotas = Convert.ToString(item[5]),
+                        RangeCommitments = Convert.ToString(item[6]),
+                    });
+                }
+                entity.dispositions = JsonConvert.SerializeObject(dispositions);
 
-            entity.dispositions = JsonConvert.SerializeObject(dispositions);
-            entity.Flags = 2;
-            entity.IsCommitmentSet = true;
+                var data = dc.QuotasCommitments.FirstOrDefault(a => entity.StartDate.Date == a.StartDate &&
+              entity.EndDate.Date == a.EndDate && a.PersonID == entity.PersonID && a.Type == entity.Type && a.Flags == 2);
 
-            var ret = base.Insert(entity);
+                if (data != null)
+                {
+                    data.dispositions = entity.dispositions;
+                    base.Update(data);
+                }
+                else
+                { 
+                    entity.CreatedByID = SmartPrincipal.UserId;
+                    entity.Flags = 2;
+                    entity.IsCommitmentSet = true;
 
-            if (ret == null)
-            {
-                entity.SaveResult = SaveResult.SuccessfulInsert;
+                    base.Insert(entity);
+                }
+
                 return entity;
             }
-
-            return entity;
         }
 
         public List<List<object>> GetQuotasReportByPerson(QuotasCommitment req)
@@ -446,11 +463,11 @@ namespace DataReef.TM.Services
         public QuotasCommitment IsCommitmentsSetByUser(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
-            {  
+            {
                 var data = dc.QuotasCommitments.Where(a => req.CurrentDate.Date >= a.StartDate && req.CurrentDate.Date <= a.EndDate && a.PersonID == req.PersonID).AsNoTracking().FirstOrDefault();
                 if (data != null)
                 {
-                    data.IsQuotatSet = true; 
+                    data.IsQuotatSet = true;
                 }
                 return data;
             }
