@@ -192,6 +192,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return SubmitLeadRequest(integrationData, createLeadRequest, ouid);
         }
 
+
         public SstResponse SubmitLead(Guid propertyID, Guid? overrideEC = null, bool disposeRepo = true, bool IsdispositionChanged = false)
         {
             var repository = _repository.Value;
