@@ -242,6 +242,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             //set another person as Energy Consultant, not the one from the appointment. Spare going to the db if user is the same as dealer
              
+
             var closer = overrideEC == null
               //? dealer
               ? null
