@@ -251,7 +251,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             //                    .FirstOrDefault(p => p.Guid == overrideEC);
 
             var closer = overrideEC == null
-             ? dealer
+            // ? dealer
+            ? null
              : overrideEC.Value == SmartPrincipal.UserId
                  ? dealer
                  : repository
