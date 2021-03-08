@@ -43,11 +43,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
         public class TokenResponse
         {
             public string token { get; set; }
-        }
-
-
-
-        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);        
+        } 
 
         public class SunnovaProjects
         {
