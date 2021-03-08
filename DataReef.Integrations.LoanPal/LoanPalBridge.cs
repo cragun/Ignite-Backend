@@ -50,8 +50,7 @@ namespace DataReef.Integrations.LoanPal
                 return resp;
             }
             return null;
-        }
-
+        } 
 
         public ApplicationResponse SubmitApplication(ApplicationRequest request)
         {
