@@ -26,7 +26,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
         private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunnova.test.url"];
         private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunnova.Auth.Username"];
         private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunnova.Auth.Password"];
-        
+        private static readonly string ReturnUrl = System.Configuration.ConfigurationManager.AppSettings["Sunnova.test.ReturnUrl"];
+
         public SunnovaAdapter(Lazy<IOUSettingService> ouSettingService) : base("Sunnova", ouSettingService)
         {
         }
@@ -246,6 +247,50 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<SunnovaLeadCreditResponse>(content);
+
+                return ret;
+            }
+        }
+
+        public SunnovaLeadCreditResponseData PassSunnovaLeadCreditURL(Property property)
+        {
+
+            using (var dc = new DataContext())
+            {
+                var SunnovaLeadID = property.SunnovaLeadID;
+
+                var SunnovaData = dc.ApiLogEntries.SingleOrDefault(r => r.RequestContentBody == SunnovaLeadID);
+                var SunnovaDatas = SunnovaData != null ? SunnovaData.ResponseContentBody : String.Empty;
+
+                SunnovaLeadCredit SunnovaContact = JsonConvert.DeserializeObject<SunnovaLeadCredit>(SunnovaDatas);
+
+                var SunnovaContactId = SunnovaContact.Contacts;
+                SunnovaLeadCreditRequestData req = new SunnovaLeadCreditRequestData();
+                req.Return_URL = ReturnUrl;
+
+                string token = GetSunnovaToken();
+                var request = new RestRequest($"/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=inperson", Method.PATCH);
+                request.AddJsonBody(req);
+                request.AddHeader("Authorization", "Bearer " + token);
+
+                var response = client.Execute(request);
+
+                if (response.StatusCode != HttpStatusCode.Created)
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=inperson", null, token);
+                    throw new ApplicationException($"passSunnovaLeadCredit Failed. {response.Content}");
+                }
+
+                try
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=inperson", null, token);
+                }
+                catch (Exception)
+                {
+                }
+
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<SunnovaLeadCreditResponseData>(content);
 
                 return ret;
             }

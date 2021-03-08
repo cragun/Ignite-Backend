@@ -102,5 +102,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid);
 
+        [OperationContract]
+        Task<SunnovaLeadCreditResponseData> SendLeadCreditURLSunnova(Guid propertyid);
+
     }
 }

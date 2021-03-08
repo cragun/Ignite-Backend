@@ -18,6 +18,9 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
         SunnovaLeadCreditResponse PassSunnovaLeadCredit(Property property);
 
         [OperationContract]
+        SunnovaLeadCreditResponseData PassSunnovaLeadCreditURL(Property property);
+
+        [OperationContract]
         string GetSunnovaToken();
     }
 }

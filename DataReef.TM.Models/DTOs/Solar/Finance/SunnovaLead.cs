@@ -79,4 +79,15 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public object Signing_URL { get; set; }
     }
 
+    public class SunnovaLeadCreditRequestData
+    {
+        public object Return_URL;
+    }
+
+    public class SunnovaLeadCreditResponseData
+    {
+        public string Contact_Id { get; set; }
+        public string Message { get; set; }
+        public object Signing_URL { get; set; }
+    }
 }

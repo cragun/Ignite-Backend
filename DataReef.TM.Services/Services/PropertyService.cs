@@ -1795,5 +1795,26 @@ namespace DataReef.TM.Services.Services
 
 
         }
+
+        public async Task<SunnovaLeadCreditResponseData> SendLeadCreditURLSunnova(Guid propertyid)
+        {
+
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null && prop.SunnovaLeadID != null)
+                {
+                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(prop);
+                    //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
+                    dataContext.SaveChanges();
+
+                    return lead;
+                }
+                else
+                {
+                    return new SunnovaLeadCreditResponseData();
+                }
+            }
+        }
     }
 }
