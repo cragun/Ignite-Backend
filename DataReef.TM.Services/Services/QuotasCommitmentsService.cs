@@ -189,8 +189,15 @@ namespace DataReef.TM.Services
                             item.TodayQuotas = Convert.ToString(Math.Round(Convert.ToDouble(item.Quota) / Convert.ToDouble(quota.EndDate.Subtract(quota.StartDate).TotalDays)));
                             item.WeekQuotas = Convert.ToString(Convert.ToDouble(item.TodayQuotas) * 7);
                             item.RangeQuotas = item.Quota;
+                            if (isUserSetCommitment != null)
+                            {
+                                var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
 
-                            if (isAdminSetCommitment != null && isUserSetCommitment == null)
+                                item.TodayCommitments = userCommitment.TodayCommitments;
+                                item.WeekCommitments = userCommitment.WeekCommitments;
+                                item.RangeCommitments = userCommitment.RangeCommitments;
+                            }
+                            else if (isAdminSetCommitment != null)
                             {
                                 var adminCommitment = isAdminSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
                                 if (string.IsNullOrEmpty(adminCommitment.Commitments))
@@ -202,15 +209,7 @@ namespace DataReef.TM.Services
 
                                 item.WeekCommitments = Convert.ToString(Convert.ToDouble(item.TodayCommitments) * 7);
                                 item.RangeCommitments = adminCommitment.Commitments;
-                            }
-                            else if (isUserSetCommitment != null && isAdminSetCommitment == null)
-                            {
-                                var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
-
-                                item.TodayCommitments = userCommitment.TodayCommitments;
-                                item.WeekCommitments = userCommitment.WeekCommitments;
-                                item.RangeCommitments = userCommitment.RangeCommitments;
-                            }
+                            } 
                             else
                             {
                                 item.TodayCommitments = "0";
