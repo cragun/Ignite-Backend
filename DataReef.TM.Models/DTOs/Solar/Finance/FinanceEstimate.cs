@@ -60,7 +60,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
             TotalInterestPayment = response.TotalInterestPayment;
             LenderFee = plan.LenderFee != null ? plan.LenderFee.Value : 0;
-            DealerFee = plan.DealerFee != null ? plan.DealerFee.Value : 0;
+            DealerFee = Convert.ToDouble(request?.DealerFee);
             
             PPW = plan.PPW != null ? plan.PPW.Value : 0;
 
