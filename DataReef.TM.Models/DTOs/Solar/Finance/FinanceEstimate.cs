@@ -55,7 +55,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             TotalSavings = response.TotalSavings;
 
             TakeHomeIncentives = response.TotalTakeHomeIncentives;
-            TotalAddersCosts = request.TotalAddersCosts;
+            TotalAddersCosts = response.TotalAddersCosts;
             Name = plan.Type == FinancePlanType.Mortgage ? $"Mortgage {Terms} / {InterestRate.ToString("n2")}%" : plan.Name;
 
             TotalInterestPayment = response.TotalInterestPayment;
