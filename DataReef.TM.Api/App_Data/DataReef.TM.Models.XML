@@ -30,6 +30,11 @@
             Navigation property for the Person
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.DTOs.Persons.PersonKPIScreenshotRequest.ScreenshotData">
+            <summary>
+            Base64 encoded value of the screenshot data used in personKPI
+            </summary>
+        </member>
         <member name="M:DataReef.TM.Models.DTOs.Solar.Finance.Incentive.GetGrandTotal(System.Int64)">
             <summary>
             Get the total incentives for all period
@@ -3093,11 +3098,6 @@
         <member name="P:DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard.SBProposalMonthData.Production">
             <summary>
             In kWh
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Persons.PersonKPIScreenshotRequest.ScreenshotData">
-            <summary>
-            Base64 encoded value of the screenshot data used in personKPI
             </summary>
         </member>
         <member name="P:DataReef.TM.Models.DTOs.PropertyAttachments.AuditItem.ItemIDs">

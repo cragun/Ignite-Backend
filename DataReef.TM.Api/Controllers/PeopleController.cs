@@ -910,5 +910,13 @@ namespace DataReef.TM.Api.Controllers
                 return Ok(prolist);
             }
         }
+
+        [HttpGet]
+        [Route("GetUserBuildVersion")]
+        public async Task<IHttpActionResult> GetUserBuildVersion()
+        {
+            var result  = await peopleService.GetUserBuildVersion();
+            return Ok(result);
+        }
     }
 }

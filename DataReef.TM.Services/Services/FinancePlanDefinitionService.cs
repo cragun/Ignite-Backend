@@ -31,17 +31,20 @@ namespace DataReef.TM.Services
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
         private readonly Lazy<IFinancingCalculator> _loanCalculator;
         private readonly Lazy<IOUSettingService> _ouSettingService;
+        private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
 
         public FinancePlanDefinitionService(ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IFinancingCalculator> loanCalculator,
             Lazy<IOUSettingService> ouSettingService,
-            Lazy<ISunlightAdapter> sunlightAdapter
+            Lazy<ISunlightAdapter> sunlightAdapter,
+            Lazy<ISunnovaAdapter> sunnovaAdapter
             ) : base(logger, unitOfWorkFactory)
         {
             _sunlightAdapter = sunlightAdapter;
             _loanCalculator = loanCalculator;
             _ouSettingService = ouSettingService;
+            _sunnovaAdapter = sunnovaAdapter;
         }
 
         public override ICollection<FinancePlanDefinition> GetMany(IEnumerable<Guid> uniqueIds, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
@@ -219,6 +222,12 @@ namespace DataReef.TM.Services
                             {
                                 string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
+                            }
+
+                            if (url.CreditCheckUrl.Contains("https://sunnovaenergy.force.com/partnerconnect/login"))
+                            {
+                                var sunnovaurl = _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(property);
+                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("https://sunnovaenergy.force.com/partnerconnect/login", sunnovaurl.Signing_URL.ToString() ?? string.Empty);
                             }
                         }
                         return creditCheckUrls;
