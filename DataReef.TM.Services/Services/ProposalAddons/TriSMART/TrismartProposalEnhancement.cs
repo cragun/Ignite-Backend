@@ -268,6 +268,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 //proposal.ForecastScenario.FedTaxCredit = smarterRequest.FederalTaxIncentive;
 
                 //as per new calculation
+
                 proposal.ForecastScenario.FedTaxCredit = (decimal)proposal.SystemCosts.FederalTaxCredit;
 
                 if (financePlan.FinancePlanType == FinancePlanType.Cash)
