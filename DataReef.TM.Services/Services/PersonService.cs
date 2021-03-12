@@ -1,4 +1,5 @@
-﻿using DataReef.Core.Classes;
+﻿using DataReef.Core;
+using DataReef.Core.Classes;
 using DataReef.Core.Enums;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Infrastructure.Repository;
@@ -30,6 +31,7 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
+using static DataReef.TM.Models.Person;
 
 namespace DataReef.TM.Services
 {
@@ -43,6 +45,7 @@ namespace DataReef.TM.Services
         private readonly Lazy<IOUService> _ouService;
         private readonly Lazy<IOUSettingService> _ouSettingsService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private IAppSettingService _settingsService;
 
 
         public PersonService(ILogger logger,
@@ -51,12 +54,14 @@ namespace DataReef.TM.Services
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingsService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            IAppSettingService settingsService,
             Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
         {
             _ouAssociationService = ouAssociationService;
             _mailChimpAdapter = mailChimpAdapter;
             _ouService = ouService;
             _sbAdapter = sbAdapter;
+            _settingsService = settingsService;
             _ouSettingsService = ouSettingsService;
         }
 
@@ -1314,7 +1319,7 @@ namespace DataReef.TM.Services
                     OldState = oldstate,
                     NewState = newstate,
                     Changer = changer
-                   // Changer = SmartPrincipal.UserId.ToString(),
+                    // Changer = SmartPrincipal.UserId.ToString(),
                 };
 
                 dc.ActiveDeactiveUserLog.Add(usrlog);
@@ -1323,5 +1328,53 @@ namespace DataReef.TM.Services
                 return usrlog;
             }
         }
+
+
+        public async Task<IOSVersionResponseModel> GetUserBuildVersion()
+        {
+            IOSVersionResponseModel resp = new IOSVersionResponseModel();
+            using (DataContext dc = new DataContext())
+            {
+                string iosdata = _settingsService.GetValue(Constants.IOSVersion);
+
+                if (!string.IsNullOrEmpty(iosdata))
+                {
+                    IOSVersionDTO iosversion = JsonConvert.DeserializeObject<IOSVersionDTO>(iosdata);
+
+                    resp.IsPopupEnabled = iosversion.IsPopupEnabled;
+                    resp.LatestVersion = iosversion.VersionValue;
+                    resp.UserVersion = "";
+                    resp.PopUpMsg = "";
+
+                    // if (iosversion.IsPopupEnabled == true)
+                    // {
+                    var latestVersion = Version.Parse(iosversion.VersionValue);
+                    var person = dc.People.Where(x => x.IsDeleted == false && x.Guid == SmartPrincipal.UserId && x.BuildVersion != null).FirstOrDefault();
+
+                    if (person != null)
+                    {
+                        if (person.BuildVersion.Contains("Version"))
+                        {
+                            string ver = person.BuildVersion.Replace("Version ", "");
+                            if (Version.Parse(ver) < latestVersion)
+                            {
+                                resp.UserVersion = ver;
+                                resp.PopUpMsg = "A new version of the app is available.Please update to have a better experience.";
+                            }
+
+                            if (Version.Parse(ver) == latestVersion)
+                            {
+                                resp.UserVersion = ver;
+                                resp.PopUpMsg = "Same Version";
+                            }
+                        }
+                    }
+                    // }
+                }
+            }
+
+            return resp;
+        }
+
     }
 }

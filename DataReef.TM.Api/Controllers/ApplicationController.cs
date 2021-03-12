@@ -2,9 +2,12 @@
 using DataReef.Core.Logging;
 using DataReef.TM.Api.Classes.Requests;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.Models.DTOs.Persons;
 using System;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using System.Web.Http;
+using static DataReef.TM.Models.Person;
 
 namespace DataReef.TM.API.Controllers
 {
@@ -102,6 +105,53 @@ namespace DataReef.TM.API.Controllers
             catch (Exception ex)
             {
                 _logger.Error("SetLoginDays", ex);
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// Get the IOSVersion
+        /// </summary>
+        /// <returns></returns>
+        [Route("IOSVersion")]
+        [HttpGet]
+        public async Task<string> GetIOSVersion()
+        {
+            try
+            {
+
+                return _settingsService.GetValue(Constants.IOSVersion);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("GetIOSVersion", ex);
+                return String.Empty;
+            }
+        }
+
+        //public class iosversionmodel
+        //{
+        //    public string VersionValue { get; set; }
+        //    public bool IsPopupEnabled { get; set; }
+        //}
+        /// <summary>
+        /// Set IOSVersion 
+        /// </summary>
+        /// <returns></returns>
+        [HttpPatch]
+        [Route("IOSVersion")]
+        public async Task<bool> SetIOSVersion(IOSVersionDTO ios)
+        {
+            try
+            {
+                _settingsService.SetValue(Constants.IOSVersion, Newtonsoft.Json.JsonConvert.SerializeObject(ios));
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("SetIOSVersion", ex);
             }
             return false;
         }
