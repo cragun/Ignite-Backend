@@ -74,6 +74,18 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             }
         }
 
+
+        public decimal TotalAddersCostsWithOutFinancingFee
+        {
+            get
+            {
+                return
+                    Adders
+                    ?.Where(a => a.Type == AdderItemType.Adder)
+                    ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, false)) ?? TotalAddersCosts;
+            }
+        }
+
         public decimal TotalAddersBeforeITCWithFinancingFee
         {
             get
