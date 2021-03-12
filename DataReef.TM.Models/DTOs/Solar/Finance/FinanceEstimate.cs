@@ -16,7 +16,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public FinanceEstimate(LoanResponse response, FinancePlanDefinition plan, decimal mortgagePayment, LoanRequest request = null)
         {
-            FinancePlanDefinitionId = plan.Guid; 
+            FinancePlanDefinitionId = plan.Guid;
             CanBuild = plan.Type == FinancePlanType.Cash || plan.Type == FinancePlanType.Loan || plan.Type == FinancePlanType.Lease;
             FinanceType = plan.Type;
 
@@ -26,7 +26,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             LoanPayment = plan.Type != FinancePlanType.Mortgage ? response.MonthlyPayment : 0;
             InterestRate = response.StatedApr;
             MortgagePayment = mortgagePayment;
-           
+
             switch (plan.Type)
             {
                 case FinancePlanType.PPA:
@@ -60,15 +60,17 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
             TotalInterestPayment = response.TotalInterestPayment;
             LenderFee = plan.LenderFee != null ? plan.LenderFee.Value : 0;
-            DealerFee = Convert.ToDouble(request?.DealerFee); 
+            DealerFee = Convert.ToDouble(request?.DealerFee);
             PPW = plan.PPW != null ? plan.PPW.Value : 0;
 
             //new calc
             BaseLoanAmount = ((Convert.ToDecimal(request?.PricePerWattASP) * Convert.ToDecimal(request?.SystemSize)) + request.TotalAddersCosts) - request.UpfrontRebate - request.DownPayment;
 
 
-            FinalPPW = Math.Round((FinalLoanAmount + request.DownPayment) / request.SystemSize , 2);
+            FinalPPW = Math.Round((FinalLoanAmount + request.DownPayment) / request.SystemSize, 2);
             PPW = Convert.ToDouble(FinalPPW);
+
+            LenderFeesInAmount = Math.Round((FinalLoanAmount - BaseLoanAmount), 2);
         }
 
         public Guid FinancePlanDefinitionId { get; set; }
@@ -102,7 +104,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal BaseLoanAmount { get; set; }
         public decimal FinalPPW { get; set; }
-        
+
         /// <summary>
         /// In Years
         /// </summary>
@@ -128,38 +130,16 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// Tells the client to show/hide the Build button
         /// </summary>
         public bool CanBuild { get; set; }
-        public double LenderFee { get; set; } 
-        public double DealerFee { get; set; } 
+        public double LenderFee { get; set; }
+        public double DealerFee { get; set; }
         public double PPW { get; set; }
-        public decimal LenderFeesInAmount
-        {
-            get
-            {
-                //if (LoanPayment != 0)
-                //{ 
-                //    return Math.Round(LoanPayment * ((LoanPayment / (LoanPayment * (1 - (Convert.ToDecimal(LenderFee) / 100)))) - 1), 2); ;
-                //}
-                //else
-                //{
-                //    return 0;  
-                //} 
-                 
-                if (BaseLoanAmount != 0)
-                {
-                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(DealerFee) / 100)))) - 1), 2); ;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
+        public decimal LenderFeesInAmount { get; set; }
 
 
         public decimal FinalLoanAmount
         {
             get
-            {  
+            {
                 if (BaseLoanAmount != 0)
                 {
                     return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(DealerFee) / 100))))), 2); ;
