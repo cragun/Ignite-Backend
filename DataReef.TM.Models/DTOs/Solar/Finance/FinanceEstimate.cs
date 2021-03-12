@@ -64,8 +64,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             PPW = plan.PPW != null ? plan.PPW.Value : 0;
 
             //new calc
-            BaseLoanAmount = ((Convert.ToDecimal(request?.PricePerWattASP) * Convert.ToDecimal(request?.SystemSize)) + request.TotalAddersCosts) - request.UpfrontRebate - request.DownPayment;
-
+            BaseLoanAmount = ((Convert.ToDecimal(request?.PricePerWattASP) * Convert.ToDecimal(request?.SystemSize)) + request.TotalAddersCosts) - request.UpfrontRebate - request.DownPayment; 
 
             FinalPPW = Math.Round((FinalLoanAmount + request.DownPayment) / request.SystemSize, 2);
             PPW = Convert.ToDouble(FinalPPW);
