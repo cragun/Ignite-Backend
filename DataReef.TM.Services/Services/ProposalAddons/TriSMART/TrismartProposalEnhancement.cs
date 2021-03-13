@@ -219,7 +219,10 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                                     .Where(si => !(stdIncentives?.Contains(si) == true) && !(smartIncentives?.Contains(si) == true))
                                     .ToList();
 
-                proposal.ForecastScenario.TotalCost = (decimal)proposal.SystemCosts.Total;
+                //proposal.ForecastScenario.TotalCost = (decimal)proposal.SystemCosts.Total;
+
+                //as per new calculation
+                proposal.ForecastScenario.TotalCost = (decimal)proposal.SystemCosts.TotalCostToCustomer;
 
                 //proposal.ForecastScenario.StdRebates = stdIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(stdRequest.SystemSize));
                 //proposal.ForecastScenario.SmartRebates = smartIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smartRequest.SystemSize));
@@ -233,7 +236,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                     Cost = a.GetGrandTotal(smartRequest.SystemSize),
                     Quantity = a.Quantity,
                     IsRebate = a.IsRebate,
-                    AllowsQuantitySelection = a.AllowsQuantitySelection,
+                    AllowsQuantitySelection =a.AllowsQuantitySelection,
                     AdderType = a.AdderType
                 }).ToList();
 
@@ -260,7 +263,12 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
                 // There are scenarios when there are incentives/rebates that apply before the ITC is calculated
                 // to capture that, we'll use the smarter option for ITC (FederalTaxIncentive)
-                proposal.ForecastScenario.FedTaxCredit = smarterRequest.FederalTaxIncentive;
+                //proposal.ForecastScenario.FedTaxCredit = smarterRequest.FederalTaxIncentive;
+
+                //as per new calculation
+
+                proposal.ForecastScenario.FedTaxCredit = (decimal)proposal.SystemCosts.FederalTaxCredit;
+
 
                 if (financePlan.FinancePlanType == FinancePlanType.Cash)
                 {
