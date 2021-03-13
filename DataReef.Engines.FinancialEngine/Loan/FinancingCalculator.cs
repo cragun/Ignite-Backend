@@ -764,6 +764,7 @@ namespace DataReef.Engines.FinancialEngine.Loan
             };
             result.Add(noneEstimate);
 
+
             foreach (var financePlanDefinition in plans)
             {
                 // cloning the request object
