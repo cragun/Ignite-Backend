@@ -74,6 +74,17 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             }
         }
 
+        public decimal TotalAddersCostsWithOutFinancingFee
+        {
+            get
+            {
+                return
+                    Adders
+                    ?.Where(a => a.Type == AdderItemType.Adder)
+                    ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, false)) ?? TotalAddersCosts;
+            }
+        }
+
         public decimal TotalAddersBeforeITCWithFinancingFee
         {
             get
@@ -204,7 +215,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             get
             {
                 var sum = GrossSystemCostWithTax + TotalAddersBeforeITCWithFinancingFee;
-                if(DealerFee > 0)
+                if (DealerFee > 0)
                 {
                     sum = sum * (DealerFee / 100);
                 }
@@ -327,7 +338,50 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         #endregion
 
+        #region New Calculation 
 
+        public double BaseLoanAmount
+        {
+            get
+            {
+                return Convert.ToDouble(((PricePerWattASP * SystemSize) + TotalAddersCosts) - UpfrontRebate - DownPayment);
+            }
+        }
+
+        public double FinalLoanAmount
+        {
+            get
+            {
+                if (BaseLoanAmount != 0)
+                {
+                    return Math.Round(BaseLoanAmount * (BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDouble((DealerFee)) / 100)))), 2);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+        public double TotalCostToCustomer
+        {
+            get
+            {
+                return FinalLoanAmount + Convert.ToDouble(DownPayment);
+            }
+        }
+
+        public double FederalTaxCredit
+        {
+            get
+            {
+                return TotalCostToCustomer * (double)FederalTaxIncentivePercentage;
+            }
+        }
+
+
+        
+        #endregion
     }
 
 

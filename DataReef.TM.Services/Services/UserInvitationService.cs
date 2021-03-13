@@ -1,5 +1,6 @@
 ﻿using DataReef.Core;
 using DataReef.Core.Classes;
+using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Infrastructure.Repository;
 using DataReef.Core.Logging;
 using DataReef.TM.Classes;
@@ -23,11 +24,13 @@ namespace DataReef.TM.Services
     public class UserInvitationService : DataService<UserInvitation>, IUserInvitationService
     {
         private readonly IOUService _ouService;
+        private readonly IPersonService _personService;
 
-        public UserInvitationService(ILogger logger, IOUService ouService, Func<IUnitOfWork> unitOfWorkFactory)
+        public UserInvitationService(ILogger logger, IOUService ouService, IPersonService personService, Func<IUnitOfWork> unitOfWorkFactory)
             : base(logger, unitOfWorkFactory)
         {
             _ouService = ouService;
+            _personService = personService;
         }
 
         public override UserInvitation Get(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
@@ -152,6 +155,10 @@ namespace DataReef.TM.Services
                 var person = dataContext.People.SingleOrDefault(p => p.Guid == toPersonId.Value);
                 if (person != null && person.IsDeleted)
                 {
+                    string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
+                    // insert log for users activate - deactivate 
+                    _personService.InsertActiveDeactiveUserLog(person.EmailAddressString, "InsertEntity Api", oldstate, "Active", "IgniteApi-" + SmartPrincipal.UserId.ToString());
+
                     userWasDeleted = true;
                     person.IsDeleted = false;
                 }

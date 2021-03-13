@@ -47,6 +47,7 @@ namespace DataReef.Application.Services
         private readonly Lazy<IPowerBIBridge> _powerBIBridge;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
         private readonly IAppSettingService _appSettingService = null;
+        private readonly IPersonService _personService;
 
         public AuthenticationService(ILogger logger,
             Lazy<IMailChimpAdapter> mailChimpAdapter,
@@ -55,7 +56,8 @@ namespace DataReef.Application.Services
             Lazy<IDataService<Credential>> credentialService,
             Lazy<IPowerBIBridge> powerBIBridge,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
-            IAppSettingService appSettingService)
+            IAppSettingService appSettingService,
+            IPersonService personService)
         {
             this.logger = logger;
             _mailChimpAdapter = mailChimpAdapter;
@@ -65,6 +67,7 @@ namespace DataReef.Application.Services
             _powerBIBridge = powerBIBridge;
             _sbAdapter = sbAdapter;
             _appSettingService = appSettingService;
+            _personService = personService;
         }
 
         public AuthenticationToken ChangePassword(string userName, string oldPassword, string newPassword, string fcm_token)
@@ -383,21 +386,30 @@ namespace DataReef.Application.Services
                 {
                     if (value)
                     {
+                        string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
                         person.IsDeleted = false;
                         person.ModifiedTime = DateTime.UtcNow;
                         user.IsDeleted = false;
                         credential.IsDeleted = false;
-
                         dc.SaveChanges();
+                        
+                        // insert log for users activate - deactivate 
+                        _personService.InsertActiveDeactiveUserLog(person.EmailAddressString, "UpdateUser Api", oldstate, "Active", "IgniteApi-" + SmartPrincipal.UserId.ToString());
+
                         return true;
                     }
                     else
                     {
+                        string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
                         person.IsDeleted = true;
                         person.ModifiedTime = DateTime.UtcNow;
                         user.IsDeleted = true;
                         credential.IsDeleted = true;
                         dc.SaveChanges();
+
+                        // insert log for users activate - deactivate 
+                        _personService.InsertActiveDeactiveUserLog(person.EmailAddressString, "UpdateUser Api", oldstate, "DeActive", "IgniteApi-" + SmartPrincipal.UserId.ToString());
+
                         return true;
                     }
                 }
@@ -652,6 +664,10 @@ namespace DataReef.Application.Services
 
                     if (person != null)
                     {
+                        string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
+                        // insert log for users activate - deactivate 
+                        _personService.InsertActiveDeactiveUserLog(person.EmailAddressString, "CreateUser Api", oldstate, "Active", "IgniteApi-" + SmartPrincipal.UserId.ToString());
+
                         person.IsDeleted = false;
                         person.ModifiedTime = DateTime.UtcNow;
                     }
@@ -1006,6 +1022,10 @@ namespace DataReef.Application.Services
 
                                 if (person != null)
                                 {
+                                    string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
+                                    // insert log for users activate - deactivate 
+                                    _personService.InsertActiveDeactiveUserLog(person.EmailAddressString, "CreateUpdateUserFromSB Api", oldstate, "Active", "SBApi-" + SmartPrincipal.UserId.ToString());
+
                                     person.IsDeleted = false;
                                     person.ModifiedTime = DateTime.UtcNow;
                                 }

@@ -191,6 +191,9 @@ namespace DataReef.TM.DataAccess.Database
         // API log
         public DbSet<ApiLogEntry> ApiLogEntries { get; set; }
 
+        // UserActivate Deactivate logs
+        public DbSet<ActiveDeactiveUserLog> ActiveDeactiveUserLog { get; set; }
+
         // Commerce
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
