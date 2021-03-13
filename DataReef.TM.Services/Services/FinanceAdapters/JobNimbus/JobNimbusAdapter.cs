@@ -68,6 +68,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.status_name = "Lead";
                 req.geo = geo;
 
+
                 string url = $"/api1/contacts/";
                 if (!IsCreate)
                     url = $"{url}{property.JobNimbusLeadID}";
