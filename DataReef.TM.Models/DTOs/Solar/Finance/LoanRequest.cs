@@ -345,7 +345,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         {
             get
             {
-                return Convert.ToDouble(((PricePerWattASP * SystemSize) + TotalAddersCosts) - UpfrontRebate - DownPayment);
+                return Convert.ToDouble(((PricePerWattASP * SystemSize) + TotalAddersCostsWithOutFinancingFee) - UpfrontRebate - DownPayment);
             }
         }
 
