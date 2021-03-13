@@ -66,8 +66,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.customer = Convert.ToString(property.Guid);
                 req.record_type_name = "Customer";
                 req.status_name = "Lead";
-                req.geo = geo;
-
+                req.geo = geo; 
 
                 string url = $"/api1/contacts/";
                 if (!IsCreate)
