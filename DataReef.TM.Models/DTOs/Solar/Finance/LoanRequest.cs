@@ -63,6 +63,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// </summary>
         public List<AdderItem> Adders { get; set; }
 
+
         public decimal TotalAddersCostsWithFinancingFee
         {
             get
