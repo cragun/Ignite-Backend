@@ -43,7 +43,7 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO request,DateTime fromDate,DateTime toDate);
 
         [OperationContract]
-        IEnumerable<Models.Person> QueryForPerson(Guid propertyID, string email, string name);
+        Task<IEnumerable<Models.Person>> QueryForPerson(Guid propertyID, string email, string name);
 
         [OperationContract]
         SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);

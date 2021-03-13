@@ -1894,6 +1894,18 @@
             <param name="value"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.API.Controllers.ApplicationController.GetIOSVersion">
+            <summary>
+            Get the IOSVersion
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.API.Controllers.ApplicationController.SetIOSVersion(DataReef.TM.Models.DTOs.Persons.IOSVersionDTO)">
+            <summary>
+            Set IOSVersion 
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.API.Controllers.BlobsController.SaveBytes(DataReef.TM.Api.Classes.BlobPost)">
             <summary>
             Saves an image blob to the blob cloud.  The Guid is the guid of the associated Attachment object. Content is the Base64 encoded image

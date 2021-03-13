@@ -51,8 +51,8 @@ namespace DataReef.TM.Api.Controllers
         [Route("roles/users")]
         public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
         {
-            var ret = quotasCommitmentsService.GetUsersFromRoleType(request.RoleID);
-            return Ok(new { Response = ret });
+            return Ok(new { Response = quotasCommitmentsService.GetUsersFromRoleType(request.RoleID) });
+
         }
 
         //add quotas by admin
@@ -105,8 +105,8 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost, Route("isSetCommitments")]
         public async Task<IHttpActionResult> IsCommitmentsSetByUser(QuotasCommitment request)
         {
-            var ret = quotasCommitmentsService.IsCommitmentsSetByUser(request);
-            return Ok(new { Response = ret });
+            return Ok(new { Response = quotasCommitmentsService.IsCommitmentsSetByUser(request) });
+
         }
     }
 }

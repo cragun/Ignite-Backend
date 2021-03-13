@@ -33,6 +33,8 @@ namespace DataReef.TM.Models
         [DataMember]
         public string dispositions { get; set; }
 
+        [DataMember]
+        public bool IsCommitmentSet { get; set; }
         [NotMapped]
         public List<QuotaCommitementsDisposition> Disposition { get; set; }
 
@@ -60,6 +62,8 @@ namespace DataReef.TM.Models
         [NotMapped]
         public DateTime CurrentDate { get; set; }
 
+        [NotMapped]
+        public bool IsQuotatSet { get; set; }
 
         #region Navigation Properties
 

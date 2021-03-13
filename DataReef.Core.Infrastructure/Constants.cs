@@ -14,6 +14,7 @@ namespace DataReef.Core
         public static string IPadVersionSettingName = "RequiredVersion.Ipad";
         public static string IPadMinimumVersionSettingName = "MinimumRequiredVersion.Ipad";
         public static string LoginDays = "Ignite.Portal.LoginDays";
+        public static string IOSVersion = "Ignite.Portal.IOSVersion";
         public static string FromEmailName = "Ignite App";
     }
 

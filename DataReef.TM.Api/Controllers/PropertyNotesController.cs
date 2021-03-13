@@ -46,7 +46,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAllForProperty(Guid propertyID)
         {
-            var result = _propertyNoteService.GetNotesByPropertyID(propertyID);
+            var result = await _propertyNoteService.GetNotesByPropertyID(propertyID);
 
             return Ok(result);
         }
@@ -62,7 +62,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> QueryUsersForProperty(Guid propertyID, [FromBody]PropertyNoteUserQueryRequest request)
         {
-            var result = _propertyNoteService.QueryForPerson(propertyID, request?.Email, request?.Name);
+            var result = await _propertyNoteService.QueryForPerson(propertyID, request?.Email, request?.Name);
 
             return Ok(result);
         }
@@ -161,11 +161,9 @@ namespace DataReef.TM.Api.Controllers
         {
 
             
-             bool checkTime= CryptographyHelper.checkTime(apiKey);
-            string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-
-
-            var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
+           bool checkTime= CryptographyHelper.checkTime(apiKey);
+           string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
+           var result = _propertyNoteService.AddNoteFromSmartboard(request, DecyptApiKey);
 
             return Ok(result);
         }

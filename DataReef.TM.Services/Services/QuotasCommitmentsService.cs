@@ -37,10 +37,10 @@ namespace DataReef.TM.Services
 
         public AdminQuotas GetQuotasType()
         {
-            List<Models.DTOs.QuotasCommitments.Type> typeList = new List<Models.DTOs.QuotasCommitments.Type>();
+            List<Models.DTOs.QuotasCommitments.Types> typeList = new List<Models.DTOs.QuotasCommitments.Types>();
 
-            typeList.Add(new Models.DTOs.QuotasCommitments.Type() { Id = 1, Name = "Quotas" });
-            typeList.Add(new Models.DTOs.QuotasCommitments.Type() { Id = 2, Name = "Commitments" });
+            typeList.Add(new Models.DTOs.QuotasCommitments.Types() { Id = 1, Name = "Quotas" });
+            typeList.Add(new Models.DTOs.QuotasCommitments.Types() { Id = 2, Name = "Commitments" });
 
             var ouRoles = _ouService.SBGetOuRoles();
             var dispositions = _personService.CRMGetAvailableDispositionsQuotas();

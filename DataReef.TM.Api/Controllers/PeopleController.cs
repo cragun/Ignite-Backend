@@ -497,5 +497,12 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetUserBuildVersion")]
+        public async Task<IHttpActionResult> GetUserBuildVersion()
+        {
+            var result = await peopleService.GetUserBuildVersion();
+            return Ok(result);
+        }
     }
 }
