@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 
 namespace DataReef.TM.Models.DTOs.Solar.Finance
-{
+{ 
     public class Geo
     {
         public double lon { get; set; }
