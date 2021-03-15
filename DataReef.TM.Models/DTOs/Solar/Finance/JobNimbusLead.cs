@@ -149,7 +149,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
         public long date_created { get; set; }
         public string title { get; set; }
-        public related related { get; set; }
+        public related primary { get; set; }
         public int record_type { get; set; }
         public string record_type_name { get; set; }
         public string jnid { get; set; }
