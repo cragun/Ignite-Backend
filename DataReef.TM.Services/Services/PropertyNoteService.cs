@@ -786,6 +786,7 @@ namespace DataReef.TM.Services.Services
                     }
                 }
 
+
                 var taggedPersons = GetTaggedPersons(note.Content);
                 if (taggedPersons?.Any() == true)
                 {
