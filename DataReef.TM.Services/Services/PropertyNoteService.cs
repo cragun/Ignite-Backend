@@ -196,6 +196,7 @@ namespace DataReef.TM.Services.Services
             return ret;
         }
 
+
         public override ICollection<PropertyNote> InsertMany(ICollection<PropertyNote> entities)
         {
             var ret = base.InsertMany(entities);
@@ -474,6 +475,8 @@ namespace DataReef.TM.Services.Services
                     PropertyID = property.Guid
                 };
 
+                Guid emailnoteid = note.Guid;
+
                 //if reply type is comment
                 if (noteRequest.ContentType == "Comment")
                 {
@@ -481,6 +484,7 @@ namespace DataReef.TM.Services.Services
                     note.ParentID = noteRequest.ParentID;
 
                     var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+                    emailnoteid = not.Guid;
 
                     not.Updated(user.Guid, user?.Name);
                     dc.SaveChanges();
@@ -544,7 +548,8 @@ namespace DataReef.TM.Services.Services
                             }
                         }
 
-                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                       // SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
 
@@ -619,6 +624,7 @@ namespace DataReef.TM.Services.Services
 
                 note.Content = noteRequest.Content;
 
+                Guid emailnoteid = note.Guid;
                 //if reply type is comment
                 if (noteRequest.ContentType == "Comment")
                 {
@@ -626,6 +632,8 @@ namespace DataReef.TM.Services.Services
 
                     not.Updated(user.Guid, user?.Name);
                     dc.SaveChanges();
+
+                    emailnoteid = not.Guid;
 
                     if (not != null && property != null)
                     {
@@ -685,7 +693,8 @@ namespace DataReef.TM.Services.Services
                             }
                         }
 
-                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                        //SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                        SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
                 dc.SaveChanges();
