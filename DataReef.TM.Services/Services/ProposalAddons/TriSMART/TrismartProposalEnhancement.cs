@@ -150,6 +150,10 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
             var stdResponse = _loanCalculator.CalculateLoan(stdRequest, planDefinition);
             var stdPlan = stdResponse.ToPlanOption(SubPlan_Standard.ToUpper(), "Keep All Incentives", PlanOptionType.Standard);
+
+            //as per new calculation
+            stdPlan.Balance = (decimal)proposal.SystemCosts.TotalCostToCustomer;
+
             introMonthlyPayment = stdResponse.IntroMonthlyPayment;
 
             #endregion
@@ -170,6 +174,8 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
             var smartResponse = _loanCalculator.CalculateLoan(smartRequest, planDefinition);
             var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
+            //as per new calculations 
+            smartPlan.Balance = (decimal)proposal.SystemCosts.TotalCostToCustomer - (decimal)proposal.SystemCosts.FederalTaxCredit;
 
             #endregion
 
@@ -200,9 +206,14 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 UtilityInflationRate = param.UtilityInflationRate
             });
             var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter, introMonthlyPayment);
+            //as per new calculations 
+            smarterPlan.Balance = smartPlan.Balance;
 
             proposal.FinancePlanOptions = new List<ProposalFinancePlanOption> { stdPlan, smartPlan, smarterPlan };
             proposal.Financing.MonthlyPayment = (double)smarterPlan.Payment19M;
+
+            
+
 
             #endregion
 
