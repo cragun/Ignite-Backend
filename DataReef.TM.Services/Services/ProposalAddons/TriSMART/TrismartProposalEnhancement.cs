@@ -150,6 +150,10 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
             var stdResponse = _loanCalculator.CalculateLoan(stdRequest, planDefinition);
             var stdPlan = stdResponse.ToPlanOption(SubPlan_Standard.ToUpper(), "Keep All Incentives", PlanOptionType.Standard);
+
+            //as per new calculation
+            stdPlan.Balance = (decimal)proposal.SystemCosts.TotalCostToCustomer;
+
             introMonthlyPayment = stdResponse.IntroMonthlyPayment;
 
             #endregion
@@ -170,6 +174,9 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
             var smartResponse = _loanCalculator.CalculateLoan(smartRequest, planDefinition);
             var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
+
+            //as per new calculations 
+            smartPlan.Balance = (decimal)(proposal.SystemCosts.TotalCostToCustomer - proposal.SystemCosts.FederalTaxCredit);
 
             #endregion
 
@@ -201,8 +208,14 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             });
             var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter, introMonthlyPayment);
 
+            //as per new calculations 
+            smarterPlan.Balance = smartPlan.Balance;
+
             proposal.FinancePlanOptions = new List<ProposalFinancePlanOption> { stdPlan, smartPlan, smarterPlan };
             proposal.Financing.MonthlyPayment = (double)smarterPlan.Payment19M;
+
+            
+
 
             #endregion
 
@@ -224,13 +237,15 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 //as per new calculation
                 proposal.ForecastScenario.TotalCost = (decimal)proposal.SystemCosts.TotalCostToCustomer;
 
+                 
+
+
                 //proposal.ForecastScenario.StdRebates = stdIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(stdRequest.SystemSize));
                 //proposal.ForecastScenario.SmartRebates = smartIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smartRequest.SystemSize));
                 //proposal.ForecastScenario.SmarterRebates = smarterIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smarterRequest.SystemSize));
 
 
-                proposal.ForecastScenario.StdRebates = stdIncentives.Select(a => new Incentive
-                {
+                proposal.ForecastScenario.StdRebates = stdIncentives.Select(a => new Incentive{
                     Guid = a.Guid,
                     Name = a.Name,
                     Cost = a.GetGrandTotal(smartRequest.SystemSize),
@@ -248,7 +263,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                     Quantity = a.Quantity,
                     IsRebate = a.IsRebate,
                     AllowsQuantitySelection = a.AllowsQuantitySelection
-                }).ToList();
+                }).ToList(); 
 
                 proposal.ForecastScenario.SmarterRebates = smarterIncentives.Select(a => new Incentive
                 {
@@ -260,15 +275,14 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                     AllowsQuantitySelection = a.AllowsQuantitySelection
                 }).ToList(); ;
 
-
                 // There are scenarios when there are incentives/rebates that apply before the ITC is calculated
                 // to capture that, we'll use the smarter option for ITC (FederalTaxIncentive)
+
                 //proposal.ForecastScenario.FedTaxCredit = smarterRequest.FederalTaxIncentive;
 
                 //as per new calculation
 
                 proposal.ForecastScenario.FedTaxCredit = (decimal)proposal.SystemCosts.FederalTaxCredit;
-
 
                 if (financePlan.FinancePlanType == FinancePlanType.Cash)
                 {
