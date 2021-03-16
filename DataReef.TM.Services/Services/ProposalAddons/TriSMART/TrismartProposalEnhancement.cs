@@ -176,7 +176,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
 
             //as per new calculations 
-            smartPlan.Balance = (decimal)proposal.SystemCosts.TotalCostToCustomer - (decimal)proposal.SystemCosts.FederalTaxCredit;
+            smartPlan.Balance = (decimal)(proposal.SystemCosts.TotalCostToCustomer - proposal.SystemCosts.FederalTaxCredit);
 
             #endregion
 
