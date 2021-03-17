@@ -148,7 +148,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             using (var dc = new DataContext())
             {
                 NoteJobNimbusLeadRequestData req = new NoteJobNimbusLeadRequestData();
-                req.primary = new related() { id = note.JobNimbusID };
+                req.primary = new primary() { id = note.JobNimbusID };
                 req.record_type_name = "Note";
                 req.note = note.Content;
                 req.date_created = (long)(note.DateCreated - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;

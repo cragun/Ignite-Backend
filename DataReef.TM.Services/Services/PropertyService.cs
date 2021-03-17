@@ -1737,24 +1737,40 @@ namespace DataReef.TM.Services.Services
             return lead;
         }
 
+        //public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
+        //{
+        //    using (var dataContext = new DataContext())
+        //    {
+        //        var prop = dataContext.PropertyNotes.FirstOrDefault(x => x.Guid == propertyid);
+        //        if (prop != null)
+        //        {
+        //            var lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+        //            prop.JobNimbusID = lead != null ? lead.jnid : "";
+        //            dataContext.SaveChanges();
+
+        //            return lead;
+        //        }
+        //        else
+        //        {
+        //            return new NoteJobNimbusLeadResponseData();
+        //        }
+        //    }
+        //}
+
         public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
         {
+            NoteJobNimbusLeadResponseData lead = new NoteJobNimbusLeadResponseData();
             using (var dataContext = new DataContext())
             {
-                var prop = dataContext.PropertyNotes.FirstOrDefault(x => x.Guid == propertyid);
+                var prop = dataContext.PropertyNotes.Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null)
                 {
-                    var lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+                    lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
                     prop.JobNimbusID = lead != null ? lead.jnid : "";
                     dataContext.SaveChanges();
-
-                    return lead;
-                }
-                else
-                {
-                    return new NoteJobNimbusLeadResponseData();
                 }
             }
+            return lead;
         }
 
         public Property AddProperty(Property entity)

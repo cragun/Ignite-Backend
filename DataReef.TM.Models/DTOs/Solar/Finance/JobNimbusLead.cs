@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 
 namespace DataReef.TM.Models.DTOs.Solar.Finance
-{ 
+{
     public class Geo
     {
         public double lon { get; set; }
@@ -17,7 +17,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
         public string first_name { get; set; }
         public string last_name { get; set; }
-        public string display_name { get; set; } 
+        public string display_name { get; set; }
         public string record_type_name { get; set; }
         public string status_name { get; set; }
         public string address_line1 { get; set; }
@@ -82,17 +82,22 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     public class related
     {
         public string id { get; set; }
-    } 
+    }
+
+    public class primary
+    {
+        public string id { get; set; }
+    }
 
     public class AppointmentJobNimbusLeadRequestData
-    { 
-            public long date_start { get; set; } 
-            public string title { get; set; }
-            public List<related> related { get; set; }
-            public int record_type { get; set; }
-            public string record_type_name { get; set; }
-            public string created_by { get; set; }
-            public string customer { get; set; } 
+    {
+        public long date_start { get; set; }
+        public string title { get; set; }
+        public List<related> related { get; set; }
+        public int record_type { get; set; }
+        public string record_type_name { get; set; }
+        public string created_by { get; set; }
+        public string customer { get; set; }
     }
 
     public class AppointmentJobNimbusLeadResponseData
@@ -137,23 +142,38 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
         public long date_created { get; set; }
         public string note { get; set; }
-        public related primary { get; set; } 
-        public string record_type_name { get; set; }  
+        public primary primary { get; set; }
+        public string record_type_name { get; set; }
         public string created_by { get; set; }
         //note guid
         public string external_id { get; set; }
-        
+
     }
 
     public class NoteJobNimbusLeadResponseData
     {
         public long date_created { get; set; }
-        public string title { get; set; }
-        public related primary { get; set; }
+        public string jnid { get; set; }
+        public string customer { get; set; }
+        public string type { get; set; }
+        public string external_id { get; set; }
+        public string created_by { get; set; }
+        public string created_by_name { get; set; }
+        public int date_updated { get; set; }
+        public bool is_active { get; set; }
+        public bool is_archived { get; set; }
+        public List<related> related { get; set; }
+        public List<primary> primary { get; set; }
+        public bool is_private { get; set; }
         public int record_type { get; set; }
         public string record_type_name { get; set; }
-        public string jnid { get; set; }
-
+        public string email_status { get; set; }
+        public string Yes { get; set; }
+        public string source { get; set; }
+        public Location location { get; set; }
+        public string note { get; set; }
+        public bool is_status_change { get; set; }
+        public bool is_editable { get; set; }
     }
 }
 
