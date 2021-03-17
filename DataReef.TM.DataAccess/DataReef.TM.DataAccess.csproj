@@ -1243,6 +1243,32 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101021244080_Add Permissions.cs" />
+    <Compile Include="Migrations\202101021244080_Add Permissions.Designer.cs" />
+    <Compile Include="Migrations\202101041425388_Add attachments field in propertynotes.cs" />
+    <Compile Include="Migrations\202101041425388_Add attachments field in propertynotes.designer.cs">
+      <DependentUpon>202101041425388_Add attachments field in propertynotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101160524295_Add field SalesRepName.cs" />
+    <Compile Include="Migrations\202101160524295_Add field SalesRepName.designer.cs">
+      <DependentUpon>202101160524295_Add field SalesRepName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101291616066_migration.cs" />
+    <Compile Include="Migrations\202101291616066_migration.designer.cs">
+      <DependentUpon>202101291616066_migration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102091506408_Add jobnimbus field.cs" />
+    <Compile Include="Migrations\202102091506408_Add jobnimbus field.designer.cs">
+      <DependentUpon>202102091506408_Add jobnimbus field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102251804456_Add ActiveDeactiveUserLog Table.cs" />
+    <Compile Include="Migrations\202102251804456_Add ActiveDeactiveUserLog Table.designer.cs">
+      <DependentUpon>202102251804456_Add ActiveDeactiveUserLog Table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103011654275_AddJobNimbusIdMigration.cs" />
+    <Compile Include="Migrations\202103011654275_AddJobNimbusIdMigration.designer.cs">
+      <DependentUpon>202103011654275_AddJobNimbusIdMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\202103171409301_Remainfields.cs" />
     <Compile Include="Migrations\202103171409301_Remainfields.Designer.cs">
       <DependentUpon>202103171409301_Remainfields.cs</DependentUpon>
@@ -2138,6 +2164,25 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101021244080_Add Permissions.resx" />
+    <EmbeddedResource Include="Migrations\202101041425388_Add attachments field in propertynotes.resx">
+      <DependentUpon>202101041425388_Add attachments field in propertynotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101160524295_Add field SalesRepName.resx">
+      <DependentUpon>202101160524295_Add field SalesRepName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101291616066_migration.resx">
+      <DependentUpon>202101291616066_migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102091506408_Add jobnimbus field.resx">
+      <DependentUpon>202102091506408_Add jobnimbus field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102251804456_Add ActiveDeactiveUserLog Table.resx">
+      <DependentUpon>202102251804456_Add ActiveDeactiveUserLog Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103011654275_AddJobNimbusIdMigration.resx">
+      <DependentUpon>202103011654275_AddJobNimbusIdMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103171409301_Remainfields.resx">
       <DependentUpon>202103171409301_Remainfields.cs</DependentUpon>
