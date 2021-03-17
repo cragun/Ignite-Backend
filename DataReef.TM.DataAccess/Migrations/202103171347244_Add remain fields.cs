@@ -6,7 +6,7 @@ namespace DataReef.TM.DataAccess.Migrations
     public partial class Addremainfields : DbMigration
     {
         public override void Up()
-        {            
+        {
             AddColumn("dbo.Appointments", "JobNimbusID", c => c.String());
             AddColumn("dbo.Appointments", "JobNimbusLeadID", c => c.String());
             AddColumn("dbo.Properties", "JobNimbusLeadID", c => c.String(maxLength: 200));

@@ -13,7 +13,7 @@ namespace DataReef.TM.DataAccess.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202103171319006_Add remain fields"; }
+            get { return "202103171347244_Add remain fields"; }
         }
         
         string IMigrationMetadata.Source
