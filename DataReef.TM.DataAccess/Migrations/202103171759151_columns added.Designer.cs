@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class addfields : IMigrationMetadata
+    public sealed partial class columnsadded : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addfields));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(columnsadded));
         
         string IMigrationMetadata.Id
         {
-            get { return "202103171613046_add fields"; }
+            get { return "202103171759151_columns added"; }
         }
         
         string IMigrationMetadata.Source
