@@ -66,7 +66,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.customer = Convert.ToString(property.Guid);
                 req.record_type_name = "Customer";
                 req.status_name = "Lead";
-                req.geo = geo; 
+                req.geo = geo;
 
                 string url = $"/api1/contacts/";
                 if (!IsCreate)
@@ -78,15 +78,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
                 var response = client.Execute(request);
-
-                if (response.StatusCode != HttpStatusCode.Created)
+                
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
                     throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}");
                 }
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
                 }
                 catch (Exception)
                 {
@@ -103,7 +103,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             {
                 AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData();
 
-                List<related> relate = new List<related>(); 
+                List<related> relate = new List<related>();
 
                 relate.Add(new related { id = appointment.JobNimbusLeadID });
                 req.related = relate;
@@ -124,14 +124,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 var response = client.Execute(request);
 
-                if (response.StatusCode != HttpStatusCode.Created)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url , null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
                     throw new ApplicationException($"CreateJobNimbusAppointment Failed. {response.ErrorMessage}");
                 }
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url , null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
                 }
                 catch (Exception)
                 {
@@ -163,14 +163,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 var response = client.Execute(request);
 
-                if (response.StatusCode != HttpStatusCode.Created)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
                     throw new ApplicationException($"CreateJobNimbusLead Failed. {response.ErrorMessage}");
                 }
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, null, AuthTokenApikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
                 }
                 catch (Exception)
                 {
