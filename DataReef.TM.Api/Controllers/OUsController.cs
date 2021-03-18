@@ -55,7 +55,6 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-
         [HttpGet]
         [ResponseType(typeof(ICollection<OU>))]
         [Route("roots")]
