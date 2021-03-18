@@ -1243,17 +1243,9 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202101160524295_Add field SalesRepName.cs" />
-    <Compile Include="Migrations\202101160524295_Add field SalesRepName.Designer.cs">
-      <DependentUpon>202101160524295_Add field SalesRepName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202102091506408_Add jobnimbus field.cs" />
-    <Compile Include="Migrations\202102091506408_Add jobnimbus field.Designer.cs">
-      <DependentUpon>202102091506408_Add jobnimbus field.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103180819262_Check_Migration.cs" />
-    <Compile Include="Migrations\202103180819262_Check_Migration.Designer.cs">
-      <DependentUpon>202103180819262_Check_Migration.cs</DependentUpon>
+    <Compile Include="Migrations\202103180850447_Fields.cs" />
+    <Compile Include="Migrations\202103180850447_Fields.Designer.cs">
+      <DependentUpon>202103180850447_Fields.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2147,14 +2139,8 @@
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202101160524295_Add field SalesRepName.resx">
-      <DependentUpon>202101160524295_Add field SalesRepName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202102091506408_Add jobnimbus field.resx">
-      <DependentUpon>202102091506408_Add jobnimbus field.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103180819262_Check_Migration.resx">
-      <DependentUpon>202103180819262_Check_Migration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202103180850447_Fields.resx">
+      <DependentUpon>202103180850447_Fields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
