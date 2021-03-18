@@ -94,8 +94,8 @@ namespace DataReef.TM.Models
         public int? LeadSourceId { get; set; }
 
         [DataMember]
-        public bool UsageCollected { get; set; }      
-        
+        public bool UsageCollected { get; set; }
+
 
         [DataMember]
         public Nullable<int> DispositionTypeId { get; set; }
@@ -281,31 +281,5 @@ namespace DataReef.TM.Models
 
         [NotMapped]
         public int? PropertyNotesCount { get; set; }
-
-        //public static object FromModel(NewMexicoData mexico)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public static Property FromModel(NewMexicoData p)
-        {
-            var ret = new Property
-            {
-                ExternalID = string.Format("{0}-{1}", p.State, p.Location_ID),
-                AddressID = p.Location_ID,
-                Address1 = p.Standardized_Address,
-                City = p.City,
-                State = p.State,
-                Name = p.Full_Name,
-                Latitude = Convert.ToDouble(p.Latitude),
-                Longitude = Convert.ToDouble(p.Longitude),
-                HouseNumber = p.Address_Street_Number,
-                StreetName = p.Address_Street_Name,
-                ZipCode = p.Zip,
-                PlusFour = p.ZIP_Plus4
-            };
-
-            return ret;
-        }
     }
 }

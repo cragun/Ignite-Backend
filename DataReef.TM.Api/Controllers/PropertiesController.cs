@@ -432,15 +432,27 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
+        //[Route("addproperty")]
+        //[HttpPost]
+        //public async Task<IHttpActionResult> AddProperty(Property req)
+        //{
+        //    try
+        //    { 
+        //        return Ok(propertyService.AddProperty(req));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
-        /// get territories from address
-        [Route("addproperty")]
+        [Route("addproperty/{propertyID:guid}")]
         [HttpPost]
-        public async Task<IHttpActionResult> AddProperty(Property req)
+        public async Task<IHttpActionResult> AddProperty(Guid propertyID)
         {
             try
-            { 
-                return Ok(propertyService.AddProperty(req));
+            {
+                return Ok(await propertyService.AddLeadJobNimbus(propertyID));
             }
             catch (Exception ex)
             {
@@ -448,14 +460,27 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-        /// get territories from address
-        [Route("addpropertynote")]
+        //[Route("addpropertynote")]
+        //[HttpPost]
+        //public async Task<IHttpActionResult> AddPropertyNote(PropertyNote req)
+        //{
+        //    try
+        //    {
+        //       return Ok(propertyService.AddJobNimbusNote(req.Guid));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+        [Route("addpropertynote/{propertyID:guid}")]
         [HttpPost]
-        public async Task<IHttpActionResult> AddPropertyNote(PropertyNote req)
+        public async Task<IHttpActionResult> AddPropertyNote(Guid propertyID)
         {
             try
             {
-               return Ok(propertyService.AddJobNimbusNote(req.Guid));
+                return Ok(await propertyService.AddJobNimbusNote(propertyID));
             }
             catch (Exception ex)
             {

@@ -192,10 +192,7 @@ namespace DataReef.TM.DataAccess.Database
         public DbSet<ApiLogEntry> ApiLogEntries { get; set; }
 
         // UserActivate Deactivate logs
-        public DbSet<ActiveDeactiveUserLog> ActiveDeactiveUserLog { get; set; }
-
-        // New Mexico Data
-        public DbSet<NewMexicoData> NewMexicoData { get; set; }
+        public DbSet<ActiveDeactiveUserLog> ActiveDeactiveUserLog { get; set; }        
 
         // Commerce
         public DbSet<Order> Orders { get; set; }
