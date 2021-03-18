@@ -1243,9 +1243,9 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103180850447_Fields.cs" />
-    <Compile Include="Migrations\202103180850447_Fields.Designer.cs">
-      <DependentUpon>202103180850447_Fields.cs</DependentUpon>
+    <Compile Include="Migrations\202103181005055_Deploy.cs" />
+    <Compile Include="Migrations\202103181005055_Deploy.Designer.cs">
+      <DependentUpon>202103181005055_Deploy.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2139,8 +2139,8 @@
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103180850447_Fields.resx">
-      <DependentUpon>202103180850447_Fields.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202103181005055_Deploy.resx">
+      <DependentUpon>202103181005055_Deploy.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

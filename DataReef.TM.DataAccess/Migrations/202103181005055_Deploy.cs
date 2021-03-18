@@ -3,7 +3,7 @@ namespace DataReef.TM.DataAccess.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Fields : DbMigration
+    public partial class Deploy : DbMigration
     {
         public override void Up()
         {
