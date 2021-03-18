@@ -173,8 +173,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// </summary>
         public LeaseParameters LeaseParams { get; set; }
 
-        #endregion
-
+        #endregion 
 
         #region computed properties and methods
 
