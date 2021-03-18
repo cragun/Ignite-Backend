@@ -83,7 +83,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
-                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}");
+                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}  {response.StatusCode}");
                 }
                 try
                 {
@@ -91,7 +91,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException($"CreateJobNimbusLead Failed.");
+                    throw new ApplicationException($"CreateJobNimbusLead Failed.  {response.StatusCode}");
                 }
 
                 return JsonConvert.DeserializeObject<JobNimbusLeadResponseData>(response.Content);
@@ -128,7 +128,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
-                    throw new ApplicationException($"CreateJobNimbusAppointment Failed. {response.ErrorMessage}");
+                    throw new ApplicationException($"CreateJobNimbusAppointment Failed. {response.ErrorMessage}  {response.StatusCode}");
                 }
                 try
                 {
@@ -136,7 +136,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException($"CreateJobNimbusAppointment Failed.");
+                    throw new ApplicationException($"CreateJobNimbusAppointment Failed. {response.StatusCode}");
                 }
 
                 var ret = JsonConvert.DeserializeObject<AppointmentJobNimbusLeadResponseData>(response.Content);
@@ -167,7 +167,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
-                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.ErrorMessage}");
+                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.ErrorMessage}  {response.StatusCode}");
                 }
                 try
                 {
@@ -175,7 +175,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException($"CreateJobNimbusNote Failed.");
+                    throw new ApplicationException($"CreateJobNimbusNote Failed.  {response.StatusCode}");
                 }
 
                 return JsonConvert.DeserializeObject<NoteJobNimbusLeadResponseData>(response.Content);
@@ -193,7 +193,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    throw new ApplicationException($"GetJobNimbusContacts Failed. {response.Content}");
+                    throw new ApplicationException($"GetJobNimbusContacts Failed. {response.Content}  {response.StatusCode}");
                 }
 
                 try
