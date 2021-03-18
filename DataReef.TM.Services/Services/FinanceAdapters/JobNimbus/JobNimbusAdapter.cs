@@ -182,6 +182,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
+
         public List<JobNimbusContacts> GetJobNimbusContacts(string JobNimbusLeadID)
         {
             using (var dc = new DataContext())
