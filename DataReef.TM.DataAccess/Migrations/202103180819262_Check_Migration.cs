@@ -3,7 +3,7 @@ namespace DataReef.TM.DataAccess.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddPermissions : DbMigration
+    public partial class Check_Migration : DbMigration
     {
         public override void Up()
         {
@@ -401,16 +401,22 @@ namespace DataReef.TM.DataAccess.Migrations
                     })
                 .PrimaryKey(t => t.id);
             
-            AddColumn("dbo.OUs", "Permissions", c => c.Long(nullable: false));
-            AddColumn("dbo.Properties", "SunnovaLeadID", c => c.String(maxLength: 200));
-            AlterColumn("dbo.People", "StartDate", c => c.DateTime());
+            AddColumn("dbo.Appointments", "JobNimbusID", c => c.String());
+            AddColumn("dbo.Appointments", "JobNimbusLeadID", c => c.String());
+            AddColumn("dbo.Properties", "JobNimbusLeadID", c => c.String(maxLength: 200));
+            AddColumn("dbo.Inquiries", "SalesRepName", c => c.String(maxLength: 100));
+            AddColumn("dbo.PropertyNotes", "JobNimbusID", c => c.String());
+            AddColumn("dbo.PropertyNotes", "JobNimbusLeadID", c => c.String());
         }
         
         public override void Down()
         {
-            AlterColumn("dbo.People", "StartDate", c => c.DateTime(nullable: false));
-            DropColumn("dbo.Properties", "SunnovaLeadID");
-            DropColumn("dbo.OUs", "Permissions");
+            DropColumn("dbo.PropertyNotes", "JobNimbusLeadID");
+            DropColumn("dbo.PropertyNotes", "JobNimbusID");
+            DropColumn("dbo.Inquiries", "SalesRepName");
+            DropColumn("dbo.Properties", "JobNimbusLeadID");
+            DropColumn("dbo.Appointments", "JobNimbusLeadID");
+            DropColumn("dbo.Appointments", "JobNimbusID");
             DropTable("dbo.NewMexicoDatas");
         }
     }

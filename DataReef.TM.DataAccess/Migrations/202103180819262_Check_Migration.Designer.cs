@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddJobNimbusIdMigration : IMigrationMetadata
+    public sealed partial class Check_Migration : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddJobNimbusIdMigration));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Check_Migration));
         
         string IMigrationMetadata.Id
         {
-            get { return "202103011654275_AddJobNimbusIdMigration"; }
+            get { return "202103180819262_Check_Migration"; }
         }
         
         string IMigrationMetadata.Source
