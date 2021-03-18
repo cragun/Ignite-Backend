@@ -223,9 +223,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
             proposal.FinancePlanOptions = new List<ProposalFinancePlanOption> { stdPlan, smartPlan, smarterPlan };
             proposal.Financing.MonthlyPayment = (double)smarterPlan.Payment19M;
-
-            
-
+             
 
             #endregion
 
