@@ -204,7 +204,11 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal LeaseSystemCostWithExtrasAndTax => LeaseSystemCostWithTax + ExtraCostsWithTax;
 
-        public decimal FederalTaxIncentive => (GrossSystemCostWithAddersTaxAndDealearFee - UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
+        //public decimal FederalTaxIncentive => (GrossSystemCostWithAddersTaxAndDealearFee - UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
+
+        public decimal FederalTaxIncentive => (decimal)FederalTaxCredit;
+
+        
 
         /// <summary>
         /// Gross SystemCost with tax And Dealer Fee
@@ -227,13 +231,10 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal ExtraCostsWithTax => (TotalAddersCostsWithFinancingFee - AddersPaidByRep) * (1 + TaxRate);
 
-        public decimal AmountToFinance {
-            get
-            { 
-                return Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance ? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
-            }
-            set { }
-        } 
+
+        //public decimal AmountToFinance => Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
+
+        public decimal AmountToFinance => (decimal)TotalCostToCustomer;
 
         public decimal AmountToFinanceUnreduced => AmountToFinance + AmountToFinanceReducer;
 
@@ -318,6 +319,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         {
             AmountToFinanceReducer = value;
         }
+         
 
         public T GetPlanData<T>()
         {
@@ -385,7 +387,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             {
                 return TotalCostToCustomer * (double)FederalTaxIncentivePercentage;
             }
-        } 
+        }
 
         #endregion
     }
