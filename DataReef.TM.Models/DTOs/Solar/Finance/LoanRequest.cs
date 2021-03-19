@@ -206,9 +206,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         //public decimal FederalTaxIncentive => (GrossSystemCostWithAddersTaxAndDealearFee - UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
 
-        public decimal FederalTaxIncentive => (decimal)FederalTaxCredit;
-
-        
+        public decimal FederalTaxIncentive => (decimal)FederalTaxCredit; 
 
         /// <summary>
         /// Gross SystemCost with tax And Dealer Fee
