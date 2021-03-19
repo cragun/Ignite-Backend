@@ -164,6 +164,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public bool is_archived { get; set; }
         public List<related> related { get; set; }
         // public List<primary> primary { get; set; }
+
         public primary primary { get; set; }
         public bool is_private { get; set; }
         public int record_type { get; set; }
