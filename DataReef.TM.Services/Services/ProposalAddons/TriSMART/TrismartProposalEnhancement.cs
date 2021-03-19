@@ -298,6 +298,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                     proposal.ForecastScenario.NetCost = smarterRequest.AmountToFinance;
                 }
 
+
                 //as per new calculation
                 proposal.ForecastScenario.NetCost = smarterRequest.AmountToFinance;
             }
