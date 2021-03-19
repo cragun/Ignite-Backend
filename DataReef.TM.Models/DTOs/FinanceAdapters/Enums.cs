@@ -17,4 +17,11 @@
         SingleFamily = 0,
         ManufacturedHome = 1
     }
+
+    public enum ThirdPropertyType
+    {
+        SolarTracker = 0,
+        Roofing = 1,
+        Both = 2
+    }
 }

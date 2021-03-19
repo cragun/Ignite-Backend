@@ -526,6 +526,28 @@ namespace DataReef.TM.Services.Services
                     catch (Exception ex)
                     {
                         transaction.Rollback();
+
+                        ApiLogEntry apilog = new ApiLogEntry();
+                        apilog.Id = Guid.NewGuid();
+                        apilog.User = SmartPrincipal.UserId.ToString();
+                        apilog.Machine = Environment.MachineName;
+                        apilog.RequestContentType = "RollbackIssue";
+                        apilog.RequestRouteTemplate = "";
+                        apilog.RequestRouteData = "";
+                        apilog.RequestIpAddress = "";
+                        apilog.RequestMethod = ex.Message;
+                        apilog.RequestHeaders = ex.InnerException.Message;
+                        apilog.RequestTimestamp = DateTime.UtcNow;
+                        apilog.RequestUri = "SunnovaCallBackApiGet";
+                        apilog.ResponseContentBody = ex.StackTrace;
+                        apilog.RequestContentBody = ex.Message;
+
+                        using (var dc = new DataContext())
+                        {
+                            dc.ApiLogEntries.Add(apilog);
+                            dc.SaveChanges();
+                        }
+
                         throw ex;
                     }
                 }
