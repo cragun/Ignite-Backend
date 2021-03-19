@@ -527,6 +527,7 @@ namespace DataReef.TM.Services.Services
                     {
                         transaction.Rollback();
 
+
                         ApiLogEntry apilog = new ApiLogEntry();
                         apilog.Id = Guid.NewGuid();
                         apilog.User = SmartPrincipal.UserId.ToString();
