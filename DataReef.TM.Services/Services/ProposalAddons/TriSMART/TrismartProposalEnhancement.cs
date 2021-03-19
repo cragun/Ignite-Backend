@@ -147,9 +147,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             stdRequest.UpfrontRebateReducedFromITC = stdIncentiveValues.Item1;
             stdRequest.OverridenUtilityRate = overridenUtilityRate;
             stdRequest.OverridenUtilityBaseFee = overridenUtilityBaseRate;
-
-            //as per new calculation
-            stdRequest.AmountToFinance = (decimal)proposal.SystemCosts.TotalCostToCustomer;
+             
 
             var stdResponse = _loanCalculator.CalculateLoan(stdRequest, planDefinition);
             var stdPlan = stdResponse.ToPlanOption(SubPlan_Standard.ToUpper(), "Keep All Incentives", PlanOptionType.Standard);
@@ -174,9 +172,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             smartRequest.UpfrontRebateReducedFromITC = smartIncentiveValues.Item1;
             smartRequest.OverridenUtilityRate = overridenUtilityRate;
             smartRequest.OverridenUtilityBaseFee = overridenUtilityBaseRate;
-
-            //as per new calculation
-            smartRequest.AmountToFinance = (decimal)(proposal.SystemCosts.TotalCostToCustomer - proposal.SystemCosts.FederalTaxCredit);
+             
 
             var smartResponse = _loanCalculator.CalculateLoan(smartRequest, planDefinition);
             var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
@@ -204,9 +200,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             var smarterRequest = financePlan.GetRequest(true);
             smarterRequest.OverridenUtilityRate = overridenUtilityRate;
             smarterRequest.OverridenUtilityBaseFee = overridenUtilityBaseRate;
-
-            //as per new calculation
-            smarterRequest.AmountToFinance = (decimal)(proposal.SystemCosts.TotalCostToCustomer - proposal.SystemCosts.FederalTaxCredit);
+             
 
             var smarterResponse = CalculateOption(new OptionCalculatorModel
             {
