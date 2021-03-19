@@ -280,11 +280,10 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 // There are scenarios when there are incentives/rebates that apply before the ITC is calculated
                 // to capture that, we'll use the smarter option for ITC (FederalTaxIncentive)
 
-                //proposal.ForecastScenario.FedTaxCredit = smarterRequest.FederalTaxIncentive;
+                proposal.ForecastScenario.FedTaxCredit = smarterRequest.FederalTaxIncentive;
 
                 //as per new calculation
-
-                proposal.ForecastScenario.FedTaxCredit = (decimal)proposal.SystemCosts.FederalTaxCredit;
+                //proposal.ForecastScenario.FedTaxCredit = (decimal)proposal.SystemCosts.FederalTaxCredit;
 
                 if (financePlan.FinancePlanType == FinancePlanType.Cash)
                 {
@@ -298,6 +297,9 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                     // We use the Smarter Amount to finance as NetCost.
                     proposal.ForecastScenario.NetCost = smarterRequest.AmountToFinance;
                 }
+
+                //as per new calculation
+                proposal.ForecastScenario.NetCost = smarterRequest.AmountToFinance;
             }
         }
 
