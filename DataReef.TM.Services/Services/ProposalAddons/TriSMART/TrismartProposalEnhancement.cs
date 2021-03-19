@@ -251,8 +251,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 //proposal.ForecastScenario.StdRebates = stdIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(stdRequest.SystemSize));
                 //proposal.ForecastScenario.SmartRebates = smartIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smartRequest.SystemSize));
                 //proposal.ForecastScenario.SmarterRebates = smarterIncentives?.ToDictionary(si => si.Name, si => si.GetGrandTotal(smarterRequest.SystemSize));
-
-
+                 
                 proposal.ForecastScenario.StdRebates = stdIncentives.Select(a => new Incentive{
                     Guid = a.Guid,
                     Name = a.Name,
