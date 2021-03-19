@@ -206,6 +206,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         //public decimal FederalTaxIncentive => (GrossSystemCostWithAddersTaxAndDealearFee - UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
 
+        //as per new calculation
         public decimal FederalTaxIncentive => (decimal)FederalTaxCredit; 
 
         /// <summary>
@@ -231,6 +232,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         //public decimal AmountToFinance => Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
 
+        //as per new calculation
         public decimal AmountToFinance => (decimal)TotalCostToCustomer - AmountToFinanceReducer;
 
         public decimal AmountToFinanceUnreduced => AmountToFinance + AmountToFinanceReducer;

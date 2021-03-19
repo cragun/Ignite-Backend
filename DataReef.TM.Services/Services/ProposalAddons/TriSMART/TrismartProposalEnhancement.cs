@@ -175,7 +175,10 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
              
 
             var smartResponse = _loanCalculator.CalculateLoan(smartRequest, planDefinition);
-            var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
+            //var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
+
+            //as per new calculations 
+            var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart);
 
             //as per new calculations 
             //smartPlan.Balance = (decimal)(proposal.SystemCosts.TotalCostToCustomer - proposal.SystemCosts.FederalTaxCredit);
@@ -210,7 +213,10 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 ScenarioTermInYears = scenarioTermInYears,
                 UtilityInflationRate = param.UtilityInflationRate
             });
-            var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter, introMonthlyPayment);
+            //var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter, introMonthlyPayment);
+
+            //as per new calculations 
+            var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter);
 
             //as per new calculations 
             //smarterPlan.Balance = smartPlan.Balance;
