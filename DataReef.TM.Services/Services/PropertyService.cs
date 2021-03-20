@@ -612,7 +612,6 @@ namespace DataReef.TM.Services.Services
                 apilog.RequestUri = "updatePropertyservicelast";
                 apilog.ResponseContentBody = ex.StackTrace;
                 apilog.RequestContentBody = ex.Message;
-
                 using (var dc = new DataContext())
                 {
                     dc.ApiLogEntries.Add(apilog);
