@@ -72,6 +72,7 @@ namespace DataReef.TM.Services.Services
             _jobNimbusAdapter = jobNimbusAdapter;
         }
 
+
         public async Task<IEnumerable<PropertyNote>> GetNotesByPropertyID(Guid propertyID)
         {
             using (var dc = new DataContext())
