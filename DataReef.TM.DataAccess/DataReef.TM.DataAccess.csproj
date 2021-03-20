@@ -1247,6 +1247,10 @@
     <Compile Include="Migrations\202103181005055_Deploy.Designer.cs">
       <DependentUpon>202103181005055_Deploy.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103200942289_Add ThirdPartyType.cs" />
+    <Compile Include="Migrations\202103200942289_Add ThirdPartyType.Designer.cs">
+      <DependentUpon>202103200942289_Add ThirdPartyType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2141,6 +2145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103181005055_Deploy.resx">
       <DependentUpon>202103181005055_Deploy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103200942289_Add ThirdPartyType.resx">
+      <DependentUpon>202103200942289_Add ThirdPartyType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

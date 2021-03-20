@@ -18,7 +18,7 @@
         ManufacturedHome = 1
     }
 
-    public enum ThirdPropertyType
+    public enum ThirdPartyPropertyType
     {
         SolarTracker = 0,
         Roofing = 1,

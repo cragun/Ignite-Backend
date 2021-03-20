@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.Enums;
+﻿using DataReef.TM.Models.DTOs.FinanceAdapters;
+using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -66,6 +67,9 @@ namespace DataReef.TM.Models
 
         [DataMember]
         public string JobNimbusLeadID { get; set; }
+
+        [DataMember]
+        public ThirdPartyPropertyType PropertyType { get; set; }
 
         #region Navigation Properties
 

@@ -8,6 +8,7 @@ using DataReef.TM.Contracts.Services.FinanceAdapters;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Models.DTOs.FinanceAdapters.SST;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.SmartBoard;
@@ -464,10 +465,6 @@ namespace DataReef.TM.Services
             }
             yield break;
         }
-
-
-
-
         public ICollection<Person> GetMembersWithAppointment(OUMembersRequest request, Guid ouID, string apiKey, DateTime date)
         {
             using (var uow = UnitOfWorkFactory())
@@ -515,7 +512,26 @@ namespace DataReef.TM.Services
             VerifyUserAssignmentAndInvite(entity);
             var appointment = base.Update(entity);
 
-            var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            // var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+
+            #region ThirdPartyPropertyType
+            if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
+            {
+                var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            }
+
+            if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
+            {
+                AddAppointmentLeadJobNimbus(entity.Guid);
+            }
+
+            if (entity.PropertyType == ThirdPartyPropertyType.Both)
+            {
+                var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+                AddAppointmentLeadJobNimbus(entity.Guid);
+            }
+
+            #endregion ThirdPartyPropertyType
 
             return appointment;
         }

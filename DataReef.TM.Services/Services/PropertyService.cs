@@ -12,6 +12,7 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.Signatures;
@@ -236,7 +237,6 @@ namespace DataReef.TM.Services.Services
                         {
                             entity.Guid = existingProp.Guid;
                             _inquiryService.Value.UpdatePersonClockTime(entity.Guid);
-                            //AddLeadJobNimbus(ret.Guid);
                             return Update(entity);
                         }
                     }
@@ -244,23 +244,52 @@ namespace DataReef.TM.Services.Services
             }
 
             var prop = base.InsertMany(new List<Property>(1) { entity }).FirstOrDefault();
-            //AddLeadJobNimbus(ret.Guid);
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
+
             //send new lead to SMARTBOARD
-            //if (entity.LatestDisposition.Equals("DoorKnocked") || entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null)
-            //if (entity.LatestDisposition.Equals("DoorKnocked"))
             if (entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null || entity.Name != null)
             {
                 try
                 {
-                    var response = _sbAdapter.Value.SubmitLead(entity.Guid);
-
-                    if (response != null && response.Message.Type.Equals("error"))
+                    #region ThirdPartyPropertyType
+                    if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
                     {
-                        prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                        var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+
+                        if (response != null && response.Message.Type.Equals("error"))
+                        {
+                            prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                        }
                     }
+
+                    if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
+                    {
+                        AddLeadJobNimbus(entity.Guid);
+                        if(entity.Appointments?.Any() == true)
+                        {
+                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                        }
+                    }
+
+                    if (entity.PropertyType == ThirdPartyPropertyType.Both)
+                    {
+                        var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+
+                        if (response != null && response.Message.Type.Equals("error"))
+                        {
+                            prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                        }
+
+                        AddLeadJobNimbus(entity.Guid);
+                        if (entity.Appointments?.Any() == true)
+                        {
+                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                        }
+                    }
+
+                    #endregion ThirdPartyPropertyType
                 }
                 catch (Exception ex)
                 {
@@ -305,7 +334,6 @@ namespace DataReef.TM.Services.Services
             {
                 //person clocktime 
                 _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
-                //AddLeadJobNimbus(ret.Guid);
                 using (var uow = UnitOfWorkFactory())
                 {
                     var property = uow
@@ -331,7 +359,6 @@ namespace DataReef.TM.Services.Services
             });
 
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
-            //AddLeadJobNimbus(ret.Guid);
             return prop;
         }
 
@@ -365,12 +392,6 @@ namespace DataReef.TM.Services.Services
                                             .Include(p => p.Appointments)
                                             .FirstOrDefault(p => p.Guid == entity.Guid);
                             }
-
-                            //needToUpdateSB = oldProp.SmartBoardId.HasValue
-                            //                && (oldProp.Name != entity.Name
-                            //                    || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
-                            //                    || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber()
-                            //                    || oldProp.UtilityProviderID != entity.UtilityProviderID);
 
                             needToUpdateSB = (oldProp.Name != entity.Name || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
                                                 || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID || oldProp.LatestDisposition != entity.LatestDisposition);
@@ -419,7 +440,6 @@ namespace DataReef.TM.Services.Services
                                 _peopleService.UpdateStartDate();
                                 //person clocktime 
                                 _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
-                                //AddLeadJobNimbus(ret.Guid);
                             }
                             if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
                             ret.SBLeadError = "";
@@ -450,8 +470,6 @@ namespace DataReef.TM.Services.Services
 
                                 if (fstAppoint?.SendSmsToCust == true)
                                 {
-                                    //_smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
-                                    //DateTime currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
                                     DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
 
                                     _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
@@ -464,8 +482,6 @@ namespace DataReef.TM.Services.Services
 
                                     _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
                                      stDate.Year + "/" + stDate.Month + "/" + stDate.Day, creator?.PhoneNumbers.FirstOrDefault()?.Number);
-
-                                    //_smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
                                 }
 
                                 _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
@@ -512,12 +528,44 @@ namespace DataReef.TM.Services.Services
 
                                 try
                                 {
-                                    var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
-
-                                    if (response != null && response.Message.Type.Equals("error"))
+                                    #region ThirdPartyPropertyType
+                                    if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
                                     {
-                                        ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                        var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
+
+                                        if (response != null && response.Message.Type.Equals("error"))
+                                        {
+                                            ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                        }
                                     }
+
+                                    if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
+                                    {
+                                        AddLeadJobNimbus(entity.Guid);
+                                        if (entity.Appointments?.Any() == true)
+                                        {
+                                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                                        }
+
+                                    }
+
+                                    if (entity.PropertyType == ThirdPartyPropertyType.Both)
+                                    {
+                                        var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
+
+                                        if (response != null && response.Message.Type.Equals("error"))
+                                        {
+                                            ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                        }
+
+                                        AddLeadJobNimbus(entity.Guid);
+                                        if (entity.Appointments?.Any() == true)
+                                        {
+                                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                                        }
+                                    }
+
+                                    #endregion ThirdPartyPropertyType
                                 }
                                 catch (Exception ex)
                                 {
@@ -530,7 +578,7 @@ namespace DataReef.TM.Services.Services
                                     apilog.RequestRouteData = "";
                                     apilog.RequestIpAddress = "";
                                     apilog.RequestMethod = ex.Message;
-                                    apilog.RequestHeaders = ex.InnerException.Message;
+                                    apilog.RequestHeaders = "";
                                     apilog.RequestTimestamp = DateTime.UtcNow;
                                     apilog.RequestUri = "updatePropertyservicelead";
                                     apilog.ResponseContentBody = ex.StackTrace;
@@ -556,7 +604,7 @@ namespace DataReef.TM.Services.Services
                             apilog.RequestRouteData = "";
                             apilog.RequestIpAddress = "";
                             apilog.RequestMethod = ex.Message;
-                            apilog.RequestHeaders = ex.InnerException.Message;
+                            apilog.RequestHeaders = "";
                             apilog.RequestTimestamp = DateTime.UtcNow;
                             apilog.RequestUri = "updatePropertyservice";
                             apilog.ResponseContentBody = ex.StackTrace;
@@ -592,7 +640,6 @@ namespace DataReef.TM.Services.Services
                             }
                         }
                     }
-                    //AddLeadJobNimbus(ret.Guid);
                     return ret;
                 }
             }
@@ -607,7 +654,7 @@ namespace DataReef.TM.Services.Services
                 apilog.RequestRouteData = "";
                 apilog.RequestIpAddress = "";
                 apilog.RequestMethod = ex.Message;
-                apilog.RequestHeaders = ex.InnerException.Message;
+                apilog.RequestHeaders = "";
                 apilog.RequestTimestamp = DateTime.UtcNow;
                 apilog.RequestUri = "updatePropertyservicelast";
                 apilog.ResponseContentBody = ex.StackTrace;
@@ -1835,7 +1882,7 @@ namespace DataReef.TM.Services.Services
                 if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
             }
 
-            AddLeadJobNimbus(ret.Guid); 
+            AddLeadJobNimbus(ret.Guid);
             return ret;
         }
 

@@ -1,6 +1,7 @@
 ﻿using DataReef.Core.Attributes;
 using DataReef.TM.Models.Credit;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Geo;
 using DataReef.TM.Models.PropertyAttachments;
@@ -107,6 +108,9 @@ namespace DataReef.TM.Models
         [DataMember]
         [StringLength(200)]
         public string JobNimbusLeadID { get; set; }
+
+        [DataMember]
+        public ThirdPartyPropertyType PropertyType { get; set; }
 
 
         #region Navigation

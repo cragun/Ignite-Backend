@@ -1,5 +1,6 @@
 ﻿using DataReef.Core.Attributes;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.Enums;
 using Newtonsoft.Json;
@@ -48,6 +49,9 @@ namespace DataReef.TM.Models
 
         [DataMember]
         public string JobNimbusLeadID { get; set; }
+
+        [DataMember]
+        public ThirdPartyPropertyType PropertyType { get; set; }
 
         #endregion
 
