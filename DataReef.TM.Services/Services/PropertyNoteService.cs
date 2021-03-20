@@ -72,7 +72,6 @@ namespace DataReef.TM.Services.Services
             _jobNimbusAdapter = jobNimbusAdapter;
         }
 
-
         public async Task<IEnumerable<PropertyNote>> GetNotesByPropertyID(Guid propertyID)
         {
             using (var dc = new DataContext())
@@ -560,7 +559,7 @@ namespace DataReef.TM.Services.Services
                             }
                         }
 
-                       // SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                        // SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
