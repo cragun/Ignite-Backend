@@ -204,6 +204,7 @@ namespace DataReef.TM.Services
                         var creditCheckUrls = metaData?.SBMeta?.SmartBoardCreditCheckUrls ?? new List<SmartBOARDCreditCheck>();
                         foreach (var url in creditCheckUrls)
                         {
+
                             if (url.UseSMARTBoardAuthentication && url.CreditCheckUrl.Contains("{smartBoardID}"))
                             {
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{smartBoardID}", property.SmartBoardId.ToString() ?? string.Empty);
