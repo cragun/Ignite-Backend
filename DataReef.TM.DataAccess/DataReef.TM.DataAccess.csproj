@@ -1255,6 +1255,10 @@
     <Compile Include="Migrations\202103221640515_Add FinanceField.Designer.cs">
       <DependentUpon>202103221640515_Add FinanceField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103231124465_Check_Migration.cs" />
+    <Compile Include="Migrations\202103231124465_Check_Migration.Designer.cs">
+      <DependentUpon>202103231124465_Check_Migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2155,6 +2159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103221640515_Add FinanceField.resx">
       <DependentUpon>202103221640515_Add FinanceField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103231124465_Check_Migration.resx">
+      <DependentUpon>202103231124465_Check_Migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
