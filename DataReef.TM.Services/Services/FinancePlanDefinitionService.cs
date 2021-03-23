@@ -186,7 +186,6 @@ namespace DataReef.TM.Services
 
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
-
             using (var dc = new DataContext())
             {
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
@@ -210,6 +209,7 @@ namespace DataReef.TM.Services
                             if (url.CreditCheckUrl.Contains("{loanpaldata}"))
                             {
                                 string loanpalurl = "??lname=" + property.GetMainOccupant().LastName + "&fname=" + property.GetMainOccupant().FirstName + "&street=" + property.Address1 + "&city=" + property.City + "&state=" + property.State + "&zip=" + property.ZipCode + "&email=" + property.GetMainEmailAddress() + "&phone=" + property.GetMainPhoneNumber()?.Replace("-", "") + "&srfn=" + salesperson.FirstName + "&srln=" + salesperson.LastName + "&sre=" + salesperson.EmailAddressString + "&loanterm=" + financePlan.TermExternalID
+
                                     //+ "&loanterm=" + GetloantermID(financePlan.Name).ToString() + "&cost=" + property.Name + "&refnum=" + property.Name 
                                     + "&language=english";
                                 loanpalurl = loanpalurl.Replace(" ", "%20");
