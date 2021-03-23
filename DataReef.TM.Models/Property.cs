@@ -112,7 +112,11 @@ namespace DataReef.TM.Models
         [DataMember]
         public ThirdPartyPropertyType PropertyType { get; set; }
 
-
+        //notes server reference id 
+        [DataMember]
+        [StringLength(200)]
+        public string ReferenceId { get; set; }
+        
         #region Navigation
 
         [ForeignKey("TerritoryID")]
