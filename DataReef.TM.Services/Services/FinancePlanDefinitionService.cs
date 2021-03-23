@@ -186,6 +186,7 @@ namespace DataReef.TM.Services
 
         public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
+
             using (var dc = new DataContext())
             {
                 var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
