@@ -1054,9 +1054,7 @@ namespace DataReef.TM.Services
                     propertiesQuery = propertiesQuery.OrderByDescending(p => p.DateCreated);
                 }
 
-                var result = propertiesQuery.Skip(request.PageIndex * request.PageSize)
-                                    .Take(request.PageSize)
-                                    .ToList();
+                var result = propertiesQuery.Where(x => !string.IsNullOrEmpty(x.Name)).Skip(request.PageIndex * request.PageSize).Take(request.PageSize).ToList();
 
                 //if (result?.Any() == true)
                 //{
