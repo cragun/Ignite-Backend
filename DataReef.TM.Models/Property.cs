@@ -113,7 +113,7 @@ namespace DataReef.TM.Models
         public ThirdPartyPropertyType PropertyType { get; set; }
 
         //notes server reference id 
-        [DataMember]
+        [NotMapped]
         [StringLength(200)]
         public string ReferenceId { get; set; }
         
