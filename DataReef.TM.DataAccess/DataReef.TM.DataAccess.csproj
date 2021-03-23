@@ -1134,6 +1134,10 @@
     <Compile Include="Migrations\202103130615012_Add ActiveDeactivelog Table.Designer.cs">
       <DependentUpon>202103130615012_Add ActiveDeactivelog Table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103230202118_Add FinanceField.cs" />
+    <Compile Include="Migrations\202103230202118_Add FinanceField.Designer.cs">
+      <DependentUpon>202103230202118_Add FinanceField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -1940,6 +1944,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103130615012_Add ActiveDeactivelog Table.resx">
       <DependentUpon>202103130615012_Add ActiveDeactivelog Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103230202118_Add FinanceField.resx">
+      <DependentUpon>202103230202118_Add FinanceField.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

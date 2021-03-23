@@ -78,6 +78,9 @@ namespace DataReef.TM.Models.Finance
         [DataMember]
         public string MetaDataJSON { get; set; }
 
+        [DataMember]
+        public int TermExternalID { get; set; }
+
         #region Navigation
 
         [DataMember]
