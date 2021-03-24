@@ -175,7 +175,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
             //smartRequest.SetAmountToFinanceReducer(smartRequest.FederalTaxIncentive);
             //as per new calculations
-            smartRequest.SetAmountToFinanceReducer(smartRequest.FederalTaxIncentive + smartRequest.UpfrontRebate);
+            smartRequest.SetAmountToFinanceReducer(smartRequest.FederalTaxIncentive);
 
             var smartResponse = _loanCalculator.CalculateLoan(smartRequest, planDefinition);
             var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
@@ -318,7 +318,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
 
             //request.SetAmountToFinanceReducer(request.FederalTaxIncentive + request.UpfrontRebate);
             //as per new calculation
-            request.SetAmountToFinanceReducer(request.FederalTaxIncentive + request.UpfrontRebate);
+            request.SetAmountToFinanceReducer(request.FederalTaxIncentive);
 
             return _loanCalculator.CalculateLoan(request, args.PlanDefinition);
         }
