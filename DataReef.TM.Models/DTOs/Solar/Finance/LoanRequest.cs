@@ -358,6 +358,9 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public double TotalCostToCustomer => FinalLoanAmount + (double)DownPayment;
 
+        //public double FederalTaxCredit => (TotalCostToCustomer) * (double)FederalTaxIncentivePercentage;
+
+        //as per new calculation
         public double FederalTaxCredit => (TotalCostToCustomer - (double)UpfrontRebateReducedFromITC) * (double)FederalTaxIncentivePercentage; 
 
         #endregion
