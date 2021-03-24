@@ -440,9 +440,18 @@ internal static class DataViewExtensions
         var year30 = data.Years.LastOrDefault();
 
         var newUtilityBill = year1.ElectricityBillWithSolar / 12;
-        var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (mainMonthlyPayment + newUtilityBill);
+        //var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (mainMonthlyPayment + newUtilityBill);
+
+        //as per new calulation
+        var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (introPayment ?? data.IntroMonthlyPayment + newUtilityBill);
         var annualSavings = monthlySavings * 12;
         var totalCost = data.AmountFinanced == 0 ? data.SolarSystemCost : data.AmountFinanced;
+
+        //as per new calulation
+        if (optionType == PlanOptionType.Smarter)
+        {
+            data.AmountFinanced = data.AmountFinanced - (monthlySavings * 18);
+        }
 
         return new ProposalFinancePlanOption
         {

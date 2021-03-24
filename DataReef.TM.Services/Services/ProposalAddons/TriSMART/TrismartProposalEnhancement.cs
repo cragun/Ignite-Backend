@@ -162,7 +162,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             #region Smart Plan
 
             var smartRequest = param.FinancePlan.GetRequest(true);
-            smartRequest.SetAmountToFinanceReducer(smartRequest.FederalTaxIncentive);
+            
             smartRequest.ScenarioTermInYears = scenarioTermInYears;
             smartRequest.IncludeMonthsInResponse = true;
             smartRequest.UtilityInflationRate = param.UtilityInflationRate ?? smartRequest.UtilityInflationRate;
@@ -172,13 +172,13 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             smartRequest.UpfrontRebateReducedFromITC = smartIncentiveValues.Item1;
             smartRequest.OverridenUtilityRate = overridenUtilityRate;
             smartRequest.OverridenUtilityBaseFee = overridenUtilityBaseRate;
-             
+
+            //smartRequest.SetAmountToFinanceReducer(smartRequest.FederalTaxIncentive);
+            //as per new calculations
+            smartRequest.SetAmountToFinanceReducer(smartRequest.FederalTaxIncentive + smartRequest.UpfrontRebate);
 
             var smartResponse = _loanCalculator.CalculateLoan(smartRequest, planDefinition);
-            //var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
-
-            //as per new calculations 
-            var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart);
+            var smartPlan = smartResponse.ToPlanOption(SubPlan_Smart.ToUpper(), "Apply FTC, State, Utility", PlanOptionType.Smart, introMonthlyPayment);
 
             //as per new calculations 
             //smartPlan.Balance = (decimal)(proposal.SystemCosts.TotalCostToCustomer - proposal.SystemCosts.FederalTaxCredit);
@@ -213,10 +213,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                 ScenarioTermInYears = scenarioTermInYears,
                 UtilityInflationRate = param.UtilityInflationRate
             });
-            //var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter, introMonthlyPayment);
-
-            //as per new calculations 
-            var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter);
+            var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter, introMonthlyPayment);
 
             //as per new calculations 
             //smarterPlan.Balance = smartPlan.Balance;
@@ -320,7 +317,9 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             request.UpfrontRebate = smarterIncentiveValues.Item1 + smarterIncentiveValues.Item2;
             request.UpfrontRebateReducedFromITC = smarterIncentiveValues.Item1;
 
-            request.SetAmountToFinanceReducer(request.FederalTaxIncentive);
+            //request.SetAmountToFinanceReducer(request.FederalTaxIncentive + request.UpfrontRebate);
+            //as per new calculation
+            request.SetAmountToFinanceReducer(request.FederalTaxIncentive + request.UpfrontRebate);
 
             return _loanCalculator.CalculateLoan(request, args.PlanDefinition);
         }

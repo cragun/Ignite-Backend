@@ -233,7 +233,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         //public decimal AmountToFinance => Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
 
         //as per new calculation
-        public decimal AmountToFinance => (decimal)TotalCostToCustomer - AmountToFinanceReducer;
+        public decimal AmountToFinance => (decimal)TotalCostToCustomer + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
 
         public decimal AmountToFinanceUnreduced => AmountToFinance + AmountToFinanceReducer;
 
@@ -347,49 +347,19 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         #endregion
 
-        #region New Calculation 
+        #region a per new calculation 
 
-        public double BaseLoanAmount
-        {
-            get
-            {
-                return Convert.ToDouble(((PricePerWattASP * SystemSize) + TotalAddersCostsWithOutFinancingFee) - UpfrontRebate - DownPayment);
-            }
-        }
+        public double BaseLoanAmount => (double)(((PricePerWattASP * SystemSize) + TotalAddersCostsWithOutFinancingFee) - UpfrontRebate - DownPayment - AddersPaidByRep);
 
-        public double FinalLoanAmount
-        {
-            get
-            {
-                if (BaseLoanAmount != 0)
-                {
-                    return Math.Round(BaseLoanAmount * (BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDouble((DealerFee)) / 100)))), 2);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
 
-        public double TotalCostToCustomer
-        {
-            get
-            {
-                return FinalLoanAmount + Convert.ToDouble(DownPayment);
-            }
-        }
+        public double BaseLoanAmountWithTax => BaseLoanAmount + ((BaseLoanAmount + (double)DownPayment) * ((double)TaxRate / 100));
 
-        public double FederalTaxCredit
-        {
-            get
-            {
-                return TotalCostToCustomer * (double)FederalTaxIncentivePercentage;
-            }
-        }
+        public double FinalLoanAmount => BaseLoanAmountWithTax != 0 ? Math.Round(BaseLoanAmountWithTax * (BaseLoanAmountWithTax / (BaseLoanAmountWithTax * (1 - (double)(DealerFee / 100)))), 2) : 0;
+
+        public double TotalCostToCustomer => FinalLoanAmount + (double)DownPayment;
+
+        public double FederalTaxCredit => (TotalCostToCustomer) * (double)FederalTaxIncentivePercentage; 
 
         #endregion
-    }
-
-
+    } 
 }
