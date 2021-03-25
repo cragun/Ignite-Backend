@@ -443,7 +443,7 @@ internal static class DataViewExtensions
         //var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (mainMonthlyPayment + newUtilityBill);
 
         //as per new calulation
-        var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (introPayment ?? data.IntroMonthlyPayment + newUtilityBill);
+        var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (introMonthlyPayment + newUtilityBill);
         var annualSavings = monthlySavings * 12;
         var totalCost = data.AmountFinanced == 0 ? data.SolarSystemCost : data.AmountFinanced;
 
