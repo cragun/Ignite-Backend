@@ -450,7 +450,7 @@ internal static class DataViewExtensions
         //as per new calulation
         if (optionType == PlanOptionType.Smarter)
         {
-            data.AmountFinanced = data.AmountFinanced - (monthlySavings * 18);
+            data.AmountFinanced = data.AmountFinanced - (monthlySavings > 0 ? monthlySavings * 18 : 0);
         }
 
         return new ProposalFinancePlanOption
