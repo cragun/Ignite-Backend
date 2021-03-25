@@ -18,8 +18,9 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         public double TotalSystem { get; set; }
 
         public double Total { get; set; }
-        public double TotalCostToCustomer { get; set; }
-        public double FederalTaxCredit { get; set; }
+        public decimal TotalCostToCustomer { get; set; }
+        public decimal FederalTaxCredit { get; set; }
+        public decimal NetCost { get; set; }
 
 
         public ProposalSystemCosts()
@@ -101,8 +102,9 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
 
             TotalSystem = baseSystemGroup.Total ?? 0;
 
-            TotalCostToCustomer = Math.Round(request?.TotalCostToCustomer ?? 0);
-            FederalTaxCredit = Math.Round(request?.FederalTaxCredit ?? 0); 
+            TotalCostToCustomer = (request?.TotalCostToCustomer ?? 0);
+            FederalTaxCredit = (request?.FederalTaxCredit ?? 0); 
+            NetCost = (request?.NetCost ?? 0); 
         }
     }
 
