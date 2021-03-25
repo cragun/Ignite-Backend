@@ -195,7 +195,6 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             var smarterRequest = financePlan.GetRequest(true);
             smarterRequest.OverridenUtilityRate = overridenUtilityRate;
             smarterRequest.OverridenUtilityBaseFee = overridenUtilityBaseRate;
-             
 
             var smarterResponse = CalculateOption(new OptionCalculatorModel
             {
