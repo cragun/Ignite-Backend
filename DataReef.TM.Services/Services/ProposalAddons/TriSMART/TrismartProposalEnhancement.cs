@@ -321,7 +321,6 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             var proposalData = param.Data;
 
 
-
             first.ApplyReductionAfterPeriod = ReductionType.ReduceInTheBeginning;
 
             var smartResponse = _loanCalculator.CalculateLoan(smartRequest, financePlanDefinition);
