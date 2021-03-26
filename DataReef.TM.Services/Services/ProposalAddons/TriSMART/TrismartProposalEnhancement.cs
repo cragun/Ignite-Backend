@@ -205,6 +205,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             //    UtilityInflationRate = param.UtilityInflationRate
             //});
 
+
             //as per new calculation
 
             smarterRequest.UtilityInflationRate = param.UtilityInflationRate ?? smarterRequest.UtilityInflationRate;
