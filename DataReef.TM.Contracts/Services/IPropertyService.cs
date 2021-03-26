@@ -87,8 +87,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Task<bool> IsPropertyAvailable(long igniteId);
 
-        [OperationContract]
-        Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid);
+        //[OperationContract]
+        //Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid);
 
         [OperationContract]
         List<Territory> GetTerritoriesFromAddress(Property req);
@@ -100,8 +100,8 @@ namespace DataReef.TM.Contracts.Services
         //Task<Property> AddProperty(Guid propertyid);
 
 
-        [OperationContract]
-        Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid);
+        //[OperationContract]
+        //Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid);
 
         [OperationContract]
         Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid);

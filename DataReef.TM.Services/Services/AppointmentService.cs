@@ -516,26 +516,26 @@ namespace DataReef.TM.Services
             VerifyUserAssignmentAndInvite(entity);
             var appointment = base.Update(entity);
 
-            // var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
 
-            #region ThirdPartyPropertyType
-            if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
-            {
-                var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-            }
+            //#region ThirdPartyPropertyType
+            //if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
+            //{
+            //    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            //}
 
-            if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
-            {
-                AddAppointmentLeadJobNimbus(entity.Guid);
-            }
+            //if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
+            //{
+            //    AddAppointmentLeadJobNimbus(entity.Guid);
+            //}
 
-            if (entity.PropertyType == ThirdPartyPropertyType.Both)
-            {
-                var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-                AddAppointmentLeadJobNimbus(entity.Guid);
-            }
+            //if (entity.PropertyType == ThirdPartyPropertyType.Both)
+            //{
+            //    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            //    AddAppointmentLeadJobNimbus(entity.Guid);
+            //}
 
-            #endregion ThirdPartyPropertyType
+            //#endregion ThirdPartyPropertyType
 
             return appointment;
         }
@@ -555,21 +555,21 @@ namespace DataReef.TM.Services
             return ret;
         }
 
-        public AppointmentJobNimbusLeadResponseData AddAppointmentLeadJobNimbus(Guid propertyid)
-        {
-            AppointmentJobNimbusLeadResponseData lead = new AppointmentJobNimbusLeadResponseData();
-            using (var dataContext = new DataContext())
-            {
-                var appointmentdata = dataContext.Appointments.Where(x => x.Guid == propertyid).FirstOrDefault();
-                if (appointmentdata != null)
-                {
-                    lead = _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata , true);
-                    appointmentdata.JobNimbusID = lead != null ? lead.jnid : "";
-                    dataContext.SaveChanges();
-                }
-            }
-            return lead;
-        }
+        //public AppointmentJobNimbusLeadResponseData AddAppointmentLeadJobNimbus(Guid propertyid)
+        //{
+        //    AppointmentJobNimbusLeadResponseData lead = new AppointmentJobNimbusLeadResponseData();
+        //    using (var dataContext = new DataContext())
+        //    {
+        //        var appointmentdata = dataContext.Appointments.Where(x => x.Guid == propertyid).FirstOrDefault();
+        //        if (appointmentdata != null)
+        //        {
+        //            lead = _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata , true);
+        //            appointmentdata.JobNimbusID = lead != null ? lead.jnid : "";
+        //            dataContext.SaveChanges();
+        //        }
+        //    }
+        //    return lead;
+        //}
 
 
         public void VerifyUserAssignmentAndInvite(IEnumerable<Appointment> entities)
