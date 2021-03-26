@@ -487,7 +487,7 @@ namespace DataReef.TM.Api.Controllers
         public override async Task<ICollection<Proposal>> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string include = "", string exclude = "", string fields = "")
         {
 
-            exclude = string.IsNullOrEmpty(exclude) ? exclude + "Property.Proposals" : exclude + ",Property.Proposals";
+            exclude =  string.IsNullOrEmpty(exclude) ? exclude + "Property.Proposals" : exclude + ",Property.Proposals";
             var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);     
             if(results.Count == 0)
             {
@@ -503,5 +503,14 @@ namespace DataReef.TM.Api.Controllers
             }
             return results;
         }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [HttpPost, Route("{proposalId}/SendProposalEmailToEC")]
+        public async Task<IHttpActionResult> SendProposalEmailToEC(Guid proposalId)
+        {
+            var cnt = _proposalService.SendProposalEmailToEC(proposalId);
+            return Ok(new GenericResponse<string> { Response = cnt });
+        } 
     }
 }

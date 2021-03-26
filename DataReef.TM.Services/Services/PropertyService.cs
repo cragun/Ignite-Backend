@@ -12,10 +12,12 @@ using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Geo;
 using DataReef.TM.Models.PubSubMessaging;
@@ -40,6 +42,7 @@ using System.Net.Http.Headers;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using Property = DataReef.TM.Models.Property;
@@ -62,6 +65,8 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
+        private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
+        private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
         private readonly Lazy<ISmsService> _smsService;
         private readonly IPersonService _peopleService;
 
@@ -87,6 +92,8 @@ namespace DataReef.TM.Services.Services
             Lazy<IDeviceService> deviceService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Lazy<ISunlightAdapter> sunlightAdapter,
+            Lazy<ISunnovaAdapter> sunnovaAdapter,
+            Lazy<IJobNimbusAdapter> jobNimbusAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
@@ -101,6 +108,8 @@ namespace DataReef.TM.Services.Services
             _deviceService = deviceService;
             _sbAdapter = sbAdapter;
             _sunlightAdapter = sunlightAdapter;
+            _sunnovaAdapter = sunnovaAdapter;
+            _jobNimbusAdapter = jobNimbusAdapter;
             _ouService = ouService;
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
@@ -245,12 +254,43 @@ namespace DataReef.TM.Services.Services
             {
                 try
                 {
-                    var response = _sbAdapter.Value.SubmitLead(entity.Guid);
-
-                    if (response != null && response.Message.Type.Equals("error"))
+                    #region ThirdPartyPropertyType
+                    if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
                     {
-                        prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                        var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+
+                        if (response != null && response.Message.Type.Equals("error"))
+                        {
+                            prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                        }
                     }
+
+                    if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
+                    {
+                        AddLeadJobNimbus(entity.Guid);
+                        if(entity.Appointments?.Any() == true)
+                        {
+                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                        }
+                    }
+
+                    if (entity.PropertyType == ThirdPartyPropertyType.Both)
+                    {
+                        var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+
+                        if (response != null && response.Message.Type.Equals("error"))
+                        {
+                            prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                        }
+
+                        AddLeadJobNimbus(entity.Guid);
+                        if (entity.Appointments?.Any() == true)
+                        {
+                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                        }
+                    }
+
+                    #endregion ThirdPartyPropertyType
                 }
                 catch (Exception ex)
                 {
@@ -327,224 +367,250 @@ namespace DataReef.TM.Services.Services
             return prop;
         }
 
-
         public override Property Update(Property entity)
         {
-            Property ret = null;
+            try
+            {
+                Property ret = null;
 
-            Appointment appointmentBefore = null;
-            using (var dc = new DataContext())
-            {
-                appointmentBefore = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
-            }
-            using (var dataContext = new DataContext())
-            {
-                using (var transaction = dataContext.Database.BeginTransaction())
+                Appointment appointmentBefore = null;
+                using (var dc = new DataContext())
                 {
-                    try
+                    appointmentBefore = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
+                }
+                using (var dataContext = new DataContext())
+                {
+                    using (var transaction = dataContext.Database.BeginTransaction())
                     {
-                        var needToUpdateSB = false;
-                        Property oldProp = null;
-                        using (var dc = new DataContext())
+                        try
                         {
-                            oldProp = dc
-                                        .Properties
-                                        .Include(p => p.Occupants)
-                                        .Include(p => p.PropertyBag)
-                                        .Include(p => p.Inquiries)
-                                        .Include(p => p.Territory)
-                                        .Include(p => p.Appointments)
-                                        .FirstOrDefault(p => p.Guid == entity.Guid);
-                        }
+                            var needToUpdateSB = false;
+                            Property oldProp = null;
+                            using (var dc = new DataContext())
+                            {
+                                oldProp = dc
+                                            .Properties
+                                            .Include(p => p.Occupants)
+                                            .Include(p => p.PropertyBag)
+                                            .Include(p => p.Inquiries)
+                                            .Include(p => p.Territory)
+                                            .Include(p => p.Appointments)
+                                            .FirstOrDefault(p => p.Guid == entity.Guid);
+                            }
 
-                        //needToUpdateSB = oldProp.SmartBoardId.HasValue
-                        //                && (oldProp.Name != entity.Name
-                        //                    || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
-                        //                    || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber()
-                        //                    || oldProp.UtilityProviderID != entity.UtilityProviderID);
+                            needToUpdateSB = (oldProp.Name != entity.Name || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
+                                                || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID || oldProp.LatestDisposition != entity.LatestDisposition);
 
-                        needToUpdateSB = (oldProp.Name != entity.Name || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
-                                            || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID || oldProp.LatestDisposition != entity.LatestDisposition);
+                            entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
-                        entity.PrepareNavigationProperties(SmartPrincipal.UserId);
-
-                        // remove property bags
-                        dataContext
-                                .Fields
-                                .Where(f => f.PropertyId == entity.Guid)
-                                .Delete();
-
-                        // remove occupants property bags
-                        var occupantIds = dataContext
-                                            .Occupants
-                                            .Where(o => o.PropertyID == entity.Guid)
-                                            .Select(o => o.Guid)
-                                            .ToList();
-                        if (occupantIds.Count > 0)
-                        {
+                            // remove property bags
                             dataContext
                                     .Fields
-                                    .Where(f => f.OccupantId.HasValue && occupantIds.Contains(f.OccupantId.Value))
+                                    .Where(f => f.PropertyId == entity.Guid)
                                     .Delete();
-                            // remove occupants
+
+                            // remove occupants property bags
+                            var occupantIds = dataContext
+                                                .Occupants
+                                                .Where(o => o.PropertyID == entity.Guid)
+                                                .Select(o => o.Guid)
+                                                .ToList();
+                            if (occupantIds.Count > 0)
+                            {
+                                dataContext
+                                        .Fields
+                                        .Where(f => f.OccupantId.HasValue && occupantIds.Contains(f.OccupantId.Value))
+                                        .Delete();
+                                // remove occupants
+                                dataContext
+                                        .Occupants
+                                        .Where(o => occupantIds.Contains(o.Guid))
+                                        .Delete();
+                            }
+                            // remove property attributes
                             dataContext
-                                    .Occupants
-                                    .Where(o => occupantIds.Contains(o.Guid))
+                                    .PropertyAttributes
+                                    .Where(pa => pa.PropertyID == entity.Guid)
                                     .Delete();
-                        }
-                        // remove property attributes
-                        dataContext
-                                .PropertyAttributes
-                                .Where(pa => pa.PropertyID == entity.Guid)
-                                .Delete();
 
-                        dataContext.SaveChanges();
-
-
-
-                        ret = base.Update(entity, dataContext);
-
-                        if (oldProp.LatestDisposition != entity.LatestDisposition)
-                        {
-                            //Update StartDate and Sb User StartDate
-                            _peopleService.UpdateStartDate();
-                            //person clocktime 
-                            _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
-                        }
-                        if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
-                        ret.SBLeadError = "";
-                        UpdateNavigationProperties(entity, dataContext: dataContext);
-
-                        //update territory date modified because a new property was added
-                        var territory = dataContext.Territories.FirstOrDefault(t => t.Guid == entity.TerritoryID);
-                        if (territory != null)
-                        {
-                            territory.Updated(SmartPrincipal.UserId);
                             dataContext.SaveChanges();
-                        }
 
 
-                        transaction.Commit();
 
-                        // handle new appointments
-                        var newAppointments = entity
-                                                .Appointments?
-                                                .Where(ap => ap.IsNew == true)?
-                                                .ToList();
+                            ret = base.Update(entity, dataContext);
 
-                        var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
-
-                        if (newAppointments?.Any() == true)
-                        {
-                            var fstAppoint = newAppointments.FirstOrDefault();
-
-                            if (fstAppoint?.SendSmsToCust == true)
+                            if (oldProp.LatestDisposition != entity.LatestDisposition)
                             {
-                                //_smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
-                                //DateTime currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-                                DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                                //Update StartDate and Sb User StartDate
+                                _peopleService.UpdateStartDate();
+                                //person clocktime 
+                                _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
+                            }
+                            if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
+                            ret.SBLeadError = "";
+                            UpdateNavigationProperties(entity, dataContext: dataContext);
 
-                                _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
-                                 stDate.Year + "/" + stDate.Month + "/" + stDate.Day, entity.GetMainPhoneNumber());
+                            //update territory date modified because a new property was added
+                            var territory = dataContext.Territories.FirstOrDefault(t => t.Guid == entity.TerritoryID);
+                            if (territory != null)
+                            {
+                                territory.Updated(SmartPrincipal.UserId);
+                                dataContext.SaveChanges();
                             }
 
-                            if (fstAppoint?.SendSmsToEC == true)
+
+                            transaction.Commit();
+
+                            // handle new appointments
+                            var newAppointments = entity
+                                                    .Appointments?
+                                                    .Where(ap => ap.IsNew == true)?
+                                                    .ToList();
+
+                            var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
+
+                            if (newAppointments?.Any() == true)
                             {
-                                DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                                var fstAppoint = newAppointments.FirstOrDefault();
 
-                                _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
-                                 stDate.Year + "/" + stDate.Month + "/" + stDate.Day, creator?.PhoneNumbers.FirstOrDefault()?.Number);
-
-                                //_smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
-                            }
-
-                            _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
-                        }
-
-
-                        // handle new inquiries
-                        var newInquiries = entity
-                                                .Inquiries?
-                                                .Where(inq => inq.IsNew == true)?
-                                                .ToList();
-
-
-                        var pushedToSB = false;
-                        if (newInquiries?.Any() == true)
-                        {
-                            var ouid = oldProp.Territory?.OUID;
-                            newInquiries.ForEach(inquiry =>
-                            {
-                                pushedToSB = pushedToSB || _ouService.Value.ProcessEvent(new EventMessage
+                                if (fstAppoint?.SendSmsToCust == true)
                                 {
-                                    EventSource = "Inquiry",
-                                    EventAction = EventActionType.Insert,
-                                    EventEntity = inquiry,
-                                    OUID = ouid,
-                                    EventEntityGuid = inquiry.Guid
+                                    DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+
+                                    _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
+                                     stDate.Year + "/" + stDate.Month + "/" + stDate.Day, entity.GetMainPhoneNumber());
+                                }
+
+                                if (fstAppoint?.SendSmsToEC == true)
+                                {
+                                    DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+
+                                    _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
+                                     stDate.Year + "/" + stDate.Month + "/" + stDate.Day, creator?.PhoneNumbers.FirstOrDefault()?.Number);
+                                }
+
+                                _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
+                            }
+
+                            // handle new inquiries
+                            var newInquiries = entity
+                                                    .Inquiries?
+                                                    .Where(inq => inq.IsNew == true)?
+                                                    .ToList();
+
+
+                            var pushedToSB = false;
+                            if (newInquiries?.Any() == true)
+                            {
+                                var ouid = oldProp.Territory?.OUID;
+                                newInquiries.ForEach(inquiry =>
+                                {
+                                    pushedToSB = pushedToSB || _ouService.Value.ProcessEvent(new EventMessage
+                                    {
+                                        EventSource = "Inquiry",
+                                        EventAction = EventActionType.Insert,
+                                        EventEntity = inquiry,
+                                        OUID = ouid,
+                                        EventEntityGuid = inquiry.Guid
+                                    });
                                 });
+
+                            }
+
+                            Task.Factory.StartNew(() =>
+                            {
+                                _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
                             });
 
-                        }
-
-                        Task.Factory.StartNew(() =>
-                        {
-                            _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
-                        });
-
-                        //if (needToUpdateSB && !pushedToSB)
-                        if (needToUpdateSB)
-                        {
-                            bool IsdispositionChanged = false;
-                            if (oldProp.LatestDisposition != entity.LatestDisposition && entity.LatestDisposition != "AppointmentSet")
+                            //if (needToUpdateSB && !pushedToSB)
+                            if (needToUpdateSB)
                             {
-                                IsdispositionChanged = true;
-                            }
-
-                            try
-                            {
-                                var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
-
-                                if (response != null && response.Message.Type.Equals("error"))
+                                bool IsdispositionChanged = false;
+                                if (oldProp.LatestDisposition != entity.LatestDisposition && entity.LatestDisposition != "AppointmentSet")
                                 {
-                                    ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                    IsdispositionChanged = true;
+                                }
+
+                                try
+                                {
+                                    #region ThirdPartyPropertyType
+                                    if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
+                                    {
+                                        var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
+
+                                        if (response != null && response.Message.Type.Equals("error"))
+                                        {
+                                            ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                        }
+                                    }
+
+                                    if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
+                                    {
+                                        AddLeadJobNimbus(entity.Guid);
+                                        if (entity.Appointments?.Any() == true)
+                                        {
+                                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                                        }
+
+                                    }
+
+                                    if (entity.PropertyType == ThirdPartyPropertyType.Both)
+                                    {
+                                        var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
+
+                                        if (response != null && response.Message.Type.Equals("error"))
+                                        {
+                                            ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                        }
+
+                                        AddLeadJobNimbus(entity.Guid);
+                                        if (entity.Appointments?.Any() == true)
+                                        {
+                                            _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
+                                        }
+                                    }
+
+                                    #endregion ThirdPartyPropertyType
+                                }
+                                catch (Exception ex)
+                                {
+                                    logger.Error("Error submitting SB lead!", ex);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                logger.Error("Error submitting SB lead!", ex);
-                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-                }
-
-                if (entity.Inquiries?.Where(inq => inq.IsNew == true)?.ToList()?.Any() == true)
-                {
-                    using (var dc = new DataContext())
-                    {
-                        var appointmentAfter = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
-                        if (appointmentBefore != null && appointmentAfter != null)
+                        catch (Exception ex)
                         {
-                            //check if the appointment was cancelled while processing the inquiries
-                            if (appointmentBefore.Status != appointmentAfter.Status && appointmentAfter.Status == AppointmentStatus.Cancelled)
-                            {
-                                ret.SaveResult.Payload = new PropertySaveResultPayload
-                                {
-                                    AppointmentID = appointmentAfter.Guid,
-                                    GoogleEventID = appointmentAfter.GoogleEventID
-                                };
-                            }
+                            transaction.Rollback();
+                            throw ex;
                         }
                     }
 
+                    if (entity.Inquiries?.Where(inq => inq.IsNew == true)?.ToList()?.Any() == true)
+                    {
+                        using (var dc = new DataContext())
+                        {
+                            var appointmentAfter = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
+                            if (appointmentBefore != null && appointmentAfter != null)
+                            {
+                                //check if the appointment was cancelled while processing the inquiries
+                                if (appointmentBefore.Status != appointmentAfter.Status && appointmentAfter.Status == AppointmentStatus.Cancelled)
+                                {
+                                    ret.SaveResult.Payload = new PropertySaveResultPayload
+                                    {
+                                        AppointmentID = appointmentAfter.Guid,
+                                        GoogleEventID = appointmentAfter.GoogleEventID
+                                    };
+                                }
+                            }
+                        }
+                    }
+                    return ret;
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
 
-                return ret;
             }
         }
 
@@ -1549,8 +1615,7 @@ namespace DataReef.TM.Services.Services
                 {
                     property = data.Properties.Include(x => x.Occupants).Include(x => x.PropertyBag).FirstOrDefault(x => x.Id == igniteID);
                 }
-                // Update(Latestproperty);
-
+                // Update(Latestproperty); 
 
                 return new SBPropertyDTO(property);
             }
@@ -1668,6 +1733,23 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid)
+        {
+            List<SunnovaLead> lead = new List<SunnovaLead>();
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null && prop.SunnovaLeadID == null)
+                {
+                    lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
+                    prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
+                    dataContext.SaveChanges();
+                }
+            }
+
+            return lead;
+        }
+
         public List<Territory> GetTerritoriesFromAddress(Property req)
         {
             using (var dc = new DataContext())
@@ -1679,6 +1761,118 @@ namespace DataReef.TM.Services.Services
                                  .Where(o => property.Contains(o.Guid)).ToList();
 
                 return territories;
+            }
+        }
+
+        public async Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid)
+        {
+            JobNimbusLeadResponseData lead = new JobNimbusLeadResponseData();
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null)
+                {
+                    lead = _jobNimbusAdapter.Value.CreateJobNimbusLead(prop, true);
+                    prop.JobNimbusLeadID = lead != null ? lead.jnid : "";
+                    dataContext.SaveChanges();
+                }
+            }
+            return lead;
+        }
+
+        //public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
+        //{
+        //    using (var dataContext = new DataContext())
+        //    {
+        //        var prop = dataContext.PropertyNotes.FirstOrDefault(x => x.Guid == propertyid);
+        //        if (prop != null)
+        //        {
+        //            var lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+        //            prop.JobNimbusID = lead != null ? lead.jnid : "";
+        //            dataContext.SaveChanges();
+
+        //            return lead;
+        //        }
+        //        else
+        //        {
+        //            return new NoteJobNimbusLeadResponseData();
+        //        }
+        //    }
+        //}
+
+        public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
+        {
+            NoteJobNimbusLeadResponseData lead = new NoteJobNimbusLeadResponseData();
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.PropertyNotes.Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null)
+                {
+                    lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+                    prop.JobNimbusID = lead != null ? lead.jnid : "";
+                    dataContext.SaveChanges();
+                }
+            }
+            return lead;
+        }
+
+        public Property AddProperty(Property entity)
+        {
+            Property ret = null;
+
+            entity.PrepareNavigationProperties(SmartPrincipal.UserId);
+
+            using (var dataContext = new DataContext())
+            {
+                ret = base.Update(entity, dataContext);
+                if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
+            }
+
+            AddLeadJobNimbus(ret.Guid);
+            return ret;
+        }
+
+        public async Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid)
+        {
+
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null && prop.SunnovaLeadID != null)
+                {
+                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCredit(prop);
+                    //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
+                    dataContext.SaveChanges();
+
+                    return lead;
+                }
+                else
+                {
+                    return new SunnovaLeadCreditResponse();
+                }
+            }
+
+
+        }
+
+        public async Task<SunnovaLeadCreditResponseData> SendLeadCreditURLSunnova(Guid propertyid)
+        {
+
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null && prop.SunnovaLeadID != null)
+                {
+                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(prop);
+                    //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
+                    dataContext.SaveChanges();
+
+                    return lead;
+                }
+                else
+                {
+                    return new SunnovaLeadCreditResponseData();
+                }
             }
         }
     }

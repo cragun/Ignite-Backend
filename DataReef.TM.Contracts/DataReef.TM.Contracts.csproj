@@ -80,9 +80,11 @@
     <Compile Include="Exceptions\TemplateNotFoundException.cs" />
     <Compile Include="Faults\InvalidSyncItemFault.cs" />
     <Compile Include="Faults\PreconditionFailedFault.cs" />
+    <Compile Include="Services\FinanceAdapters\IJobNimbusAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\ILoanPalAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\ISolarSalesTrackerAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\ISunlightAdapter.cs" />
+    <Compile Include="Services\FinanceAdapters\ISunnovaAdapter.cs" />
     <Compile Include="Services\ICRUDAuditService.cs" />
     <Compile Include="Services\ICsvReportingService.cs" />
     <Compile Include="Services\IFinancialService.cs" />

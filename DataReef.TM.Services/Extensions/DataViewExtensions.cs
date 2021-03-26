@@ -424,7 +424,7 @@ internal static class DataViewExtensions
         // use month 20 for 19 - end
         //var monthSecond = data.Months[19];
         var isITCApplied = optionType != PlanOptionType.Standard;
-        
+
         var introMonthlyPayment = introPayment ?? data.IntroMonthlyPayment;
         var mainMonthlyPayment = !isITCApplied ? data.MonthlyPaymentNoITC : data.MonthlyPayment;
 
@@ -435,16 +435,19 @@ internal static class DataViewExtensions
             introMonthlyPayment = (planType.Value == FinancePlanType.Lease ? data.Months[2] : data.Months[16]).PaymentAmount;
             mainMonthlyPayment = data.Months[19].PaymentAmount;
         }
-
         var year1 = data.Years[0];
         var year3 = data.Years[2];
         var year30 = data.Years.LastOrDefault();
 
         var newUtilityBill = year1.ElectricityBillWithSolar / 12;
-        var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (mainMonthlyPayment + newUtilityBill);
+        //var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (mainMonthlyPayment + newUtilityBill);
+
+
+        //as per new calulation
+        var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (introMonthlyPayment + newUtilityBill);
         var annualSavings = monthlySavings * 12;
         var totalCost = data.AmountFinanced == 0 ? data.SolarSystemCost : data.AmountFinanced;
-
+         
         return new ProposalFinancePlanOption
         {
             Name = name,

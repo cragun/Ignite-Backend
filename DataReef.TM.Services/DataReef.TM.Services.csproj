@@ -230,10 +230,12 @@
     <Compile Include="InternalServices\Tokens\TokensProvider.cs" />
     <Compile Include="Services\CRUDAuditService.cs" />
     <Compile Include="Services\CsvReportingService.cs" />
+    <Compile Include="Services\FinanceAdapters\JobNimbus\JobNimbusAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\LoanPal\LoanPalAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\SolarSalesTracker\SolarSalesTrackerAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\SolarSalesTracker\SolarTrackerResources.cs" />
     <Compile Include="Services\FinanceAdapters\Sunlight\SunlightAdapter.cs" />
+    <Compile Include="Services\FinanceAdapters\Sunnova\SunnovaAdapter.cs" />
     <Compile Include="Services\FinancialService.cs" />
     <Compile Include="Services\KeyValueService.cs" />
     <Compile Include="Services\ActionItemService.cs" />

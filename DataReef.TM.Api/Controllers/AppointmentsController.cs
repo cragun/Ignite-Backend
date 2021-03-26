@@ -73,11 +73,11 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="date"></param>
         [HttpPost]
         [Route("sb/ouAppointment/{ouID}/{apiKey}/{date}")]
-        public async Task<IHttpActionResult> GetMembers([FromBody]OUMembersRequest request, Guid ouID, string apiKey, string date)
+        public async Task<IHttpActionResult> GetMembers([FromBody] OUMembersRequest request, Guid ouID, string apiKey, string date)
         {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-            var data =  _appointmentService.GetMembersWithAppointment(request, ouID, DecyptApiKey, DateTime.Parse(date));
+            var data = _appointmentService.GetMembersWithAppointment(request, ouID, DecyptApiKey, DateTime.Parse(date));
             return Ok(data);
         }
 
@@ -150,7 +150,7 @@ namespace DataReef.TM.Api.Controllers
         {
             return _appointmentService.SetAppointmentStatusFromSmartboard(request, apiKey);
         }
-        
+
 
         [HttpPost, Route("sendsms")]
         [AllowAnonymous, InjectAuthPrincipal]
@@ -159,18 +159,18 @@ namespace DataReef.TM.Api.Controllers
             _appointmentService.SendSMSTest(request.Number);
         }
 
-        //[Route("addappointment/jobnimbus")]
-        //[HttpPost]
-        //public async Task<IHttpActionResult> AddAppointmentJobNimbus(Appointment req)
-        //{
-        //    try
-        //    {
-        //        return Ok(_appointmentService.AddAppointmentLeadJobNimbus(req.PropertyID));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        [Route("addappointment/jobnimbus")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddAppointmentJobNimbus(Appointment req)
+        {
+            try
+            {
+                return Ok(_appointmentService.AddAppointmentLeadJobNimbus(req.PropertyID));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
