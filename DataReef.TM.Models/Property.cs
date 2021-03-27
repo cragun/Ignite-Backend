@@ -1,6 +1,7 @@
 ﻿using DataReef.Core.Attributes;
 using DataReef.TM.Models.Credit;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Geo;
 using DataReef.TM.Models.PropertyAttachments;
@@ -94,8 +95,8 @@ namespace DataReef.TM.Models
         public int? LeadSourceId { get; set; }
 
         [DataMember]
-        public bool UsageCollected { get; set; }      
-        
+        public bool UsageCollected { get; set; }
+
 
         [DataMember]
         public Nullable<int> DispositionTypeId { get; set; }
@@ -104,7 +105,18 @@ namespace DataReef.TM.Models
         [StringLength(200)]
         public string SunnovaLeadID { get; set; }
 
+        [DataMember]
+        [StringLength(200)]
+        public string JobNimbusLeadID { get; set; }
 
+        [DataMember]
+        public ThirdPartyPropertyType PropertyType { get; set; }
+
+        //notes server reference id 
+        [NotMapped]
+        [StringLength(200)]
+        public string ReferenceId { get; set; }
+        
         #region Navigation
 
         [ForeignKey("TerritoryID")]
@@ -276,6 +288,6 @@ namespace DataReef.TM.Models
 
         [NotMapped]
         public int? PropertyNotesCount { get; set; }
-        
+       
     }
 }

@@ -22,6 +22,8 @@ using DataReef.Core;
 using System.Data.SqlClient;
 using DataReef.TM.Models.Enums;
 using Newtonsoft.Json;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
+using DataReef.TM.Contracts.Services.FinanceAdapters;
 
 namespace DataReef.TM.Services.Services
 {
@@ -40,6 +42,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IRepository> _repository;
         private readonly Lazy<ISmsService> _smsService;
 
+
         public PropertyNoteService(
             ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
@@ -51,7 +54,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IPersonService> personService,
             Lazy<IPushNotificationService> pushNotificationService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
-             Lazy<ISmsService> smsService,
+            Lazy<ISmsService> smsService,
             IApiLoggingService apiLoggingService) : base(logger, unitOfWorkFactory)
         {
             _ouSettingService = ouSettingService;
@@ -194,6 +197,7 @@ namespace DataReef.TM.Services.Services
             }
             return ret;
         }
+
 
         public override ICollection<PropertyNote> InsertMany(ICollection<PropertyNote> entities)
         {

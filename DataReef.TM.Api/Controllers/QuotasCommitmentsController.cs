@@ -51,8 +51,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("roles/users")]
         public async Task<IHttpActionResult> GetUsersFromRoleType(QuotasCommitment request)
         {
-            return Ok(new { Response = quotasCommitmentsService.GetUsersFromRoleType(request.RoleID) });
-
+            return Ok(new { Response = await quotasCommitmentsService.GetUsersFromRoleType(request.RoleID) });
         }
 
         //add quotas by admin

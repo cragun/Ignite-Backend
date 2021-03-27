@@ -5,6 +5,7 @@ using DataReef.TM.Models.DTOs.QuotasCommitments;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -16,7 +17,7 @@ namespace DataReef.TM.Contracts.Services
         AdminQuotas GetQuotasType();
 
         [OperationContract]
-        IEnumerable<GuidNamePair> GetUsersFromRoleType(Guid roleid);
+        Task<IEnumerable<GuidNamePair>> GetUsersFromRoleType(Guid roleid);
 
         [OperationContract]
         QuotasCommitment InsertQuotas(QuotasCommitment request);

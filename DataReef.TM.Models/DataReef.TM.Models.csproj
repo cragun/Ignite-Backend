@@ -327,6 +327,9 @@
     <Compile Include="DTOs\Solar\Finance\Projects.cs" />
     <Compile Include="DTOs\Solar\Finance\SunlightError.cs" />
     <Compile Include="DTOs\Solar\Finance\SunlightResponse.cs" />
+    <Compile Include="DTOs\Solar\Finance\SunnovaContacts.cs" />
+    <Compile Include="DTOs\Solar\Finance\SunnovaLead.cs" />
+    <Compile Include="DTOs\Solar\Finance\SunnovaLeadSystem.cs" />
     <Compile Include="DTOs\Solar\Genability\BaseResponse.cs" />
     <Compile Include="DTOs\Solar\Genability\UsageProfileRequest.cs" />
     <Compile Include="DTOs\Solar\Proposal\CloneSettings.cs" />

@@ -419,6 +419,9 @@
     <Analyzer Include="..\packages\AWSSDK.S3.3.5.0-beta\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
     <Analyzer Include="..\packages\AWSSDK.SimpleNotificationService.3.5.0-beta\analyzers\dotnet\cs\AWSSDK.SimpleNotificationService.CodeAnalysis.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\FinanceAdapters\Sunnova\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.Enums;
+﻿using DataReef.TM.Models.DTOs.FinanceAdapters;
+using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -59,7 +60,16 @@ namespace DataReef.TM.Models
 
         [DataMember]
         [StringLength(250)]
-        public string TimeZone { get; set; }
+        public string TimeZone { get; set; } 
+
+        [DataMember]
+        public string JobNimbusID { get; set; }
+
+        [DataMember]
+        public string JobNimbusLeadID { get; set; }
+
+        [DataMember]
+        public ThirdPartyPropertyType PropertyType { get; set; }
 
         #region Navigation Properties
 
@@ -78,9 +88,9 @@ namespace DataReef.TM.Models
         #endregion
 
         [NotMapped]
-        public Nullable<bool> SendSmsToCust { get; set; }
+        public bool SendSmsToCust { get; set; }
 
         [NotMapped]
-        public Nullable<bool> SendSmsToEC { get; set; }
+        public bool SendSmsToEC { get; set; }
     }
 }

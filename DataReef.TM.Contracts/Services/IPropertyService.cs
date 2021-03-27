@@ -9,6 +9,7 @@ using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using System.Threading.Tasks;
 using DataReef.TM.Models;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -88,6 +89,5 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         List<Territory> GetTerritoriesFromAddress(Property req);
-
     }
 }

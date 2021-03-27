@@ -12,6 +12,7 @@ using DataReef.TM.Models.DTOs.Blobs;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.ClientAPI;
 using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -107,6 +108,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string Getproposalpdftest(string s);
+
+        [OperationContract]
+        Task<string> SendProposalEmailToEC(Guid ProposalID);
 
     }
 }

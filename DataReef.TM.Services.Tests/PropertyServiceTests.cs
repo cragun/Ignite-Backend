@@ -264,7 +264,7 @@ namespace DataReef.TM.Services.Tests
             var service = GetService();
 
             //  act
-           service.SyncProperty(property.Object.Guid);
+            service.SyncProperty(property.Object.Guid);
 
             //  assert
             _unitOfWorkMock.Verify(uow => uow.SaveChanges(), Times.Never);

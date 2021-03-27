@@ -765,7 +765,7 @@ namespace DataReef.TM.Services.Services
             {
                 throw new Exception("You must select at least one shape");
             }
-            else if (entity.Shapes.Select(s => s.ShapeTypeID).Distinct().Count() > 1)
+            else if (entity.Shapes.Where(a => !a.IsDeleted).Select(s => s.ShapeTypeID).Distinct().Count() > 1)
             {
                 throw new Exception("All the shapes must be at the same level");
             }
@@ -2722,7 +2722,7 @@ namespace DataReef.TM.Services.Services
                     try
                     {
                         //var Ous = dc.OUs.Include(a => a.Shapes).ToList();
-                        Guid ouid = Guid.Parse("7749729D-787E-49D2-83F1-E070597A152E");
+                        Guid ouid = Guid.Parse("6838761e-c926-4318-a1c3-b32fd4854cc6");
                         var Ous = await dc.OUs.Include(a => a.Shapes).Where(x => x.Guid == ouid).ToListAsync();
 
                         foreach (var entity in Ous)

@@ -7,7 +7,6 @@ using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
-using DataReef.TM.Models.DTOs.FinanceAdapters.SST;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.SmartBoard;
 using DataReef.TM.Models.Enums;
@@ -19,6 +18,7 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -503,13 +503,13 @@ namespace DataReef.TM.Services
             return base.UpdateMany(entities);
         }
 
+
         public override Appointment Update(Appointment entity)
         {
             VerifyUserAssignmentAndInvite(entity);
             var appointment = base.Update(entity);
 
             var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-
             return appointment;
         }
 

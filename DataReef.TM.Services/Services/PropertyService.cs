@@ -16,6 +16,7 @@ using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.DTOs.Signatures;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Geo;
 using DataReef.TM.Models.PubSubMessaging;
@@ -40,6 +41,7 @@ using System.Net.Http.Headers;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using Property = DataReef.TM.Models.Property;
@@ -327,224 +329,218 @@ namespace DataReef.TM.Services.Services
             return prop;
         }
 
-
         public override Property Update(Property entity)
         {
-            Property ret = null;
+            try
+            {
+                Property ret = null;
 
-            Appointment appointmentBefore = null;
-            using (var dc = new DataContext())
-            {
-                appointmentBefore = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
-            }
-            using (var dataContext = new DataContext())
-            {
-                using (var transaction = dataContext.Database.BeginTransaction())
+                Appointment appointmentBefore = null;
+                using (var dc = new DataContext())
                 {
-                    try
+                    appointmentBefore = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
+                }
+                using (var dataContext = new DataContext())
+                {
+                    using (var transaction = dataContext.Database.BeginTransaction())
                     {
-                        var needToUpdateSB = false;
-                        Property oldProp = null;
-                        using (var dc = new DataContext())
+                        try
                         {
-                            oldProp = dc
-                                        .Properties
-                                        .Include(p => p.Occupants)
-                                        .Include(p => p.PropertyBag)
-                                        .Include(p => p.Inquiries)
-                                        .Include(p => p.Territory)
-                                        .Include(p => p.Appointments)
-                                        .FirstOrDefault(p => p.Guid == entity.Guid);
-                        }
+                            var needToUpdateSB = false;
+                            Property oldProp = null;
+                            using (var dc = new DataContext())
+                            {
+                                oldProp = dc
+                                            .Properties
+                                            .Include(p => p.Occupants)
+                                            .Include(p => p.PropertyBag)
+                                            .Include(p => p.Inquiries)
+                                            .Include(p => p.Territory)
+                                            .Include(p => p.Appointments)
+                                            .FirstOrDefault(p => p.Guid == entity.Guid);
+                            }
 
-                        //needToUpdateSB = oldProp.SmartBoardId.HasValue
-                        //                && (oldProp.Name != entity.Name
-                        //                    || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
-                        //                    || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber()
-                        //                    || oldProp.UtilityProviderID != entity.UtilityProviderID);
+                            needToUpdateSB = (oldProp.Name != entity.Name || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
+                                                || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID || oldProp.LatestDisposition != entity.LatestDisposition);
 
-                        needToUpdateSB = (oldProp.Name != entity.Name || oldProp.GetMainEmailAddress() != entity.GetMainEmailAddress()
-                                            || oldProp.GetMainPhoneNumber() != entity.GetMainPhoneNumber() || oldProp.UtilityProviderID != entity.UtilityProviderID || oldProp.LatestDisposition != entity.LatestDisposition);
+                            entity.PrepareNavigationProperties(SmartPrincipal.UserId);
 
-                        entity.PrepareNavigationProperties(SmartPrincipal.UserId);
-
-                        // remove property bags
-                        dataContext
-                                .Fields
-                                .Where(f => f.PropertyId == entity.Guid)
-                                .Delete();
-
-                        // remove occupants property bags
-                        var occupantIds = dataContext
-                                            .Occupants
-                                            .Where(o => o.PropertyID == entity.Guid)
-                                            .Select(o => o.Guid)
-                                            .ToList();
-                        if (occupantIds.Count > 0)
-                        {
+                            // remove property bags
                             dataContext
                                     .Fields
-                                    .Where(f => f.OccupantId.HasValue && occupantIds.Contains(f.OccupantId.Value))
+                                    .Where(f => f.PropertyId == entity.Guid)
                                     .Delete();
-                            // remove occupants
+
+                            // remove occupants property bags
+                            var occupantIds = dataContext
+                                                .Occupants
+                                                .Where(o => o.PropertyID == entity.Guid)
+                                                .Select(o => o.Guid)
+                                                .ToList();
+                            if (occupantIds.Count > 0)
+                            {
+                                dataContext
+                                        .Fields
+                                        .Where(f => f.OccupantId.HasValue && occupantIds.Contains(f.OccupantId.Value))
+                                        .Delete();
+                                // remove occupants
+                                dataContext
+                                        .Occupants
+                                        .Where(o => occupantIds.Contains(o.Guid))
+                                        .Delete();
+                            }
+                            // remove property attributes
                             dataContext
-                                    .Occupants
-                                    .Where(o => occupantIds.Contains(o.Guid))
+                                    .PropertyAttributes
+                                    .Where(pa => pa.PropertyID == entity.Guid)
                                     .Delete();
-                        }
-                        // remove property attributes
-                        dataContext
-                                .PropertyAttributes
-                                .Where(pa => pa.PropertyID == entity.Guid)
-                                .Delete();
 
-                        dataContext.SaveChanges();
-
-
-
-                        ret = base.Update(entity, dataContext);
-
-                        if (oldProp.LatestDisposition != entity.LatestDisposition)
-                        {
-                            //Update StartDate and Sb User StartDate
-                            _peopleService.UpdateStartDate();
-                            //person clocktime 
-                            _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
-                        }
-                        if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
-                        ret.SBLeadError = "";
-                        UpdateNavigationProperties(entity, dataContext: dataContext);
-
-                        //update territory date modified because a new property was added
-                        var territory = dataContext.Territories.FirstOrDefault(t => t.Guid == entity.TerritoryID);
-                        if (territory != null)
-                        {
-                            territory.Updated(SmartPrincipal.UserId);
                             dataContext.SaveChanges();
-                        }
 
 
-                        transaction.Commit();
 
-                        // handle new appointments
-                        var newAppointments = entity
-                                                .Appointments?
-                                                .Where(ap => ap.IsNew == true)?
-                                                .ToList();
+                            ret = base.Update(entity, dataContext);
 
-                        var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
-
-                        if (newAppointments?.Any() == true)
-                        {
-                            var fstAppoint = newAppointments.FirstOrDefault();
-
-                            if (fstAppoint?.SendSmsToCust == true)
+                            if (oldProp.LatestDisposition != entity.LatestDisposition)
                             {
-                                //_smsService.Value.SendSms("New Appointment is created!", entity.GetMainPhoneNumber());
-                                //DateTime currentTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-                                DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                                //Update StartDate and Sb User StartDate
+                                _peopleService.UpdateStartDate();
+                                //person clocktime 
+                                _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
+                            }
+                            if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
+                            ret.SBLeadError = "";
+                            UpdateNavigationProperties(entity, dataContext: dataContext);
 
-                                _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
-                                 stDate.Year + "/" + stDate.Month + "/" + stDate.Day, entity.GetMainPhoneNumber());
+                            //update territory date modified because a new property was added
+                            var territory = dataContext.Territories.FirstOrDefault(t => t.Guid == entity.TerritoryID);
+                            if (territory != null)
+                            {
+                                territory.Updated(SmartPrincipal.UserId);
+                                dataContext.SaveChanges();
                             }
 
-                            if (fstAppoint?.SendSmsToEC == true)
+
+                            transaction.Commit();
+
+                            // handle new appointments
+                            var newAppointments = entity
+                                                    .Appointments?
+                                                    .Where(ap => ap.IsNew == true)?
+                                                    .ToList();
+
+                            var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
+
+                            if (newAppointments != null && newAppointments.Count > 0)
                             {
-                                DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                                var fstAppoint = newAppointments.FirstOrDefault(); 
 
-                                _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
-                                 stDate.Year + "/" + stDate.Month + "/" + stDate.Day, creator?.PhoneNumbers.FirstOrDefault()?.Number);
-
-                                //_smsService.Value.SendSms("New Appointment is created!", creator?.PhoneNumbers.FirstOrDefault()?.Number);
-                            }
-
-                            _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
-                        }
-
-
-                        // handle new inquiries
-                        var newInquiries = entity
-                                                .Inquiries?
-                                                .Where(inq => inq.IsNew == true)?
-                                                .ToList();
-
-
-                        var pushedToSB = false;
-                        if (newInquiries?.Any() == true)
-                        {
-                            var ouid = oldProp.Territory?.OUID;
-                            newInquiries.ForEach(inquiry =>
-                            {
-                                pushedToSB = pushedToSB || _ouService.Value.ProcessEvent(new EventMessage
+                                if (fstAppoint != null)
                                 {
-                                    EventSource = "Inquiry",
-                                    EventAction = EventActionType.Insert,
-                                    EventEntity = inquiry,
-                                    OUID = ouid,
-                                    EventEntityGuid = inquiry.Guid
+                                    if (fstAppoint.SendSmsToCust)
+                                    {
+                                        DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+
+                                        _smsService.Value.SendSms($"You have a solar appointment with {creator?.Name} on  {stDate.Date.ToShortDateString()} at {stDate.ToShortTimeString()} , https://calendar.google.com/calendar/u/0/r/{ stDate.Year}/{ stDate.Month}/{ stDate.Day}", entity.GetMainPhoneNumber());
+                                    }
+
+                                    if (fstAppoint.SendSmsToEC)
+                                    {
+                                        DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+
+                                        _smsService.Value.SendSms($"You have a solar appointment with {entity.Name} on  {stDate.Date.ToShortDateString()} at {stDate.ToShortTimeString()} , https://calendar.google.com/calendar/u/0/r/{ stDate.Year}/{ stDate.Month}/{ stDate.Day}", creator?.PhoneNumbers.FirstOrDefault()?.Number);
+                                    }
+                                }
+                                _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
+                            }
+
+                            // handle new inquiries
+                            var newInquiries = entity
+                                                    .Inquiries?
+                                                    .Where(inq => inq.IsNew == true)?
+                                                    .ToList();
+
+
+                            var pushedToSB = false;
+                            if (newInquiries != null && newInquiries.Count > 0)
+                            {
+                                var ouid = oldProp.Territory?.OUID;
+                                newInquiries.ForEach(inquiry =>
+                                {
+                                    pushedToSB = pushedToSB || _ouService.Value.ProcessEvent(new EventMessage
+                                    {
+                                        EventSource = "Inquiry",
+                                        EventAction = EventActionType.Insert,
+                                        EventEntity = inquiry,
+                                        OUID = ouid,
+                                        EventEntityGuid = inquiry.Guid
+                                    });
                                 });
+
+                            }
+
+                            Task.Factory.StartNew(() =>
+                            {
+                                _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
                             });
 
-                        }
-
-                        Task.Factory.StartNew(() =>
-                        {
-                            _deviceService.Value.PushToSubscribers<Territory, Property>(ret.TerritoryID.ToString(), ret.Guid.ToString(), DataAction.Update, alert: $"Property {ret.Name} has been updated!");
-                        });
-
-                        //if (needToUpdateSB && !pushedToSB)
-                        if (needToUpdateSB)
-                        {
-                            bool IsdispositionChanged = false;
-                            if (oldProp.LatestDisposition != entity.LatestDisposition && entity.LatestDisposition != "AppointmentSet")
+                            //if (needToUpdateSB && !pushedToSB)
+                            if (needToUpdateSB)
                             {
-                                IsdispositionChanged = true;
-                            }
-
-                            try
-                            {
-                                var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
-
-                                if (response != null && response.Message.Type.Equals("error"))
+                                bool IsdispositionChanged = false;
+                                if (oldProp.LatestDisposition != entity.LatestDisposition && entity.LatestDisposition != "AppointmentSet")
                                 {
-                                    ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                    IsdispositionChanged = true;
+                                }
+
+                                try
+                                {
+                                    var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
+
+                                    if (response != null && response.Message.Type.Equals("error"))
+                                    {
+                                        ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    logger.Error("Error submitting SB lead!", ex);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                logger.Error("Error submitting SB lead!", ex);
-                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-                }
-
-                if (entity.Inquiries?.Where(inq => inq.IsNew == true)?.ToList()?.Any() == true)
-                {
-                    using (var dc = new DataContext())
-                    {
-                        var appointmentAfter = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
-                        if (appointmentBefore != null && appointmentAfter != null)
+                        catch (Exception ex)
                         {
-                            //check if the appointment was cancelled while processing the inquiries
-                            if (appointmentBefore.Status != appointmentAfter.Status && appointmentAfter.Status == AppointmentStatus.Cancelled)
-                            {
-                                ret.SaveResult.Payload = new PropertySaveResultPayload
-                                {
-                                    AppointmentID = appointmentAfter.Guid,
-                                    GoogleEventID = appointmentAfter.GoogleEventID
-                                };
-                            }
+                            transaction.Rollback();
+                            throw ex;
                         }
                     }
 
+                    if (entity.Inquiries?.Where(inq => inq.IsNew == true)?.ToList()?.Any() == true)
+                    {
+                        using (var dc = new DataContext())
+                        {
+                            var appointmentAfter = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
+                            if (appointmentBefore != null && appointmentAfter != null)
+                            {
+                                //check if the appointment was cancelled while processing the inquiries
+                                if (appointmentBefore.Status != appointmentAfter.Status && appointmentAfter.Status == AppointmentStatus.Cancelled)
+                                {
+                                    ret.SaveResult.Payload = new PropertySaveResultPayload
+                                    {
+                                        AppointmentID = appointmentAfter.Guid,
+                                        GoogleEventID = appointmentAfter.GoogleEventID
+                                    };
+                                }
+                            }
+                        }
+                    }
+                    return ret;
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
 
-                return ret;
             }
         }
 
@@ -1549,8 +1545,7 @@ namespace DataReef.TM.Services.Services
                 {
                     property = data.Properties.Include(x => x.Occupants).Include(x => x.PropertyBag).FirstOrDefault(x => x.Id == igniteID);
                 }
-                // Update(Latestproperty);
-
+                // Update(Latestproperty); 
 
                 return new SBPropertyDTO(property);
             }
@@ -1666,7 +1661,7 @@ namespace DataReef.TM.Services.Services
                     return true;
                 }
             }
-        }
+        }   
 
         public List<Territory> GetTerritoriesFromAddress(Property req)
         {
@@ -1680,6 +1675,21 @@ namespace DataReef.TM.Services.Services
 
                 return territories;
             }
+        }
+
+        public Property AddProperty(Property entity)
+        {
+            Property ret = null;
+
+            entity.PrepareNavigationProperties(SmartPrincipal.UserId);
+
+            using (var dataContext = new DataContext())
+            {
+                ret = base.Update(entity, dataContext);
+                if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
+            }
+
+            return ret;
         }
     }
 }

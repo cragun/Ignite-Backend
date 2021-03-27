@@ -77,7 +77,7 @@ namespace DataReef.TM.Api.Controllers
         {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-            var data =  _appointmentService.GetMembersWithAppointment(request, ouID, DecyptApiKey, DateTime.Parse(date));
+            var data =_appointmentService.GetMembersWithAppointment(request, ouID, DecyptApiKey, DateTime.Parse(date));
             return Ok(data);
         }
 
@@ -150,7 +150,7 @@ namespace DataReef.TM.Api.Controllers
         {
             return _appointmentService.SetAppointmentStatusFromSmartboard(request, apiKey);
         }
-        
+
 
         [HttpPost, Route("sendsms")]
         [AllowAnonymous, InjectAuthPrincipal]
@@ -158,19 +158,5 @@ namespace DataReef.TM.Api.Controllers
         {
             _appointmentService.SendSMSTest(request.Number);
         }
-
-        //[Route("addappointment/jobnimbus")]
-        //[HttpPost]
-        //public async Task<IHttpActionResult> AddAppointmentJobNimbus(Appointment req)
-        //{
-        //    try
-        //    {
-        //        return Ok(_appointmentService.AddAppointmentLeadJobNimbus(req.PropertyID));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
     }
 }

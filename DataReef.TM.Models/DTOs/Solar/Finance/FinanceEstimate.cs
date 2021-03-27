@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.DTOs.Solar.Finance.Enums;
+﻿using DataReef.Core.Extensions;
+using DataReef.TM.Models.DTOs.Solar.Finance.Enums;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Finance;
 using System;
@@ -26,6 +27,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             LoanPayment = plan.Type != FinancePlanType.Mortgage ? response.MonthlyPayment : 0;
             InterestRate = response.StatedApr;
             MortgagePayment = mortgagePayment;
+
             switch (plan.Type)
             {
                 case FinancePlanType.PPA:
@@ -54,7 +56,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             TotalSavings = response.TotalSavings;
 
             TakeHomeIncentives = response.TotalTakeHomeIncentives;
-            TotalAddersCosts = request.TotalAddersCostsWithOutFinancingFee;
+            TotalAddersCosts = request?.TotalAddersCostsWithOutFinancingFee ?? 0;
             Name = plan.Type == FinancePlanType.Mortgage ? $"Mortgage {Terms} / {InterestRate.ToString("n2")}%" : plan.Name;
 
             TotalInterestPayment = response.TotalInterestPayment;
@@ -62,13 +64,11 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             DealerFee = Convert.ToDouble(request?.DealerFee);
             PPW = plan.PPW != null ? plan.PPW.Value : 0;
 
-            //new calc
-            BaseLoanAmount = ((Convert.ToDecimal(request?.PricePerWattASP) * Convert.ToDecimal(request?.SystemSize)) + request.TotalAddersCostsWithOutFinancingFee) - request.UpfrontRebate - request.DownPayment;
+            //as per new calculation 
 
-            FinalPPW = plan.Type == FinancePlanType.Lease ? 0 : Math.Round((FinalLoanAmount + request.DownPayment) / request.SystemSize, 2);
-            PPW = Convert.ToDouble(FinalPPW);
-
-            LenderFeesInAmount = Math.Round((FinalLoanAmount - BaseLoanAmount), 2);
+            FinalPPW = plan.Type == FinancePlanType.Lease ? 0 : request?.FinalPricePerWatt ?? 0;
+            PPW = (double)FinalPPW;
+            LenderFeesInAmount =  request?.LenderFeesInAmount ?? 0;
         }
 
         public Guid FinancePlanDefinitionId { get; set; }
@@ -98,9 +98,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public decimal TakeHomeIncentives { get; set; }
 
         public decimal TotalAddersCosts { get; set; }
-
-
-        public decimal BaseLoanAmount { get; set; }
+         
         public decimal FinalPPW { get; set; }
 
         /// <summary>
@@ -131,22 +129,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public double LenderFee { get; set; }
         public double DealerFee { get; set; }
         public double PPW { get; set; }
-        public decimal LenderFeesInAmount { get; set; }
-
-
-        public decimal FinalLoanAmount
-        {
-            get
-            {
-                if (BaseLoanAmount != 0)
-                {
-                    return Math.Round(BaseLoanAmount * ((BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDecimal(DealerFee) / 100))))), 2); ;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
+        public decimal LenderFeesInAmount { get; set; } 
+ 
     }
 }

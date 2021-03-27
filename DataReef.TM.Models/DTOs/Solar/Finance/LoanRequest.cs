@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.Enums;
+﻿using DataReef.Core.Extensions;
+using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Solar;
 using Newtonsoft.Json;
 using System;
@@ -63,7 +64,6 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// </summary>
         public List<AdderItem> Adders { get; set; }
 
-
         public decimal TotalAddersCostsWithFinancingFee
         {
             get
@@ -74,6 +74,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
                     ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, true)) ?? TotalAddersCosts;
             }
         }
+
 
         public decimal TotalAddersCostsWithOutFinancingFee
         {
@@ -204,7 +205,10 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal LeaseSystemCostWithExtrasAndTax => LeaseSystemCostWithTax + ExtraCostsWithTax;
 
-        public decimal FederalTaxIncentive => (GrossSystemCostWithAddersTaxAndDealearFee - UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
+        //public decimal FederalTaxIncentive => (GrossSystemCostWithAddersTaxAndDealearFee - UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
+
+        //as per new calculation
+        public decimal FederalTaxIncentive => (decimal)FederalTaxCredit;
 
         /// <summary>
         /// Gross SystemCost with tax And Dealer Fee
@@ -227,7 +231,11 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal ExtraCostsWithTax => (TotalAddersCostsWithFinancingFee - AddersPaidByRep) * (1 + TaxRate);
 
-        public decimal AmountToFinance => Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance ? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
+        //public decimal AmountToFinance => Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
+
+        //as per new calculation
+        public decimal AmountToFinance => (decimal)TotalCostToCustomer + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
+
         public decimal AmountToFinanceUnreduced => AmountToFinance + AmountToFinanceReducer;
 
         public decimal AmountToRefinance => MortgageData?.CurrentMortgage?.CurrentBalance + MortgageData?.ClosingCostRate ?? 0;
@@ -312,6 +320,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             AmountToFinanceReducer = value;
         }
 
+
         public T GetPlanData<T>()
         {
             if (string.IsNullOrWhiteSpace(FinancePlanData))
@@ -339,51 +348,53 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         #endregion
 
-        #region New Calculation 
+        #region as per new calculation 
 
-        public double BaseLoanAmount
-        {
-            get
-            {
-                return Convert.ToDouble(((PricePerWattASP * SystemSize) + TotalAddersCostsWithOutFinancingFee) - UpfrontRebate - DownPayment);
-            }
-        }
+        public decimal BaseTotalCostBeforeAdders =>  (PricePerWattASP * SystemSize);
 
-        public double FinalLoanAmount
-        {
-            get
-            {
-                if (BaseLoanAmount != 0)
-                {
-                    return Math.Round(BaseLoanAmount * (BaseLoanAmount / (BaseLoanAmount * (1 - (Convert.ToDouble((DealerFee)) / 100)))), 2);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
+        public decimal BaseTotalCostWithAdders => BaseTotalCostBeforeAdders + TotalAddersCostsWithOutFinancingFee;
 
-        public double TotalCostToCustomer
-        {
-            get
-            {
-                return FinalLoanAmount + Convert.ToDouble(DownPayment);
-            }
-        }
+        public decimal BaseLoanAmount =>  ((decimal)BaseTotalCostWithAdders - UpfrontRebate - DownPayment - AddersPaidByRep);
 
-        public double FederalTaxCredit
-        {
-            get
-            {
-                return TotalCostToCustomer * (double)FederalTaxIncentivePercentage;
-            }
-        }
+        public decimal BaseLoanAmountWithTax => BaseLoanAmount + ((BaseLoanAmount + DownPayment) * (TaxRate / 100));
 
+        public decimal FinalLoanAmount => BaseLoanAmountWithTax != 0 ? (BaseLoanAmountWithTax * (BaseLoanAmountWithTax / (BaseLoanAmountWithTax * (1 - (DealerFee / 100))))).RoundValue() : 0;
 
+        public decimal TotalCostToCustomer => BaseTotalCostWithAdders + LenderFeesInAmount; 
         
+        public decimal FederalTaxCredit => (TotalCostToCustomer - TotalAddersBeforeITCWithOutFinancingFee- UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
+
+        public decimal LenderFeesInAmount => (FinalLoanAmount - BaseLoanAmountWithTax).RoundValue();
+
+        public decimal FinalPriceToCustomer => (FinalLoanAmount + DownPayment).RoundValue();
+
+        public decimal FinalPricePerWatt => (FinalPriceToCustomer / SystemSize).RoundValue();
+
+        //nonQualifyingAdders 
+        public decimal TotalAddersBeforeITCWithOutFinancingFee
+        {
+            get
+            {
+                return
+                    Adders
+                    ?.Where(a => a.Type == AdderItemType.Adder && a.IsAppliedBeforeITC)
+                    ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, false)) ?? 0;
+            }
+        }
+
+        public decimal NonRebatesIncentives
+        {
+            get
+            {
+                return
+                    Incentives
+                    ?.Where(a => !a.IsRebate)
+                    ?.Sum(i => i.GetGrandTotal(SystemSize)) ?? 0;
+            }
+        }
+
+        public decimal NetCost => FinalPriceToCustomer - FederalTaxCredit - NonRebatesIncentives;
+
         #endregion
     }
-
-
 }
