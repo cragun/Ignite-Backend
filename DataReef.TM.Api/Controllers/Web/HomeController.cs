@@ -114,6 +114,7 @@ namespace DataReef.TM.Api.Controllers.Web
             return View("UserRegistration", model?.ToRegistration());
         }
 
+
         [HttpPost]
         public ActionResult RegisterUser(RegistrationViewModel model)
         {
