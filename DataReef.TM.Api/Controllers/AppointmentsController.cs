@@ -73,11 +73,11 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="date"></param>
         [HttpPost]
         [Route("sb/ouAppointment/{ouID}/{apiKey}/{date}")]
-        public async Task<IHttpActionResult> GetMembers([FromBody] OUMembersRequest request, Guid ouID, string apiKey, string date)
+        public async Task<IHttpActionResult> GetMembers([FromBody]OUMembersRequest request, Guid ouID, string apiKey, string date)
         {
             bool checkTime = CryptographyHelper.checkTime(apiKey);
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
-            var data = _appointmentService.GetMembersWithAppointment(request, ouID, DecyptApiKey, DateTime.Parse(date));
+            var data =_appointmentService.GetMembersWithAppointment(request, ouID, DecyptApiKey, DateTime.Parse(date));
             return Ok(data);
         }
 

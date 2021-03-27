@@ -17,7 +17,7 @@ namespace DataReef.TM.Contracts.Services
         AdminQuotas GetQuotasType();
 
         [OperationContract]
-        IEnumerable<GuidNamePair> GetUsersFromRoleType(Guid roleid); 
+        Task<IEnumerable<GuidNamePair>> GetUsersFromRoleType(Guid roleid);
 
         [OperationContract]
         QuotasCommitment InsertQuotas(QuotasCommitment request);

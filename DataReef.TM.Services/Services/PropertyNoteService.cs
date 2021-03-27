@@ -130,12 +130,12 @@ namespace DataReef.TM.Services.Services
 
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
 
-                #region ThirdPartyPropertyType
-                if (entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
-                {
-                    _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
-                }
-                #endregion ThirdPartyPropertyType
+                //#region ThirdPartyPropertyType
+                //if (entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
+                //{
+                //    _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
+                //}
+                //#endregion ThirdPartyPropertyType
 
                 if (property != null)
                 {

@@ -765,7 +765,7 @@ namespace DataReef.TM.Services.Services
             {
                 throw new Exception("You must select at least one shape");
             }
-            else if (entity.Shapes.Where(a => a.IsDeleted == false).Select(s => s.ShapeTypeID).Distinct().Count() > 1)
+            else if (entity.Shapes.Where(a => !a.IsDeleted).Select(s => s.ShapeTypeID).Distinct().Count() > 1)
             {
                 throw new Exception("All the shapes must be at the same level");
             }

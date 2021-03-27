@@ -99,18 +99,17 @@ namespace DataReef.TM.Contracts.Services
         //[OperationContract]
         //Task<Property> AddProperty(Guid propertyid);
 
-
         //[OperationContract]
         //Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid);
 
-        [OperationContract]
-        Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid);
+        //[OperationContract]
+        //Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid);
 
-        [OperationContract]
-        Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid);
+        //[OperationContract]
+        //Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid);
 
-        [OperationContract]
-        Task<SunnovaLeadCreditResponseData> SendLeadCreditURLSunnova(Guid propertyid);
+        //[OperationContract]
+        //Task<SunnovaLeadCreditResponseData> SendLeadCreditURLSunnova(Guid propertyid);
 
     }
 }

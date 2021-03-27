@@ -1,10 +1,6 @@
 ﻿using DataReef.TM.Models;
-using DataReef.TM.Models.Client;
 using DataReef.TM.Models.DataViews;
-using DataReef.TM.Models.DTOs.Common;
-using DataReef.TM.Models.DTOs.Inquiries;
 using DataReef.TM.Models.DTOs.SmartBoard;
-using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Enums;
 using System;
 using System.Collections.Generic;

@@ -15,6 +15,8 @@ using DataReef.TM.Models.DataViews;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using DataReef.TM.Models.DTOs.Inquiries;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace DataReef.TM.Services
 {
@@ -53,13 +55,15 @@ namespace DataReef.TM.Services
             };
         }
 
-        public IEnumerable<GuidNamePair> GetUsersFromRoleType(Guid roleid)
+        public async Task<IEnumerable<GuidNamePair>> GetUsersFromRoleType(Guid roleid)
         {
+
             using (DataContext dc = new DataContext())
             {
-                var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OURoleID == roleid).Select(y => y.PersonID);
-                var peoples = dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).ToList();
-                return peoples.Select(a => new GuidNamePair
+                var peopleIds = dc.OUAssociations.Where(x => x.IsDeleted == false && x.OURoleID == roleid).AsNoTracking().Select(y => y.PersonID);
+
+                var roles = await dc.People.Where(x => peopleIds.Contains(x.Guid) && x.IsDeleted == false).AsNoTracking().ToListAsync();
+                return roles?.Select(a => new GuidNamePair
                 {
                     Name = $"{a.FirstName} {a.LastName}",
                     Guid = a.Guid,
