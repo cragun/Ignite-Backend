@@ -158,19 +158,5 @@ namespace DataReef.TM.Api.Controllers
         {
             _appointmentService.SendSMSTest(request.Number);
         }
-
-        //[Route("addappointment/jobnimbus")]
-        //[HttpPost]
-        //public async Task<IHttpActionResult> AddAppointmentJobNimbus(Appointment req)
-        //{
-        //    try
-        //    {
-        //        return Ok(_appointmentService.AddAppointmentLeadJobNimbus(req.PropertyID));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
     }
 }

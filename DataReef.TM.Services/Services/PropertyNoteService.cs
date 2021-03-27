@@ -41,7 +41,6 @@ namespace DataReef.TM.Services.Services
         private readonly IApiLoggingService _apiLoggingService;
         private readonly Lazy<IRepository> _repository;
         private readonly Lazy<ISmsService> _smsService;
-        private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
 
 
         public PropertyNoteService(
@@ -56,8 +55,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IPushNotificationService> pushNotificationService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Lazy<ISmsService> smsService,
-            IApiLoggingService apiLoggingService,
-            Lazy<IJobNimbusAdapter> jobNimbusAdapter) : base(logger, unitOfWorkFactory)
+            IApiLoggingService apiLoggingService) : base(logger, unitOfWorkFactory)
         {
             _ouSettingService = ouSettingService;
             _ouService = ouService;
@@ -69,7 +67,6 @@ namespace DataReef.TM.Services.Services
             _repository = repository;
             _smsService = smsService;
             _apiLoggingService = apiLoggingService;
-            _jobNimbusAdapter = jobNimbusAdapter;
         }
 
 
@@ -129,13 +126,6 @@ namespace DataReef.TM.Services.Services
                 }
 
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
-
-                //#region ThirdPartyPropertyType
-                //if (entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
-                //{
-                //    _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
-                //}
-                //#endregion ThirdPartyPropertyType
 
                 if (property != null)
                 {

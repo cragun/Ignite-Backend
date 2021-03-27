@@ -230,12 +230,10 @@
     <Compile Include="InternalServices\Tokens\TokensProvider.cs" />
     <Compile Include="Services\CRUDAuditService.cs" />
     <Compile Include="Services\CsvReportingService.cs" />
-    <Compile Include="Services\FinanceAdapters\JobNimbus\JobNimbusAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\LoanPal\LoanPalAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\SolarSalesTracker\SolarSalesTrackerAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\SolarSalesTracker\SolarTrackerResources.cs" />
     <Compile Include="Services\FinanceAdapters\Sunlight\SunlightAdapter.cs" />
-    <Compile Include="Services\FinanceAdapters\Sunnova\SunnovaAdapter.cs" />
     <Compile Include="Services\FinancialService.cs" />
     <Compile Include="Services\KeyValueService.cs" />
     <Compile Include="Services\ActionItemService.cs" />
@@ -420,6 +418,9 @@
     <Analyzer Include="..\packages\AWSSDK.DynamoDBv2.3.5.0-beta\analyzers\dotnet\cs\AWSSDK.DynamoDBv2.CodeAnalysis.dll" />
     <Analyzer Include="..\packages\AWSSDK.S3.3.5.0-beta\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
     <Analyzer Include="..\packages\AWSSDK.SimpleNotificationService.3.5.0-beta\analyzers\dotnet\cs\AWSSDK.SimpleNotificationService.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\FinanceAdapters\Sunnova\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

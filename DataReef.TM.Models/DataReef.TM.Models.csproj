@@ -322,8 +322,6 @@
     <Compile Include="DTOs\Solar\Finance\Incentive.cs" />
     <Compile Include="DTOs\Solar\Finance\ComparisonFinancePlanRequestData.cs" />
     <Compile Include="DTOs\Solar\Finance\DealerIncentive.cs" />
-    <Compile Include="DTOs\Solar\Finance\JobNimbusContacts.cs" />
-    <Compile Include="DTOs\Solar\Finance\JobNimbusLead.cs" />
     <Compile Include="DTOs\Solar\Finance\LeaseParameters.cs" />
     <Compile Include="DTOs\Solar\Finance\ProductionPrice.cs" />
     <Compile Include="DTOs\Solar\Finance\Projects.cs" />

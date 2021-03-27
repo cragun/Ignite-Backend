@@ -64,8 +64,6 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IAppointmentService> _appointmentService;
         private readonly Lazy<IInquiryService> _inquiryService;
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
-        private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
-        private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
         private readonly Lazy<ISmsService> _smsService;
         private readonly IPersonService _peopleService;
 
@@ -91,8 +89,6 @@ namespace DataReef.TM.Services.Services
             Lazy<IDeviceService> deviceService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Lazy<ISunlightAdapter> sunlightAdapter,
-            Lazy<ISunnovaAdapter> sunnovaAdapter,
-            Lazy<IJobNimbusAdapter> jobNimbusAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<ITerritoryService> territoryService,
@@ -107,8 +103,6 @@ namespace DataReef.TM.Services.Services
             _deviceService = deviceService;
             _sbAdapter = sbAdapter;
             _sunlightAdapter = sunlightAdapter;
-            _sunnovaAdapter = sunnovaAdapter;
-            _jobNimbusAdapter = jobNimbusAdapter;
             _ouService = ouService;
             _ouSettingService = ouSettingService;
             _territoryService = territoryService;
@@ -259,45 +253,6 @@ namespace DataReef.TM.Services.Services
                     {
                         prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                     }
-
-
-                    //#region ThirdPartyPropertyType
-                    //if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
-                    //{
-                    //    var response = _sbAdapter.Value.SubmitLead(entity.Guid);
-
-                    //    if (response != null && response.Message.Type.Equals("error"))
-                    //    {
-                    //        prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
-                    //    }
-                    //}
-
-                    //if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
-                    //{
-                    //    AddLeadJobNimbus(entity.Guid);
-                    //    if(entity.Appointments?.Any() == true)
-                    //    {
-                    //        _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
-                    //    }
-                    //}
-
-                    //if (entity.PropertyType == ThirdPartyPropertyType.Both)
-                    //{
-                    //    var response = _sbAdapter.Value.SubmitLead(entity.Guid);
-
-                    //    if (response != null && response.Message.Type.Equals("error"))
-                    //    {
-                    //        prop.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
-                    //    }
-
-                    //    AddLeadJobNimbus(entity.Guid);
-                    //    if (entity.Appointments?.Any() == true)
-                    //    {
-                    //        _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
-                    //    }
-                    //}
-
-                    //#endregion ThirdPartyPropertyType
                 }
                 catch (Exception ex)
                 {
@@ -544,45 +499,6 @@ namespace DataReef.TM.Services.Services
                                     {
                                         ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                                     }
-
-                                    //#region ThirdPartyPropertyType
-                                    //if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
-                                    //{
-                                    //    var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
-
-                                    //    if (response != null && response.Message.Type.Equals("error"))
-                                    //    {
-                                    //        ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
-                                    //    }
-                                    //}
-
-                                    //if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
-                                    //{
-                                    //    AddLeadJobNimbus(entity.Guid);
-                                    //    if (entity.Appointments?.Any() == true)
-                                    //    {
-                                    //        _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
-                                    //    }
-
-                                    //}
-
-                                    //if (entity.PropertyType == ThirdPartyPropertyType.Both)
-                                    //{
-                                    //    var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
-
-                                    //    if (response != null && response.Message.Type.Equals("error"))
-                                    //    {
-                                    //        ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
-                                    //    }
-
-                                    //    AddLeadJobNimbus(entity.Guid);
-                                    //    if (entity.Appointments?.Any() == true)
-                                    //    {
-                                    //        _appointmentService.Value.AddAppointmentLeadJobNimbus(entity.Guid);
-                                    //    }
-                                    //}
-
-                                    //#endregion ThirdPartyPropertyType
                                 }
                                 catch (Exception ex)
                                 {
@@ -1743,24 +1659,7 @@ namespace DataReef.TM.Services.Services
                     return true;
                 }
             }
-        }
-
-        //public async Task<List<SunnovaLead>> SendLeadSunnova(Guid propertyid)
-        //{
-        //    List<SunnovaLead> lead = new List<SunnovaLead>();
-        //    using (var dataContext = new DataContext())
-        //    {
-        //        var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
-        //        if (prop != null && prop.SunnovaLeadID == null)
-        //        {
-        //            lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
-        //            prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
-        //            dataContext.SaveChanges();
-        //        }
-        //    }
-
-        //    return lead;
-        //}
+        }   
 
         public List<Territory> GetTerritoriesFromAddress(Property req)
         {
@@ -1776,58 +1675,6 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        //public async Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid)
-        //{
-        //    JobNimbusLeadResponseData lead = new JobNimbusLeadResponseData();
-        //    using (var dataContext = new DataContext())
-        //    {
-        //        var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
-        //        if (prop != null)
-        //        {
-        //            lead = _jobNimbusAdapter.Value.CreateJobNimbusLead(prop, true);
-        //            prop.JobNimbusLeadID = lead != null ? lead.jnid : "";
-        //            dataContext.SaveChanges();
-        //        }
-        //    }
-        //    return lead;
-        //}
-
-        //public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
-        //{
-        //    using (var dataContext = new DataContext())
-        //    {
-        //        var prop = dataContext.PropertyNotes.FirstOrDefault(x => x.Guid == propertyid);
-        //        if (prop != null)
-        //        {
-        //            var lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
-        //            prop.JobNimbusID = lead != null ? lead.jnid : "";
-        //            dataContext.SaveChanges();
-
-        //            return lead;
-        //        }
-        //        else
-        //        {
-        //            return new NoteJobNimbusLeadResponseData();
-        //        }
-        //    }
-        //}
-
-        public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
-        {
-            NoteJobNimbusLeadResponseData lead = new NoteJobNimbusLeadResponseData();
-            using (var dataContext = new DataContext())
-            {
-                var prop = dataContext.PropertyNotes.Where(x => x.Guid == propertyid).FirstOrDefault();
-                if (prop != null)
-                {
-                    lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
-                    prop.JobNimbusID = lead != null ? lead.jnid : "";
-                    dataContext.SaveChanges();
-                }
-            }
-            return lead;
-        }
-
         public Property AddProperty(Property entity)
         {
             Property ret = null;
@@ -1840,52 +1687,7 @@ namespace DataReef.TM.Services.Services
                 if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
             }
 
-            // AddLeadJobNimbus(ret.Guid);
             return ret;
-        }
-
-        public async Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid)
-        {
-
-            using (var dataContext = new DataContext())
-            {
-                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
-                if (prop != null && prop.SunnovaLeadID != null)
-                {
-                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCredit(prop);
-                    //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
-                    dataContext.SaveChanges();
-
-                    return lead;
-                }
-                else
-                {
-                    return new SunnovaLeadCreditResponse();
-                }
-            }
-
-
-        }
-
-        public async Task<SunnovaLeadCreditResponseData> SendLeadCreditURLSunnova(Guid propertyid)
-        {
-
-            using (var dataContext = new DataContext())
-            {
-                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
-                if (prop != null && prop.SunnovaLeadID != null)
-                {
-                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(prop);
-                    //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
-                    dataContext.SaveChanges();
-
-                    return lead;
-                }
-                else
-                {
-                    return new SunnovaLeadCreditResponseData();
-                }
-            }
         }
     }
 }

@@ -45,8 +45,5 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         void SendSMSTest(string mobilenumber);
 
-        //[OperationContract]
-        //AppointmentJobNimbusLeadResponseData AddAppointmentLeadJobNimbus(Guid propertyID);
-
     }
 }
