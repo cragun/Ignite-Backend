@@ -1142,6 +1142,10 @@
     <Compile Include="Migrations\202103261329371_migration2.Designer.cs">
       <DependentUpon>202103261329371_migration2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103271308453_Remove old Fields.cs" />
+    <Compile Include="Migrations\202103271308453_Remove old Fields.Designer.cs">
+      <DependentUpon>202103271308453_Remove old Fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -1954,6 +1958,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103261329371_migration2.resx">
       <DependentUpon>202103261329371_migration2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103271308453_Remove old Fields.resx">
+      <DependentUpon>202103271308453_Remove old Fields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -105,12 +105,12 @@ namespace DataReef.TM.Models
         [StringLength(200)]
         public string SunnovaLeadID { get; set; }
 
-        [DataMember]
-        [StringLength(200)]
-        public string JobNimbusLeadID { get; set; }
+        //[DataMember]
+        //[StringLength(200)]
+        //public string JobNimbusLeadID { get; set; }
 
-        [DataMember]
-        public ThirdPartyPropertyType PropertyType { get; set; }
+        //[DataMember]
+        //public ThirdPartyPropertyType PropertyType { get; set; }
 
         //notes server reference id 
         [NotMapped]
