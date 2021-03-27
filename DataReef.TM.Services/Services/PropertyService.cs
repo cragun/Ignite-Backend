@@ -433,6 +433,7 @@ namespace DataReef.TM.Services.Services
 
                             if (newAppointments != null && newAppointments.Count > 0)
                             {
+
                                 var fstAppoint = newAppointments.FirstOrDefault(); 
 
                                 if (fstAppoint != null)
