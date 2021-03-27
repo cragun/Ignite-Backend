@@ -408,7 +408,7 @@ namespace DataReef.TM.Services.Services
                                 //person clocktime 
                                 _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
                             }
-                            if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
+                            if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
                             ret.SBLeadError = "";
                             UpdateNavigationProperties(entity, dataContext: dataContext);
 
