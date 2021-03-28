@@ -438,14 +438,14 @@ namespace DataReef.TM.Services.Services
 
                                 if (fstAppoint != null)
                                 {
-                                    if (fstAppoint.SendSmsToCust)
+                                    if (Convert.ToBoolean(fstAppoint.SendSmsToCust))
                                     {
                                         DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
 
                                         _smsService.Value.SendSms($"You have a solar appointment with {creator?.Name} on  {stDate.Date.ToShortDateString()} at {stDate.ToShortTimeString()} , https://calendar.google.com/calendar/u/0/r/{ stDate.Year}/{ stDate.Month}/{ stDate.Day}", entity.GetMainPhoneNumber());
                                     }
 
-                                    if (fstAppoint.SendSmsToEC)
+                                    if (Convert.ToBoolean(fstAppoint.SendSmsToEC))
                                     {
                                         DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
 
