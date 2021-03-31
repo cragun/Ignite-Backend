@@ -88,9 +88,9 @@ namespace DataReef.TM.Models
         #endregion
 
         [NotMapped]
-        public Nullable<bool> SendSmsToCust { get; set; }
+        public bool? SendSmsToCust { get; set; }
 
         [NotMapped]
-        public Nullable<bool> SendSmsToEC { get; set; }
+        public bool? SendSmsToEC { get; set; }
     }
 }

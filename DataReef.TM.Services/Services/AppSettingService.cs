@@ -39,6 +39,7 @@ namespace DataReef.TM.Services.Services
             {
                 var entity = dataContext
                             .AppSettings
+                            .AsNoTracking()
                             .FirstOrDefault(a => a.Key == key);
 
                 return entity == null ? null : entity.Value;

@@ -47,7 +47,7 @@ namespace DataReef.TM.Services
                     setQuery = setQuery.OrderBy(i => i.Name).Skip((pageNumber - 1) * itemsPerPage).Take(itemsPerPage);
                 }
 
-                IList<T> returnData = setQuery.ToList();
+                IList<T> returnData = setQuery.AsNoTracking().ToList();
 
                 if (!deletedItems)
                 {
@@ -66,7 +66,7 @@ namespace DataReef.TM.Services
 
                 AssignIncludes(include, ref setQuery);
 
-                var returnData = setQuery.FirstOrDefault(qq => qq.Guid == uniqueId);
+                var returnData = setQuery.AsNoTracking().FirstOrDefault(qq => qq.Guid == uniqueId);
 
                 if (!deletedItems)
                 {
@@ -84,7 +84,7 @@ namespace DataReef.TM.Services
                 IQueryable<T> setQuery = repository.Get<T>();
                 AssignIncludes(include, ref setQuery);
 
-                IList<T> returnData = setQuery.Where(qq => uniqueIds.Contains(qq.Guid)).ToList();
+                IList<T> returnData = setQuery.Where(qq => uniqueIds.Contains(qq.Guid)).AsNoTracking().ToList();
 
                 if (!deletedItems)
                 {

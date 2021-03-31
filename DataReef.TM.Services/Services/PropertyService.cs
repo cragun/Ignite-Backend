@@ -441,7 +441,7 @@ namespace DataReef.TM.Services.Services
                                 //person clocktime 
                                 _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
                             }
-                            if (!ret.SaveResult.Success) throw new Exception(ret.SaveResult.Exception + " " + ret.SaveResult.ExceptionMessage);
+                            if (!ret.SaveResult.Success) throw new Exception($"{ret.SaveResult.Exception} {ret.SaveResult.ExceptionMessage}");
                             ret.SBLeadError = "";
                             UpdateNavigationProperties(entity, dataContext: dataContext);
 
@@ -464,26 +464,26 @@ namespace DataReef.TM.Services.Services
 
                             var creator = dataContext.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
 
-                            if (newAppointments?.Any() == true)
+                            if (newAppointments != null && newAppointments.Count > 0)
                             {
-                                var fstAppoint = newAppointments.FirstOrDefault();
+                                var fstAppoint = newAppointments.FirstOrDefault(); 
 
-                                if (fstAppoint?.SendSmsToCust == true)
+                                if (fstAppoint != null)
                                 {
-                                    DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                                    if (Convert.ToBoolean(fstAppoint.SendSmsToCust))
+                                    {
+                                        DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
 
-                                    _smsService.Value.SendSms("You have a solar appointment with " + creator?.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
-                                     stDate.Year + "/" + stDate.Month + "/" + stDate.Day, entity.GetMainPhoneNumber());
+                                        _smsService.Value.SendSms($"You have a solar appointment with {creator?.Name} on  {stDate.Date.ToShortDateString()} at {stDate.ToShortTimeString()} , https://calendar.google.com/calendar/u/0/r/{ stDate.Year}/{ stDate.Month}/{ stDate.Day}", entity.GetMainPhoneNumber());
+                                    }
+
+                                    if (Convert.ToBoolean(fstAppoint.SendSmsToEC))
+                                    {
+                                        DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+
+                                        _smsService.Value.SendSms($"You have a solar appointment with {entity.Name} on  {stDate.Date.ToShortDateString()} at {stDate.ToShortTimeString()} , https://calendar.google.com/calendar/u/0/r/{ stDate.Year}/{ stDate.Month}/{ stDate.Day}", creator?.PhoneNumbers.FirstOrDefault()?.Number);
+                                    }
                                 }
-
-                                if (fstAppoint?.SendSmsToEC == true)
-                                {
-                                    DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-
-                                    _smsService.Value.SendSms("You have a solar appointment with " + entity.Name + " on " + stDate.Date.ToShortDateString() + " at " + stDate.ToShortTimeString() + " , https://calendar.google.com/calendar/u/0/r/" +
-                                     stDate.Year + "/" + stDate.Month + "/" + stDate.Day, creator?.PhoneNumbers.FirstOrDefault()?.Number);
-                                }
-
                                 _appointmentService.Value.VerifyUserAssignmentAndInvite(newAppointments);
                             }
 
@@ -495,7 +495,7 @@ namespace DataReef.TM.Services.Services
 
 
                             var pushedToSB = false;
-                            if (newInquiries?.Any() == true)
+                            if (newInquiries != null && newInquiries.Count > 0)
                             {
                                 var ouid = oldProp.Territory?.OUID;
                                 newInquiries.ForEach(inquiry =>
@@ -1501,6 +1501,7 @@ namespace DataReef.TM.Services.Services
             {
                 var property = uow
                                 .Get<Property>()
+                                .AsNoTracking()
                                 .FirstOrDefault(p => p.GenabilityProviderAccountID == id);
                 if (property == null)
                 {
@@ -1513,6 +1514,7 @@ namespace DataReef.TM.Services.Services
                                  && p.Tariff != null
                                  && p.Tariff.TariffName != null)
                         .Select(p => p.Tariff)
+                        .AsNoTracking()
                         .FirstOrDefault();
             }
         }
@@ -1564,7 +1566,6 @@ namespace DataReef.TM.Services.Services
                 return TerritoriesList;
             }
         }
-
 
         public async Task<IEnumerable<TerritoryApikey>> TerritoryNApikey(double Lat, double Long)
         {

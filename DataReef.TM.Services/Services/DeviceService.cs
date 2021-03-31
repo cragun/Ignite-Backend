@@ -179,6 +179,7 @@ namespace DataReef.TM.Services
 
                 return context
                         .UserDevices
+                        .AsNoTracking()
                         .Any(ud => ud.UserID == SmartPrincipal.UserId
                                 && ud.DeviceID == SmartPrincipal.DeviceId
                                 && !ud.IsDisabled);

@@ -1531,6 +1531,7 @@ namespace DataReef.TM.Services.Services
             {
                 var proposalData = dataContext
                                     .ProposalData
+                                    .AsNoTracking()
                                     .FirstOrDefault(pd => pd.Guid == proposalDataId);
 
                 if (proposalData == null)
@@ -1572,6 +1573,7 @@ namespace DataReef.TM.Services.Services
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.SolarSystem.Proposal.Tariff))
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Details))
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Provider))
+                                               .AsNoTracking()
                                                .FirstOrDefault(p => p.Guid == proposalData.ProposalID);
 
                     financePlan = proposal.SolarSystem.FinancePlans.FirstOrDefault();
@@ -1585,11 +1587,13 @@ namespace DataReef.TM.Services.Services
                 var contractorSetting = dataContext
                                 .OUSettings
                                 .Include(ous => ous.OU)
+                                .AsNoTracking()
                                 .FirstOrDefault(ous => ous.Value == proposalData.ContractorID);
 
                 proposal.SalesRep = dataContext
                                         .People
                                         .Include(p => p.PhoneNumbers)
+                                        .AsNoTracking()
                                         .FirstOrDefault(p => p.Guid == proposalData.SalesRepID);
 
 
@@ -1642,7 +1646,7 @@ namespace DataReef.TM.Services.Services
                     proposalDV.BasicInfo.CompanyLogoUrl = logoUrl;
                 }
 
-                var proposalSettings = settings?.Where(s => s.Name.StartsWith("Proposal.", StringComparison.OrdinalIgnoreCase));
+                var proposalSettings = settings?.Where(s => s.Name.StartsWith("Proposal.", StringComparison.OrdinalIgnoreCase))?.ToList();
 
                 if (proposalSettings != null)
                 {
@@ -2544,27 +2548,27 @@ namespace DataReef.TM.Services.Services
             return "send";
         }
 
-        public string SendProposalEmailToEC(Guid proposalDataId)
+        public async Task<string> SendProposalEmailToEC(Guid proposalDataId)
         {
             using (var dataContext = new DataContext())
             {
-                var data = dataContext
+                var data = await dataContext
                             .ProposalData
-                            .FirstOrDefault(pd => pd.Guid == proposalDataId);
+                            .AsNoTracking().FirstOrDefaultAsync(pd => pd.Guid == proposalDataId);
 
                 if (data == null)
                 {
                     throw new ApplicationException("Could not find Proposal Data!");
                 }
 
-                var financePlan = dataContext
+                var financePlan = await dataContext
                .FinancePlans
-               .FirstOrDefault(fp => fp.Guid == data.FinancePlanID);
+               .AsNoTracking().FirstOrDefaultAsync(fp => fp.Guid == data.FinancePlanID);
 
-                var proposal = dataContext
+                var proposal = await dataContext
                               .Proposal
                               .Include(fp => fp.Property.Territory)
-                              .FirstOrDefault(p => p.Guid == financePlan.SolarSystemID);
+                              .AsNoTracking().FirstOrDefaultAsync(p => p.Guid == financePlan.SolarSystemID);
 
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
 
@@ -2594,11 +2598,9 @@ namespace DataReef.TM.Services.Services
 
                 var propertyAddress = proposal.GetPropertyAddress();
 
-                var salesRepEmailAddress = dataContext
+                var salesRepEmailAddress = await dataContext
                                     .People
-                                    .Where(p => p.Guid == data.SalesRepID)
-                                    .Select(p => p.EmailAddressString)
-                                    .SingleOrDefault();
+                                    .AsNoTracking().FirstOrDefaultAsync(p => p.Guid == data.SalesRepID);
 
                 var disableSendingToCustomer = ouSettings?
                                     .FirstOrDefault(os => os.Name == OUSetting.Proposal_Features_SendEmailToCustomer_Disabled)?
@@ -2608,11 +2610,9 @@ namespace DataReef.TM.Services.Services
 
                 string ccEmails = ouSettings?.FirstOrDefault(os => os.Name == OUSetting.Proposal_Features_EmailsToCC)?.Value;
 
-                //var planName = financePlan.Name;
-
                 var documentsLinks = string.Join("<br/>", documentUrls.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for {homeOwnerName}<a/>"));
 
-                Task.Factory.StartNew(() =>
+                await Task.Factory.StartNew(() =>
                 {
                     var mediaItems = GetProposalMediaItemsAsShareableLinks(proposal.Guid);
 
@@ -2627,9 +2627,8 @@ namespace DataReef.TM.Services.Services
                     var mediaItemsBody = mediaItems.Count == 0 ? "" : $"<br/>Attached documents and images: <br/>{mediaItemLinks}";
 
                     var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
-                    var to = salesRepEmailAddress;
 
-                    Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
+                    Mail.Library.SendEmail(salesRepEmailAddress?.EmailAddressString, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
 
                     Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                 });
@@ -2637,5 +2636,6 @@ namespace DataReef.TM.Services.Services
 
             return "send";
         }
+
     }
 }

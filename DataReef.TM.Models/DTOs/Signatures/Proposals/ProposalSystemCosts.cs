@@ -102,9 +102,9 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
 
             TotalSystem = baseSystemGroup.Total ?? 0;
 
-            TotalCostToCustomer = (request?.TotalCostToCustomer ?? 0);
-            FederalTaxCredit = (request?.FederalTaxCredit ?? 0); 
-            NetCost = (request?.NetCost ?? 0); 
+            TotalCostToCustomer = Math.Round(request?.TotalCostToCustomer ?? 0);
+            FederalTaxCredit = Math.Round(request?.FederalTaxCredit ?? 0); 
+            NetCost = (request?.NetCost ?? 0);
         }
     }
 

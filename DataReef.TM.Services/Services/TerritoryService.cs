@@ -194,7 +194,7 @@ namespace DataReef.TM.Services
             {
                 if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && territory.OU != null)
                 {
-                    OUService.PopulateOUSummary(territory.OU);
+                    Task.Run(() => OUService.PopulateOUSummary(territory.OU)).GetAwaiter().GetResult();
                 }
             }
 
@@ -206,12 +206,12 @@ namespace DataReef.TM.Services
 
             using (var context = new DataContext())
             {
-                var ousQuery = context.OUs.FirstOrDefault(t => t.Guid == ouid);
-                var ouTerritoriesQuery = context.Territories.Where(t => t.OUID == ouid);
+                var ousQuery = context.OUs.AsNoTracking().FirstOrDefault(t => t.Guid == ouid);
+                var ouTerritoriesQuery = context.Territories.Where(t => t.OUID == ouid).AsNoTracking();
 
                 if (personID.HasValue)
                 {
-                    if (!context.OUAssociations.Any(ou => ou.PersonID == personID && ou.OUID == ouid && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
+                    if (!context.OUAssociations.AsNoTracking().Any(ou => ou.PersonID == personID && ou.OUID == ouid && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
                     {
                         ouTerritoriesQuery = ouTerritoriesQuery.Where(t => t.Assignments.Any(ass => ass.PersonID == personID.Value));
                     }
@@ -223,7 +223,7 @@ namespace DataReef.TM.Services
 
                 if (!personID.HasValue)
                 {
-                    var isSuperAdmin = context.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId && oa.OURole.RoleType == OURoleType.SuperAdmin).FirstOrDefault();
+                    var isSuperAdmin = context.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId && oa.OURole.RoleType == OURoleType.SuperAdmin).AsNoTracking().FirstOrDefault();
 
                     if (isSuperAdmin != null)
                     {
@@ -231,7 +231,7 @@ namespace DataReef.TM.Services
                     }
                 }
 
-                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).ToList();
+                var favouriteTerritories = context.FavouriteTerritories.Where(f => f.PersonID == personID).AsNoTracking().ToList();
                 foreach (var territory in ouTerritories.ToList())
                 {
                     var favourite = favouriteTerritories?.FirstOrDefault(s => s.TerritoryID == territory.Guid);
@@ -251,7 +251,7 @@ namespace DataReef.TM.Services
                 if (territoryShapeVersions != null)
                 {
                     var territoryIds = territoryShapeVersions.Select(s => s.TerritoryID).ToList();
-                    var territoriesShapeQuery = context.Territories.Where(t => territoryIds.Contains(t.Guid));
+                    var territoriesShapeQuery = context.Territories.Where(t => territoryIds.Contains(t.Guid)).AsNoTracking();
                     AssignIncludes(include, ref territoriesShapeQuery);
                     territoriesShapeQuery = ApplyDeletedFilter(deletedItems, territoriesShapeQuery);
                     var shapeTerritories = territoriesShapeQuery.ToList();
@@ -271,7 +271,7 @@ namespace DataReef.TM.Services
 
                 foreach (var territory in ouTerritories.Where(territory => include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && territory.OU != null))
                 {
-                    OUService.PopulateOUSummary(territory.OU);
+                    Task.Run(() => OUService.PopulateOUSummary(territory.OU)).GetAwaiter().GetResult();
                 }
 
                 return ouTerritories;
@@ -306,7 +306,7 @@ namespace DataReef.TM.Services
             {
                 throw new Exception("You must select at least one shape");
             }
-            else if (entity.Shapes.Select(s => s.ShapeTypeID).Distinct().Count() > 1)
+            else if (entity.Shapes.Where(a => a.IsDeleted).Select(s => s.ShapeTypeID).Distinct().Count() > 1)
             {
                 throw new Exception("All the shapes must be at the same level");
             }

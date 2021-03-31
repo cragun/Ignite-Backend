@@ -34,17 +34,17 @@ namespace DataReef.TM.Services.Services
                 mobileNumber = mobileNumber.Replace("()", "").Trim();
                 if (!mobileNumber.Contains("+1"))
                 {
-                    mobileNumber = "+1" + mobileNumber;
+                    mobileNumber = $"+1 {mobileNumber}";
                 }
 
                 pubRequest.PhoneNumber = mobileNumber;
                 PublishResponse pubResponse = snsClient.Publish(pubRequest);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message  + "  " + ex.StackTrace);
+                throw new Exception($"{ex.Message} {ex.StackTrace}");
             }
-            
+
         }
     }
 }

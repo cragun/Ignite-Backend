@@ -460,7 +460,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Manualpresolarcost(Guid proposalID, ManualProposal req)
         {
-            var prop = _manualProposalService.Get(proposalID);            
+            var prop = _manualProposalService.Get(proposalID);
 
             var proposal = new ManualProposal();
             if (prop == null)
@@ -488,9 +488,9 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetManualpresolarcostData(Guid proposalID)
         {
-            var proposal = _manualProposalService.Get(proposalID);
+            var proposal =  _manualProposalService.Get(proposalID);
 
-            if(proposal == null)
+            if (proposal == null)
             {
                 throw new ArgumentNullException("Please send valid ProposalId");
             }
