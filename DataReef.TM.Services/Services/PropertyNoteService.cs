@@ -703,6 +703,7 @@ namespace DataReef.TM.Services.Services
                                     _smsService.Value.SendSms("You received new notes", number);
                                 }
                                 // _smsService.Value.SendSms("You received new notes", item.PhoneNumber);
+
                             }
                         }
 
