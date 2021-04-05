@@ -59,6 +59,7 @@ namespace DataReef.TM.Services.Services
         private readonly Func<IGeographyBridge> _geographyBridgeFactory;
         private readonly Lazy<IDeviceService> _deviceService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly Lazy<IPropertyNotesAdapter> _propertyNotesAdapter;
         private readonly Lazy<IOUService> _ouService;
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<ITerritoryService> _territoryService;
@@ -91,6 +92,7 @@ namespace DataReef.TM.Services.Services
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IDeviceService> deviceService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            Lazy<IPropertyNotesAdapter> propertyNotesAdapter,
             Lazy<ISunlightAdapter> sunlightAdapter,
             Lazy<ISunnovaAdapter> sunnovaAdapter,
             Lazy<IJobNimbusAdapter> jobNimbusAdapter,
@@ -107,6 +109,7 @@ namespace DataReef.TM.Services.Services
             _geographyBridgeFactory = geographyBridgeFactory;
             _deviceService = deviceService;
             _sbAdapter = sbAdapter;
+            _propertyNotesAdapter = propertyNotesAdapter;
             _sunlightAdapter = sunlightAdapter;
             _sunnovaAdapter = sunnovaAdapter;
             _jobNimbusAdapter = jobNimbusAdapter;
@@ -256,7 +259,7 @@ namespace DataReef.TM.Services.Services
                     #region ThirdPartyPropertyType
                     if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
                     {
-                        var response = _sbAdapter.Value.SubmitLead(entity.Guid);
+                        var response = _sbAdapter.Value.SubmitLead(entity.Guid); 
 
                         if (response != null && response.Message.Type.Equals("error"))
                         {
@@ -473,7 +476,7 @@ namespace DataReef.TM.Services.Services
                                     if (Convert.ToBoolean(fstAppoint.SendSmsToCust))
                                     {
                                         DateTime stDate = TimeZoneInfo.ConvertTime(fstAppoint.StartDate, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-
+ 
                                         _smsService.Value.SendSms($"You have a solar appointment with {creator?.Name} on  {stDate.Date.ToShortDateString()} at {stDate.ToShortTimeString()} , https://calendar.google.com/calendar/u/0/r/{ stDate.Year}/{ stDate.Month}/{ stDate.Day}", entity.GetMainPhoneNumber());
                                     }
 
@@ -530,13 +533,13 @@ namespace DataReef.TM.Services.Services
                                 {
                                     #region ThirdPartyPropertyType
                                     if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
-                                    {
+                                    { 
                                         var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
 
                                         if (response != null && response.Message.Type.Equals("error"))
                                         {
                                             ret.SBLeadError = response.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
-                                        }
+                                        } 
                                     }
 
                                     if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
@@ -1071,7 +1074,8 @@ namespace DataReef.TM.Services.Services
                     Longitude = request.Longitude,
                     Name = $"{request.FirstName} {request.MiddleNameInitial} {request.LastName}",
                     TerritoryID = request.TerritoryID,
-                    SmartBoardId = request.LeadID
+                    SmartBoardId = request.LeadID,
+                    NoteReferenceId = request.NoteReferenceId
                 };
 
                 var propertyData = Insert(property);

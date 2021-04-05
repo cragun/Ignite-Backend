@@ -106,6 +106,7 @@
     <Compile Include="DTOs\Persons\IOSVersionDTO.cs" />
     <Compile Include="DTOs\QuotasCommitments\AdminQuotas.cs" />
     <Compile Include="DTOs\Solar\Finance\JobNimbusContacts.cs" />
+    <Compile Include="DTOs\Solar\Finance\PropertyNotesLead.cs" />
     <Compile Include="DTOs\Solar\Finance\JobNimbusLead.cs" />
     <Compile Include="DTOs\Solar\Finance\SunnovaLeadSystem.cs" />
     <Compile Include="DTOs\Solar\Finance\SunnovaContacts.cs" />
