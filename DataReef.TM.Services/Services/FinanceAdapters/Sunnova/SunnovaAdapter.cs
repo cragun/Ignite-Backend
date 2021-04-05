@@ -15,6 +15,7 @@ using System.Web.Script.Serialization;
 using DataReef.TM.Services;
 using DataReef.TM.Contracts.Services;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 {
@@ -64,7 +65,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
         }
 
-        public string GetSunnovaToken()
+        public async Task<string> GetSunnovaToken()
         {
             try
             {
@@ -72,7 +73,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 var request = new RestRequest($"/authentication", Method.GET);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
-                var response = client.Execute(request);  
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -91,7 +92,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
         }
 
 
-        public List<SunnovaLead> CreateSunnovaLead(Property property)
+        public async Task<List<SunnovaLead>> CreateSunnovaLead(Property property)
         {
             using (var dc = new DataContext())
             {
@@ -126,12 +127,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.Preferred_Language = "English";
                // req.Suffix = "";
                 
-                string token = GetSunnovaToken();
+                string token = await GetSunnovaToken();
                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
-                 
-                var response = client.Execute(request);
+
+                var response = await client.ExecuteTaskAsync(request);
                 //var json = new JavaScriptSerializer().Serialize(req);
                 //var resp = new JavaScriptSerializer().Serialize(response);                
 
@@ -161,16 +162,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
         }
 
 
-        public List<SunnovaContacts> GetSunnovaContacts(string SunnovaLeadID)
+        public async Task<List<SunnovaContacts>> GetSunnovaContacts(string SunnovaLeadID)
         {
             using (var dc = new DataContext())
             {
                 //https://apitest.sunnova.com/services/v1.0/leads/{LeadID}/contacts
-                string token = GetSunnovaToken();
+                string token = await GetSunnovaToken();
                 var request = new RestRequest($"/services/v1.0/leads/" + SunnovaLeadID + "/contacts", Method.GET);
                 request.AddHeader("Authorization", "Bearer " + token);
 
-                var response = client.Execute(request);            
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -205,7 +206,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             }
         }
 
-        public SunnovaLeadCreditResponse PassSunnovaLeadCredit(Property property)
+        public async Task<SunnovaLeadCreditResponse> PassSunnovaLeadCredit(Property property)
         {
 
             using (var dc = new DataContext())
@@ -220,12 +221,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 var SunnovaContactId = SunnovaContact.Contacts;
                 SunnovaCredit req = new SunnovaCredit();
 
-                string token = GetSunnovaToken();
+                string token = await GetSunnovaToken();
                 var request = new RestRequest($"/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=email", Method.PATCH);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {
@@ -248,7 +249,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             }
         }
 
-        public SunnovaLeadCreditResponseData PassSunnovaLeadCreditURL(Property property)
+        public async Task<SunnovaLeadCreditResponseData> PassSunnovaLeadCreditURL(Property property)
         {
 
             using (var dc = new DataContext())
@@ -264,12 +265,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 SunnovaLeadCreditRequestData req = new SunnovaLeadCreditRequestData();
                 req.Return_URL = ReturnUrl;
 
-                string token = GetSunnovaToken();
+                string token = await GetSunnovaToken();
                 var request = new RestRequest($"/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=inperson", Method.PATCH);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.Created)
                 {

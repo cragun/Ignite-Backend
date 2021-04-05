@@ -20,6 +20,7 @@ using DataReef.TM.Services.Services.ProposalAddons.TriSMART;
 using DataReef.TM.Services.Services.ProposalAddons.TriSMART.Models;
 using DataReef.Engines.FinancialEngine.Loan;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services
 {
@@ -187,7 +188,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
+        public async Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())
             {
@@ -227,7 +228,7 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("https://sunnovaenergy.force.com/partnerconnect/login"))
                             {
-                                var sunnovaurl = _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(property);
+                                var sunnovaurl = await _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(property);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("https://sunnovaenergy.force.com/partnerconnect/login", sunnovaurl.Signing_URL.ToString() ?? string.Empty);
                             }
                         }

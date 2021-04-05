@@ -552,7 +552,7 @@ namespace DataReef.TM.Services
             return ret;
         }
 
-        public AppointmentJobNimbusLeadResponseData AddAppointmentLeadJobNimbus(Guid propertyid)
+        public async Task<AppointmentJobNimbusLeadResponseData> AddAppointmentLeadJobNimbus(Guid propertyid)
         {
             AppointmentJobNimbusLeadResponseData lead = new AppointmentJobNimbusLeadResponseData();
             using (var dataContext = new DataContext())
@@ -560,7 +560,7 @@ namespace DataReef.TM.Services
                 var appointmentdata = dataContext.Appointments.Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (appointmentdata != null)
                 {
-                    lead = _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata , true);
+                    lead = await _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata , true);
                     appointmentdata.JobNimbusID = lead != null ? lead.jnid : "";
                     dataContext.SaveChanges();
                 }

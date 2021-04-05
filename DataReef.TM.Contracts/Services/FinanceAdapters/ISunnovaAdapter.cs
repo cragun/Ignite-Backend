@@ -12,15 +12,15 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     public interface ISunnovaAdapter
     {
         [OperationContract]
-        List<SunnovaLead> CreateSunnovaLead(Property property);
+        Task<List<SunnovaLead>> CreateSunnovaLead(Property property);
 
         [OperationContract]
-        SunnovaLeadCreditResponse PassSunnovaLeadCredit(Property property);
+        Task<SunnovaLeadCreditResponse> PassSunnovaLeadCredit(Property property);
 
         [OperationContract]
-        SunnovaLeadCreditResponseData PassSunnovaLeadCreditURL(Property property);
+        Task<SunnovaLeadCreditResponseData> PassSunnovaLeadCreditURL(Property property);
 
         [OperationContract]
-        string GetSunnovaToken();
+        Task<string> GetSunnovaToken();
     }
 }

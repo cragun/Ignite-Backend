@@ -12,13 +12,13 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     public interface IJobNimbusAdapter
     {
         [OperationContract]
-        JobNimbusLeadResponseData CreateJobNimbusLead(Property property, bool IsCreate);
+        Task<JobNimbusLeadResponseData> CreateJobNimbusLead(Property property, bool IsCreate);
 
         [OperationContract]
-        AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Appointment appointment, bool IsCreate);
+        Task<AppointmentJobNimbusLeadResponseData> CreateAppointmentJobNimbusLead(Appointment appointment, bool IsCreate);
 
         [OperationContract]
-        NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note);
+        Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note);
 
     }
 }

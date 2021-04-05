@@ -1796,7 +1796,7 @@ namespace DataReef.TM.Services.Services
                 var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null && prop.SunnovaLeadID == null)
                 {
-                    lead = _sunnovaAdapter.Value.CreateSunnovaLead(prop);
+                    lead = await _sunnovaAdapter.Value.CreateSunnovaLead(prop);
                     prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
                     dataContext.SaveChanges();
                 }
@@ -1827,7 +1827,7 @@ namespace DataReef.TM.Services.Services
                 var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null)
                 {
-                    lead = _jobNimbusAdapter.Value.CreateJobNimbusLead(prop, true);
+                    lead = await _jobNimbusAdapter.Value.CreateJobNimbusLead(prop, true);
                     prop.JobNimbusLeadID = lead != null ? lead.jnid : "";
                     dataContext.SaveChanges();
                 }
@@ -1863,7 +1863,7 @@ namespace DataReef.TM.Services.Services
                 var prop = dataContext.PropertyNotes.Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null)
                 {
-                    lead = _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+                    lead = await _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
                     prop.JobNimbusID = lead != null ? lead.jnid : "";
                     dataContext.SaveChanges();
                 }
@@ -1895,7 +1895,7 @@ namespace DataReef.TM.Services.Services
                 var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null && prop.SunnovaLeadID != null)
                 {
-                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCredit(prop);
+                    var lead = await _sunnovaAdapter.Value.PassSunnovaLeadCredit(prop);
                     //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
                     dataContext.SaveChanges();
 
@@ -1918,7 +1918,7 @@ namespace DataReef.TM.Services.Services
                 var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
                 if (prop != null && prop.SunnovaLeadID != null)
                 {
-                    var lead = _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(prop);
+                    var lead = await _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(prop);
                     //prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().Contacts.id : "";
                     dataContext.SaveChanges();
 

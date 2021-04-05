@@ -43,7 +43,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         }
 
 
-        public JobNimbusLeadResponseData CreateJobNimbusLead(Property property, bool IsCreate)
+        public async Task<JobNimbusLeadResponseData> CreateJobNimbusLead(Property property, bool IsCreate)
         {
             using (var dc = new DataContext())
             {
@@ -78,8 +78,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                var response = client.Execute(request);
-                
+                // var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
+
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
@@ -98,7 +99,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-        public AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Appointment appointment, bool IsCreate)
+        public async Task<AppointmentJobNimbusLeadResponseData> CreateAppointmentJobNimbusLead(Appointment appointment, bool IsCreate)
         {
             using (var dc = new DataContext())
             {
@@ -123,7 +124,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -144,7 +145,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-        public NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note)
+        public async Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note)
         {
             using (var dc = new DataContext())
             {
@@ -162,7 +163,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -183,14 +184,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         }
 
 
-        public List<JobNimbusContacts> GetJobNimbusContacts(string JobNimbusLeadID)
+        public async Task<List<JobNimbusContacts>> GetJobNimbusContacts(string JobNimbusLeadID)
         {
             using (var dc = new DataContext())
             {
                 var request = new RestRequest($"/api1/contacts", Method.GET);
                 request.AddHeader("Authorization", $"Bearer {AuthTokenApikey}");
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
