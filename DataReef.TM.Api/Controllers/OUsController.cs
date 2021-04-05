@@ -155,6 +155,7 @@ namespace DataReef.TM.Api.Controllers
             return Ok(await ouService.GetAllSubOUIdsAndNamesOfSpecifiedOus(ouIDs));
         }
 
+
         [HttpGet]
         [ResponseType(typeof(List<OUWithAncestors>))]
         [Route("{ouID:guid}/subous/setting")]
