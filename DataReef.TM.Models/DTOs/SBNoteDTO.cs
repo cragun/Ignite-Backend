@@ -9,8 +9,7 @@ namespace DataReef.TM.Models.DTOs
 
     public class SBNoteData
     {
-
-
+         
         public string apiKey { get; set; }
 
         public long? LeadID { get; set; }
@@ -105,6 +104,8 @@ namespace DataReef.TM.Models.DTOs
         public bool IsSendSMS { get; set; }
         public int SmartBoardId { get; set; }
         public string PhoneNumber { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     } 
 
     public class Territories

@@ -53,5 +53,9 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
 
         [DataMember]
         public long LeadID { get; set; }
+
+        [DataMember]
+        public string NoteReferenceId { get; set; }
+        
     }
 }

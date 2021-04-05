@@ -78,6 +78,7 @@
     <Compile Include="Faults\InvalidSyncItemFault.cs" />
     <Compile Include="Faults\PreconditionFailedFault.cs" />
     <Compile Include="Services\FinanceAdapters\IJobNimbusAdapter.cs" />
+    <Compile Include="Services\FinanceAdapters\IPropertyNotesAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\ILoanPalAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\ISolarSalesTrackerAdapter.cs" />
     <Compile Include="Services\FinanceAdapters\ISunnovaAdapter.cs" />
