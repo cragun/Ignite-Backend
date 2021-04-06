@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataReef.TM.Models.DTOs.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,7 +71,8 @@ namespace DataReef.TM.Models.DTOs
         public bool IsSendSMS { get; set; }
         public bool IsSendEmail { get; set; }
         public List<SBTaggedUser> TaggedUsers { get; set; }
-         
+        public IEnumerable<PropertyNoteTagDTO> ContentTags { get; set; }
+
         public SBNoteDTO()
         {
 
