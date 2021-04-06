@@ -450,7 +450,8 @@ namespace DataReef.TM.Services.Services
                     Attachments = x.Attachments,
                     ParentID = x.ParentID,
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
-                    LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid && !a.IsDeleted).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
+                    LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid && !a.IsDeleted).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified,
+                    ContentTags = x.ContentTags
                 });
             }
         }
