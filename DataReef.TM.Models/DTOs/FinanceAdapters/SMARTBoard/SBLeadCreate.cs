@@ -56,6 +56,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             LeadSourceId = property?.LeadSourceId;
             // Disposition = property?.LatestDisposition;
             DispositionTypeId = property?.DispositionTypeId;
+            NoteReferenceId = property?.NoteReferenceId;
         }
 
         [JsonProperty("associated_id")]
@@ -125,6 +126,8 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
         [JsonProperty("disposition_type_id")]
         public int? DispositionTypeId { get; set; }
+
+        public string NoteReferenceId { get; set; }
         public string HoaName { get; set; }
 
         public string HoaPhoneEmail { get; set; }
