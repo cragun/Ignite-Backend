@@ -215,6 +215,5 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         {
             throw new NotImplementedException();
         }
-
     }
 }
