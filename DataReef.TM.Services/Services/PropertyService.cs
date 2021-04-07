@@ -440,7 +440,6 @@ namespace DataReef.TM.Services.Services
 
                             dataContext.SaveChanges();
 
-
                             ret = base.Update(entity, dataContext);
 
                             if (oldProp.LatestDisposition != entity.LatestDisposition)
