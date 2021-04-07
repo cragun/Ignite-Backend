@@ -335,7 +335,7 @@ namespace DataReef.TM.Services.Services
                 var property = await GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
-                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToList();
+                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToListAsync();
 
                 return property.PropertyNotes?.Select(x => new SBNoteDTO
                 {
@@ -346,7 +346,7 @@ namespace DataReef.TM.Services.Services
                     Content = x.Content,
                     DateCreated = x.DateCreated,
                     DateLastModified = x.DateLastModified,
-                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
+                    UserID = users?.Result?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
                     Attachments = x.Attachments,
                     ParentID = x.ParentID,
@@ -364,7 +364,7 @@ namespace DataReef.TM.Services.Services
                 var property = await GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
-                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
+                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToListAsync();
 
                 return property.PropertyNotes?.Where(a => a.ParentID == ParentID).Select(x => new SBNoteDTO
                 {
@@ -375,7 +375,7 @@ namespace DataReef.TM.Services.Services
                     Content = x.Content,
                     DateCreated = x.DateCreated,
                     DateLastModified = x.DateLastModified,
-                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
+                    UserID = users?.Result?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
                     Attachments = x.Attachments,
                     ParentID = x.ParentID,
@@ -403,10 +403,11 @@ namespace DataReef.TM.Services.Services
 
                 if (property.SmartBoardId == null && noteRequest.LeadID > 0)
                 {
-                   var prop = dc.Properties.FirstOrDefault(x => x.Id == property.Id);
+                   // var prop = dc.Properties.FirstOrDefault(x => x.Id == property.Id);
+                    var prop = await dc.Properties.FirstOrDefaultAsync(x => x.Id == property.Id);
                     property.SmartBoardId = noteRequest.LeadID;
                     prop.SmartBoardId = noteRequest.LeadID;
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
                 }
 
                 var user = await dc.People.AsNoTracking().FirstOrDefaultAsync(x => !x.IsDeleted && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase) || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
@@ -433,16 +434,16 @@ namespace DataReef.TM.Services.Services
                     note.ContentType = noteRequest.ContentType;
                     note.ParentID = noteRequest.ParentID;
 
-                    var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+                    var not = await dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefaultAsync();
                     emailnoteid = not.Guid;
 
                     not.Updated(user.Guid, user?.Name);
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
 
                     if (not != null && property != null)
                     {
                         NotifyComment(not.PersonID, not, property, dc);
-                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+                        var personemail = await dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefaultAsync();
 
                         if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
@@ -463,7 +464,7 @@ namespace DataReef.TM.Services.Services
                     }
                 }
                 dc.PropertyNotes.Add(note);
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
 
                 //send notifications to the tagged users
                 var taggedPersons = GetTaggedPersons(note.Content);
@@ -511,7 +512,10 @@ namespace DataReef.TM.Services.Services
                     Email = user.EmailAddressString,
                     ContentType = noteRequest.ContentType,
                     Attachments = noteRequest.Attachments,
-                    ParentID = noteRequest.ParentID
+                    ParentID = noteRequest.ParentID,
+                    IsSendEmail = noteRequest.IsSendEmail,
+                    IsSendSMS = noteRequest.IsSendSMS
+
                 };
             }
         }
@@ -545,10 +549,10 @@ namespace DataReef.TM.Services.Services
 
                 if (property.SmartBoardId == null && noteRequest.LeadID > 0)
                 {
-                    var prop = dc.Properties.FirstOrDefault(x => x.Id == property.Id);
+                    var prop = await dc.Properties.FirstOrDefaultAsync(x => x.Id == property.Id);
                     property.SmartBoardId = noteRequest.LeadID;
                     prop.SmartBoardId = noteRequest.LeadID;
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
                 }
 
                 //get user by the the smartboardId
@@ -561,7 +565,7 @@ namespace DataReef.TM.Services.Services
                 Person user = null;
                 if (!string.IsNullOrEmpty(noteRequest.UserID) || !string.IsNullOrEmpty(noteRequest.Email))
                 {
-                    user = dc.People.FirstOrDefault(x => !x.IsDeleted
+                    user = await dc.People.FirstOrDefaultAsync(x => !x.IsDeleted
                                                            && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
                                                             || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email, StringComparison.InvariantCultureIgnoreCase))));
                     if (user == null)
@@ -581,10 +585,10 @@ namespace DataReef.TM.Services.Services
                 //if reply type is comment
                 if (noteRequest.ContentType == "Comment")
                 {
-                    var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
+                    var not = await dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefaultAsync();
 
                     not.Updated(user.Guid, user?.Name);
-                    dc.SaveChanges();
+                    await dc.SaveChangesAsync();
 
                     emailnoteid = not.Guid;
 
@@ -592,7 +596,7 @@ namespace DataReef.TM.Services.Services
                     {
                         NotifyComment(not.PersonID, not, property, dc);
 
-                        var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
+                        var personemail = await dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefaultAsync();
 
                         if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
                         {
@@ -645,7 +649,7 @@ namespace DataReef.TM.Services.Services
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
-                dc.SaveChanges();
+                await dc.SaveChangesAsync();
 
                 return new SBNoteDTO
                 {
@@ -659,7 +663,9 @@ namespace DataReef.TM.Services.Services
                     UserID = smartboardUserID,
                     ContentType = noteRequest.ContentType,
                     ParentID = noteRequest.ParentID,
-                    Attachments = noteRequest.Attachments
+                    Attachments = noteRequest.Attachments,
+                    IsSendEmail = noteRequest.IsSendEmail,
+                    IsSendSMS = noteRequest.IsSendSMS
                 };
             }
         }
