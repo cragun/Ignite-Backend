@@ -21,23 +21,23 @@ namespace DataReef.TM.Contracts.Services
         string getApiKey(long? smartboardLeadID, long? igniteID, string apiKey);
 
         [OperationContract]
-        IEnumerable<SBNoteDTO> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey);
+        Task<IEnumerable<SBNoteDTO>> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey);
 
         [OperationContract]
-        IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID);
+        Task<IEnumerable<SBNoteDTO>> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID);
 
         [OperationContract]
-        SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
+        Task<SBNoteDTO> AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
-        SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
+        Task<SBNoteDTO> EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
         IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey);
 
 
         [OperationContract]
-        SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
+        Task<SBNoteDTO> DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
 
         [OperationContract]
         IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO request,DateTime fromDate,DateTime toDate);
@@ -46,7 +46,7 @@ namespace DataReef.TM.Contracts.Services
         Task<IEnumerable<Models.Person>> QueryForPerson(Guid propertyID, string email, string name);
 
         [OperationContract]
-        SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
+        Task<SBUpdateProperty> UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
 
         [OperationContract]
         string SendNotification(string fcm_token);

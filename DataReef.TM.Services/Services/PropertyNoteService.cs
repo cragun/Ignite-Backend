@@ -13,17 +13,13 @@ using System.Linq;
 using System.Linq.Dynamic;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using DataReef.Core.Infrastructure.Authorization;
 using DataReef.Core.Classes;
 using DataReef.Core;
 using System.Data.SqlClient;
-using DataReef.TM.Models.Enums;
 using Newtonsoft.Json;
-using DataReef.TM.Models.DTOs.FinanceAdapters;
-using DataReef.TM.Contracts.Services.FinanceAdapters;
 
 namespace DataReef.TM.Services.Services
 {
@@ -35,11 +31,8 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IOUService> _ouService;
         private readonly Lazy<IAssignmentService> _assignmentService;
         private readonly Lazy<IUserInvitationService> _userInvitationService;
-        private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
         private readonly Lazy<IPushNotificationService> _pushNotificationService;
-        private readonly IApiLoggingService _apiLoggingService;
-        private readonly Lazy<IRepository> _repository;
         private readonly Lazy<ISmsService> _smsService;
 
 
@@ -48,25 +41,19 @@ namespace DataReef.TM.Services.Services
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<IOUService> ouService,
-            Lazy<IRepository> repository,
             Lazy<IAssignmentService> assignmentService,
             Lazy<IUserInvitationService> userInvitationService,
-            Lazy<IPersonService> personService,
             Lazy<IPushNotificationService> pushNotificationService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
-            Lazy<ISmsService> smsService,
-            IApiLoggingService apiLoggingService) : base(logger, unitOfWorkFactory)
+            Lazy<ISmsService> smsService) : base(logger, unitOfWorkFactory)
         {
             _ouSettingService = ouSettingService;
             _ouService = ouService;
             _assignmentService = assignmentService;
             _userInvitationService = userInvitationService;
-            _personService = personService;
             _pushNotificationService = pushNotificationService;
             _sbAdapter = sbAdapter;
-            _repository = repository;
             _smsService = smsService;
-            _apiLoggingService = apiLoggingService;
         }
 
 
@@ -143,16 +130,13 @@ namespace DataReef.TM.Services.Services
 
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
                     }
-
                 }
-
             }
             return entity;
         }
 
         public override PropertyNote Insert(PropertyNote entity, DataContext dataContext)
         {
-
             var ret = base.Insert(entity, dataContext);
 
             using (var dc = new DataContext())
@@ -188,12 +172,9 @@ namespace DataReef.TM.Services.Services
                         {
                             SendEmailNotification(entity.Content, entity.CreatedByName, emails, property, entity.Guid);
                         }
-
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
                     }
-
                 }
-
             }
             return ret;
         }
@@ -243,46 +224,11 @@ namespace DataReef.TM.Services.Services
 
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
                         }
-
                     }
-
-
                 }
             }
-
             return ret;
-
         }
-
-        //public override PropertyNote Update(PropertyNote entity)
-        //{
-        //    var ret = base.Update(entity);
-        //    using (var dc = new DataContext())
-        //    {
-        //        var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
-
-        //        if (property != null)
-        //        {
-        //            //send notifications to the tagged users
-        //            var taggedPersons = GetTaggedPersons(entity.Content);
-        //            if(taggedPersons?.Any() == true)
-        //            {
-        //                var emails = taggedPersons?.Select(x => x.EmailAddressString);
-        //                var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-        //                VerifyUserAssignmentsAndInvite(taggedPersonIds, property);
-        //                if (emails?.Any() == true)
-        //                {
-        //                    SendEmailNotification(entity.Content, emails, property);
-        //                }
-
-        //                NotifyTaggedUsers(taggedPersons, entity.Guid, property.Name, dc);
-        //            }
-
-        //        }
-        //    }
-        //    return ret;
-        //}
-
         public override PropertyNote Update(PropertyNote entity, DataContext dataContext)
         {
             var ret = base.Update(entity, dataContext);
@@ -375,22 +321,18 @@ namespace DataReef.TM.Services.Services
 
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
                         }
-
                     }
-
-
                 }
             }
-
             return ret;
         }
 
-        public IEnumerable<SBNoteDTO> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey)
+        public async Task<IEnumerable<SBNoteDTO>> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey)
         {
             using (var dc = new DataContext())
             {
                 //first get the property
-                var property = GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
+                var property = await GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
                 var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToList();
@@ -412,15 +354,14 @@ namespace DataReef.TM.Services.Services
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified
                 });
             }
-
         }
 
-        public IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID)
+        public async Task<IEnumerable<SBNoteDTO>> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID)
         {
             using (var dc = new DataContext())
             {
                 //first get the property
-                var property = GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
+                var property = await GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
                 var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).ToList();
@@ -444,131 +385,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        //public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
-        //{
-        //    using (var dc = new DataContext())
-        //    {
-        //        //first get the property
-        //        if (!noteRequest.LeadID.HasValue || !noteRequest.IgniteID.HasValue)
-        //        {
-        //            throw new Exception("LeadID or IgniteID is required");
-        //        }
-        //        var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
-
-        //        //get user by the the smartboardId
-        //        //var user = dc.People.FirstOrDefault(x => !x.IsDeleted && (noteRequest.UserID != null &&  x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
-        //        //                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
-
-        //        var user = dc.People.FirstOrDefault(x => !x.IsDeleted
-        //                                              && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
-        //                                                    || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
-        //        if (user == null)
-        //        {
-        //            throw new Exception("User with the specified ID was not found");
-        //        }
-
-
-        //        var note = new PropertyNote
-        //        {
-        //            CreatedByID = user.Guid,
-        //            CreatedByName = user.FullName,
-        //            PersonID = user.Guid,
-        //            Content = noteRequest.Content,
-        //            Attachments = noteRequest.Attachments,
-        //            PropertyID = property.Guid
-        //        };
-
-        //        //if reply type is comment
-        //        if (noteRequest.ContentType == "Comment")
-        //        {
-        //            note.ContentType = noteRequest.ContentType;
-        //            note.ParentID = noteRequest.ParentID;
-
-        //            var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
-
-        //            not.Updated(user.Guid, user?.Name);
-        //            dc.SaveChanges();
-
-        //            if (not != null && property != null)
-        //            {
-        //                NotifyComment(not.PersonID, not, property, dc);
-        //                var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
-
-        //                if (not.PersonID != user.Guid)
-        //                {
-        //                    //if (noteRequest.IsSendEmail)
-        //                    //{
-        //                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
-        //                    //}
-
-        //                    //if (noteRequest.IsSendSMS)
-        //                    //{
-        //                    //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
-        //                    //}
-        //                }
-        //            }
-        //        }
-
-        //        dc.PropertyNotes.Add(note);
-        //        dc.SaveChanges();
-
-        //        //send notifications to the tagged users
-        //        var taggedPersons = GetTaggedPersons(note.Content);
-        //        if (taggedPersons?.Any() == true)
-        //        {
-        //            var emails = taggedPersons?.Select(x => x.EmailAddressString);
-        //            var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-        //            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-        //            //if (emails?.Any() == true)
-        //            //{
-        //            //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
-        //            //}
-
-        //            NotifyTaggedUsers(taggedPersons, note, property, dc);
-
-        //            //email / sms to tagged users
-        //            if (noteRequest.TaggedUsers.Count > 0)
-        //            {
-        //                List<string> sendemails = new List<string>();
-        //                foreach (var item in noteRequest.TaggedUsers)
-        //                {
-        //                    //if (item.IsSendEmail)
-        //                    //{
-        //                        sendemails.Add(item.email);
-        //                    //}
-
-        //                    //if (item.IsSendSMS)
-        //                    //{
-        //                    //    _smsService
-        //                    // .Value
-        //                    // .SendSms("You received new notes", item.PhoneNumber);
-        //                    //}
-        //                }
-
-        //                SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
-        //            }
-        //        }
-
-
-
-        //        return new SBNoteDTO
-        //        {
-        //            Guid = note.Guid,
-        //            PropertyID = property.Guid,
-        //            LeadID = property.SmartBoardId,
-        //            Content = note.Content,
-        //            DateCreated = note.DateCreated,
-        //            DateLastModified = note.DateLastModified,
-        //            UserID = user.SmartBoardID,
-        //            Email = user.EmailAddressString,
-        //            ContentType = noteRequest.ContentType,
-        //            Attachments = noteRequest.Attachments,
-        //            ParentID = noteRequest.ParentID
-        //        };
-        //    }
-        //}
-
-        public SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
+        public async Task<SBNoteDTO> AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             using (var dc = new DataContext())
             {
@@ -577,15 +394,22 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("LeadID or IgniteID is required");
                 }
-                var property = GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
+                var property = await GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
 
-                //get user by the the smartboardId
-                //var user = dc.People.FirstOrDefault(x => !x.IsDeleted && (noteRequest.UserID != null &&  x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
-                //                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
+                if (property == null)
+                {
+                    throw new Exception("The lead was not found");
+                }
 
-                var user = dc.People.FirstOrDefault(x => !x.IsDeleted
-                                                      && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
-                                                            || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
+                if (property.SmartBoardId == null && noteRequest.LeadID > 0)
+                {
+                   var prop = dc.Properties.FirstOrDefault(x => x.Id == property.Id);
+                    property.SmartBoardId = noteRequest.LeadID;
+                    prop.SmartBoardId = noteRequest.LeadID;
+                    dc.SaveChanges();
+                }
+
+                var user = await dc.People.AsNoTracking().FirstOrDefaultAsync(x => !x.IsDeleted && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase) || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
                 if (user == null)
                 {
                     throw new Exception("User with the specified ID was not found");
@@ -636,16 +460,10 @@ namespace DataReef.TM.Services.Services
                                 }
                             }
                         }
-
-                        //if (not.PersonID != user.Guid && !note.Content.Contains(personemail?.EmailAddressString))
-                        //{
-                        //    SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail?.EmailAddressString, property, not.Guid, true);
-                        //}
                     }
                 }
                 dc.PropertyNotes.Add(note);
                 dc.SaveChanges();
-
 
                 //send notifications to the tagged users
                 var taggedPersons = GetTaggedPersons(note.Content);
@@ -677,7 +495,6 @@ namespace DataReef.TM.Services.Services
                             }
                         }
 
-                       // SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
@@ -699,9 +516,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-
-
-        public SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
+        public async Task<SBNoteDTO> EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             using (var dc = new DataContext())
             {
@@ -722,10 +537,18 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //get the property
-                var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
+                var property = await GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
                 if (property == null)
                 {
                     throw new Exception("The lead was not found");
+                }
+
+                if (property.SmartBoardId == null && noteRequest.LeadID > 0)
+                {
+                    var prop = dc.Properties.FirstOrDefault(x => x.Id == property.Id);
+                    property.SmartBoardId = noteRequest.LeadID;
+                    prop.SmartBoardId = noteRequest.LeadID;
+                    dc.SaveChanges();
                 }
 
                 //get user by the the smartboardId
@@ -819,8 +642,6 @@ namespace DataReef.TM.Services.Services
                                 }
                             }
                         }
-
-                        //SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
@@ -843,142 +664,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        //public SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
-        //{
-        //    using (var dc = new DataContext())
-        //    {
-        //        if (!noteRequest.Guid.HasValue)
-        //        {
-        //            throw new Exception("The note Guid is required");
-        //        }
-
-        //        //get the note
-        //        var note = dc
-        //            .PropertyNotes
-        //            .Include(x => x.Property)
-        //            .Include(x => x.Person)
-        //            .FirstOrDefault(x => x.Guid == noteRequest.Guid);
-        //        if (note == null)
-        //        {
-        //            throw new Exception("The note with the specified Guid was not found");
-        //        }
-
-        //        //get the property
-        //        var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
-        //        if (property == null)
-        //        {
-        //            throw new Exception("The lead was not found");
-        //        }
-
-        //        //get user by the the smartboardId
-        //        var smartboardUserID = noteRequest.UserID;
-        //        Person user = null;
-        //        if (!string.IsNullOrEmpty(noteRequest.UserID) || !string.IsNullOrEmpty(noteRequest.Email))
-        //        {
-        //            user = dc.People.FirstOrDefault(x => !x.IsDeleted
-        //                                                   && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase)
-        //                                                    || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email, StringComparison.InvariantCultureIgnoreCase))));
-        //            if (user == null)
-        //            {
-        //                throw new Exception("User with the specified ID was not found");
-        //            }
-        //            note.Updated(user?.Guid, user.Name);
-        //        }
-        //        else
-        //        {
-        //            smartboardUserID = note.Person?.SmartBoardID;
-        //        }
-
-        //        note.Content = noteRequest.Content;
-
-        //        //if reply type is comment
-        //        if (noteRequest.ContentType == "Comment")
-        //        {
-        //            var not = dc.PropertyNotes.Where(x => x.Guid == noteRequest.ParentID).FirstOrDefault();
-
-        //            not.Updated(user.Guid, user?.Name);
-        //            dc.SaveChanges();
-
-        //            if (not != null && property != null)
-        //            {
-        //                NotifyComment(not.PersonID, not, property, dc);
-
-        //                 var personemail = dc.People.Where(x => x.Guid == not.PersonID).FirstOrDefault();
-
-        //                if (not.PersonID != user.Guid)
-        //                {
-        //                    //if (noteRequest.IsSendEmail)
-        //                    //{
-        //                        SendEmailForNotesComment(noteRequest.Content, note.CreatedByName, personemail.EmailAddressString, property, not.Guid, true);
-        //                    //}
-
-        //                    //if (noteRequest.IsSendSMS)
-        //                    //{
-        //                    //    _smsService.Value.SendSms("You received new notes", personemail?.PhoneNumbers?.FirstOrDefault()?.Number);
-        //                    //}
-        //                }
-
-        //            }
-        //        }
-
-        //        var taggedPersons = GetTaggedPersons(note.Content);
-        //        if (taggedPersons?.Any() == true)
-        //        {
-        //            var emails = taggedPersons?.Select(x => x.EmailAddressString);
-        //            var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-        //            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, user.Guid);
-        //            //if (emails?.Any() == true)
-        //            //{
-        //            //    SendEmailNotification(note.Content, note.CreatedByName, emails, property, note.Guid, true);
-        //            //}
-
-        //            NotifyTaggedUsers(taggedPersons, note, property, dc);
-
-        //            //email / sms to tagged users
-        //            if (noteRequest.TaggedUsers.Count > 0)
-        //            {
-        //                List<string> sendemails = new List<string>();
-        //                foreach (var item in noteRequest.TaggedUsers)
-        //                {
-        //                    //if (item.IsSendEmail)
-        //                    //{
-        //                        sendemails.Add(item.email);
-        //                    //}
-
-
-        //                    //if (item.IsSendSMS)
-        //                    //{
-        //                    //    _smsService
-        //                    // .Value
-        //                    // .SendSms("You received new notes", item.PhoneNumber);
-        //                    //}
-        //                }
-
-        //                SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
-        //            }
-        //        }
-
-
-
-        //        dc.SaveChanges();
-
-        //        return new SBNoteDTO
-        //        {
-        //            Guid = note.Guid,
-        //            PropertyID = property.Guid,
-        //            LeadID = property.SmartBoardId,
-        //            Email = user.EmailAddressString,
-        //            Content = note.Content,
-        //            DateCreated = note.DateCreated,
-        //            DateLastModified = note.DateLastModified,
-        //            UserID = smartboardUserID,
-        //            ContentType = noteRequest.ContentType,
-        //            ParentID = noteRequest.ParentID
-        //        };
-        //    }
-        //}
-
-        public SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
+        public async Task<SBNoteDTO> DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email)
         {
             using (var dc = new DataContext())
             {
@@ -998,7 +684,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 //get the property
-                var property = GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
+                var property = await GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
 
                 note.IsDeleted = true;
                 note.Updated(user.Guid);
@@ -1040,13 +726,9 @@ namespace DataReef.TM.Services.Services
                         new SqlParameter("@userid", userID))
                         .ToList();
 
-
                     NoteList.RemoveAll(x => x.LeadID == null || x.apiKey == null || x.DateCreated == null);
-
                     return NoteList;
-
                 }
-
             }
             catch (Exception ex)
             {
@@ -1055,7 +737,7 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        public SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email)
+        public async Task<SBUpdateProperty> UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email)
         {
             using (var dc = new DataContext())
             {
@@ -1090,7 +772,7 @@ namespace DataReef.TM.Services.Services
                 dc.SaveChanges();
 
                 //get the property
-                var property = GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey);
+                var property = await GetPropertyAndValidateToken(propertye?.SmartBoardId, propertye?.Id, apiKey);
 
                 return new SBUpdateProperty
                 {
@@ -1098,8 +780,6 @@ namespace DataReef.TM.Services.Services
                     PropertyId = property.Guid,
                     apiKey = apiKey
                 };
-
-
             }
         }
 
@@ -1189,7 +869,7 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        private Property GetPropertyAndValidateToken(long? smartboardLeadID, long? igniteID, string apiKey)
+        private async Task<Property> GetPropertyAndValidateToken(long? smartboardLeadID, long? igniteID, string apiKey)
         {
             using (var dc = new DataContext())
             {
@@ -1198,11 +878,11 @@ namespace DataReef.TM.Services.Services
                     return null;
                 }
                 //first get the property
-                var property = dc.Properties
+                var property = await dc.Properties
                     .Include(x => x.Territory)
                     .Include(x => x.PropertyNotes)
                     .AsNoTracking()
-                    .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
+                    .FirstOrDefaultAsync(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
 
                 if (property == null)
                 {
@@ -1246,7 +926,7 @@ namespace DataReef.TM.Services.Services
                 {
                     throw new Exception("No lead found with the specified ID(s)");
                 }
-                //  property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
+                
                 //validate the token
                 var sbSettings = _ouSettingService
                                     .Value
@@ -1279,57 +959,7 @@ namespace DataReef.TM.Services.Services
 
                 return TerritoriesList;
             }
-        }
-
-
-        #region check latitude- longitude are available in polygon(wellknownText) region or not 
-        //// var ij = _ouService.IsInside(request.Request, -95.243265, 29.973433);
-        //public bool IsInside(string wkt, double longitude, double latitude)
-        //{
-        //    DbGeography point = DbGeography.FromText(string.Format("POINT({1} {0})", latitude.ToString().Replace(',', '.'), longitude.ToString().Replace(',', '.')), DbGeography.DefaultCoordinateSystemId);
-
-        //    DbGeography polygon = DbGeography.FromText(wkt);
-        //    var wellKnownText = polygon.AsText();
-
-        //    var sqlGeography =
-        //        Microsoft.SqlServer.Types.SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(wellKnownText), DbGeography.DefaultCoordinateSystemId)
-        //            .MakeValid();
-
-        //    //Now get the inversion of the above area
-        //    var invertedSqlGeography = sqlGeography.ReorientObject();
-
-        //    //Whichever of these is smaller is the enclosed polygon, so we use that one.
-        //    if (sqlGeography.STArea() > invertedSqlGeography.STArea())
-        //    {
-        //        sqlGeography = invertedSqlGeography;
-        //    }
-
-        //    polygon = DbSpatialServices.Default.GeographyFromProviderValue(sqlGeography);
-
-        //    return point.Intersects(polygon);
-        //}
-        #endregion check latitude- longitude are available in polygon(wellknownText) region or not 
-
-
-
-        //private void SendEmailNotification(string content, IEnumerable<string> emails, Property property, Guid noteID)
-        //{
-        //    Task.Factory.StartNew(() =>
-        //    {
-        //        emails = emails.Distinct();
-        //        var tag1Regex = new Regex(@"\[email:'(.*?)'\]");
-        //        var tag2Regex = new Regex(@"\[\/email\]");
-
-        //        content = tag1Regex.Replace(content, "<b>");
-        //        content = tag2Regex.Replace(content, "</b>");
-
-        //        var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SmartBoard</a>";
-        //        var body = $"New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} <br/><br/>{directNoteLinks}";
-        //        var to = string.Join(";", emails);
-
-        //        Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true);
-        //    });
-        //}
+        } 
 
         private void SendEmailForNotesComment(string content, string Username, string email, Property property, Guid noteID, bool IsSmartboard = false)
         {
@@ -1341,7 +971,6 @@ namespace DataReef.TM.Services.Services
 
                 Mail.Library.SendEmail(email, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
             });
-
         }
 
         private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID, bool IsSmartboard = false)
@@ -1355,10 +984,7 @@ namespace DataReef.TM.Services.Services
                 content = tag1Regex.Replace(content, "<b>");
                 content = tag2Regex.Replace(content, "</b>");
 
-                //var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
-
                 var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
-                //var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . /*<br/><br/> Note Sent by: {Username}*/<br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
 
                 var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
@@ -1424,8 +1050,6 @@ namespace DataReef.TM.Services.Services
                     }
                 }
             }
-
-
         }
 
 
@@ -1480,12 +1104,10 @@ namespace DataReef.TM.Services.Services
         {
             //send notification 
             var response = _sbAdapter.Value.GetAllSbUsers();
-
             if (response?.users?.Count > 0)
             {
                 try
                 {
-
                     //update the user's SmartBoard ID
                     using (var dc = new DataContext())
                     {
@@ -1505,7 +1127,7 @@ namespace DataReef.TM.Services.Services
                                     apilog.RequestContentType = "Update All Smartboard IDS";
                                     apilog.RequestTimestamp = DateTime.UtcNow;
                                     apilog.RequestUri = "UpdateSmartboardIdByEmail";
-                                    apilog.ResponseContentBody = "IGNITE-SmartBoardID " + currentPerson.SmartBoardID + " SmartBoardID " + item.id;
+                                    apilog.ResponseContentBody = $"IGNITE-SmartBoardID {currentPerson.SmartBoardID} SmartBoardID {item.id}";
 
                                     dc.ApiLogEntries.Add(apilog);
                                     dc.SaveChanges();
