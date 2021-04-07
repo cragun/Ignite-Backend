@@ -86,7 +86,6 @@ namespace DataReef.TM.Api.Controllers
             string DecyptApiKey = CryptographyHelper.getDecryptAPIKey(apiKey);
 
             var result = _propertyNoteService.GetAllNotesForProperty(leadId, igniteId, DecyptApiKey);
-
             return Ok(result);
         }
 

@@ -250,7 +250,6 @@ namespace DataReef.TM.Services.Services
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
-
             //send new lead to SMARTBOARD
             if (entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null || entity.Name != null)
             {
@@ -431,8 +430,15 @@ namespace DataReef.TM.Services.Services
                                     .Where(pa => pa.PropertyID == entity.Guid)
                                     .Delete();
 
-                            dataContext.SaveChanges();
+                            #region transfer lead to new server
 
+                            var reference = _propertyNotesAdapter.Value.GetLeadReferenceId(entity, null);
+                            entity.NoteReferenceId = reference?.refId;
+
+                            #endregion
+
+
+                            dataContext.SaveChanges();
 
 
                             ret = base.Update(entity, dataContext);
@@ -534,6 +540,8 @@ namespace DataReef.TM.Services.Services
                                     #region ThirdPartyPropertyType
                                     if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
                                     { 
+                                      
+
                                         var response = _sbAdapter.Value.SubmitLead(entity.Guid, null, true, IsdispositionChanged);
 
                                         if (response != null && response.Message.Type.Equals("error"))
@@ -1192,8 +1200,7 @@ namespace DataReef.TM.Services.Services
             return propertiesRequest.PropertiesRequest != null
                 ? properties.Union(newProperties).ToList()
                 : newProperties;
-        }
-
+        } 
 
         public ICollection<Property> GetPropertiesSearch(Guid territoryid, string searchvalue)
         {
@@ -1480,8 +1487,7 @@ namespace DataReef.TM.Services.Services
                 }
                 return property;
             }
-        }
-
+        } 
 
         public async Task<Property> PropertyBagsbyID(Guid propertyID)
         {
@@ -1521,9 +1527,7 @@ namespace DataReef.TM.Services.Services
                         .AsNoTracking()
                         .FirstOrDefault();
             }
-        }
-
-
+        } 
 
         public async Task<IEnumerable<Territories>> GetTerritoriesList(Guid propertyid, string apiKey)
         {
@@ -1779,8 +1783,7 @@ namespace DataReef.TM.Services.Services
 
                 return result;
             }
-        }
-
+        } 
 
         public async Task<bool> IsPropertyAvailable(long igniteId)
         {
@@ -1939,6 +1942,6 @@ namespace DataReef.TM.Services.Services
                     return new SunnovaLeadCreditResponseData();
                 }
             }
-        }
+        } 
     }
 }

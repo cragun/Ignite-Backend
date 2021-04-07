@@ -15,7 +15,7 @@ namespace DataReef.TM.Contracts.Services
     public interface IPropertyNotesAdapter
     {
         [OperationContract]
-        Task<NoteResponse> GetLeadReferenceId(Property property, string apikey);
+        NoteResponse GetLeadReferenceId(Property property, string apikey);
          
     }
 }

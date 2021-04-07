@@ -46,14 +46,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         }
 
         //To create referenceId for leads send from Ignite
-        public async Task<NoteResponse> GetLeadReferenceId(Property property, string apikey)
-        {
-
+        public NoteResponse GetLeadReferenceId(Property property, string apikey)
+        { 
             AddLeadReferenceRequest req = new AddLeadReferenceRequest();
             req.lead_reference = new lead_reference() { ignite_id = Convert.ToString(property.Guid), smartboard_id = Convert.ToString(property.SmartBoardId) };
             req.account_reference_id = apikey;
 
-            var propName = property.Name.FirstAndLastName();
+            var propName = property.Name?.FirstAndLastName();
              
             req.lead_info = new lead_info()
             {
@@ -64,14 +63,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 state = property.State,
                 zipCode = property.ZipCode,
                 lattitude = Convert.ToString(property.Latitude),
-                longitude = Convert.ToString(property.Longitude),
-                
+                longitude = Convert.ToString(property.Longitude), 
             };
 
             var request = new RestRequest($"/references", Method.POST);
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(req);
-            var response = await client.ExecuteTaskAsync(request);
+            var response = client.Execute(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -217,6 +215,5 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         {
             throw new NotImplementedException();
         }
-
     }
 }
