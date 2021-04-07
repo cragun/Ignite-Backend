@@ -1595,6 +1595,12 @@ namespace DataReef.TM.Services.Services
                     throw new Exception("No lead found with the specified ID");
                 }
 
+                if(!string.IsNullOrEmpty(Request.NoteReferenceId))
+                {
+                    property.NoteReferenceId = Request.NoteReferenceId;
+                    dc.SaveChanges();
+                }
+
                 //get the user who transfered the Lead Territory
                 var user = dc.People.FirstOrDefault(x => !x.IsDeleted
                                                && ((x.EmailAddressString.Equals(Request.UserEmailId)) || (x.SmartBoardID == Request.UserId)));
@@ -1620,7 +1626,7 @@ namespace DataReef.TM.Services.Services
                             Guid = Guid.NewGuid(),
                             PropertyID = property.Guid,
                             PersonID = user.Guid,
-                            Notes = "Sales Rap(SB): " + user.Name,
+                            Notes = $"Sales Rap(SB):  {user.Name}",
                             Lat = property.Latitude,
                             Lon = property.Longitude,
                             Name = property.LatestDisposition,
