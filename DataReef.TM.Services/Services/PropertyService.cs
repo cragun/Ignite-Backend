@@ -250,7 +250,6 @@ namespace DataReef.TM.Services.Services
             _inquiryService.Value.UpdatePersonClockTime(prop.Guid);
             prop.SBLeadError = "";
 
-
             //send new lead to SMARTBOARD
             if (entity.GetMainPhoneNumber() != null || entity.GetMainEmailAddress() != null || entity.Name != null)
             {
