@@ -20,6 +20,9 @@ using DataReef.Core.Classes;
 using DataReef.Core;
 using System.Data.SqlClient;
 using Newtonsoft.Json;
+using System.Web.Http;
+using System.Net.Http;
+using System.Net;
 
 namespace DataReef.TM.Services.Services
 {
@@ -335,7 +338,7 @@ namespace DataReef.TM.Services.Services
                 var property = await GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
-                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToListAsync();
+                var users = await dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToListAsync();
 
                 return property.PropertyNotes?.Select(x => new SBNoteDTO
                 {
@@ -346,7 +349,7 @@ namespace DataReef.TM.Services.Services
                     Content = x.Content,
                     DateCreated = x.DateCreated,
                     DateLastModified = x.DateLastModified,
-                    UserID = users?.Result?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
+                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
                     Attachments = x.Attachments,
                     ParentID = x.ParentID,
@@ -364,7 +367,7 @@ namespace DataReef.TM.Services.Services
                 var property = await GetPropertyAndValidateToken(smartboardLeadID, igniteID, apiKey);
                 var userIds = property?.PropertyNotes?.Select(x => x.PersonID) ?? new List<Guid>();
 
-                var users = dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToListAsync();
+                var users = await dc.People.Where(x => !x.IsDeleted && userIds.Contains(x.Guid)).AsNoTracking().ToListAsync();
 
                 return property.PropertyNotes?.Where(a => a.ParentID == ParentID).Select(x => new SBNoteDTO
                 {
@@ -375,7 +378,7 @@ namespace DataReef.TM.Services.Services
                     Content = x.Content,
                     DateCreated = x.DateCreated,
                     DateLastModified = x.DateLastModified,
-                    UserID = users?.Result?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
+                    UserID = users?.FirstOrDefault(u => u.Guid == x.PersonID)?.SmartBoardID,
                     ContentType = x.ContentType,
                     Attachments = x.Attachments,
                     ParentID = x.ParentID,
@@ -392,18 +395,18 @@ namespace DataReef.TM.Services.Services
                 //first get the property
                 if (!noteRequest.LeadID.HasValue || !noteRequest.IgniteID.HasValue)
                 {
-                    throw new Exception("LeadID or IgniteID is required");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "LeadID or IgniteID is required" });
                 }
                 var property = await GetPropertyAndValidateToken(noteRequest.LeadID, noteRequest.IgniteID, apiKey);
 
                 if (property == null)
                 {
-                    throw new Exception("The lead was not found");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The lead was not found" });
                 }
 
                 if (property.SmartBoardId == null && noteRequest.LeadID > 0)
                 {
-                   // var prop = dc.Properties.FirstOrDefault(x => x.Id == property.Id);
+                    // var prop = dc.Properties.FirstOrDefault(x => x.Id == property.Id);
                     var prop = await dc.Properties.FirstOrDefaultAsync(x => x.Id == property.Id);
                     property.SmartBoardId = noteRequest.LeadID;
                     prop.SmartBoardId = noteRequest.LeadID;
@@ -413,7 +416,7 @@ namespace DataReef.TM.Services.Services
                 var user = await dc.People.AsNoTracking().FirstOrDefaultAsync(x => !x.IsDeleted && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase) || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
                 if (user == null)
                 {
-                    throw new Exception("User with the specified ID was not found");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                 }
 
                 var note = new PropertyNote
@@ -526,7 +529,7 @@ namespace DataReef.TM.Services.Services
             {
                 if (!noteRequest.Guid.HasValue)
                 {
-                    throw new Exception("The note Guid is required");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The note Guid is required" });
                 }
 
                 //get the note
@@ -537,14 +540,14 @@ namespace DataReef.TM.Services.Services
                     .FirstOrDefault(x => x.Guid == noteRequest.Guid);
                 if (note == null)
                 {
-                    throw new Exception("The note with the specified Guid was not found");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The note with the specified Guid was not found" });
                 }
 
                 //get the property
                 var property = await GetPropertyAndValidateToken(note.Property?.SmartBoardId, note.Property?.Id, apiKey);
                 if (property == null)
                 {
-                    throw new Exception("The lead was not found");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The lead was not found" });
                 }
 
                 if (property.SmartBoardId == null && noteRequest.LeadID > 0)
@@ -570,7 +573,7 @@ namespace DataReef.TM.Services.Services
                                                             || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email, StringComparison.InvariantCultureIgnoreCase))));
                     if (user == null)
                     {
-                        throw new Exception("User with the specified ID was not found");
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                     }
                     note.Updated(user?.Guid, user.Name);
                 }
@@ -678,7 +681,7 @@ namespace DataReef.TM.Services.Services
                 var note = dc.PropertyNotes.Include(x => x.Property).FirstOrDefault(x => x.Guid == noteID);
                 if (note == null)
                 {
-                    throw new Exception("The note with the specified Guid was not found");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The note with the specified Guid was not found" });
                 }
 
                 //get the user who deleted the note
@@ -686,7 +689,7 @@ namespace DataReef.TM.Services.Services
                                                && (x.SmartBoardID.Equals(userID, StringComparison.InvariantCultureIgnoreCase) || x.EmailAddressString.Equals(email, StringComparison.InvariantCultureIgnoreCase)));
                 if (user == null)
                 {
-                    throw new Exception("No user found with the specified ID");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No user found with the specified ID" });
                 }
 
                 //get the property
@@ -738,7 +741,7 @@ namespace DataReef.TM.Services.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = ex.Message });
             }
         }
 
@@ -751,18 +754,18 @@ namespace DataReef.TM.Services.Services
                 var propertye = dc.Properties.Where(x => x.SmartBoardId == leadId).FirstOrDefault();
                 if (propertye == null)
                 {
-                    throw new Exception("The Lead with the specified LeadId was not found");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The Lead with the specified LeadId was not found" });
                 }
 
                 if (TerritoryId == null)
                 {
-                    throw new Exception("Please select Territory");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Please select Territory" });
                 }
 
                 var territory = dc.Territories.Where(x => x.Guid == TerritoryId).FirstOrDefault();
                 if (territory == null)
                 {
-                    throw new Exception("The Territory with the specified TerritoryId was not found");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The Territory with the specified TerritoryId was not found" });
                 }
 
                 //get the user who transfered the Lead Territory
@@ -770,7 +773,7 @@ namespace DataReef.TM.Services.Services
                                                && (x.EmailAddressString.Equals(email)));
                 if (user == null)
                 {
-                    throw new Exception("No user found with the specified ID");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No user found with the specified ID" });
                 }
 
                 propertye.TerritoryID = territory.Guid;
@@ -892,7 +895,7 @@ namespace DataReef.TM.Services.Services
 
                 if (property == null)
                 {
-                    throw new Exception("No lead found with the specified ID(s)");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
                 }
                 property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
                 //validate the token
@@ -905,7 +908,7 @@ namespace DataReef.TM.Services.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                    throw new Exception("Please send Valid Apikey base on LeadId.");
+                   throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Please send Valid Apikey base on LeadId." });
                 }
 
                 return property;
@@ -930,9 +933,9 @@ namespace DataReef.TM.Services.Services
 
                 if (property == null)
                 {
-                    throw new Exception("No lead found with the specified ID(s)");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
                 }
-                
+
                 //validate the token
                 var sbSettings = _ouSettingService
                                     .Value
@@ -954,7 +957,7 @@ namespace DataReef.TM.Services.Services
 
                 if (property == null)
                 {
-                    throw new Exception("No lead found with the specified ID(s)");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
                 }
 
                 //-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
@@ -965,7 +968,7 @@ namespace DataReef.TM.Services.Services
 
                 return TerritoriesList;
             }
-        } 
+        }
 
         private void SendEmailForNotesComment(string content, string Username, string email, Property property, Guid noteID, bool IsSmartboard = false)
         {
