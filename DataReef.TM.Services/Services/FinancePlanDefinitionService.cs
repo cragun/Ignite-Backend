@@ -224,7 +224,6 @@ namespace DataReef.TM.Services
                                 //var sunnovaurl = await _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(property);
                                 //url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunnovadata}", sunnovaurl.Signing_URL.ToString() ?? string.Empty);
 
-
                                 string sunnovaurl = await _sunnovaAdapter.Value.GetSunnovaCreditURL(property);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunnovadata}", sunnovaurl ?? string.Empty);
                             }
