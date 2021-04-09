@@ -63,6 +63,9 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
         [DataMember]
         public long IgniteID { get; set; }
 
+        [DataMember]
+        public string NoteReferenceId { get; set; }
+
         public SBPropertyDTO(Property prop)
         {
             if(prop == null)
@@ -73,6 +76,7 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
             Guid = prop.Guid;
             LeadID = prop.SmartBoardId != null ? Convert.ToInt64(prop.SmartBoardId) : 0;
             IgniteID = prop.Id;
+            NoteReferenceId = prop.NoteReferenceId;
 
             var mainOccupant = prop.GetMainOccupant();
 

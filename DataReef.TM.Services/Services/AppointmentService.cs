@@ -515,21 +515,40 @@ namespace DataReef.TM.Services
             // var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
 
             #region ThirdPartyPropertyType
-            if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
+
+            switch (entity.PropertyType)
             {
-                var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+                default:
+                case ThirdPartyPropertyType.SolarTracker:
+                    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+                    break;
+
+                case ThirdPartyPropertyType.Roofing:
+                    AddAppointmentLeadJobNimbus(entity.Guid);
+                    break;
+
+
+                case ThirdPartyPropertyType.Both:
+                    var resp = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+                    AddAppointmentLeadJobNimbus(entity.Guid);
+                    break;
             }
 
-            if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
-            {
-                AddAppointmentLeadJobNimbus(entity.Guid);
-            }
+            //if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
+            //{
+            //    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            //}
 
-            if (entity.PropertyType == ThirdPartyPropertyType.Both)
-            {
-                var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-                AddAppointmentLeadJobNimbus(entity.Guid);
-            }
+            //if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
+            //{
+            //    AddAppointmentLeadJobNimbus(entity.Guid);
+            //}
+
+            //if (entity.PropertyType == ThirdPartyPropertyType.Both)
+            //{
+            //    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            //    AddAppointmentLeadJobNimbus(entity.Guid);
+            //}
 
             #endregion ThirdPartyPropertyType
 

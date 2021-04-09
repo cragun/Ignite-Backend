@@ -23,6 +23,7 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Auth.Helpers;
 using DataReef.TM.Models.DTOs.Signatures;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 {
@@ -1072,7 +1073,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-        public SBAllUsersModel GetAllSbUsers()
+        public async Task<SBAllUsersModel> GetAllSbUsers()
         {
 
             using (DataContext dc = new DataContext())
