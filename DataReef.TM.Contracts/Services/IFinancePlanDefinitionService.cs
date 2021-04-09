@@ -28,10 +28,10 @@ namespace DataReef.TM.Contracts.Services
         Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID);
 
         [OperationContract]
-        SunlightResponse GetSunlightloanstatus(Guid proposalId);
+        Task<SunlightResponse> GetSunlightloanstatus(Guid proposalId);
 
         [OperationContract]
-        SunlightResponse Sunlightsendloandocs(Guid proposalId);
+        Task<SunlightResponse> Sunlightsendloandocs(Guid proposalId);
 
         [OperationContract]
         void UpdateCashPPW(double? cashPPW, double? lenderFee);

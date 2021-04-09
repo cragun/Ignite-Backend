@@ -1,9 +1,7 @@
 ﻿using DataReef.Core.Logging;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
-using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Finance;
-using DataReef.TM.Models.Solar;
 using System;
 using System.Linq;
 using System.ServiceModel;
@@ -13,14 +11,10 @@ using DataReef.Core.Infrastructure.Repository;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.Financing;
 using DataReef.Core.Infrastructure.Authorization;
-using System.Text;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
-using DataReef.TM.Models.DTOs.Signatures.Proposals;
-using DataReef.TM.Services.Services.ProposalAddons.TriSMART;
-using DataReef.TM.Services.Services.ProposalAddons.TriSMART.Models;
 using DataReef.Engines.FinancialEngine.Loan;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace DataReef.TM.Services
 {
@@ -151,14 +145,14 @@ namespace DataReef.TM.Services
         }
 
 
-        public SunlightResponse GetSunlightloanstatus(Guid proposalId)
+        public async Task<SunlightResponse> GetSunlightloanstatus(Guid proposalId)
         {
-            return _sunlightAdapter.Value.GetSunlightloanstatus(proposalId);
+            return await _sunlightAdapter.Value.GetSunlightloanstatus(proposalId);
         }
 
-        public SunlightResponse Sunlightsendloandocs(Guid proposalId)
+        public async Task<SunlightResponse> Sunlightsendloandocs(Guid proposalId)
         {
-            return _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
+            return await _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
         }
 
         public void UpdateCashPPW(double? cashPPW, double? lenderFee)
@@ -192,12 +186,12 @@ namespace DataReef.TM.Services
         {
             using (var dc = new DataContext())
             {
-                var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
+                var financePlan = await  dc.FinancePlaneDefinitions.AsNoTracking().FirstOrDefaultAsync(x => x.Guid == financePlanDefinitionId);
 
                 if (financePlan != null)
                 {
-                    var property = dc.Properties.Include("PropertyBag").FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
-                    var salesperson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId && !x.IsDeleted);
+                    var property = await dc.Properties.Include("PropertyBag").FirstOrDefaultAsync(x => x.Guid == propertyID && !x.IsDeleted);
+                    var salesperson = await dc.People.FirstOrDefaultAsync(x => x.Guid == SmartPrincipal.UserId && !x.IsDeleted);
                     if (property != null)
                     {
                         var metaData = financePlan.GetMetaData<FinancePlanDataModel>();
@@ -221,7 +215,7 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
+                                string sunlighturl = await _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
 
