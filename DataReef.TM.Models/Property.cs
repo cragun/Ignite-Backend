@@ -106,6 +106,9 @@ namespace DataReef.TM.Models
         public string SunnovaLeadID { get; set; }
 
         [DataMember]
+        public string SunnovaContactsResponse { get; set; }
+
+        [DataMember]
         [StringLength(200)]
         public string JobNimbusLeadID { get; set; }
 

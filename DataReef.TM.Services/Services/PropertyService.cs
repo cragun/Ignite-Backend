@@ -1876,12 +1876,12 @@ namespace DataReef.TM.Services.Services
             List<SunnovaLead> lead = new List<SunnovaLead>();
             using (var dataContext = new DataContext())
             {
-                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                var prop = await dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefaultAsync();
                 if (prop != null && prop.SunnovaLeadID == null)
                 {
                     lead = await _sunnovaAdapter.Value.CreateSunnovaLead(prop);
                     prop.SunnovaLeadID = lead.FirstOrDefault() != null ? lead.FirstOrDefault().lead.Id : "";
-                    dataContext.SaveChanges();
+                    await dataContext.SaveChangesAsync();
                 }
             }
 

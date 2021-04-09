@@ -22,5 +22,8 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
 
         [OperationContract]
         Task<string> GetSunnovaToken();
+
+        [OperationContract]
+        Task<string> GetSunnovaCreditURL(Property property);
     }
 }

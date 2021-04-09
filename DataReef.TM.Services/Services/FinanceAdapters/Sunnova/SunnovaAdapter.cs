@@ -12,7 +12,6 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Text;
 using System.Web.Script.Serialization;
-using DataReef.TM.Services;
 using DataReef.TM.Contracts.Services;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,14 +43,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
         public class TokenResponse
         {
             public string token { get; set; }
-        } 
+        }
 
         public class SunnovaProjects
         {
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string Middle_Name { get; set; }
-          //  public string Suffix { get; set; }
+            //  public string Suffix { get; set; }
             public string Email { get; set; }
             public string Preferred_Contact_Method { get; set; }
             public string Preferred_Language { get; set; }
@@ -97,18 +96,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             using (var dc = new DataContext())
             {
                 SunnovaProjects req = new SunnovaProjects();
-                
+
                 string number = property.GetMainPhoneNumber()?.Replace("-", "");
                 string email = property.GetMainEmailAddress();
 
                 Phone phone = new Phone();
-                phone.Number = number == null ? "" : number;                                                                                                       
+                phone.Number = number == null ? "" : number;
                 phone.Type = "Mobile";
 
                 Addresss addr = new Addresss();
                 addr.City = property.City;
-                addr.Country = "USA"; 
-                addr.Latitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude)); 
+                addr.Country = "USA";
+                addr.Latitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude));
                 addr.Longitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
                 addr.PostalCode = property.ZipCode;
                 addr.State = property.State == null ? "" : property.State;
@@ -125,10 +124,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 req.external_id = property.ExternalID == null ? "" : property.ExternalID;
                 req.Preferred_Contact_Method = "Email";
                 req.Preferred_Language = "English";
-               // req.Suffix = "";
-                
+                // req.Suffix = "";
+
                 string token = await GetSunnovaToken();
-               var request = new RestRequest($"/services/v1.0/leads", Method.POST);
+                var request = new RestRequest($"/services/v1.0/leads", Method.POST);
                 request.AddJsonBody(req);
                 request.AddHeader("Authorization", "Bearer " + token);
 
@@ -153,9 +152,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<List<SunnovaLead>>(content);
-                var SunnovaLeadID = ret.FirstOrDefault() != null ? ret.FirstOrDefault().lead.Id : "";
+                string SunnovaLeadID = ret.FirstOrDefault() != null ? ret.FirstOrDefault().lead.Id : "";
 
-                GetSunnovaContacts(SunnovaLeadID);
+                if (!string.IsNullOrEmpty(SunnovaLeadID))
+                {
+                    var resp = await GetSunnovaContacts(SunnovaLeadID);
+
+                    property.SunnovaLeadID = SunnovaLeadID;
+                    property.SunnovaContactsResponse = new JavaScriptSerializer().Serialize(resp);
+                    await dc.SaveChangesAsync();
+                }
 
                 return ret;
             }
@@ -188,35 +194,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 var content = response.Content;
                 var ret = JsonConvert.DeserializeObject<List<SunnovaContacts>>(content);
-
-                ApiLogEntry apilog = new ApiLogEntry();
-                apilog.Id = Guid.NewGuid();
-                apilog.User = "Sunnova";
-                apilog.Machine = Environment.MachineName;
-                apilog.RequestContentBody = SunnovaLeadID;
-                apilog.RequestContentType = "";
-                apilog.RequestTimestamp = DateTime.UtcNow;
-                apilog.RequestUri = "Sunnova";
-                apilog.ResponseContentBody = content;
-
-                dc.ApiLogEntries.Add(apilog);
-                dc.SaveChanges();
-
                 return ret;
             }
         }
 
         public async Task<SunnovaLeadCreditResponse> PassSunnovaLeadCredit(Property property)
         {
-
-            using (var dc = new DataContext())
+            if (!string.IsNullOrEmpty(property.SunnovaContactsResponse))
             {
-                var SunnovaLeadID = property.SunnovaLeadID;
-
-                var SunnovaData = dc.ApiLogEntries.SingleOrDefault(r => r.RequestContentBody == SunnovaLeadID);
-                var SunnovaDatas = SunnovaData != null ? SunnovaData.ResponseContentBody : String.Empty;
-
-                SunnovaLeadCredit SunnovaContact = JsonConvert.DeserializeObject<SunnovaLeadCredit>(SunnovaDatas);
+                SunnovaLeadCredit SunnovaContact = JsonConvert.DeserializeObject<SunnovaLeadCredit>(property.SunnovaContactsResponse);
 
                 var SunnovaContactId = SunnovaContact.Contacts;
                 SunnovaCredit req = new SunnovaCredit();
@@ -247,19 +233,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 return ret;
             }
+
+            return new SunnovaLeadCreditResponse();
         }
 
         public async Task<SunnovaLeadCreditResponseData> PassSunnovaLeadCreditURL(Property property)
         {
-
-            using (var dc = new DataContext())
+            if (!string.IsNullOrEmpty(property.SunnovaContactsResponse))
             {
-                var SunnovaLeadID = property.SunnovaLeadID;
-
-                var SunnovaData = dc.ApiLogEntries.SingleOrDefault(r => r.RequestContentBody == SunnovaLeadID);
-                var SunnovaDatas = SunnovaData != null ? SunnovaData.ResponseContentBody : String.Empty;
-
-                SunnovaLeadCredit SunnovaContact = JsonConvert.DeserializeObject<SunnovaLeadCredit>(SunnovaDatas);
+                SunnovaLeadCredit SunnovaContact = JsonConvert.DeserializeObject<SunnovaLeadCredit>(property.SunnovaContactsResponse);
 
                 var SunnovaContactId = SunnovaContact.Contacts;
                 SunnovaLeadCreditRequestData req = new SunnovaLeadCreditRequestData();
@@ -291,6 +273,57 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 return ret;
             }
+            return new SunnovaLeadCreditResponseData();
+        }
+
+
+
+        public async Task<string> GetSunnovaCreditURL(Property property)
+        {
+            if (property != null && property.SunnovaLeadID == null)
+            {
+                await CreateSunnovaLead(property);
+                using (var dc = new DataContext())
+                {
+                    property =  dc.Properties.FirstOrDefault(x => x.Guid == property.Guid && !x.IsDeleted);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(property.SunnovaContactsResponse))
+            {
+                SunnovaLeadCredit SunnovaContact = JsonConvert.DeserializeObject<SunnovaLeadCredit>(property.SunnovaContactsResponse);
+
+                var SunnovaContactId = SunnovaContact.Contacts;
+                SunnovaLeadCreditRequestData req = new SunnovaLeadCreditRequestData();
+                req.Return_URL = ReturnUrl;
+
+                string token = await GetSunnovaToken();
+                var request = new RestRequest($"/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=inperson", Method.PATCH);
+                request.AddJsonBody(req);
+                request.AddHeader("Authorization", "Bearer " + token);
+
+                var response = await client.ExecuteTaskAsync(request);
+
+                if (response.StatusCode != HttpStatusCode.Created)
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=inperson", null, token);
+                    throw new ApplicationException($"passSunnovaLeadCredit Failed. {response.Content}");
+                }
+
+                try
+                {
+                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/services/v1.0/contacts/" + SunnovaContactId.id + "/credit?action=inperson", null, token);
+                }
+                catch (Exception)
+                {
+                }
+
+                var content = response.Content;
+                var ret = JsonConvert.DeserializeObject<SunnovaLeadCreditResponseData>(content);
+
+                return ret?.Signing_URL.ToString() ?? string.Empty;
+            }
+            return string.Empty;
         }
 
         public override string GetBaseUrl(Guid ouid)

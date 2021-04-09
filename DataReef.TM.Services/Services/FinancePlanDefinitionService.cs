@@ -214,7 +214,6 @@ namespace DataReef.TM.Services
                             if (url.CreditCheckUrl.Contains("{loanpaldata}"))
                             {
                                 string loanpalurl = "??lname=" + property.GetMainOccupant().LastName + "&fname=" + property.GetMainOccupant().FirstName + "&street=" + property.Address1 + "&city=" + property.City + "&state=" + property.State + "&zip=" + property.ZipCode + "&email=" + property.GetMainEmailAddress() + "&phone=" + property.GetMainPhoneNumber()?.Replace("-", "") + "&srfn=" + salesperson.FirstName + "&srln=" + salesperson.LastName + "&sre=" + salesperson.EmailAddressString + "&loanterm=" + financePlan.TermExternalID
-                                    //+ "&loanterm=" + GetloantermID(financePlan.Name).ToString() + "&cost=" + property.Name + "&refnum=" + property.Name 
                                     + "&language=english";
                                 loanpalurl = loanpalurl.Replace(" ", "%20");
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{loanpaldata}", loanpalurl ?? string.Empty);
@@ -226,10 +225,13 @@ namespace DataReef.TM.Services
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
 
-                            if (url.CreditCheckUrl.Contains("https://sunnovaenergy.force.com/partnerconnect/login"))
+                            if (url.CreditCheckUrl.Contains("{sunnovadata}"))
                             {
-                                var sunnovaurl = await _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(property);
-                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("https://sunnovaenergy.force.com/partnerconnect/login", sunnovaurl.Signing_URL.ToString() ?? string.Empty);
+                                //var sunnovaurl = await _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(property);
+                                //url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunnovadata}", sunnovaurl.Signing_URL.ToString() ?? string.Empty);
+
+                                string sunnovaurl = await _sunnovaAdapter.Value.GetSunnovaCreditURL(property);
+                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunnovadata}", sunnovaurl ?? string.Empty);
                             }
                         }
                         return creditCheckUrls;
