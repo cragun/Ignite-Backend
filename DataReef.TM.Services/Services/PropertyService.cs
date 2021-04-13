@@ -41,6 +41,9 @@ using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Script.Serialization;
+using System.Xml;
 using System.Xml.Serialization;
 using Property = DataReef.TM.Models.Property;
 using PropertyAttribute = DataReef.TM.Models.PropertyAttribute;
@@ -1608,7 +1611,8 @@ namespace DataReef.TM.Services.Services
 
                 if (property == null)
                 {
-                    throw new Exception("No lead found with the specified ID(s)");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
+                    //throw new Exception("No lead found with the specified ID(s)");
                 }
 
                 //-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
