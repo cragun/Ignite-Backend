@@ -22,9 +22,12 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace DataReef.TM.Services.Services.PropertyAttachments
 {
@@ -1064,15 +1067,15 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                 item = Update(item);
             }
 
-            
-                var propertyattech = base.Get(item.Guid, "Items");
+
+            var propertyattech = base.Get(item.Guid, "Items");
 
             //var propertyattechitm = propertyattech.Items.Where();
 
             var attachitm = propertyattech?.Items?.Where(i => i.SectionID == "s-0" && i.ItemID == "t-10")?.FirstOrDefault();
 
             uploadImageRequest.PropertyAttachmentID = item.Guid;
-            if(attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
+            if (attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
             uploadImageRequest.SectionID = "s-0";
             uploadImageRequest.ItemID = "t-10";
             //uploadImageRequest.ImagesWithNotes = ;
@@ -1089,7 +1092,88 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             return response;
         }
 
+        public bool ReviewAllPropertyAttachment(int limit, ItemStatus status)
+        {
+            using (var context = new DataContext())
+            {
+                using (var dbContextTransaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                {
+                    try
+                    {
+                        var response = context
+                        .PropertyAttachments
+                        .Include(pa => pa.Property)
+                        .Include(pa => pa.Items)
+                        .Where(pa => pa.Status == status).Take(limit);
 
+                        foreach (var entity in response)
+                        {
+                            if (entity == null) 
+                                return false; 
 
+                            //set array manually to approve all images.
+                            PropertyAttachmentSubmitReviewRequest request = new PropertyAttachmentSubmitReviewRequest();
+                            request.Status = ItemStatus.Approved;
+                            request.Items = entity.Items.Select(a => new PropertyAttachmentSubmitReviewRequest.ItemReviewModel()
+                            {
+                                Guid = a.Guid,
+                                Status = ItemStatus.Approved
+                            }).ToList();
+
+                            var definitionItems = GetDefinitionTuple(entity.PropertyID, entity.AttachmentTypeID);
+                            var definition = definitionItems.definition;
+                            var userName = _authService.Value.GetCurrentUserFullName();
+                            string reviewMessage = "";
+
+                            request.Items.ForEach(itm =>
+                            {
+                                var entityItem = entity.Items?.FirstOrDefault(eItm => eItm.Guid == itm.Guid);
+                                reviewMessage += itm.UpdateEntity(ref entityItem, definition);
+                            });
+                             
+                            // check if all tasks (items) have been approved, and approve the whole attachment
+                            if (entity.AllAreApproved(definition))
+                            {
+                                if (entity.Status != ItemStatus.Approved)
+                                {
+                                    entity.Status = ItemStatus.Approved;
+                                    reviewMessage += "Changed status to Approved.";
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(reviewMessage))
+                            {
+                                var audit = new AuditItem
+                                {
+                                    UserName = userName,
+                                    Action = reviewMessage
+                                };
+                                entity.AddAudit(audit);
+                            }
+                        }
+
+                        context.SaveChanges();
+                        dbContextTransaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        dbContextTransaction.Rollback();
+
+                        ApiLogEntry apilog = new ApiLogEntry();
+                        apilog.Id = Guid.NewGuid();
+                        apilog.User = Convert.ToString(SmartPrincipal.UserId);
+                        apilog.RequestTimestamp = DateTime.UtcNow;
+                        apilog.RequestUri = "ReviewAllPropertyAttachment";
+                        apilog.ResponseContentBody = ex.Message;
+
+                        context.ApiLogEntries.Add(apilog);
+
+                        return false;
+                    }
+                    return true;
+                }
+            }
+
+        }
     }
 }

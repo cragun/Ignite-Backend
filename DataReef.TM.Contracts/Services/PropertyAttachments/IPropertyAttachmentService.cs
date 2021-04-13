@@ -1,5 +1,6 @@
 ﻿using DataReef.TM.Models.DataViews.Geo;
 using DataReef.TM.Models.DTOs.PropertyAttachments;
+using DataReef.TM.Models.Enums.PropertyAttachments;
 using DataReef.TM.Models.PropertyAttachments;
 using System;
 using System.Collections.Generic;
@@ -51,5 +52,8 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         PropertyAttachmentItemDTO UploadUtilityBillImage(Guid PropertyId, UploadImageToPropertyAttachmentRequest uploadImageRequest);
+
+        [OperationContract]
+        bool ReviewAllPropertyAttachment(int limit, ItemStatus status);
     }
 }

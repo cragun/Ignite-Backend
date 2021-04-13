@@ -380,6 +380,13 @@ namespace DataReef.TM.Api.Controllers
             return BadRequest("Could not find the file!");
         }
 
-
+        [HttpPost]
+        [Route("attachments/reviewimages/{limit}")]
+        [ResponseType(typeof(GenericResponse<bool>))]
+        public async Task<IHttpActionResult> ReviewAllPropertyAttachment(int limit, PropertyAttachment attachment)
+        {
+            var response = _propertyAttachmentServiceFactory().ReviewAllPropertyAttachment(limit, attachment.Status);
+            return Ok(new GenericResponse<bool> { Response = response });
+        }
     }
 }

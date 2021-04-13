@@ -312,7 +312,7 @@ namespace DataReef.TM.Api.Controllers
 
 
         /// <summary>
-        /// / Update SmartboardId By Email.
+        /// Update SmartboardId By Email.
         /// </summary>
         [Route("sb/idupdate")]
         [HttpPost]
