@@ -1096,7 +1096,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
         {
             using (var context = new DataContext())
             {
-                using (var dbContextTransaction = context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                using (var dbContextTransaction = context.Database.BeginTransaction())
                 {
                     try
                     {
@@ -1110,6 +1110,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                         {
                             if (entity == null) 
                                 return false; 
+
 
                             //set array manually to approve all images.
                             PropertyAttachmentSubmitReviewRequest request = new PropertyAttachmentSubmitReviewRequest();
