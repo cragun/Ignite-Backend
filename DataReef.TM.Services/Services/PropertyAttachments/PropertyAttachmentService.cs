@@ -22,9 +22,12 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Web.Http;
+using System.Net;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace DataReef.TM.Services.Services.PropertyAttachments
 {
@@ -1090,7 +1093,80 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             return response;
         }
 
+        public bool ReviewAllPropertyAttachment(int limit, ItemStatus status)
+        {
+            using (var context = new DataContext())
+            {
+                using (var dbContextTransaction = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var response = context
+                        .PropertyAttachments
+                        .Include(pa => pa.Property)
+                        .Include(pa => pa.Items)
+                        .Where(pa => pa.Status == status).Take(limit);
 
+                        foreach (var entity in response)
+                        {
+                            if (entity == null)
+                                return false;
+                             
+                            //set array manually to approve all images.
+                            PropertyAttachmentSubmitReviewRequest request = new PropertyAttachmentSubmitReviewRequest();
+                            request.Status = ItemStatus.Approved;
+                            request.Items = entity.Items.Select(a => new PropertyAttachmentSubmitReviewRequest.ItemReviewModel()
+                            {
+                                Guid = a.Guid,
+                                Status = ItemStatus.Approved
+                            }).ToList();
+
+                            var definitionItems = GetDefinitionTuple(entity.PropertyID, entity.AttachmentTypeID);
+                            var definition = definitionItems.definition;
+                          
+                            string reviewMessage = "";
+
+                            request.Items.ForEach(itm =>
+                            {
+                                var entityItem = entity.Items?.FirstOrDefault(eItm => eItm.Guid == itm.Guid);
+                                reviewMessage += itm.UpdateEntity(ref entityItem, definition);
+                            });
+
+                            // check if all tasks (items) have been approved, and approve the whole attachment
+                            if (entity.AllAreApproved(definition))
+                            {
+                                if (entity.Status != ItemStatus.Approved)
+                                {
+                                    entity.Status = ItemStatus.Approved;
+                                    reviewMessage += "Changed status to Approved.";
+                                }
+                            }
+
+                            var userName = _authService.Value.GetCurrentUserFullName();
+                            if (!string.IsNullOrEmpty(reviewMessage))
+                            {
+                                var audit = new AuditItem
+                                {
+                                    UserName = userName,
+                                    Action = reviewMessage
+                                };
+                                entity.AddAudit(audit);
+                            }
+                        }
+
+                        context.SaveChanges();
+                        dbContextTransaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        dbContextTransaction.Rollback(); 
+                    }
+
+                    return true;
+                }
+            }
+
+        }
 
     }
 }
