@@ -1099,7 +1099,6 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
             {
                 using (var dbContextTransaction = context.Database.BeginTransaction())
                 {
-
                     try
                     {
                         var response = context
