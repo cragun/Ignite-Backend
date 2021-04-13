@@ -49,7 +49,7 @@ namespace DataReef.TM.Models.DTOs.PropertyAttachments
                     entity.RejectionMessage = string.Empty;
                 }
 
-                result = string.IsNullOrEmpty(result) ? result : $"Updated task [{def.GetTaskName(entity.ItemID)}] {result}\r\n";
+                result = string.IsNullOrEmpty(result) ? result : $"Updated task [{def?.GetTaskName(entity.ItemID)}] {result}\r\n";
 
                 var entityImages = entity.GetImages();
                 Images?.ForEach(img =>
