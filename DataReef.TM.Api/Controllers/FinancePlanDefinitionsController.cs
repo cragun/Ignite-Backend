@@ -43,14 +43,14 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetSunlightloanstatus(Guid proposalId)
         {
-            return Ok(_financePlanDefinitionService.Value.GetSunlightloanstatus(proposalId));
+            return Ok( await _financePlanDefinitionService.Value.GetSunlightloanstatus(proposalId));
         }
 
         [Route("{proposalid:guid}/Sunlightsendloandocs")]
         [HttpGet]
         public async Task<IHttpActionResult> Sunlightsendloandocs(Guid proposalId)
         {
-            return Ok(_financePlanDefinitionService.Value.Sunlightsendloandocs(proposalId));
+            return Ok( await _financePlanDefinitionService.Value.Sunlightsendloandocs(proposalId));
         }
 
         [Route("{financePlanDefinitionId:guid}/{propertyId:guid}/creditcheckurls")]
@@ -58,7 +58,7 @@ namespace DataReef.TM.Api.Controllers
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
         public async Task<IHttpActionResult> GetPropertyCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID)
         {            
-            return Ok(_financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
+            return Ok(await _financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
         }
 
         [Route("updatePPW")]

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.ServiceModel;
@@ -124,7 +125,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             //return stateName;
         }
 
-        public string GetSunlightToken()
+        public async Task<string> GetSunlightToken()
         {
             try
             {
@@ -137,7 +138,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var request = new RestRequest($"/gettoken/accesstoken", Method.POST);
                 request.AddJsonBody(cred);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -212,14 +213,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         }
 
         //  public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
-        public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
+        public async Task<string> CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         {
             //try
             //{
             using (var dc = new DataContext())
             {
-                var proposal = dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
-                var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                var proposal = await dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefaultAsync();
+                var proposalfianaceplan = await dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                 var resp = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan.ResponseJSON);
 
                 SunlightProjects req = new SunlightProjects();
@@ -255,7 +256,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 req.projects = new List<Projects>();
                 req.projects.Add(project);
 
-                string token = GetSunlightToken();
+                string token = await GetSunlightToken();
                 //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
 
@@ -268,7 +269,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("SFAccessToken", "Bearer " + token);
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -281,10 +282,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                 using (var db = new DataContext())
                 {
-                    var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var fianacepln = await db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                     fianacepln.SunlightReqJson = ReqJson;
                     fianacepln.SunlightResponseJson = content;
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                 }
 
 
@@ -317,19 +318,19 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
 
 
-        public SunlightResponse GetSunlightloanstatus(Guid proposal)
+        public async Task<SunlightResponse> GetSunlightloanstatus(Guid proposal)
         {
             SunlightResponse snresponse = new SunlightResponse();
             try
             {
                 using (var dc = new DataContext())
                 {
-                    var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var proposalfianaceplan = await dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                     var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
                     string projectid = resp.projects?.FirstOrDefault().id;
 
                     //string requesttxt = "{'projectIds': '" + projectid + "'}";
-                    string token = GetSunlightToken();
+                    string token = await GetSunlightToken();
 
                     string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                     var request = new RestRequest($"/getstatus/status/", Method.POST);
@@ -342,7 +343,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     request.AddHeader("Authorization", "Basic " + svcCredentials);
                     request.AddHeader("SFAccessToken", "Bearer " + token);
 
-                    var response = client.Execute(request);
+                    var response = await client.ExecuteTaskAsync(request);
 
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
@@ -358,10 +359,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     using (var db = new DataContext())
                     {
-                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        var fianacepln = await db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                         fianacepln.SunlightReqJson = ReqJson;
                         fianacepln.SunlightResponseJson = content;
-                        db.SaveChanges();
+                        await db.SaveChangesAsync();
                     }                    
 
                     if (ret.returnCode != "200")
@@ -396,14 +397,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
 
 
-        public SunlightResponse Sunlightsendloandocs(Guid proposal)
+        public async Task<SunlightResponse> Sunlightsendloandocs(Guid proposal)
         {
             SunlightResponse snresponse = new SunlightResponse();
             try
             {
                 using (var dc = new DataContext())
                 {
-                    var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var proposalfianaceplan = await dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                     var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
                     string projectid = resp.projects?.FirstOrDefault()?.id;
 
@@ -414,7 +415,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     req.projects = new List<Projects>();
                     req.projects.Add(project);
 
-                    string token = GetSunlightToken();
+                    string token = await GetSunlightToken();
 
                     string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                     var request = new RestRequest($"/sendloandocs/request/", Method.POST);
@@ -422,7 +423,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     request.AddHeader("Authorization", "Basic " + svcCredentials);
                     request.AddHeader("SFAccessToken", "Bearer " + token);
 
-                    var response = client.Execute(request);
+                    var response = await client.ExecuteTaskAsync(request);
 
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
@@ -434,10 +435,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     var ReqJson = new JavaScriptSerializer().Serialize(req);
                     using (var db = new DataContext())
                     {
-                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        var fianacepln = await db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                         fianacepln.SunlightReqJson = ReqJson;
                         fianacepln.SunlightResponseJson = content;
-                        db.SaveChanges();
+                        await db.SaveChangesAsync();
                     }
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
