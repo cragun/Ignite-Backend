@@ -1142,6 +1142,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                                 }
                             }
 
+
                             var userName = _authService.Value.GetCurrentUserFullName();
                             if (!string.IsNullOrEmpty(reviewMessage))
                             {
