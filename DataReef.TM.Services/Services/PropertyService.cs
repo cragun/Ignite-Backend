@@ -470,12 +470,11 @@ namespace DataReef.TM.Services.Services
 
                             #region transfer lead to new server
 
-                            var reference = _propertyNotesAdapter.Value.GetLeadReferenceId(entity, null);
+                            var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(entity, null);
                             entity.NoteReferenceId = reference?.refId;
 
                             #endregion
-
-
+                             
                             dataContext.SaveChanges();
 
                             ret = base.Update(entity, dataContext);
