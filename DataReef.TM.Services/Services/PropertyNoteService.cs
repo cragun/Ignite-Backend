@@ -24,6 +24,8 @@ using DataReef.TM.Models.Enums;
 using Newtonsoft.Json;
 using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
+using System.Web.Http;
+using System.Net.Http;
 
 namespace DataReef.TM.Services.Services
 {
@@ -1206,7 +1208,8 @@ namespace DataReef.TM.Services.Services
 
                 if (property == null)
                 {
-                    throw new Exception("No lead found with the specified ID(s)");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
+                    //throw new Exception("No lead found with the specified ID(s)");
                 }
                 property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
                 //validate the token
@@ -1244,7 +1247,7 @@ namespace DataReef.TM.Services.Services
 
                 if (property == null)
                 {
-                    throw new Exception("No lead found with the specified ID(s)");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
                 }
                 //  property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
                 //validate the token
@@ -1268,7 +1271,8 @@ namespace DataReef.TM.Services.Services
 
                 if (property == null)
                 {
-                    throw new Exception("No lead found with the specified ID(s)");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
+                    //throw new Exception("No lead found with the specified ID(s)");
                 }
 
                 //-- exec usp_GetTerritoryIdsNameByapiKey 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
