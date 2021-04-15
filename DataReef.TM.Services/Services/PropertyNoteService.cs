@@ -694,7 +694,10 @@ namespace DataReef.TM.Services.Services
                     Email = user.EmailAddressString,
                     ContentType = noteRequest.ContentType,
                     Attachments = noteRequest.Attachments,
-                    ParentID = noteRequest.ParentID
+                    ParentID = noteRequest.ParentID,
+                    TaggedUsers = noteRequest.TaggedUsers,
+                    IsSendEmail = noteRequest.IsSendEmail,
+                    IsSendSMS = noteRequest.IsSendSMS
                 };
             }
         }
@@ -838,7 +841,10 @@ namespace DataReef.TM.Services.Services
                     UserID = smartboardUserID,
                     ContentType = noteRequest.ContentType,
                     ParentID = noteRequest.ParentID,
-                    Attachments = noteRequest.Attachments
+                    Attachments = noteRequest.Attachments,
+                    TaggedUsers = noteRequest.TaggedUsers,
+                    IsSendEmail = noteRequest.IsSendEmail,
+                    IsSendSMS = noteRequest.IsSendSMS
                 };
             }
         }
