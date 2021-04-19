@@ -146,7 +146,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 req.referenceId = referenceId;
                 req.created = note.DateCreated.ToString("MM/dd/yyyy HH:mm:ss");
                 req.source = "Ignite";
-                req.attachments = note.Attachments.Split(',').ToList();
+                req.attachments = note.Attachments?.Split(',').ToList();
                 req.personId = Convert.ToString(note.PersonID);
                 req.jobNimbusId = note.JobNimbusID;
                 req.jobNimbusLeadId = note.JobNimbusLeadID;
@@ -158,7 +158,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                     req.taggedUsers = taggedPersons.Select(a => new NoteTaggedUser
                     {
                         email = a.EmailAddressString,
-                        phone = a.PhoneNumbers.FirstOrDefault().Number,
+                        phone = a.PhoneNumbers?.FirstOrDefault().Number,
                         isSendEmail = true,
                         isSendSms = true,
                         userId = a.SmartBoardID,
@@ -182,8 +182,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                     isSendEmail = true,
                     isSendSms = true,
                 };
-            }
-           
+            } 
 
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(req);
