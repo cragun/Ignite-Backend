@@ -90,6 +90,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string jobNimbusLeadId { get; set; }
         public int? version { get; set; }
         public ThirdPartyPropertyType propertyType { get; set; }
+
     }
       
     public class AllNotes
