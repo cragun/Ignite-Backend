@@ -845,7 +845,7 @@ namespace DataReef.Application.Services
             }
         }
 
-        public async Task<string> FullName(Guid guid)
+        public async Task<string> GetUserName(Guid guid)
         {
             using (var ctx = new DataContext())
             {
