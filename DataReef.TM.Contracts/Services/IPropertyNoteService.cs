@@ -21,35 +21,38 @@ namespace DataReef.TM.Contracts.Services
         string getApiKey(long? smartboardLeadID, long? igniteID, string apiKey);
 
         [OperationContract]
-        Task<IEnumerable<SBNoteDTO>> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey);
+        IEnumerable<SBNoteDTO> GetAllNotesForProperty(long? smartboardLeadID, long? igniteID, string apiKey);
 
         [OperationContract]
-        Task<IEnumerable<SBNoteDTO>> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID);
+        IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID);
 
         [OperationContract]
-        Task<SBNoteDTO> AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
+        SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
-        Task<SBNoteDTO> EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
+        SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
         IEnumerable<Territories> GetTerritoriesList(long smartboardLeadID, string apiKey);
 
 
         [OperationContract]
-        Task<SBNoteDTO> DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
+        SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);
 
         [OperationContract]
-        IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO request,DateTime fromDate,DateTime toDate);
+        IEnumerable<SBNoteData> NotesCreate(NoteCreateDTO request, DateTime fromDate, DateTime toDate);
 
         [OperationContract]
         Task<IEnumerable<Models.Person>> QueryForPerson(Guid propertyID, string email, string name);
 
         [OperationContract]
-        Task<SBUpdateProperty> UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
+        SBUpdateProperty UpdateTerritoryIdInProperty(long? leadId, Guid? TerritoryId, string apiKey, string email);
 
         [OperationContract]
         string SendNotification(string fcm_token);
+
+        [OperationContract]
+        string SendEmailForTest(string emailid);
 
         [OperationContract]
         string UpdateSmartboardIdByEmail();

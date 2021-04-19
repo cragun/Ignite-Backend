@@ -453,8 +453,6 @@
             <summary>
             / Update SmartboardId By Email.
             </summary>
-            <param name="request"></param>
-            <param name="apiKey"></param>
             <returns></returns>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
