@@ -145,7 +145,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-        public async Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note)
+        public NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note)
         {
             using (var dc = new DataContext())
             {
@@ -163,7 +163,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                var response = await client.ExecuteTaskAsync(request);
+                var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {

@@ -25,6 +25,7 @@ using DataReef.TM.Contracts.Services.FinanceAdapters;
 using System.Web.Http;
 using System.Net;
 using System.Net.Http;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 
 namespace DataReef.TM.Services.Services
 {
@@ -34,33 +35,38 @@ namespace DataReef.TM.Services.Services
     {
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<IOUService> _ouService;
+        private readonly Lazy<IAuthenticationService> _authService;
         private readonly Lazy<IAssignmentService> _assignmentService;
         private readonly Lazy<IUserInvitationService> _userInvitationService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
         private readonly Lazy<IPushNotificationService> _pushNotificationService;
         private readonly Lazy<ISmsService> _smsService;
         private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
-
+        private readonly Lazy<IPropertyNotesAdapter> _propertyNotesAdapter;
 
         public PropertyNoteService(
             ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IOUSettingService> ouSettingService,
             Lazy<IOUService> ouService,
+            Lazy<IAuthenticationService> authService,
             Lazy<IAssignmentService> assignmentService,
             Lazy<IUserInvitationService> userInvitationService,
             Lazy<IPushNotificationService> pushNotificationService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
             Lazy<ISmsService> smsService,
+              Lazy<IPropertyNotesAdapter> propertyNotesAdapter,
             Lazy<IJobNimbusAdapter> jobNimbusAdapter) : base(logger, unitOfWorkFactory)
         {
             _ouSettingService = ouSettingService;
             _ouService = ouService;
+            _authService = authService;
             _assignmentService = assignmentService;
             _userInvitationService = userInvitationService;
             _pushNotificationService = pushNotificationService;
             _sbAdapter = sbAdapter;
             _smsService = smsService;
+            _propertyNotesAdapter = propertyNotesAdapter;
             _jobNimbusAdapter = jobNimbusAdapter;
         }
 
@@ -75,7 +81,23 @@ namespace DataReef.TM.Services.Services
                     .OrderByDescending(p => p.DateCreated)
                     .ToListAsync();
 
-                return notesList ?? new List<PropertyNote>();
+                return notesList?.Where(a => a.ContentType != "Comment").Select(x => new PropertyNote
+                {
+                    ParentID = x.ParentID,
+                    ContentType = x.ContentType,
+                    Attachments = x.Attachments,
+                    PropertyType = x.PropertyType,
+                    PersonID = x.PersonID,
+                    PropertyID = x.PropertyID,
+                    Content = x.Content,
+                    IsDeleted = x.IsDeleted,
+                    DateCreated = x.DateCreated,
+                    DateLastModified = x.DateLastModified,
+                    CreatedByName = x.CreatedByName,
+                    LastModifiedBy = x.LastModifiedBy,
+                    LastModifiedByName = x.LastModifiedByName, 
+                    Replies = notesList?.Where(a => a.ContentType == "Comment" && a.ParentID == x.Guid),
+                });
             }
         }
 
@@ -127,11 +149,11 @@ namespace DataReef.TM.Services.Services
                 {
                     _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
                 }
-                #endregion ThirdPartyPropertyType
+                #endregion ThirdPartyPropertyType 
 
                 if (property != null)
                 {
-                    //send notifications to the tagged users
+                    //send notifications to the tagged users 
                     var taggedPersons = GetTaggedPersons(entity.Content);
                     if (taggedPersons?.Any() == true)
                     {
@@ -176,7 +198,6 @@ namespace DataReef.TM.Services.Services
                 }
 
                 var property = dc.Properties.Include(x => x.Territory).FirstOrDefault(x => x.Guid == entity.PropertyID);
-
                 if (property != null)
                 {
                     //send notifications to the tagged users
@@ -448,6 +469,135 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        #region transfer notes to new server
+
+        public PropertyNote AddEditNote(PropertyNote entity)
+        {
+            using (var dc = new DataContext())
+            {
+                var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
+
+                if (people == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                }
+
+                var property = dc.Properties.Include(x => x.Territory).AsNoTracking().FirstOrDefault(x => x.Guid == entity.PropertyID);
+
+                if (property == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
+                }
+
+                entity.DateCreated = DateTime.UtcNow;
+                entity.DateLastModified = DateTime.UtcNow;
+
+                #region ThirdPartyPropertyType
+
+                if (String.IsNullOrEmpty(entity.NoteID) && entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
+                {
+                    var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
+                    entity.JobNimbusID = response?.jnid;
+                }
+
+                #endregion ThirdPartyPropertyType
+
+                var taggedPersons = GetTaggedPersons(entity.Content);
+
+                //send notifications to the tagged users 
+                if (taggedPersons.Count() > 0)
+                {
+                    var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
+
+                    NotifyTaggedUsers(taggedPersons, entity, property, dc);
+                }
+
+                if (entity.ContentType == "Comment")
+                {
+                    var parentNote = entity.ParentNote;
+
+                    if (parentNote == null)
+                    {
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Note not found" });
+                    }
+
+                    entity.ThreadID = parentNote.ThreadID;
+
+                    var parent = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == parentNote.PersonID);
+
+                    parentNote.CreatedByID = parent?.Guid;
+                    parentNote.CreatedByName = parent?.Name;
+
+                    NotifyComment(parentNote.PersonID, parentNote, property, dc);
+                }
+
+                var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
+
+                entity.NoteID = reference?.noteId;
+                entity.ThreadID = reference?.threadId;
+
+                return entity;
+            }
+        }
+
+        public async Task<IEnumerable<PropertyNote>> GetPropertyNotes(Guid PropertyID)
+        {
+            using (var dc = new DataContext())
+            {
+                var property = await dc.Properties.AsNoTracking().FirstOrDefaultAsync(x => x.Guid == PropertyID);
+
+                if (property == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
+                }
+
+                var response = await _propertyNotesAdapter.Value.GetPropertyNotes(property.NoteReferenceId);
+
+                List<PropertyNote> noteList = new List<PropertyNote>();
+
+                foreach (var item in response)
+                {
+                    var note = item.notes;
+
+                    if (note != null)
+                    {
+                        var data = new PropertyNote
+                        {
+                            Attachments = String.Join(",", note.attachments),
+                            PropertyType = note.propertyType,
+                            PersonID = Guid.Parse(note.personId),
+                            PropertyID = PropertyID,
+                            Content = note.message,
+                            DateCreated = Convert.ToDateTime(note.created),
+                            DateLastModified = Convert.ToDateTime(note.modified),
+                            CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
+                            NoteID = note._id,
+                            ThreadID = note.threadId, 
+                            Replies = item.replies?.Select(async a => new PropertyNote
+                            {
+                                Attachments = String.Join(",", a.attachments),
+                                PropertyType = a.propertyType,
+                                PersonID = Guid.Parse(a.personId),
+                                PropertyID = PropertyID,
+                                Content = a.message,
+                                DateCreated = Convert.ToDateTime(a.created),
+                                DateLastModified = Convert.ToDateTime(a.modified),
+                                CreatedByName = await _authService.Value.GetUserName(Guid.Parse(a.personId)),
+                                NoteID = note._id, 
+                            }).Select(a => a.Result).ToList()
+                        };
+
+                        noteList.Add(data);
+                    }
+                }
+
+                return noteList;
+            }
+        }
+
+        #endregion
+
         public async Task<SBNoteDTO> AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey)
         {
             using (var dc = new DataContext())
@@ -471,6 +621,8 @@ namespace DataReef.TM.Services.Services
                     property.SmartBoardId = noteRequest.LeadID;
                     prop.SmartBoardId = noteRequest.LeadID;
                     await dc.SaveChangesAsync();
+
+
                 }
 
                 var user = await dc.People.AsNoTracking().FirstOrDefaultAsync(x => !x.IsDeleted && (x.SmartBoardID.Equals(noteRequest.UserID, StringComparison.InvariantCultureIgnoreCase) || (noteRequest.Email != null && x.EmailAddressString.Equals(noteRequest.Email))));
@@ -576,7 +728,7 @@ namespace DataReef.TM.Services.Services
                     ContentType = noteRequest.ContentType,
                     Attachments = noteRequest.Attachments,
                     ParentID = noteRequest.ParentID,
-                    TaggedUsers = noteRequest.TaggedUsers,                    
+                    TaggedUsers = noteRequest.TaggedUsers,
                     IsSendEmail = noteRequest.IsSendEmail,
                     IsSendSMS = noteRequest.IsSendSMS
                 };
@@ -761,7 +913,7 @@ namespace DataReef.TM.Services.Services
                 note.IsDeleted = true;
                 note.Updated(user.Guid);
 
-               await dc.SaveChangesAsync();
+                await dc.SaveChangesAsync();
 
                 return new SBNoteDTO
                 {
@@ -975,7 +1127,7 @@ namespace DataReef.TM.Services.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                   throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Please send Valid Apikey base on LeadId." });
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Please send Valid Apikey base on LeadId." });
                 }
 
                 return property;
@@ -1203,7 +1355,7 @@ namespace DataReef.TM.Services.Services
                             }
                         }
 
-                       await dc.SaveChangesAsync();
+                        await dc.SaveChangesAsync();
 
                     }
                 }

@@ -24,6 +24,12 @@ namespace DataReef.TM.Contracts.Services
         Task<IEnumerable<SBNoteDTO>> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID);
 
         [OperationContract]
+        PropertyNote AddEditNote(PropertyNote entity);
+
+        [OperationContract]
+        Task<IEnumerable<PropertyNote>> GetPropertyNotes(Guid PropertyID);
+
+        [OperationContract]
         Task<SBNoteDTO> AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
