@@ -88,7 +88,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string personId { get; set; }
         public string jobNimbusId { get; set; }
         public string jobNimbusLeadId { get; set; }
-        public int version { get; set; }
+        public int? version { get; set; }
         public ThirdPartyPropertyType propertyType { get; set; }
     }
       
