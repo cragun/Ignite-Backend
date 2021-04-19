@@ -170,8 +170,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 {
                     req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
                 }
-
-
+                 
                 req.user = new NoteTaggedUser()
                 {
                     userId = user.SmartBoardID,
