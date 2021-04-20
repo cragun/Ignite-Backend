@@ -52,6 +52,9 @@ namespace DataReef.TM.Contracts.Services
         string SendNotification(string fcm_token);
 
         [OperationContract]
+        string SendEmailForTest(string emailid);
+
+        [OperationContract]
         string UpdateSmartboardIdByEmail();
     }
 }
