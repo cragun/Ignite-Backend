@@ -27,17 +27,14 @@ namespace DataReef.TM.Api.Controllers
     public class PropertiesController : EntityCrudController<Property>
     {
         private readonly IPropertyService propertyService;
-        private readonly ISunnovaAdapter sunnovaAdapter;
         private readonly Func<IPropertyAttachmentService> _propertyAttachmentServiceFactory;
 
         public PropertiesController(IPropertyService propertyService,
                                     ILogger logger,
-                                    ISunnovaAdapter sunnovaAdapter,
                                     Func<IPropertyAttachmentService> propertyAttachmentServiceFactory)
             : base(propertyService, logger)
         {
             this.propertyService = propertyService;
-            this.sunnovaAdapter = sunnovaAdapter;
             _propertyAttachmentServiceFactory = propertyAttachmentServiceFactory;
         }
 
@@ -380,22 +377,6 @@ namespace DataReef.TM.Api.Controllers
             }
         }
 
-
-        //[AllowAnonymous]
-        //[Route("sunnovatoken")]
-        //[HttpGet]
-        //public async Task<string> sunnovatoken()
-        //{
-        //    try
-        //    {
-        //        return sunnovaAdapter.GetSunnovaToken();
-        //    }
-        //    catch (System.Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
-
         /// <summary>
         /// send data to sunnova website
         /// </summary>
@@ -425,63 +406,6 @@ namespace DataReef.TM.Api.Controllers
             {
                 var result =   propertyService.GetTerritoriesFromAddress(req);
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        //[Route("addproperty")]
-        //[HttpPost]
-        //public async Task<IHttpActionResult> AddProperty(Property req)
-        //{
-        //    try
-        //    { 
-        //        return Ok(propertyService.AddProperty(req));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
-
-        [Route("addproperty/{propertyID:guid}")]
-        [HttpPost]
-        public async Task<IHttpActionResult> AddProperty(Guid propertyID)
-        {
-            try
-            {
-                return Ok(await propertyService.AddLeadJobNimbus(propertyID));
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        //[Route("addpropertynote")]
-        //[HttpPost]
-        //public async Task<IHttpActionResult> AddPropertyNote(PropertyNote req)
-        //{
-        //    try
-        //    {
-        //       return Ok(propertyService.AddJobNimbusNote(req.Guid));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
-
-        [Route("addpropertynote/{propertyID:guid}")]
-        [HttpPost]
-        public async Task<IHttpActionResult> AddPropertyNote(Guid propertyID)
-        {
-            try
-            {
-                return Ok(await propertyService.AddJobNimbusNote(propertyID));
             }
             catch (Exception ex)
             {

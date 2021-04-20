@@ -451,7 +451,7 @@
         </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateSmartboardIdByEmail">
             <summary>
-            / Update SmartboardId By Email.
+            Update SmartboardId By Email.
             </summary>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">

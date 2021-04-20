@@ -524,32 +524,15 @@ namespace DataReef.TM.Services
                     break;
 
                 case ThirdPartyPropertyType.Roofing:
-                    AddAppointmentLeadJobNimbus(entity.Guid);
+                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
                     break;
 
 
                 case ThirdPartyPropertyType.Both:
                     var resp = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-                    AddAppointmentLeadJobNimbus(entity.Guid);
+                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
                     break;
             }
-
-            //if (entity.PropertyType == ThirdPartyPropertyType.SolarTracker)
-            //{
-            //    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-            //}
-
-            //if (entity.PropertyType == ThirdPartyPropertyType.Roofing)
-            //{
-            //    AddAppointmentLeadJobNimbus(entity.Guid);
-            //}
-
-            //if (entity.PropertyType == ThirdPartyPropertyType.Both)
-            //{
-            //    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-            //    AddAppointmentLeadJobNimbus(entity.Guid);
-            //}
-
             #endregion ThirdPartyPropertyType
 
             return appointment;
@@ -564,29 +547,12 @@ namespace DataReef.TM.Services
             if (ret == null)
             {
                 entity.SaveResult = SaveResult.SuccessfulInsert;
-                AddAppointmentLeadJobNimbus(entity.Guid);
+                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
                 return entity;
             }
-            AddAppointmentLeadJobNimbus(entity.Guid);
+            _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
             return ret;
         }
-
-        public async Task<AppointmentJobNimbusLeadResponseData> AddAppointmentLeadJobNimbus(Guid propertyid)
-        {
-            AppointmentJobNimbusLeadResponseData lead = new AppointmentJobNimbusLeadResponseData();
-            using (var dataContext = new DataContext())
-            {
-                var appointmentdata = dataContext.Appointments.Where(x => x.Guid == propertyid).FirstOrDefault();
-                if (appointmentdata != null)
-                {
-                    lead = await _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(appointmentdata , true);
-                    appointmentdata.JobNimbusID = lead != null ? lead.jnid : "";
-                    dataContext.SaveChanges();
-                }
-            }
-            return lead;
-        }
-
 
         public void VerifyUserAssignmentAndInvite(IEnumerable<Appointment> entities)
         {

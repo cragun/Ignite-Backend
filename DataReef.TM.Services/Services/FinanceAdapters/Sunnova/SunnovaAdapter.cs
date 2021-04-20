@@ -50,7 +50,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string Middle_Name { get; set; }
-            //  public string Suffix { get; set; }
             public string Email { get; set; }
             public string Preferred_Contact_Method { get; set; }
             public string Preferred_Language { get; set; }
@@ -102,6 +101,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
 
                 Phone phone = new Phone();
                 phone.Number = number == null ? "" : number;
+                // number is required
                 phone.Type = "Mobile";
 
                 Addresss addr = new Addresss();
@@ -111,6 +111,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunnova
                 addr.Longitude = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
                 addr.PostalCode = property.ZipCode;
                 addr.State = property.State == null ? "" : property.State;
+                // state is required
                 addr.Street = property.Address1 == null ? "" : property.Address1;
 
                 var name = property.GetMainOccupant();

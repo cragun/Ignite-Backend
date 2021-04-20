@@ -1,6 +1,7 @@
 ﻿using DataReef.TM.Models;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Finance;
+using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -12,10 +13,10 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     public interface IJobNimbusAdapter
     {
         [OperationContract]
-        Task<JobNimbusLeadResponseData> CreateJobNimbusLead(Property property, bool IsCreate);
+        JobNimbusLeadResponseData CreateJobNimbusLead(Guid propertyid);
 
         [OperationContract]
-        Task<AppointmentJobNimbusLeadResponseData> CreateAppointmentJobNimbusLead(Appointment appointment, bool IsCreate);
+        AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Guid propertyid);
 
         [OperationContract]
         Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note);

@@ -17,11 +17,12 @@ using DataReef.TM.Contracts.Services;
 using System.Linq;
 using DataReef.Core.Infrastructure.Authorization;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Net.Http;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 {
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    //[ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     [Service(typeof(IJobNimbusAdapter))]
     public class JobNimbusAdapter : FinancialAdapterBase, IJobNimbusAdapter
     {
@@ -42,12 +43,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-
-        public async Task<JobNimbusLeadResponseData> CreateJobNimbusLead(Property property, bool IsCreate)
+        public JobNimbusLeadResponseData CreateJobNimbusLead(Guid propertyid)
         {
             using (var dc = new DataContext())
             {
+                var property = dc.Properties.Include("PropertyBag").Where(x => x.Guid == propertyid).FirstOrDefault();
 
+                if (property == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "The property was not found for Jobnimbus." });
+                }
                 Geo geo = new Geo();
                 geo.lat = Convert.ToDouble(String.Format("{0:0.0000}", property.Latitude));
                 geo.lon = Convert.ToDouble(String.Format("{0:0.0000}", property.Longitude));
@@ -70,7 +75,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.geo = geo;
 
                 string url = $"/api1/contacts/";
-                if (!IsCreate)
+                if (!string.IsNullOrEmpty(property.JobNimbusLeadID))
                     url = $"{url}{property.JobNimbusLeadID}";
 
                 var request = new RestRequest(url, Method.POST);
@@ -78,13 +83,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                // var response = client.Execute(request);
-                var response = await client.ExecuteTaskAsync(request);
+                var response = client.Execute(request);
+                // var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, AuthTokenApikey);
-                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.Content}  {response.StatusCode}");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = $"CreateJobNimbusLead Failed. {response.Content}  {response.StatusCode}" });
                 }
                 try
                 {
@@ -92,17 +97,25 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 }
                 catch (Exception)
                 {
-                    throw new ApplicationException($"CreateJobNimbusLead Failed.  {response.StatusCode}");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = $"CreateJobNimbusLead Failed.   {response.StatusCode}" });
                 }
 
-                return JsonConvert.DeserializeObject<JobNimbusLeadResponseData>(response.Content);
+                var lead = JsonConvert.DeserializeObject<JobNimbusLeadResponseData>(response.Content);
+
+                property.JobNimbusLeadID = lead != null ? lead.jnid : "";
+                dc.SaveChanges();
+
+                return lead;
             }
         }
 
-        public async Task<AppointmentJobNimbusLeadResponseData> CreateAppointmentJobNimbusLead(Appointment appointment, bool IsCreate)
+        public AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Guid propertyid)
         {
             using (var dc = new DataContext())
             {
+
+                var appointment = dc.Appointments.Where(x => x.Guid == propertyid).FirstOrDefault();
+
                 AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData();
 
                 List<related> relate = new List<related>();
@@ -116,7 +129,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.customer = Convert.ToString(appointment?.CreatedByID);
 
                 string url = $"/api1/tasks/";
-                if (!IsCreate)
+                if (!string.IsNullOrEmpty(appointment.JobNimbusLeadID))
                     url = $"{url}{appointment.JobNimbusID}";
 
                 var request = new RestRequest(url, Method.POST);
@@ -124,7 +137,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                var response = await client.ExecuteTaskAsync(request);
+                var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -141,10 +154,30 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 }
 
                 var ret = JsonConvert.DeserializeObject<AppointmentJobNimbusLeadResponseData>(response.Content);
+
+                appointment.JobNimbusID = ret != null ? ret.jnid : "";
+                dc.SaveChanges();
                 return ret;
             }
         }
 
+
+        //public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
+        //{
+        //    NoteJobNimbusLeadResponseData lead = new NoteJobNimbusLeadResponseData();
+        //    using (var dataContext = new DataContext())
+        //    {
+        //        var prop = dataContext.PropertyNotes.Where(x => x.Guid == propertyid).FirstOrDefault();
+        //        if (prop != null)
+        //        {
+        //            lead = await _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+        //            prop.JobNimbusID = lead != null ? lead.jnid : "";
+        //            dataContext.SaveChanges();
+        //        }
+        //    }
+        //    return lead;
+
+        //}
         public async Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note)
         {
             using (var dc = new DataContext())

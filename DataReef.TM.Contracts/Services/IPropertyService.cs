@@ -93,19 +93,6 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         List<Territory> GetTerritoriesFromAddress(Property req);
 
-        //[OperationContract]
-        //Property AddProperty(Property req);
-
-        //[OperationContract]
-        //Task<Property> AddProperty(Guid propertyid);
-
-
-        [OperationContract]
-        Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid);
-
-        [OperationContract]
-        Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid);
-
         [OperationContract]
         Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid);
 

@@ -26,13 +26,13 @@ namespace DataReef.TM.Services.Tests
         private Mock<IUnitOfWork> _unitOfWorkMock;
         private Mock<IDeviceService> _deviceServiceMock;
         private Mock<ISolarSalesTrackerAdapter> _sbAdapter;
-        private Mock<IPropertyNotesAdapter> _propertyNotesAdapter;
+       // private Mock<IPropertyNotesAdapter> _propertyNotesAdapter;
         private Mock<ISunlightAdapter> _sunlightAdapter;
         private Mock<ISunnovaAdapter> _sunnovaAdapter;
         private Mock<IJobNimbusAdapter> _jobNimbusAdapter;
         private Mock<IOUService> _ouService;
         private Mock<IOUSettingService> _ouSettingService;
-        private Mock<ITerritoryService> _territoryService;
+       // private Mock<ITerritoryService> _territoryService;
 
         [SetUp]
         public void Init()
@@ -43,13 +43,13 @@ namespace DataReef.TM.Services.Tests
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _deviceServiceMock = new Mock<IDeviceService>();
             _sbAdapter = new Mock<ISolarSalesTrackerAdapter>();
-            _propertyNotesAdapter = new Mock<IPropertyNotesAdapter>();
+           // _propertyNotesAdapter = new Mock<IPropertyNotesAdapter>();
             _sunlightAdapter = new Mock<ISunlightAdapter>();
             _sunnovaAdapter = new Mock<ISunnovaAdapter>();
             _jobNimbusAdapter = new Mock<IJobNimbusAdapter>();
             _ouService = new Mock<IOUService>();
             _ouSettingService = new Mock<IOUSettingService>();
-            _territoryService = new Mock<ITerritoryService>();
+           // _territoryService = new Mock<ITerritoryService>();
         }
 
         private PropertyService GetService()
@@ -60,13 +60,13 @@ namespace DataReef.TM.Services.Tests
                 () => _unitOfWorkMock.Object,
                 new Lazy<IDeviceService>(() => _deviceServiceMock.Object),
                 new Lazy<ISolarSalesTrackerAdapter>(() => _sbAdapter.Object),
-                new Lazy<IPropertyNotesAdapter>(() => _propertyNotesAdapter.Object),
+               // new Lazy<IPropertyNotesAdapter>(() => _propertyNotesAdapter.Object),
                 new Lazy<ISunlightAdapter>(() => _sunlightAdapter.Object),
                 new Lazy<ISunnovaAdapter>(() => _sunnovaAdapter.Object),
                 new Lazy<IJobNimbusAdapter>(() => _jobNimbusAdapter.Object),
                 new Lazy<IOUService>(() => _ouService.Object),
                 new Lazy<IOUSettingService>(() => _ouSettingService.Object),
-                new Lazy<ITerritoryService>(() => _territoryService.Object),
+               // new Lazy<ITerritoryService>(() => _territoryService.Object),
                 null,
                 null,
                 null,
