@@ -379,7 +379,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             {
                 return
                     Adders
-                    ?.Where(a => a.Type == AdderItemType.Adder && a.IsAppliedBeforeITC)
+                    ?.Where(a => a.Type == AdderItemType.Adder && !a.IsAppliedBeforeITC)
                     ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, false)) ?? 0;
             }
         }

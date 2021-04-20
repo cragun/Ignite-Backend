@@ -26,6 +26,7 @@ using System.Web.Http;
 using System.Net;
 using System.Net.Http;
 using DataReef.TM.Models.DTOs.Solar.Finance;
+using Note = DataReef.TM.Models.DTOs.Solar.Finance.Note;
 
 namespace DataReef.TM.Services.Services
 {
@@ -95,7 +96,7 @@ namespace DataReef.TM.Services.Services
                     DateLastModified = x.DateLastModified,
                     CreatedByName = x.CreatedByName,
                     LastModifiedBy = x.LastModifiedBy,
-                    LastModifiedByName = x.LastModifiedByName, 
+                    LastModifiedByName = x.LastModifiedByName,
                     Replies = notesList?.Where(a => a.ContentType == "Comment" && a.ParentID == x.Guid),
                 });
             }
@@ -534,7 +535,15 @@ namespace DataReef.TM.Services.Services
 
                 var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
 
-                entity.NoteID = reference?.noteId;
+                if (entity.ContentType == "Comment")
+                {
+                    entity.NoteID = reference?.replyId;
+                }
+                else
+                {
+                    entity.NoteID = reference?.noteId;
+                }
+
                 entity.ThreadID = reference?.threadId;
 
                 return entity;
@@ -564,28 +573,28 @@ namespace DataReef.TM.Services.Services
                     {
                         var data = new PropertyNote
                         {
-                            Attachments = String.Join(",", note.attachments),
+                            Attachments = String.Join(",", note.attachments, 1),
                             PropertyType = note.propertyType,
                             PersonID = Guid.Parse(note.personId),
                             PropertyID = PropertyID,
                             Content = note.message,
                             DateCreated = Convert.ToDateTime(note.created),
                             DateLastModified = Convert.ToDateTime(note.modified),
-                            CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
+                            //CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
                             NoteID = note._id,
-                            ThreadID = note.threadId, 
+                            ThreadID = note.threadId,
                             Replies = item.replies?.Select(async a => new PropertyNote
                             {
-                                Attachments = String.Join(",", a.attachments),
+                                Attachments = String.Join(",", a.attachments, 1),
                                 PropertyType = a.propertyType,
                                 PersonID = Guid.Parse(a.personId),
                                 PropertyID = PropertyID,
                                 Content = a.message,
                                 DateCreated = Convert.ToDateTime(a.created),
                                 DateLastModified = Convert.ToDateTime(a.modified),
-                                CreatedByName = await _authService.Value.GetUserName(Guid.Parse(a.personId)),
-                                NoteID = note._id, 
-                            }).Select(a => a.Result).ToList()
+                                //CreatedByName = await _authService.Value.GetUserName(Guid.Parse(a.personId)),
+                                NoteID = note._id,
+                            }).Select(r => r.Result).ToList()
                         };
 
                         noteList.Add(data);
@@ -595,6 +604,77 @@ namespace DataReef.TM.Services.Services
                 return noteList;
             }
         }
+
+        //public async Task<PropertyNote> ImportNotes(int limit)
+        //{
+        //    using (var dc = new DataContext())
+        //    { 
+        //        var property = await dc.Properties.Include(x => x.Territory).AsNoTracking().ToListAsync();
+
+        //        if (property == null)
+        //        {
+        //            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
+        //        }
+
+        //        entity.DateCreated = DateTime.UtcNow;
+        //        entity.DateLastModified = DateTime.UtcNow;
+
+        //        #region ThirdPartyPropertyType
+
+        //        if (String.IsNullOrEmpty(entity.NoteID) && entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
+        //        {
+        //            var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
+        //            entity.JobNimbusID = response?.jnid;
+        //        }
+
+        //        #endregion ThirdPartyPropertyType
+
+        //        var taggedPersons = GetTaggedPersons(entity.Content);
+
+        //        //send notifications to the tagged users 
+        //        if (taggedPersons.Count() > 0)
+        //        {
+        //            var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+        //            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
+
+        //            NotifyTaggedUsers(taggedPersons, entity, property, dc);
+        //        }
+
+        //        if (entity.ContentType == "Comment")
+        //        {
+        //            var parentNote = entity.ParentNote;
+
+        //            if (parentNote == null)
+        //            {
+        //                throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Note not found" });
+        //            }
+
+        //            entity.ThreadID = parentNote.ThreadID;
+
+        //            var parent = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == parentNote.PersonID);
+
+        //            parentNote.CreatedByID = parent?.Guid;
+        //            parentNote.CreatedByName = parent?.Name;
+
+        //            NotifyComment(parentNote.PersonID, parentNote, property, dc);
+        //        }
+
+        //        var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
+
+        //        if (entity.ContentType == "Comment")
+        //        {
+        //            entity.NoteID = reference?.replyId;
+        //        }
+        //        else
+        //        {
+        //            entity.NoteID = reference?.noteId;
+        //        }
+
+        //        entity.ThreadID = reference?.threadId;
+
+        //        return entity;
+        //    }
+        //}
 
         #endregion
 

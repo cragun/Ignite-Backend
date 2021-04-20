@@ -42,6 +42,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string refId { get; set; }
         public string noteId { get; set; }
         public string threadId { get; set; }
+        public string replyId { get; set; } 
     }
 
     public class NoteRequest
