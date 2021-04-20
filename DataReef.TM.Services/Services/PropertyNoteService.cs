@@ -677,7 +677,7 @@ namespace DataReef.TM.Services.Services
                             }
                         }
 
-                       // SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
+                        // SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, note.Guid, true);
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
@@ -1345,7 +1345,17 @@ namespace DataReef.TM.Services.Services
 
                 var body = $"Note Sent by: {Username}<br/><br/>New Comment on note you were created. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
 
-                Mail.Library.SendEmail(email, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
+                try
+                {
+                    Mail.Library.SendEmail(email, string.Empty, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
+
+                }
+                catch (Exception ex)
+                {
+                    // insert log for SendEmail
+                    _personService.Value.InsertActiveDeactiveUserLog(email, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, $"Exception: " + ex.Message, IsSmartboard.ToString());
+                }
+
             });
 
         }
@@ -1361,15 +1371,20 @@ namespace DataReef.TM.Services.Services
                 content = tag1Regex.Replace(content, "<b>");
                 content = tag2Regex.Replace(content, "</b>");
 
-                //var directNoteLinks = $"<a href='{Constants.CustomURL}notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
-
                 var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={noteID}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/view/{property.SmartBoardId}?showNote=1&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
-                //var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . /*<br/><br/> Note Sent by: {Username}*/<br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
 
                 var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
 
-                Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
+                try
+                {
+                    Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
+                }
+                catch (Exception ex)
+                {
+                    // insert log for SendEmail
+                    _personService.Value.InsertActiveDeactiveUserLog(to, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, $"Exception: " + ex.Message, IsSmartboard.ToString());
+                }
             });
         }
 
@@ -1479,6 +1494,20 @@ namespace DataReef.TM.Services.Services
 
             var res = _pushNotificationService.Value.PushNotification("You received new notes", fcm_token, "Ignite", notification, "Property");
             return res;
+        }
+
+        public string SendEmailForTest(string emailid)
+        {
+            try
+            {
+                Mail.Library.SendEmail(emailid, string.Empty, $"Test Email", "Test Email", true, null, true);
+
+                return "Mail Sent";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
 
