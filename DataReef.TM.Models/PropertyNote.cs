@@ -111,7 +111,7 @@ namespace DataReef.TM.Models
         public PropertyNote ParentNote { get; set; }
 
         [NotMapped]
-        public IEnumerable<PropertyNote> Replies { get; set; }
+        public List<PropertyNote> Replies { get; set; }
 
         [NotMapped]
         public string NoteID { get; set; }
