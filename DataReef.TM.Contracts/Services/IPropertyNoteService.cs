@@ -31,6 +31,7 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string ImportNotes(int limit);
+
         [OperationContract]        
         SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
