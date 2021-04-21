@@ -105,6 +105,38 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+        #region transfer notes to new server
+
+        /// <summary>
+        /// transfer a new note in note server
+        /// </summary>
+        /// <param name="entity"></param> 
+        /// <returns></returns>
+        [Route("transfer")] 
+        [HttpPost] 
+        public IHttpActionResult AddEditNote(PropertyNote entity)
+        { 
+            var result = _propertyNoteService.AddEditNote(entity); 
+            return Ok(result);
+        } 
+
+        /// <summary>
+        /// Gets all PropertyNotes linked with specified propertyID from notes server
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <returns></returns>
+        [Route("notes/{propertyID}")]
+        [ResponseType(typeof(IEnumerable<PropertyNote>))]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetPropertyNotes(Guid propertyID)
+        {
+            var result = await _propertyNoteService.GetPropertyNotes(propertyID); 
+            return Ok(result);
+        }
+
+
+        #endregion
+
 
         public class testmodelforapi
         {

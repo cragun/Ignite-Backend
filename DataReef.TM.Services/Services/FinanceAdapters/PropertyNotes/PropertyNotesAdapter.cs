@@ -19,6 +19,7 @@ using DataReef.TM.Models.FinancialIntegration.LoanPal;
 using System.Threading.Tasks;
 using DataReef.TM.Models.DTOs;
 using RestSharp.Serializers;
+using Newtonsoft.Json.Linq;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
 {
@@ -45,15 +46,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
         }
 
-        //To create referenceId for leads send from Ignite
-        public NoteResponse GetLeadReferenceId(Property property, string apikey)
-        { 
-            AddLeadReferenceRequest req = new AddLeadReferenceRequest();
+        //To create referenceId for Property send from Ignite
+        public NoteResponse GetPropertyReferenceId(Property property, string apikey)
+        {
+            AddPropertyReference req = new AddPropertyReference();
             req.lead_reference = new lead_reference() { ignite_id = Convert.ToString(property.Guid), smartboard_id = Convert.ToString(property.SmartBoardId) };
             req.account_reference_id = apikey;
 
             var propName = property.Name?.FirstAndLastName();
-             
+
             req.lead_info = new lead_info()
             {
                 firstName = propName.Item1,
@@ -63,7 +64,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 state = property.State,
                 zipCode = property.ZipCode,
                 lattitude = Convert.ToString(property.Latitude),
-                longitude = Convert.ToString(property.Longitude), 
+                longitude = Convert.ToString(property.Longitude),
             };
 
             var request = new RestRequest($"/references", Method.POST);
@@ -74,7 +75,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-                throw new ApplicationException($"GetLeadReference Failed. {response.ErrorMessage} {response.StatusCode}");
+                throw new ApplicationException($"GetPropertyReferenceId Failed. {response.ErrorMessage} {response.StatusCode}");
             }
             try
             {
@@ -82,52 +83,115 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
             catch (Exception)
             {
-                throw new ApplicationException($"GetLeadReference Failed. {response.StatusCode}");
+                throw new ApplicationException($"GetPropertyReferenceId Failed. {response.StatusCode}");
             }
 
+            var data = JObject.Parse(response.Content);
             return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
         }
 
-        //To create notes
-        public async Task<NoteResponse> AddNote(string ReferenceId, SBNoteDTO note, Person user)
+        //​To get a Properties note
+        public async Task<List<AllNotes>> GetPropertyNotes(string referenceId)
         {
-            NotesRequest req = new NotesRequest();
-            req.referenceId = ReferenceId;
+            var request = new RestRequest($"/notes/{referenceId}", Method.GET);
+            var response = await client.ExecuteTaskAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                throw new ApplicationException($"GetPropertyNotes Failed. {response.ErrorMessage} {response.StatusCode}");
+            }
+            try
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException($"GetPropertyNotes Failed. {response.StatusCode}");
+            }
+
+            var res = JsonConvert.DeserializeObject<Dictionary<string, AllNotes>>(response.Content);
+
+            List<AllNotes> notes = new List<AllNotes>();
+            foreach (var item in res)
+            {
+                notes.Add(item.Value);
+            }
+
+            return notes;
+        }
+
+        //To create note
+        public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
+        {
+            NoteRequest req = new NoteRequest();
             req.message = note.Content;
-            req.created = Convert.ToString(note.DateCreated);
-            req.source = "Ignite";
-            req.attachments = note.Attachments.Split(',').ToList();
-            req.taggedUsers = note.TaggedUsers.Select(a => new NoteTaggedUser
-            {
-                email = a.email,
-                phone = a.PhoneNumber,
-                isSendEmail = a.IsSendEmail,
-                isSendSms = a.IsSendSMS,
-                userId = Convert.ToString(a.SmartBoardId),
-                firstName = a.FirstName,
-                lastName = a.LastName
-            }).ToList();
 
-            req.user = new NoteTaggedUser()
+            string comment = "";
+            if (note.ContentType == "Comment")
             {
-                userId = Convert.ToString(note.UserID),
-                email = note.Email,
-                firstName = user.FirstName,
-                lastName = user.LastName,
-                isSendEmail = note.IsSendEmail,
-                isSendSms = note.IsSendSMS,
-                phone = user.PhoneNumbers?.FirstOrDefault()?.Number,
-            };
+                req.thread_id = note.ThreadID;
+                comment = "/reply";
+            }
 
-            var request = new RestRequest($"/notes", Method.POST);
+            RestRequest request = new RestRequest($"/notes{comment}", Method.POST);
+
+            if (!String.IsNullOrEmpty(note.NoteID))
+            {
+                req.modified = note.DateLastModified?.ToString("MM/dd/yyyy HH:mm:ss"); 
+                request = new RestRequest($"/notes{comment}/{note.NoteID}", Method.PATCH);
+            }
+            else
+            {
+                req.referenceId = referenceId;
+                req.created = note.DateCreated.ToString("MM/dd/yyyy HH:mm:ss");
+                req.source = "Ignite";
+                req.attachments = note.Attachments?.Split(',').ToList();
+                req.personId = Convert.ToString(note.PersonID);
+                req.jobNimbusId = note.JobNimbusID;
+                req.jobNimbusLeadId = note.JobNimbusLeadID;
+                req.version = note.Version;
+                req.propertyType = note.PropertyType;
+
+                if (taggedPersons.Count() > 0)
+                {
+                    req.taggedUsers = taggedPersons.Select(a => new NoteTaggedUser
+                    {
+                        email = a.EmailAddressString,
+                        phone = a.PhoneNumbers?.FirstOrDefault().Number,
+                        isSendEmail = true,
+                        isSendSms = true,
+                        userId = a.SmartBoardID,
+                        firstName = a.FirstName,
+                        lastName = a.LastName
+                    }).Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s);
+                }
+                else
+                {
+                    req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+                }
+                 
+                req.user = new NoteTaggedUser()
+                {
+                    userId = user.SmartBoardID,
+                    email = user.EmailAddressString,
+                    firstName = user.FirstName,
+                    lastName = user.LastName,
+                    phone = user.PhoneNumbers?.FirstOrDefault()?.Number,
+                    isSendEmail = true,
+                    isSendSms = true,
+                };
+            } 
+
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(req);
-            var response = await client.ExecuteTaskAsync(request);
+
+            var response = client.Execute(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-                throw new ApplicationException($"CreateNote Failed. {response.ErrorMessage} {response.StatusCode}");
+                throw new ApplicationException($"AddEditNote Failed. {response.ErrorMessage} {response.StatusCode}");
             }
             try
             {
@@ -135,66 +199,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
             catch (Exception)
             {
-                throw new ApplicationException($"CreateNote Failed. {response.StatusCode}");
+                throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
             }
 
             return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
         }
-
-        //To update a note
-        public async Task<NoteResponse> UpdateNote(string ReferenceId, SBNoteDTO note)
-        {
-            NotesRequest req = new NotesRequest();
-            req.message = note.Content;
-            req.modified = Convert.ToString(note.DateLastModified);
-
-            var request = new RestRequest($"/notes/{ReferenceId}", Method.PATCH);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddJsonBody(req);
-            var response = await client.ExecuteTaskAsync(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-                throw new ApplicationException($"UpdateNote Failed. {response.ErrorMessage} {response.StatusCode}");
-            }
-            try
-            {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-            }
-            catch (Exception)
-            {
-                throw new ApplicationException($"UpdateNote Failed. {response.StatusCode}");
-            }
-
-            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
-        }
-
-        //To get a leads note
-        public async Task<NoteResponse> GetNote(string ReferenceId)
-        {
-            var request = new RestRequest($"/notes/{ReferenceId}", Method.GET);
-            request.AddHeader("Content-Type", "application/json");
-
-            var response = await client.ExecuteTaskAsync(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-                throw new ApplicationException($"GetNote Failed. {response.ErrorMessage} {response.StatusCode}");
-            }
-            try
-            {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-            }
-            catch (Exception)
-            {
-                throw new ApplicationException($"GetNote Failed. {response.StatusCode}");
-            }
-
-            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
-        }
-
 
         public override string GetBaseUrl(Guid ouid)
         {

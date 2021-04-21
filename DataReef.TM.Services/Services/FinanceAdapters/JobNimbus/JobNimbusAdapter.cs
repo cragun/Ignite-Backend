@@ -161,23 +161,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-
-        //public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
-        //{
-        //    NoteJobNimbusLeadResponseData lead = new NoteJobNimbusLeadResponseData();
-        //    using (var dataContext = new DataContext())
-        //    {
-        //        var prop = dataContext.PropertyNotes.Where(x => x.Guid == propertyid).FirstOrDefault();
-        //        if (prop != null)
-        //        {
-        //            lead = await _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
-        //            prop.JobNimbusID = lead != null ? lead.jnid : "";
-        //            dataContext.SaveChanges();
-        //        }
-        //    }
-        //    return lead;
-
-        //}
         public async Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note)
         {
             using (var dc = new DataContext())
@@ -196,7 +179,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                var response = await client.ExecuteTaskAsync(request);
+                var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {

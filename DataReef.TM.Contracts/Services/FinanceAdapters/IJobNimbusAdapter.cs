@@ -19,7 +19,7 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
         AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Guid propertyid);
 
         [OperationContract]
-        Task<NoteJobNimbusLeadResponseData> CreateJobNimbusNote(PropertyNote note);
+        NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note);
 
     }
 }

@@ -845,6 +845,15 @@ namespace DataReef.Application.Services
             }
         }
 
+        public async Task<string> GetUserName(Guid guid)
+        {
+            using (var ctx = new DataContext())
+            {
+                var people = await ctx.People.AsNoTracking().FirstOrDefaultAsync(p => p.Guid == guid);
+                return people?.Name;
+            }
+        }
+
         public SaveResult CreateUpdateUserFromSB(CreateUserDTO newUser, string[] apikey)
         {
             using (DataContext dc = new DataContext())

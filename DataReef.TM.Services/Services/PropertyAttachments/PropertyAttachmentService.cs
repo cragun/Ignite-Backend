@@ -1108,8 +1108,8 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
 
                         foreach (var entity in response)
                         {
-                            if (entity == null) 
-                                return false; 
+                            if (entity == null)
+                                return false;
 
 
                             //set array manually to approve all images.
@@ -1131,7 +1131,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                                 var entityItem = entity.Items?.FirstOrDefault(eItm => eItm.Guid == itm.Guid);
                                 reviewMessage += itm.UpdateEntity(ref entityItem, definition);
                             });
-                             
+
                             // check if all tasks (items) have been approved, and approve the whole attachment
                             if (entity.AllAreApproved(definition))
                             {
@@ -1159,15 +1159,8 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                     catch (Exception ex)
                     {
                         dbContextTransaction.Rollback();
-
-                        ApiLogEntry apilog = new ApiLogEntry();
-                        apilog.Id = Guid.NewGuid();
-                        apilog.User = Convert.ToString(SmartPrincipal.UserId);
-                        apilog.RequestTimestamp = DateTime.UtcNow;
-                        apilog.RequestUri = "ReviewAllPropertyAttachment";
-                        apilog.ResponseContentBody = ex.Message;
-
-                        context.ApiLogEntries.Add(apilog);
+                         
+                        
 
                         return false;
                     }

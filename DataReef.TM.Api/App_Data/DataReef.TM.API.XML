@@ -381,6 +381,20 @@
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetNoteCommentsForSmartboard(System.Int64,System.String,DataReef.TM.Models.DTOs.SBNoteDTO)">
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.AddEditNote(DataReef.TM.Models.PropertyNote)">
+            <summary>
+            transfer a new note in note server
+            </summary>
+            <param name="entity"></param> 
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetPropertyNotes(System.Guid)">
+            <summary>
+            Gets all PropertyNotes linked with specified propertyID from notes server
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetApikey(System.Int64,System.String,System.Int64)">
             <summary>
             Gets apikey

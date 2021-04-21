@@ -1835,6 +1835,38 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async Task<JobNimbusLeadResponseData> AddLeadJobNimbus(Guid propertyid)
+       // public JobNimbusLeadResponseData AddLeadJobNimbus(Guid propertyid)
+        {
+            JobNimbusLeadResponseData lead = new JobNimbusLeadResponseData();
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.Properties.Include(y => y.PropertyBag).Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null)
+                {
+                    lead = await _jobNimbusAdapter.Value.CreateJobNimbusLead(prop, true);
+                    prop.JobNimbusLeadID = lead != null ? lead.jnid : "";
+                    dataContext.SaveChanges();
+                }
+            }
+            return lead;
+        }
+        public async Task<NoteJobNimbusLeadResponseData> AddJobNimbusNote(Guid propertyid)
+        {
+            NoteJobNimbusLeadResponseData lead = new NoteJobNimbusLeadResponseData();
+            using (var dataContext = new DataContext())
+            {
+                var prop = dataContext.PropertyNotes.Where(x => x.Guid == propertyid).FirstOrDefault();
+                if (prop != null)
+                {
+                    lead = await _jobNimbusAdapter.Value.CreateJobNimbusNote(prop);
+                    prop.JobNimbusID = lead != null ? lead.jnid : "";
+                    dataContext.SaveChanges();
+                }
+            }
+            return lead;
+        }
+
         public async Task<SunnovaLeadCreditResponse> SendLeadCreditSunnova(Guid propertyid)
         {
             using (var dataContext = new DataContext())
