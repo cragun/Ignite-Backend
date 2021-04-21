@@ -604,7 +604,6 @@ namespace DataReef.TM.Services.Services
                             }).Select(t => t.Result).ToList()
                         };
 
-
                         noteList.Add(data);
                     }
                 }
