@@ -604,19 +604,7 @@ namespace DataReef.TM.Services.Services
                             CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
                             NoteID = note._id,
                             ThreadID = note.threadId,
-                            Replies = new List<PropertyNote>(),
-                            //Replies = item.replies?.Select(async a => new PropertyNote
-                            //{
-                            //    Attachments = String.Join(",", a.attachments, 1),
-                            //    PropertyType = a.propertyType,
-                            //    PersonID = Guid.Parse(a.personId),
-                            //    PropertyID = PropertyID,
-                            //    Content = a.message,
-                            //    DateCreated = Convert.ToDateTime(a.created),
-                            //    DateLastModified = Convert.ToDateTime(a.modified),
-                            //    NoteID = note._id,
-                            //    CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
-                            //}).Select(t => t.Result).ToList()
+                            Replies = new List<PropertyNote>(), 
                         };
 
 
@@ -645,8 +633,7 @@ namespace DataReef.TM.Services.Services
 
                 return noteList;
             }
-        }
-
+        } 
 
         public string ImportNotes(int limit)
         {
@@ -654,7 +641,7 @@ namespace DataReef.TM.Services.Services
             {
                 using (var dc = new DataContext())
                 {
-                    var properties = dc.Properties.Include(x => x.Territory).AsNoTracking().Take(limit);
+                    var properties = dc.Properties.Include(x => x.Territory).Take(limit).ToList();
 
                     if (properties.Count() == 0)
                     {

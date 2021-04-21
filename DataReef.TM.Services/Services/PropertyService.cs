@@ -57,6 +57,7 @@ namespace DataReef.TM.Services.Services
         private readonly Func<IGeographyBridge> _geographyBridgeFactory;
         private readonly Lazy<IDeviceService> _deviceService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly Lazy<IPropertyNotesAdapter> _propertyNotesAdapter;
         private readonly Lazy<IOUService> _ouService;
         private readonly Lazy<IOUSettingService> _ouSettingService;
         private readonly Lazy<IAppointmentService> _appointmentService;
@@ -88,6 +89,7 @@ namespace DataReef.TM.Services.Services
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IDeviceService> deviceService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+            Lazy<IPropertyNotesAdapter> propertyNotesAdapter,
             Lazy<ISunlightAdapter> sunlightAdapter,
             Lazy<ISunnovaAdapter> sunnovaAdapter,
             Lazy<IJobNimbusAdapter> jobNimbusAdapter,
@@ -103,6 +105,7 @@ namespace DataReef.TM.Services.Services
             _geographyBridgeFactory = geographyBridgeFactory;
             _deviceService = deviceService;
             _sbAdapter = sbAdapter;
+            _propertyNotesAdapter = propertyNotesAdapter;
             _sunlightAdapter = sunlightAdapter;
             _sunnovaAdapter = sunnovaAdapter;
             _jobNimbusAdapter = jobNimbusAdapter;
@@ -429,8 +432,8 @@ namespace DataReef.TM.Services.Services
 
                             #region transfer lead to new server
 
-                            //var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(entity, null);
-                            //entity.NoteReferenceId = reference?.refId;
+                            var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(entity, null);
+                            entity.NoteReferenceId = reference?.refId;
 
                             #endregion
 
@@ -630,9 +633,9 @@ namespace DataReef.TM.Services.Services
                     }
 
                     var isnewInquiries = entity.Inquiries?.Where(inq => inq.IsNew == true).ToList();
-                   // if (entity.Inquiries?.Where(inq => inq.IsNew == true)?.ToList()?.Any() == true)
-                        if (isnewInquiries != null && isnewInquiries.Count > 0)
-                        {
+                    // if (entity.Inquiries?.Where(inq => inq.IsNew == true)?.ToList()?.Any() == true)
+                    if (isnewInquiries != null && isnewInquiries.Count > 0)
+                    {
                         using (var dc = new DataContext())
                         {
                             var appointmentAfter = dc.Appointments.Where(p => p.PropertyID == entity.Guid).OrderByDescending(a => a.DateCreated).FirstOrDefault();
@@ -1124,9 +1127,9 @@ namespace DataReef.TM.Services.Services
                     include: propertiesRequest.PropertiesRequest != null ? propertiesRequest.PropertiesRequest.Include : string.Empty)
                     .ToList();
 
-           // if (territoryProperties?.Any() == true)
-                if (territoryProperties != null && territoryProperties.Count > 0)
-                {
+            // if (territoryProperties?.Any() == true)
+            if (territoryProperties != null && territoryProperties.Count > 0)
+            {
                 territoryProperties.ForEach(x =>
                 {
                     x.PropertyNotesCount = x.PropertyNotes?.Where(p => !p.IsDeleted)?.Count();
@@ -1209,8 +1212,8 @@ namespace DataReef.TM.Services.Services
             var territoryProperties = List(itemsPerPage: int.MaxValue, filter: $"TerritoryID={territoryid}", include: string.Empty).ToList();
 
             //if (territoryProperties?.Any() == true)
-                if (territoryProperties != null && territoryProperties.Count > 0)
-                {
+            if (territoryProperties != null && territoryProperties.Count > 0)
+            {
                 territoryProperties.ForEach(x =>
                 {
                     x.PropertyNotesCount = x.PropertyNotes?.Where(p => !p.IsDeleted)?.Count();
