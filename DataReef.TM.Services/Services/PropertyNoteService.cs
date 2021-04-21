@@ -637,7 +637,7 @@ namespace DataReef.TM.Services.Services
                                     CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
                                 });
                             }
-                        } 
+                        }
 
                         noteList.Add(data);
                     }
@@ -663,28 +663,29 @@ namespace DataReef.TM.Services.Services
 
                     foreach (var property in properties)
                     {
+
+                        var territory = dc.Territories.AsNoTracking().FirstOrDefault(t => !t.IsDeleted && !t.IsArchived && t.Guid == property.TerritoryID);
+                        if (territory == null)
+                        {
+                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Territory not found" });
+                        }
+
+                        var sbSettings = _ouSettingService
+                                     .Value
+                                     .GetSettingsByOUID(territory.OUID)
+                                     ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                     ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                     .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                     .Data?
+                                     .SMARTBoard;
+
+                        var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(property, sbSettings?.ApiKey);
+                        property.NoteReferenceId = reference?.refId;
+
+                        dc.SaveChanges();
+
                         if (!String.IsNullOrEmpty(property.NoteReferenceId))
                         {
-                            var territory = dc.Territories.AsNoTracking().FirstOrDefault(t => !t.IsDeleted && !t.IsArchived && t.Guid == property.TerritoryID);
-                            if (territory == null)
-                            {
-                                throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Territory not found" });
-                            }
-
-                            var sbSettings = _ouSettingService
-                                         .Value
-                                         .GetSettingsByOUID(territory.OUID)
-                                         ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
-                                         ?.GetValue<ICollection<SelectedIntegrationOption>>()?
-                                         .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
-                                         .Data?
-                                         .SMARTBoard;
-
-                            var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(property, sbSettings?.ApiKey);
-                            property.NoteReferenceId = reference?.refId;
-
-                            dc.SaveChanges();
-
                             var notesList = dc.PropertyNotes.Where(p => p.PropertyID == property.Guid && !p.IsDeleted).AsNoTracking().ToList();
 
                             foreach (var note in notesList)
