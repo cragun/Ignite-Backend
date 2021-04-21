@@ -474,79 +474,86 @@ namespace DataReef.TM.Services.Services
 
         public PropertyNote AddEditNote(PropertyNote entity)
         {
-            using (var dc = new DataContext())
+            try
             {
-                var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
-
-                if (people == null)
+                using (var dc = new DataContext())
                 {
-                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
-                }
+                    var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
 
-                var property = dc.Properties.Include(x => x.Territory).AsNoTracking().FirstOrDefault(x => x.Guid == entity.PropertyID);
-
-                if (property == null)
-                {
-                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
-                }
-
-                entity.DateCreated = DateTime.UtcNow;
-                entity.DateLastModified = DateTime.UtcNow;
-
-                #region ThirdPartyPropertyType
-
-                if (String.IsNullOrEmpty(entity.NoteID) && entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
-                {
-                    var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
-                    entity.JobNimbusID = response?.jnid;
-                }
-
-                #endregion ThirdPartyPropertyType
-
-                var taggedPersons = GetTaggedPersons(entity.Content);
-
-                //send notifications to the tagged users 
-                if (taggedPersons.Count() > 0)
-                {
-                    var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-                    VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
-
-                    NotifyTaggedUsers(taggedPersons, entity, property, dc);
-                }
-
-                if (entity.ContentType == "Comment")
-                {
-                    var parentNote = entity.ParentNote;
-
-                    if (parentNote == null)
+                    if (people == null)
                     {
-                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Note not found" });
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                     }
 
-                    entity.ThreadID = parentNote.ThreadID;
+                    var property = dc.Properties.Include(x => x.Territory).AsNoTracking().FirstOrDefault(x => x.Guid == entity.PropertyID);
 
-                    var parent = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == parentNote.PersonID);
+                    if (property == null)
+                    {
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
+                    }
 
-                    parentNote.CreatedByID = parent?.Guid;
-                    parentNote.CreatedByName = parent?.Name;
+                    entity.DateCreated = DateTime.UtcNow;
+                    entity.DateLastModified = DateTime.UtcNow;
 
-                    NotifyComment(parentNote.PersonID, parentNote, property, dc);
+                    #region ThirdPartyPropertyType
+
+                    if (String.IsNullOrEmpty(entity.NoteID) && entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
+                    {
+                        var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
+                        entity.JobNimbusID = response?.jnid;
+                    }
+
+                    #endregion ThirdPartyPropertyType
+
+                    var taggedPersons = GetTaggedPersons(entity.Content);
+
+                    //send notifications to the tagged users 
+                    if (taggedPersons.Count() > 0)
+                    {
+                        var taggedPersonIds = taggedPersons.Select(x => x.Guid);
+                        VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
+
+                        NotifyTaggedUsers(taggedPersons, entity, property, dc);
+                    }
+
+                    if (entity.ContentType == "Comment")
+                    {
+                        var parentNote = entity.ParentNote;
+
+                        if (parentNote == null)
+                        {
+                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Note not found" });
+                        }
+
+                        entity.ThreadID = parentNote.ThreadID;
+
+                        var parent = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == parentNote.PersonID);
+
+                        parentNote.CreatedByID = parent?.Guid;
+                        parentNote.CreatedByName = parent?.Name;
+
+                        NotifyComment(parentNote.PersonID, parentNote, property, dc);
+                    }
+
+                    var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
+
+                    if (entity.ContentType == "Comment")
+                    {
+                        entity.NoteID = reference?.replyId;
+                    }
+                    else
+                    {
+                        entity.NoteID = reference?.noteId;
+                    }
+
+                    entity.ThreadID = reference?.threadId;
+
+                    return entity;
                 }
-
-                var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
-
-                if (entity.ContentType == "Comment")
-                {
-                    entity.NoteID = reference?.replyId;
-                }
-                else
-                {
-                    entity.NoteID = reference?.noteId;
-                }
-
-                entity.ThreadID = reference?.threadId;
-
-                return entity;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
             }
         }
 
@@ -580,7 +587,7 @@ namespace DataReef.TM.Services.Services
                             Content = note.message,
                             DateCreated = Convert.ToDateTime(note.created),
                             DateLastModified = Convert.ToDateTime(note.modified),
-                            //CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
+                            CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
                             NoteID = note._id,
                             ThreadID = note.threadId,
                             Replies = item.replies?.Select(async a => new PropertyNote
@@ -592,10 +599,11 @@ namespace DataReef.TM.Services.Services
                                 Content = a.message,
                                 DateCreated = Convert.ToDateTime(a.created),
                                 DateLastModified = Convert.ToDateTime(a.modified),
-                                //CreatedByName = await _authService.Value.GetUserName(Guid.Parse(a.personId)),
                                 NoteID = note._id,
-                            }).Select(r => r.Result).ToList()
+                                CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
+                            }).Select(t => t.Result).ToList()
                         };
+
 
                         noteList.Add(data);
                     }
@@ -606,76 +614,92 @@ namespace DataReef.TM.Services.Services
         }
 
 
-        //public async Task<PropertyNote> ImportNotes(int limit)
-        //{
-        //    using (var dc = new DataContext())
-        //    { 
-        //        var property = await dc.Properties.Include(x => x.Territory).AsNoTracking().ToListAsync();
+        public string ImportNotes(int limit)
+        {
+            try
+            {
+                using (var dc = new DataContext())
+                {
+                    var properties = dc.Properties.Include(x => x.Territory).AsNoTracking().Take(limit);
 
-        //        if (property == null)
-        //        {
-        //            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
-        //        }
+                    if (properties.Count() == 0)
+                    {
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
+                    }
 
-        //        entity.DateCreated = DateTime.UtcNow;
-        //        entity.DateLastModified = DateTime.UtcNow;
+                    foreach (var property in properties)
+                    {
+                        if (!String.IsNullOrEmpty(property.NoteReferenceId))
+                        {
+                            var territory = dc.Territories.AsNoTracking().FirstOrDefault(t => !t.IsDeleted && !t.IsArchived && t.Guid == property.TerritoryID);
+                            if (territory == null)
+                            {
+                                throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Territory not found" });
+                            }
 
-        //        #region ThirdPartyPropertyType
+                            var sbSettings = _ouSettingService
+                                         .Value
+                                         .GetSettingsByOUID(territory.OUID)
+                                         ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                         ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                         .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                         .Data?
+                                         .SMARTBoard;
 
-        //        if (String.IsNullOrEmpty(entity.NoteID) && entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
-        //        {
-        //            var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
-        //            entity.JobNimbusID = response?.jnid;
-        //        }
+                            var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(property, sbSettings?.ApiKey);
+                            property.NoteReferenceId = reference?.refId;
 
-        //        #endregion ThirdPartyPropertyType
+                            dc.SaveChanges();
 
-        //        var taggedPersons = GetTaggedPersons(entity.Content);
+                            var notesList = dc.PropertyNotes.Where(p => p.PropertyID == property.Guid && !p.IsDeleted).AsNoTracking().ToList();
 
-        //        //send notifications to the tagged users 
-        //        if (taggedPersons.Count() > 0)
-        //        {
-        //            var taggedPersonIds = taggedPersons.Select(x => x.Guid);
-        //            VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
+                            foreach (var note in notesList)
+                            {
+                                var taggedPersons = GetTaggedPersons(note.Content);
 
-        //            NotifyTaggedUsers(taggedPersons, entity, property, dc);
-        //        }
+                                var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == note.PersonID);
 
-        //        if (entity.ContentType == "Comment")
-        //        {
-        //            var parentNote = entity.ParentNote;
+                                if (people == null)
+                                {
+                                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                                }
 
-        //            if (parentNote == null)
-        //            {
-        //                throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Note not found" });
-        //            }
+                                var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
 
-        //            entity.ThreadID = parentNote.ThreadID;
+                                note.NoteID = noteReference?.noteId;
+                                note.ThreadID = noteReference?.threadId;
 
-        //            var parent = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == parentNote.PersonID);
+                                var comments = notesList.Where(a => a.ParentID == note.Guid).ToList();
 
-        //            parentNote.CreatedByID = parent?.Guid;
-        //            parentNote.CreatedByName = parent?.Name;
+                                foreach (var comment in comments)
+                                {
+                                    var taggedPersonsComment = GetTaggedPersons(comment.Content);
 
-        //            NotifyComment(parentNote.PersonID, parentNote, property, dc);
-        //        }
+                                    comment.ThreadID = note.ThreadID;
 
-        //        var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
+                                    var peopleComment = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == comment.PersonID);
 
-        //        if (entity.ContentType == "Comment")
-        //        {
-        //            entity.NoteID = reference?.replyId;
-        //        }
-        //        else
-        //        {
-        //            entity.NoteID = reference?.noteId;
-        //        }
+                                    if (peopleComment == null)
+                                    {
+                                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                                    }
 
-        //        entity.ThreadID = reference?.threadId;
+                                    var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
 
-        //        return entity;
-        //    }
-        //}
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+
+        }
 
         #endregion
 

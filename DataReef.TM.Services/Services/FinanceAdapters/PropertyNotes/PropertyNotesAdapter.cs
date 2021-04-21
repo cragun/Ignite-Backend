@@ -50,7 +50,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         public NoteResponse GetPropertyReferenceId(Property property, string apikey)
         {
             AddPropertyReference req = new AddPropertyReference();
-            req.lead_reference = new lead_reference() { ignite_id = Convert.ToString(property.Guid), smartboard_id = Convert.ToString(property.SmartBoardId) };
+            req.lead_reference = new lead_reference() { ignite_id = Convert.ToString(property.Id), smartboard_id = Convert.ToString(property.SmartBoardId) };
             req.account_reference_id = apikey;
 
             var propName = property.Name?.FirstAndLastName();
@@ -110,15 +110,26 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 throw new ApplicationException($"GetPropertyNotes Failed. {response.StatusCode}");
             }
 
-            var res = JsonConvert.DeserializeObject<Dictionary<string, AllNotes>>(response.Content);
+            //RestResponse response = new RestResponse();
+            //response.Content = "{\"f6bd7533f3209b9fe6893e942e573297ecba453e\":{\"notes\":{\"attachments\":null,\"taggedUsers\":[{\"Key\":0,\"Value\":{\"email\":\"mdhakecha+1@gmail.com\",\"firstName\":\"Manish\",\"lastName\":\"Dhakecha\",\"phone\":null,\"isSendEmail\":true,\"isSendSms\":true,\"userId\":\"18\"}}],\"parentIds\":[\"606d86d0998f280007017ac3\"],\"user\":[{\"email\":\"mdhakecha+1@gmail.com\",\"firstName\":\"Manish\",\"lastName\":\"Dhakecha\",\"phone\":null,\"isSendEmail\":true,\"isSendSms\":true,\"userId\":\"18\"}],\"pinnedBy\":[],\"likedBy\":[],\"_id\":\"607d878e19122600071aa2b3\",\"referenceId\":\"606d86d0998f280007017ac3\",\"threadId\":\"f6bd7533f3209b9fe6893e942e573297ecba453e\",\"message\":\"You Sent:- @[email:'mdhakecha+1@gmail.com']Manish Dhakecha [/email] test note edit  Apr 19, 2021, 05:56 PM\",\"created\":\"2021-04-19T13:37:15.000Z\",\"modified\":\"2021-04-19T14:04:17.000Z\",\"source\":\"Ignite\",\"personId\":\"56575f4e-0eeb-479e-a6a6-e8f1116f884e\",\"jobNimbusId\":null,\"jobNimbusLeadId\":null,\"version\":1,\"propertyType\":0,\"__v\":0},\"replies\":[{\"attachments\":null,\"taggedUsers\":[{\"Key\":0,\"Value\":{\"email\":\"mdhakecha+1@gmail.com\",\"firstName\":\"Manish\",\"lastName\":\"Dhakecha\",\"phone\":null,\"isSendEmail\":true,\"isSendSms\":true,\"userId\":\"18\"}}],\"parentIds\":[\"606d86d0998f280007017ac3\",\"f6bd7533f3209b9fe6893e942e573297ecba453e\"],\"user\":[{\"email\":\"mdhakecha+1@gmail.com\",\"firstName\":\"Manish\",\"lastName\":\"Dhakecha\",\"phone\":null,\"isSendEmail\":true,\"isSendSms\":true,\"userId\":\"18\"}],\"pinnedBy\":[],\"likedBy\":[],\"_id\":\"607d8f5be6e3cb00084a6273\",\"referenceId\":\"606d86d0998f280007017ac3\",\"threadId\":null,\"message\":\"You Sent:- @[email:'mdhakecha+1@gmail.com']Manish Dhakecha [/email] test note comment testing edit comment  Apr 19, 2021, 05:56 PM\",\"created\":\"2021-04-19T14:10:33.000Z\",\"modified\":\"2021-04-19T14:29:37.000Z\",\"source\":\"Ignite\",\"personId\":\"56575f4e-0eeb-479e-a6a6-e8f1116f884e\",\"jobNimbusId\":null,\"jobNimbusLeadId\":null,\"version\":1,\"propertyType\":0,\"__v\":0}]}}";
 
-            List<AllNotes> notes = new List<AllNotes>();
-            foreach (var item in res)
+
+            if (!String.IsNullOrEmpty(response.Content))
             {
-                notes.Add(item.Value);
-            }
+                var res = JsonConvert.DeserializeObject<Dictionary<string, AllNotes>>(response.Content);
 
-            return notes;
+                List<AllNotes> notes = new List<AllNotes>();
+                foreach (var item in res)
+                {
+                    notes.Add(item.Value);
+                }
+
+                return notes;
+            }
+            else
+            {
+                return new List<AllNotes>();
+            }
         }
 
         //To create note
@@ -138,7 +149,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
 
             if (!String.IsNullOrEmpty(note.NoteID))
             {
-                req.modified = note.DateLastModified?.ToString("MM/dd/yyyy HH:mm:ss"); 
+                req.modified = note.DateLastModified?.ToString("MM/dd/yyyy HH:mm:ss");
                 request = new RestRequest($"/notes{comment}/{note.NoteID}", Method.PATCH);
             }
             else
@@ -170,7 +181,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 {
                     req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
                 }
-                 
+
                 req.user = new NoteTaggedUser()
                 {
                     userId = user.SmartBoardID,
@@ -181,7 +192,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                     isSendEmail = true,
                     isSendSms = true,
                 };
-            } 
+            }
 
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(req);
