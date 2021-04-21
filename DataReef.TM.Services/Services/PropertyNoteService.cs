@@ -619,21 +619,24 @@ namespace DataReef.TM.Services.Services
                             //}).Select(t => t.Result).ToList()
                         };
 
-                        foreach (var reply in item.replies)
+                        if (item.replies != null)
                         {
-                            data.Replies.Add(new PropertyNote
+                            foreach (var reply in item.replies)
                             {
-                                Attachments = String.Join(",", reply.attachments, 1),
-                                PropertyType = reply.propertyType,
-                                PersonID = Guid.Parse(reply.personId),
-                                PropertyID = PropertyID,
-                                Content = reply.message,
-                                DateCreated = Convert.ToDateTime(reply.created),
-                                DateLastModified = Convert.ToDateTime(reply.modified),
-                                NoteID = note._id,
-                                CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
-                            });
-                        }
+                                data.Replies.Add(new PropertyNote
+                                {
+                                    Attachments = String.Join(",", reply.attachments, 1),
+                                    PropertyType = reply.propertyType,
+                                    PersonID = Guid.Parse(reply.personId),
+                                    PropertyID = PropertyID,
+                                    Content = reply.message,
+                                    DateCreated = Convert.ToDateTime(reply.created),
+                                    DateLastModified = Convert.ToDateTime(reply.modified),
+                                    NoteID = note._id,
+                                    CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
+                                });
+                            }
+                        } 
 
                         noteList.Add(data);
                     }
