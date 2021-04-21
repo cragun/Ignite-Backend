@@ -97,7 +97,7 @@ namespace DataReef.TM.Services.Services
                     CreatedByName = x.CreatedByName,
                     LastModifiedBy = x.LastModifiedBy,
                     LastModifiedByName = x.LastModifiedByName,
-                    Replies = notesList?.Where(a => a.ContentType == "Comment" && a.ParentID == x.Guid),
+                    Replies = notesList?.Where(a => a.ContentType == "Comment" && a.ParentID == x.Guid).ToList(),
                 });
             }
         }
@@ -474,10 +474,11 @@ namespace DataReef.TM.Services.Services
 
         public PropertyNote AddEditNote(PropertyNote entity)
         {
-            try
+            using (var dc = new DataContext())
             {
-                using (var dc = new DataContext())
+                try
                 {
+
                     var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
 
                     if (people == null)
@@ -550,10 +551,23 @@ namespace DataReef.TM.Services.Services
 
                     return entity;
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException(ex.Message);
+
+                catch (Exception ex)
+                {
+                    ApiLogEntry apilog = new ApiLogEntry();
+                    apilog.Id = Guid.NewGuid();
+                    apilog.User = SmartPrincipal.UserId.ToString();
+                    apilog.Machine = Environment.MachineName;
+                    apilog.RequestContentType = "Add Edit Note";
+                    apilog.RequestTimestamp = DateTime.UtcNow;
+                    apilog.RequestUri = "AddEditNote";
+                    apilog.ResponseContentBody = ex.Message;
+
+                    dc.ApiLogEntries.Add(apilog);
+                    dc.SaveChanges();
+
+                    throw new ApplicationException(ex.Message);
+                }
             }
         }
 
@@ -590,19 +604,36 @@ namespace DataReef.TM.Services.Services
                             CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
                             NoteID = note._id,
                             ThreadID = note.threadId,
-                            Replies = item.replies?.Select(async a => new PropertyNote
+                            Replies = new List<PropertyNote>(),
+                            //Replies = item.replies?.Select(async a => new PropertyNote
+                            //{
+                            //    Attachments = String.Join(",", a.attachments, 1),
+                            //    PropertyType = a.propertyType,
+                            //    PersonID = Guid.Parse(a.personId),
+                            //    PropertyID = PropertyID,
+                            //    Content = a.message,
+                            //    DateCreated = Convert.ToDateTime(a.created),
+                            //    DateLastModified = Convert.ToDateTime(a.modified),
+                            //    NoteID = note._id,
+                            //    CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
+                            //}).Select(t => t.Result).ToList()
+                        };
+
+                        foreach (var reply in item.replies)
+                        {
+                            data.Replies.Add(new PropertyNote
                             {
-                                Attachments = String.Join(",", a.attachments, 1),
-                                PropertyType = a.propertyType,
-                                PersonID = Guid.Parse(a.personId),
+                                Attachments = String.Join(",", reply.attachments, 1),
+                                PropertyType = reply.propertyType,
+                                PersonID = Guid.Parse(reply.personId),
                                 PropertyID = PropertyID,
-                                Content = a.message,
-                                DateCreated = Convert.ToDateTime(a.created),
-                                DateLastModified = Convert.ToDateTime(a.modified),
+                                Content = reply.message,
+                                DateCreated = Convert.ToDateTime(reply.created),
+                                DateLastModified = Convert.ToDateTime(reply.modified),
                                 NoteID = note._id,
                                 CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
-                            }).Select(t => t.Result).ToList()
-                        };
+                            });
+                        }
 
                         noteList.Add(data);
                     }
