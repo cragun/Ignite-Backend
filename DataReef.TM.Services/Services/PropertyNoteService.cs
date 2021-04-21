@@ -663,7 +663,6 @@ namespace DataReef.TM.Services.Services
 
                     foreach (var property in properties)
                     {
-
                         var territory = dc.Territories.AsNoTracking().FirstOrDefault(t => !t.IsDeleted && !t.IsArchived && t.Guid == property.TerritoryID);
                         if (territory == null)
                         {
