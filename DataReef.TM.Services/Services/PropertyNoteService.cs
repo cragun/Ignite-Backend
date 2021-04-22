@@ -640,7 +640,7 @@ namespace DataReef.TM.Services.Services
             {
                 try
                 {
-                    var properties = dc.Properties.Include(x => x.Territory).Where(a => a.NoteReferenceId != null).OrderByDescending(a => a.DateCreated).Take(limit).ToList();
+                    var properties = dc.Properties.Include(x => x.Territory).Where(a => a.NoteReferenceId == null).OrderByDescending(a => a.DateCreated).Take(limit).ToList();
 
                     if (properties.Count() == 0)
                     {
