@@ -704,7 +704,7 @@ namespace DataReef.TM.Services.Services
 
                                         if (peopleComment == null)
                                         {
-                                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase      = "User with the specified ID was not found" });
                                         }
 
                                         var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
