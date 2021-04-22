@@ -477,7 +477,7 @@ namespace DataReef.TM.Services.Services
             using (var dc = new DataContext())
             {
                 try
-                {
+                { 
 
                     var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
 
@@ -604,9 +604,8 @@ namespace DataReef.TM.Services.Services
                             CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
                             NoteID = note._id,
                             ThreadID = note.threadId,
-                            Replies = new List<PropertyNote>(), 
+                            Replies = new List<PropertyNote>()
                         };
-
 
                         if (item.replies != null)
                         {
@@ -633,7 +632,7 @@ namespace DataReef.TM.Services.Services
 
                 return noteList;
             }
-        } 
+        }
 
         public string ImportNotes(int limit)
         {
@@ -852,7 +851,7 @@ namespace DataReef.TM.Services.Services
                     ContentType = noteRequest.ContentType,
                     Attachments = noteRequest.Attachments,
                     ParentID = noteRequest.ParentID,
-                    TaggedUsers = noteRequest.TaggedUsers,                    
+                    TaggedUsers = noteRequest.TaggedUsers,
                     IsSendEmail = noteRequest.IsSendEmail,
                     IsSendSMS = noteRequest.IsSendSMS
                 };
@@ -1250,7 +1249,7 @@ namespace DataReef.TM.Services.Services
 
                 if (sbSettings?.ApiKey != apiKey)
                 {
-                   throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Please send Valid Apikey base on LeadId." });
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Please send Valid Apikey base on LeadId." });
                 }
 
                 return property;

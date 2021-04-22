@@ -70,6 +70,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             var request = new RestRequest($"/references", Method.POST);
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(req);
+
             var response = client.Execute(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
@@ -163,8 +164,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 req.version = note.Version;
                 req.propertyType = note.PropertyType;
 
+                SaveRequest(JsonConvert.SerializeObject(req), "Before Tagged Person", url, "", null);
+
                 if (taggedPersons.Count() > 0)
                 {
+                    SaveRequest(JsonConvert.SerializeObject(req), "Inside Tagged Person Before", url, "", null);
                     req.taggedUsers = taggedPersons.Select(a => new NoteTaggedUser
                     {
                         email = a.EmailAddressString,
@@ -175,11 +179,19 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                         firstName = a.FirstName,
                         lastName = a.LastName
                     }).Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s);
+
+                    SaveRequest(JsonConvert.SerializeObject(req), "Inside Tagged Person After", url, "", null);
                 }
                 else
                 {
+
+                    SaveRequest(JsonConvert.SerializeObject(req), "Inside Null Tagged Person Before", url, "", null);
+
                     req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+
+                    SaveRequest(JsonConvert.SerializeObject(req), "Inside Null Tagged Person After", url, "", null);
                 }
+
 
                 req.user = new NoteTaggedUser()
                 {
@@ -192,6 +204,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                     isSendSms = true,
                 };
             }
+
+            SaveRequest(JsonConvert.SerializeObject(req), "All Good Before", url, "", null);
 
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(req);
