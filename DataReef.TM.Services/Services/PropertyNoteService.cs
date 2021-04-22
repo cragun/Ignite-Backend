@@ -477,7 +477,7 @@ namespace DataReef.TM.Services.Services
             using (var dc = new DataContext())
             {
                 try
-                { 
+                {
 
                     var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
 
@@ -551,19 +551,19 @@ namespace DataReef.TM.Services.Services
 
                     return entity;
                 }
-
                 catch (Exception ex)
                 {
-                    ApiLogEntry apilog = new ApiLogEntry();
-                    apilog.Id = Guid.NewGuid();
-                    apilog.User = SmartPrincipal.UserId.ToString();
-                    apilog.Machine = Environment.MachineName;
-                    apilog.RequestContentType = "Add Edit Note";
-                    apilog.RequestTimestamp = DateTime.UtcNow;
-                    apilog.RequestUri = "AddEditNote";
-                    apilog.ResponseContentBody = ex.Message;
-
-                    dc.ApiLogEntries.Add(apilog);
+                    dc.ApiLogEntries.Add(new ApiLogEntry()
+                    {
+                        Id = Guid.NewGuid(),
+                        User = Convert.ToString(SmartPrincipal.UserId),
+                        Machine = Environment.MachineName,
+                        RequestContentType = "Add Edit Note",
+                        RequestContentBody = JsonConvert.SerializeObject(entity),
+                        RequestTimestamp = DateTime.UtcNow,
+                        RequestUri = "AddEditNote",
+                        ResponseContentBody = ex.Message
+                    });
                     dc.SaveChanges();
 
                     throw new ApplicationException(ex.Message);
@@ -636,11 +636,12 @@ namespace DataReef.TM.Services.Services
 
         public string ImportNotes(int limit)
         {
-            try
+
+            using (var dc = new DataContext())
             {
-                using (var dc = new DataContext())
+                try
                 {
-                    var properties = dc.Properties.Include(x => x.Territory).Take(limit).ToList();
+                    var properties = dc.Properties.Include(x => x.Territory).Where(a => a.NoteReferenceId != null).OrderByDescending(a => a.DateCreated).Take(limit).ToList();
 
                     if (properties.Count() == 0)
                     {
@@ -649,76 +650,93 @@ namespace DataReef.TM.Services.Services
 
                     foreach (var property in properties)
                     {
-                        var territory = dc.Territories.AsNoTracking().FirstOrDefault(t => !t.IsDeleted && !t.IsArchived && t.Guid == property.TerritoryID);
-                        if (territory == null)
+                        try
                         {
-                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Territory not found" });
-                        }
-
-                        var sbSettings = _ouSettingService
-                                     .Value
-                                     .GetSettingsByOUID(territory.OUID)
-                                     ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
-                                     ?.GetValue<ICollection<SelectedIntegrationOption>>()?
-                                     .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
-                                     .Data?
-                                     .SMARTBoard;
-
-                        var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(property, sbSettings?.ApiKey);
-                        property.NoteReferenceId = reference?.refId;
-
-                        dc.SaveChanges();
-
-                        if (!String.IsNullOrEmpty(property.NoteReferenceId))
-                        {
-                            var notesList = dc.PropertyNotes.Where(p => p.PropertyID == property.Guid && !p.IsDeleted).AsNoTracking().ToList();
-
-                            foreach (var note in notesList)
+                            var territory = dc.Territories.AsNoTracking().FirstOrDefault(t => !t.IsDeleted && !t.IsArchived && t.Guid == property.TerritoryID);
+                            if (territory == null)
                             {
-                                var taggedPersons = GetTaggedPersons(note.Content);
+                                throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Territory not found" });
+                            }
 
-                                var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == note.PersonID);
+                            var sbSettings = _ouSettingService
+                                         .Value
+                                         .GetSettingsByOUID(territory.OUID)
+                                         ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                         ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                         .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                         .Data?
+                                         .SMARTBoard;
 
-                                if (people == null)
+                            var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(property, sbSettings?.ApiKey);
+                            property.NoteReferenceId = reference?.refId;
+                            property.DateLastModified = DateTime.UtcNow;
+
+                            dc.SaveChanges();
+
+                            if (!String.IsNullOrEmpty(property.NoteReferenceId))
+                            {
+                                var notesList = dc.PropertyNotes.Where(p => p.PropertyID == property.Guid && !p.IsDeleted).AsNoTracking().ToList();
+
+                                foreach (var note in notesList)
                                 {
-                                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
-                                }
+                                    var taggedPersons = GetTaggedPersons(note.Content);
 
-                                var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
+                                    var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == note.PersonID);
 
-                                note.NoteID = noteReference?.noteId;
-                                note.ThreadID = noteReference?.threadId;
-
-                                var comments = notesList.Where(a => a.ParentID == note.Guid).ToList();
-
-                                foreach (var comment in comments)
-                                {
-                                    var taggedPersonsComment = GetTaggedPersons(comment.Content);
-
-                                    comment.ThreadID = note.ThreadID;
-
-                                    var peopleComment = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == comment.PersonID);
-
-                                    if (peopleComment == null)
+                                    if (people == null)
                                     {
                                         throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                                     }
 
-                                    var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
+                                    var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
 
+                                    note.NoteID = noteReference?.noteId;
+                                    note.ThreadID = noteReference?.threadId;
+
+                                    var comments = notesList.Where(a => a.ParentID == note.Guid).ToList();
+
+                                    foreach (var comment in comments)
+                                    {
+                                        var taggedPersonsComment = GetTaggedPersons(comment.Content);
+
+                                        comment.ThreadID = note.ThreadID;
+
+                                        var peopleComment = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == comment.PersonID);
+
+                                        if (peopleComment == null)
+                                        {
+                                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                                        }
+
+                                        var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
+                                    }
                                 }
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            dc.ApiLogEntries.Add(new ApiLogEntry()
+                            {
+                                Id = Guid.NewGuid(),
+                                User = Convert.ToString(SmartPrincipal.UserId),
+                                Machine = Environment.MachineName,
+                                RequestContentType = "Import Notes",
+                                RequestContentBody = JsonConvert.SerializeObject(property),
+                                RequestTimestamp = DateTime.UtcNow,
+                                RequestUri = "ImportNotes",
+                                ResponseContentBody = ex.Message
+                            });
+                            dc.SaveChanges();
+                        }
                     }
+
+                    return "success";
                 }
-
-                return "success";
+                catch (Exception ex)
+                {
+                    throw new ApplicationException(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                throw new ApplicationException(ex.Message);
-            }
-
         }
 
         #endregion
