@@ -191,8 +191,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
 
                     SaveRequest(JsonConvert.SerializeObject(req), "Inside Null Tagged Person After", url, "", null);
                 }
-
-
+                 
                 req.user = new NoteTaggedUser()
                 {
                     userId = user.SmartBoardID,
