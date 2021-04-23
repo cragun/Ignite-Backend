@@ -20,8 +20,9 @@ namespace DataReef.TM.Api.Classes.ViewModels
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
-        [StringLength(255, ErrorMessage = "Password must have at least 6 characters", MinimumLength = 6)]
+       // [StringLength(255, ErrorMessage = "Password must have at least 8 characters", MinimumLength = 8)]
         [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z])(?=.*?[#?!@$%^&*-]).{8,50}$", ErrorMessage = "Password must must have at least 8 characters and contain one uppercase letter, one lowercase letter, one digit and one special character.")]
         public string Password { get; set; }
 
         public HttpPostedFileBase Photo { get; set; }

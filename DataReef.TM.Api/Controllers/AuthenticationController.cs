@@ -11,6 +11,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Persons;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -78,7 +79,7 @@ namespace DataReef.TM.Api.Controllers
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
                 }
 
-                AuthenticationToken token = authService.Authenticate(post.UserName, post.Password , post.fcm_token);
+                AuthenticationToken token = authService.Authenticate(post.UserName, post.Password, post.fcm_token);
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
             }
@@ -176,7 +177,7 @@ namespace DataReef.TM.Api.Controllers
         [GenericRoute("createuser/{apiKey}")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IHttpActionResult> CreateUserFromSmartBoard([FromBody]CreateUserDTO user, string apiKey)
+        public async Task<IHttpActionResult> CreateUserFromSmartBoard([FromBody] CreateUserDTO user, string apiKey)
         {
             try
             {
@@ -230,7 +231,7 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-                AuthenticationToken token = authService.CompletePasswordReset(completionObject.ResetGuid, completionObject.NewPassword , completionObject.fcm_token);
+                AuthenticationToken token = authService.CompletePasswordReset(completionObject.ResetGuid, completionObject.NewPassword, completionObject.fcm_token);
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
 
@@ -251,7 +252,7 @@ namespace DataReef.TM.Api.Controllers
 
         }
 
-        
+
         [GenericRoute("changepassword")]
         [HttpPut]
         [AllowAnonymous]
@@ -260,7 +261,7 @@ namespace DataReef.TM.Api.Controllers
             try
             {
 
-                AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword , change.fcm_token);
+                AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword, change.fcm_token);
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
 
@@ -321,7 +322,7 @@ namespace DataReef.TM.Api.Controllers
         [GenericRoute("token/extend")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IHttpActionResult> ExtendTokenValidity([FromBody]string token)
+        public async Task<IHttpActionResult> ExtendTokenValidity([FromBody] string token)
         {
             var certificate = DataReef.TM.Api.Security.Certificates.Certificate.Get();
             var authToken = AuthenticationToken.FromEncryptedString(token, certificate);
@@ -335,17 +336,26 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost, Route("createuser/smartboard")]
-        [AllowAnonymous , InjectAuthPrincipal]
+        [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(SaveResult))]
-        public SaveResult CreateUserFromSB([FromBody]CreateUserDTO user)
+        public SaveResult CreateUserFromSB([FromBody] CreateUserDTO user)
         {
             if (user == null)
             {
                 return new SaveResult { Success = false, ExceptionMessage = "request data can not null" };
             }
 
-            var ret = authService.CreateUpdateUserFromSB(user, user.apikey);
-            return ret;
+            if (ModelState.IsValid)
+            {
+                var ret = authService.CreateUpdateUserFromSB(user, user.apikey);
+                return ret;
+            }
+            else
+            {
+                var errors = ModelState.Where(ms => ms.Value.Errors.Count > 0).SelectMany(ms => ms.Value.Errors.Select(e => e.ErrorMessage)).FirstOrDefault();
+                return new SaveResult { Success = false, ExceptionMessage = errors };
+            }
+
         }
 
 
