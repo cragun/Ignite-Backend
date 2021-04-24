@@ -30,7 +30,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         {
         }
 
-        public JobNimbusLeadResponseData CreateJobNimbusLead(Guid propertyid, string url, string apikey)
+        public JobNimbusLeadResponseData CreateJobNimbusLead(Guid propertyid, string baseurl, string apikey)
         {
             using (var dc = new DataContext())
             {
@@ -61,7 +61,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.status_name = "Lead";
                 req.geo = geo;
 
-                url = $"{url}/api1/contacts/";
+                string url = $"/api1/contacts/";
                 if (!string.IsNullOrEmpty(property.JobNimbusLeadID))
                     url = $"{url}{property.JobNimbusLeadID}";
 
@@ -70,18 +70,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                RestClient client = new RestClient(url);
+                var client = new RestClient(baseurl);
                 var response = client.Execute(request);
                 // var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, apikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, baseurl + url, response.StatusCode, apikey);
                     throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = $"CreateJobNimbusLead Failed. {response.Content}  {response.StatusCode}" });
                 }
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, apikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, baseurl + url, response.StatusCode, apikey);
                 }
                 catch (Exception)
                 {
@@ -97,7 +97,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-        public AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Guid appid, string url, string apikey)
+        public AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Guid appid, string baseurl, string apikey)
         {
             using (var dc = new DataContext())
             {
@@ -115,7 +115,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.created_by = Convert.ToString(appointment?.CreatedByID);
                 req.customer = Convert.ToString(appointment?.CreatedByID);
 
-                url = $"{url}/api1/tasks/";
+               string url = $"/api1/tasks/";
                 if (!string.IsNullOrEmpty(appointment.JobNimbusLeadID))
                     url = $"{url}{appointment.JobNimbusID}";
 
@@ -124,17 +124,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                RestClient client = new RestClient(url);
+                var client = new RestClient(baseurl);
                 var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, apikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, baseurl + url, response.StatusCode, apikey);
                     throw new ApplicationException($"CreateJobNimbusAppointment Failed. {response.ErrorMessage}  {response.StatusCode}");
                 }
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, apikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, baseurl + url, response.StatusCode, apikey);
                 }
                 catch (Exception)
                 {
@@ -149,7 +149,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             }
         }
 
-        public NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note, string url, string apikey)
+        public NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note, string baseurl, string apikey)
         {
             using (var dc = new DataContext())
             {
@@ -161,23 +161,23 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.created_by = Convert.ToString(note?.PersonID);
                 req.external_id = Convert.ToString(note?.Guid);
 
-                url = $"{url}/api1/activities/";
+                string url = $"/api1/activities/";
                 var request = new RestRequest(url, Method.POST);
                 request.AddHeader("Authorization", $"Bearer {apikey}");
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-                RestClient client = new RestClient(url);
+                var client = new RestClient(baseurl);
                 var response = client.Execute(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, apikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, baseurl + url, response.StatusCode, apikey);
                     throw new ApplicationException($"CreateJobNimbusLead Failed. {response.ErrorMessage}  {response.StatusCode}");
                 }
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, apikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, baseurl + url, response.StatusCode, apikey);
                 }
                 catch (Exception)
                 {
@@ -189,14 +189,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         }
 
 
-        public List<JobNimbusContacts> GetJobNimbusContacts(string JobNimbusLeadID, string url, string apikey)
+        public List<JobNimbusContacts> GetJobNimbusContacts(string JobNimbusLeadID, string baseurl, string apikey)
         {
             using (var dc = new DataContext())
             {
                 var request = new RestRequest($"/api1/contacts", Method.GET);
                 request.AddHeader("Authorization", $"Bearer {apikey}");
 
-                RestClient client = new RestClient(url);
+                var  client = new RestClient(baseurl);
                 var response = client.Execute(request);
 
                 //var response = await client.ExecuteTaskAsync(request);
@@ -208,7 +208,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 try
                 {
-                    SaveRequest(JsonConvert.SerializeObject(request), response, url + "/api1/contacts", null, apikey);
+                    SaveRequest(JsonConvert.SerializeObject(request), response, baseurl + "/api1/contacts", null, apikey);
                 }
                 catch (Exception ex)
                 {
