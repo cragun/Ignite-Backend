@@ -260,11 +260,18 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-
-                AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword, change.fcm_token);
-                Jwt ret = this.EncodeToken(token);
-                return Ok<Jwt>(ret);
-
+                if (ModelState.IsValid)
+                {
+                    AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword, change.fcm_token);
+                    Jwt ret = this.EncodeToken(token);
+                    return Ok<Jwt>(ret);
+                }
+                else
+                {
+                    var errors = ModelState.Where(ms => ms.Value.Errors.Count > 0).SelectMany(ms => ms.Value.Errors.Select(e => e.ErrorMessage)).FirstOrDefault();
+                     throw new ApplicationException(errors);
+                    //throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = errors });
+                }
             }
             catch (System.ServiceModel.FaultException fe)
             {

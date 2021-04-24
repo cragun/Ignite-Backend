@@ -317,6 +317,7 @@
     <Compile Include="Classes\Enums\WebRedirectActions.cs" />
     <Compile Include="Classes\Infrastructure\CustomMultipartFormDataProvider.cs" />
     <Compile Include="Classes\Infrastructure\InMemoryMultipartFormDataStreamProvider.cs" />
+    <Compile Include="Classes\NotEqualAttribute.cs" />
     <Compile Include="Classes\ScheduledTask\Jobclass.cs" />
     <Compile Include="Classes\ScheduledTask\JobScheduler.cs" />
     <Compile Include="Classes\ViewModels\IntegrationParameters.cs" />

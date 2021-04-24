@@ -524,13 +524,19 @@ namespace DataReef.TM.Services
                     break;
 
                 case ThirdPartyPropertyType.Roofing:
-                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+
+                    var jobnimbussetting = _ouSettingsService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                     break;
 
 
                 case ThirdPartyPropertyType.Both:
                     var resp = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
-                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+
+                    var jobnimbussettings = _ouSettingsService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussettings?.BaseUrl, jobnimbussettings?.ApiKey);
                     break;
             }
             #endregion ThirdPartyPropertyType
@@ -544,13 +550,16 @@ namespace DataReef.TM.Services
             entity.CreatedByID = SmartPrincipal.UserId;
             var ret = base.Insert(entity);
 
+            var jobnimbussetting = _ouSettingsService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
             if (ret == null)
             {
                 entity.SaveResult = SaveResult.SuccessfulInsert;
-                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+
+                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                 return entity;
             }
-            _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+            _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
             return ret;
         }
 

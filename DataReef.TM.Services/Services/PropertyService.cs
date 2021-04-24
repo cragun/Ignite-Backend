@@ -153,9 +153,6 @@ namespace DataReef.TM.Services.Services
                 return ret;
             }
 
-
-
-
             return ret;
         }
 
@@ -266,10 +263,12 @@ namespace DataReef.TM.Services.Services
                             break;
 
                         case ThirdPartyPropertyType.Roofing:
-                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid);
+                            var jobnimbussetting = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.Guid, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                             if (entity.Appointments.Count > 0)
                             {
-                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Appointments.FirstOrDefault().Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                             }
                             break;
 
@@ -282,10 +281,12 @@ namespace DataReef.TM.Services.Services
                                 prop.SBLeadError = resp.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                             }
 
-                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid);
+                            var jobnimbussettings = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.Guid, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid, jobnimbussettings?.BaseUrl, jobnimbussettings?.ApiKey);
                             if (entity.Appointments?.Count > 0)
                             {
-                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Appointments.FirstOrDefault().Guid, jobnimbussettings?.BaseUrl, jobnimbussettings?.ApiKey);
                             }
                             break;
                     }
@@ -525,6 +526,7 @@ namespace DataReef.TM.Services.Services
                             });
 
                             //if (needToUpdateSB && !pushedToSB)
+                            needToUpdateSB = true;
                             if (needToUpdateSB)
                             {
                                 bool IsdispositionChanged = false;
@@ -550,11 +552,14 @@ namespace DataReef.TM.Services.Services
                                             break;
 
                                         case ThirdPartyPropertyType.Roofing:
-                                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid);
+
+                                            var jobnimbussetting = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.Guid, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl ,jobnimbussetting?.ApiKey);
                                             // if (entity.Appointments?.Any() == true)
                                             if (entity.Appointments != null && entity.Appointments.Count > 0)
                                             {
-                                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+                                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Appointments.FirstOrDefault().Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                                             }
                                             break;
 
@@ -567,11 +572,13 @@ namespace DataReef.TM.Services.Services
                                                 ret.SBLeadError = resp.Message.Text + ". This lead will not be saved in SMARTBoard until it's added.";
                                             }
 
-                                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid);
+                                            var jobnimbussettings = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.Guid, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid, jobnimbussettings?.BaseUrl, jobnimbussettings?.ApiKey);
                                             // if (entity.Appointments?.Any() == true)
                                             if (entity.Appointments != null && entity.Appointments.Count > 0)
                                             {
-                                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid);
+                                                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Appointments.FirstOrDefault().Guid, jobnimbussettings?.BaseUrl, jobnimbussettings?.ApiKey);
                                             }
                                             break;
                                     }

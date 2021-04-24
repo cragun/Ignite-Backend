@@ -13,13 +13,13 @@ namespace DataReef.TM.Contracts.Services.FinanceAdapters
     public interface IJobNimbusAdapter
     {
         [OperationContract]
-        JobNimbusLeadResponseData CreateJobNimbusLead(Guid propertyid);
+        JobNimbusLeadResponseData CreateJobNimbusLead(Guid propertyid, string url, string apikey);
 
         [OperationContract]
-        AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Guid propertyid);
+        AppointmentJobNimbusLeadResponseData CreateAppointmentJobNimbusLead(Guid propertyid, string url, string apikey);
 
         [OperationContract]
-        NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note);
+        NoteJobNimbusLeadResponseData CreateJobNimbusNote(PropertyNote note, string url, string apikey);
 
     }
 }

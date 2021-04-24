@@ -4,6 +4,7 @@
     {
         public const string SettingName = "Integrations.Options";
         public const string SelectedSettingName = "Integrations.Options.Selected";
+        public const string JobNimbusIntegration = "JobNimbus.Integration.Options";
         public const string IncomingApiKeySettingName = "Smartboard.Incoming.ApiKey";
         //public const string SmartboardUserIdSettingName = "Integrations.SmartBoard.Id";
 

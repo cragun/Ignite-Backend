@@ -148,7 +148,9 @@ namespace DataReef.TM.Services.Services
                 #region ThirdPartyPropertyType
                 if (entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
                 {
-                    _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
+                    var jobnimbussetting = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                    _jobNimbusAdapter.Value.CreateJobNimbusNote(entity, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                 }
                 #endregion ThirdPartyPropertyType 
 
@@ -498,9 +500,11 @@ namespace DataReef.TM.Services.Services
 
                     #region ThirdPartyPropertyType
 
-                    if (String.IsNullOrEmpty(entity.NoteID) && entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
+                    if (string.IsNullOrEmpty(entity.NoteID) && entity.PropertyType == ThirdPartyPropertyType.Roofing || entity.PropertyType == ThirdPartyPropertyType.Both)
                     {
-                        var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity);
+                        var jobnimbussetting = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                        var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                         entity.JobNimbusID = response?.jnid;
                     }
 
@@ -635,7 +639,7 @@ namespace DataReef.TM.Services.Services
         }
 
         public string ImportNotes(int limit)
-        { 
+        {
             using (var dc = new DataContext())
             {
                 try
@@ -704,7 +708,7 @@ namespace DataReef.TM.Services.Services
 
                                         if (peopleComment == null)
                                         {
-                                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase      = "User with the specified ID was not found" });
+                                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                                         }
 
                                         var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
