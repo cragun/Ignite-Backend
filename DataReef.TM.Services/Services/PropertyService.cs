@@ -184,7 +184,6 @@ namespace DataReef.TM.Services.Services
             }
 
             ret.PropertyNotes = new List<PropertyNote>();
-
             return ret;
         }
 
