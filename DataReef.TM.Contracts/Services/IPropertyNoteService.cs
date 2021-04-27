@@ -30,7 +30,7 @@ namespace DataReef.TM.Contracts.Services
         Task<IEnumerable<PropertyNote>> GetPropertyNotes(Guid PropertyID);
 
         [OperationContract]
-        Task<PropertyNote> GetPropertyNoteById(Guid NoteID , Guid PropertyID); 
+        Task<PropertyNote> GetPropertyNoteById(Guid NoteID); 
 
         [OperationContract]
         string ImportNotes(int limit);

@@ -137,21 +137,20 @@ namespace DataReef.TM.Api.Controllers
 
         /// <summary>
         /// Gets PropertyNote linked with specified id from notes server
-        /// </summary>
-        /// <param name="propertyID"></param>
+        /// </summary> 
         /// <param name="noteID"></param>
         /// <returns></returns>
-        [Route("notes/{propertyID}/{noteID}")]
+        [Route("note/{noteID}")]
         [ResponseType(typeof(IEnumerable<PropertyNote>))]
         [HttpGet]
-        public async Task<IHttpActionResult> GetPropertyNoteById(Guid propertyID, Guid noteID)
+        public async Task<IHttpActionResult> GetPropertyNoteById(Guid noteID)
         {
             if (noteID == Guid.Empty)
             {
                 return BadRequest("Invalid request");
             }
            
-            var result = await _propertyNoteService.GetPropertyNoteById(noteID, propertyID);
+            var result = await _propertyNoteService.GetPropertyNoteById(noteID);
             return Ok(result);
         }
 

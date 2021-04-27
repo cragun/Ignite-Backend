@@ -667,28 +667,28 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public async Task<PropertyNote> GetPropertyNoteById(Guid NoteID, Guid PropertyID)
+        public async Task<PropertyNote> GetPropertyNoteById(Guid NoteID)
         {
             using (var dc = new DataContext())
-            {
-                var property = await dc.Properties.AsNoTracking().FirstOrDefaultAsync(x => x.Guid == PropertyID);
-
-                if (property == null)
-                {
-                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
-                }
-
+            { 
                 var note = await _propertyNotesAdapter.Value.GetPropertyNoteById(Convert.ToString(NoteID));
 
                 if (note != null)
                 {
+                    var property = await dc.Properties.AsNoTracking().FirstOrDefaultAsync(x => x.NoteReferenceId == note.referenceId);
+
+                    if (property == null)
+                    {
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
+                    }
+
                     var data = new PropertyNote
                     {
                         Guid = String.IsNullOrEmpty(note.guid) ? Guid.Empty : Guid.Parse(note.guid),
                         Attachments = String.Join(",", note.attachments, 1),
                         PropertyType = note.propertyType,
                         PersonID = Guid.Parse(note.personId),
-                        PropertyID = PropertyID,
+                        PropertyID = property.Guid,
                         Content = note.message,
                         DateCreated = Convert.ToDateTime(note.created),
                         DateLastModified = Convert.ToDateTime(note.modified),
