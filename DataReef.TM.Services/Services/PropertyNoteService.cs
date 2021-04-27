@@ -672,7 +672,7 @@ namespace DataReef.TM.Services.Services
         {
             using (var dc = new DataContext())
             { 
-                var note = await _propertyNotesAdapter.Value.GetPropertyNoteById(Convert.ToString(NoteID));
+                var note = await _propertyNotesAdapter.Value.GetPropertyNoteById(Convert.ToString(NoteID).ToLower());
 
                 if (note != null)
                 {
