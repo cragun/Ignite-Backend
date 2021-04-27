@@ -342,8 +342,7 @@ namespace DataReef.TM.Api.Controllers
             var result = await _propertyNoteService.GetTerritoriesList(leadId, DecyptApiKey);
             return Ok(result);
         }
-
-
+         
 
         /// <summary>
         /// / Update TerritoryId for Property which given By SB.
