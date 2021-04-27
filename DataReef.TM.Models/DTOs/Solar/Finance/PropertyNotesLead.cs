@@ -47,6 +47,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
     public class NoteRequest
     {
+        public string guid { get; set; }
         public string referenceId { get; set; }
         public string thread_id { get; set; }
         public string threadId { get; set; }
@@ -80,6 +81,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
         public List<string> attachments { get; set; } 
         public string _id { get; set; }
+        public string guid { get; set; }
         public string referenceId { get; set; } 
         public string message { get; set; }
         public string created { get; set; }
@@ -98,7 +100,16 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     {
         public Note notes { get; set; }
         public List<Note> replies { get; set; } 
-    } 
+    }
+
+    public class EmailNotifications
+    {  
+        public string type { get; set; }
+        public string from { get; set; }
+        public string to { get; set; } 
+        public string subject { get; set; } 
+        public string message { get; set; } 
+    }
 }
 
 

@@ -118,7 +118,7 @@ namespace DataReef.TM.Api.Controllers
         { 
             var result = _propertyNoteService.AddEditNote(entity); 
             return Ok(result);
-        } 
+        }   
 
         /// <summary>
         /// Gets all PropertyNotes linked with specified propertyID from notes server
@@ -134,6 +134,26 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Gets PropertyNote linked with specified id from notes server
+        /// </summary>
+        /// <param name="propertyID"></param>
+        /// <param name="noteID"></param>
+        /// <returns></returns>
+        [Route("notes/{propertyID}/{noteID}")]
+        [ResponseType(typeof(IEnumerable<PropertyNote>))]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetPropertyNoteById(Guid propertyID, Guid noteID)
+        {
+            if (noteID == Guid.Empty)
+            {
+                return BadRequest("Invalid request");
+            }
+           
+            var result = await _propertyNoteService.GetPropertyNoteById(noteID, propertyID);
+            return Ok(result);
+        }
 
         /// <summary>
         /// import notes to property server

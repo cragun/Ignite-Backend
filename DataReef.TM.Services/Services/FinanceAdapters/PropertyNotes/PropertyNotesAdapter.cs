@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using DataReef.TM.Models.DTOs;
 using RestSharp.Serializers;
 using Newtonsoft.Json.Linq;
+using System.Configuration;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
 {
@@ -29,6 +30,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
     public class PropertyNotesAdapter : FinancialAdapterBase, IPropertyNotesAdapter
     {
         private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["PropertyNotes.URL"];
+        private static string _senderEmail = ConfigurationManager.AppSettings["SenderEmail"] ?? "donotreply@smartboardcrm.com"; 
 
         private readonly Lazy<IProposalService> _proposalService;
 
@@ -86,11 +88,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             {
                 throw new ApplicationException($"GetPropertyReferenceId Failed. {response.StatusCode}");
             }
-             
+
             return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
         }
 
-        //​To get a Properties note
+        //​To get a Properties notes 
         public async Task<List<AllNotes>> GetPropertyNotes(string referenceId)
         {
             var request = new RestRequest($"/notes/{referenceId}", Method.GET);
@@ -128,6 +130,30 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
         }
 
+        //​To get a note by id
+        public async Task<Models.DTOs.Solar.Finance.Note> GetPropertyNoteById(string noteID)
+        {
+            var request = new RestRequest($"/notes/getNoteByGuid/{noteID}", Method.GET);
+            var response = await client.ExecuteTaskAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                throw new ApplicationException($"GetPropertyNoteById Failed. {response.ErrorMessage} {response.StatusCode}");
+            }
+            try
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException($"GetPropertyNoteById Failed. {response.StatusCode}");
+            }
+
+            var res = JsonConvert.DeserializeObject<List<Models.DTOs.Solar.Finance.Note>>(response.Content);
+            return res?.FirstOrDefault();
+        }
+
         //To create note
         public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
         {
@@ -150,6 +176,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
             else
             {
+                req.guid = Convert.ToString(note.Guid);
                 req.referenceId = referenceId;
                 req.created = note.DateCreated.ToString("MM/dd/yyyy HH:mm:ss");
                 req.source = "Ignite";
@@ -161,12 +188,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 req.propertyType = note.PropertyType;
 
                 if (taggedPersons.Count() > 0)
-                { 
+                {
                     req.taggedUsers = taggedPersons.Select(a => new NoteTaggedUser
                     {
                         email = a.EmailAddressString,
                         phone = a.PhoneNumbers?.FirstOrDefault().Number,
-                        isSendEmail = true,
+                        isSendEmail = false,
                         isSendSms = true,
                         userId = a.SmartBoardID,
                         firstName = a.FirstName,
@@ -177,7 +204,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 {
                     req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
                 }
-                 
+
                 req.user = new NoteTaggedUser()
                 {
                     userId = user.SmartBoardID,
@@ -185,10 +212,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                     firstName = user.FirstName,
                     lastName = user.LastName,
                     phone = user.PhoneNumbers?.FirstOrDefault()?.Number,
-                    isSendEmail = true,
-                    isSendSms = true,
+                    isSendEmail = false,
+                    isSendSms = false,
                 };
-            } 
+            }
 
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(req);
@@ -209,6 +236,39 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
             }
 
+            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
+        }
+
+        //​send email notification
+        public async Task<NoteResponse> SendEmailNotification(string subject, string body, string to)
+        {
+            EmailNotifications req = new EmailNotifications();
+            req.type = "email";
+            req.subject = subject;
+            req.from = _senderEmail;
+            req.to = to;
+            req.message = body;
+  
+            var request = new RestRequest($"/notes/sendNotifications", Method.POST);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddJsonBody(req);
+
+            var response = await client.ExecuteTaskAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                throw new ApplicationException($"SendEmailNotification Failed. {response.ErrorMessage} {response.StatusCode}");
+            }
+            try
+            {
+                //SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException($"SendEmailNotification Failed. {response.StatusCode}");
+            }
+             
             return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
         }
 
