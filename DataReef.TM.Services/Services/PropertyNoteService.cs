@@ -478,7 +478,6 @@ namespace DataReef.TM.Services.Services
             {
                 try
                 {
-
                     var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == SmartPrincipal.UserId);
 
                     if (people == null)
@@ -495,6 +494,7 @@ namespace DataReef.TM.Services.Services
 
                     entity.DateCreated = DateTime.UtcNow;
                     entity.DateLastModified = DateTime.UtcNow;
+                    entity.Guid = Guid.NewGuid();
 
                     #region ThirdPartyPropertyType
 
@@ -517,10 +517,9 @@ namespace DataReef.TM.Services.Services
                         NotifyTaggedUsers(taggedPersons, entity, property, dc);
                     }
 
+                    var parentNote = entity.ParentNote;
                     if (entity.ContentType == "Comment")
                     {
-                        var parentNote = entity.ParentNote;
-
                         if (parentNote == null)
                         {
                             throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Note not found" });
@@ -534,6 +533,7 @@ namespace DataReef.TM.Services.Services
                         parentNote.CreatedByName = parent?.Name;
 
                         NotifyComment(parentNote.PersonID, parentNote, property, dc);
+
                     }
 
                     var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
@@ -548,6 +548,33 @@ namespace DataReef.TM.Services.Services
                     }
 
                     entity.ThreadID = reference?.threadId;
+
+                    //send email notification to user 
+                    var emails = taggedPersons?.Select(x => x.EmailAddressString);
+                    if (emails.Count() > 0)
+                    {
+                        emails = emails.Distinct();
+
+                        string content = entity.Content;
+
+                        var tag1Regex = new Regex(@"\[email:'(.*?)'\]");
+                        var tag2Regex = new Regex(@"\[\/email\]");
+
+                        content = tag1Regex.Replace(content, "<b>");
+                        content = tag2Regex.Replace(content, "</b>");
+
+                        string noteID = entity.NoteID;
+                        if (entity.ContentType == "Comment")
+                            noteID = parentNote.NoteID;
+
+                        var directNoteLinks = $"<a href='{Constants.APIBaseAddress}/home/redirect?notes?propertyID={property.Guid}&noteID={entity.Guid}'>Click here to open the note directly in IGNITE (Link only works on iOS devices)</a><br/> <a href='{Constants.SmartboardURL}/leads/viewnote?note_reference_id={property.NoteReferenceId}&thread_id={entity.ThreadID}&note_id={noteID}'>Click here to open the note directly in SMARTBoard</a>";
+
+                        var body = $"Note Sent by: {entity.CreatedByName}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {entity.Content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
+
+                        var to = string.Join(";", emails);
+
+                        _propertyNotesAdapter.Value.SendEmailNotification($"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, to);
+                    }
 
                     return entity;
                 }
@@ -594,6 +621,7 @@ namespace DataReef.TM.Services.Services
                     {
                         var data = new PropertyNote
                         {
+                            Guid = String.IsNullOrEmpty(note.guid) ? Guid.Empty : Guid.Parse(note.guid),
                             Attachments = String.Join(",", note.attachments, 1),
                             PropertyType = note.propertyType,
                             PersonID = Guid.Parse(note.personId),
@@ -613,6 +641,7 @@ namespace DataReef.TM.Services.Services
                             {
                                 data.Replies.Add(new PropertyNote
                                 {
+                                    Guid = String.IsNullOrEmpty(reply.guid) ? Guid.Empty : Guid.Parse(reply.guid),
                                     Attachments = String.Join(",", reply.attachments, 1),
                                     PropertyType = reply.propertyType,
                                     PersonID = Guid.Parse(reply.personId),
@@ -634,8 +663,47 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async Task<PropertyNote> GetPropertyNoteById(Guid NoteID, Guid PropertyID)
+        {
+            using (var dc = new DataContext())
+            {
+                var property = await dc.Properties.AsNoTracking().FirstOrDefaultAsync(x => x.Guid == PropertyID);
+
+                if (property == null)
+                {
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
+                }
+
+                var note = await _propertyNotesAdapter.Value.GetPropertyNoteById(Convert.ToString(NoteID));
+
+                if (note != null)
+                {
+                    var data = new PropertyNote
+                    {
+                        Guid = String.IsNullOrEmpty(note.guid) ? Guid.Empty : Guid.Parse(note.guid),
+                        Attachments = String.Join(",", note.attachments, 1),
+                        PropertyType = note.propertyType,
+                        PersonID = Guid.Parse(note.personId),
+                        PropertyID = PropertyID,
+                        Content = note.message,
+                        DateCreated = Convert.ToDateTime(note.created),
+                        DateLastModified = Convert.ToDateTime(note.modified),
+                        CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
+                        NoteID = note._id,
+                        ThreadID = note.threadId
+                    };
+
+                    return data;
+                }
+                else
+                {
+                    return new PropertyNote();
+                }
+            }
+        }
+
         public string ImportNotes(int limit)
-        { 
+        {
             using (var dc = new DataContext())
             {
                 try
@@ -704,7 +772,7 @@ namespace DataReef.TM.Services.Services
 
                                         if (peopleComment == null)
                                         {
-                                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase      = "User with the specified ID was not found" });
+                                            throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                                         }
 
                                         var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
@@ -1231,7 +1299,7 @@ namespace DataReef.TM.Services.Services
 
             using (var dc = new DataContext())
             {
-                return dc.People.Where(x => !x.IsDeleted && emails.Contains(x.EmailAddressString)).ToList();
+                return dc.People.Include(p => p.PhoneNumbers).AsNoTracking().Where(x => !x.IsDeleted && emails.Contains(x.EmailAddressString)).ToList();
             }
         }
 
@@ -1334,6 +1402,7 @@ namespace DataReef.TM.Services.Services
             });
 
         }
+
         private void SendEmailNotification(string content, string Username, IEnumerable<string> emails, Property property, Guid noteID, bool IsSmartboard = false)
         {
             Task.Factory.StartNew(() =>

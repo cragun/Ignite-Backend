@@ -22,7 +22,12 @@ namespace DataReef.TM.Contracts.Services
         Task<List<AllNotes>> GetPropertyNotes(string referenceId);
 
         [OperationContract]
+        Task<Models.DTOs.Solar.Finance.Note> GetPropertyNoteById(string noteID);
+
+        [OperationContract]
         NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user);
 
+        [OperationContract]
+        Task<NoteResponse> SendEmailNotification(string subject, string body, string to);
     }
 }

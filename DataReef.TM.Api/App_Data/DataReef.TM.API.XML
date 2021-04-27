@@ -395,6 +395,14 @@
             <param name="propertyID"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetPropertyNoteById(System.Guid,System.Guid)">
+            <summary>
+            Gets PropertyNote linked with specified id from notes server
+            </summary>
+            <param name="propertyID"></param>
+            <param name="noteID"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.ImportNotes(System.Int32)">
             <summary>
             import notes to property server
