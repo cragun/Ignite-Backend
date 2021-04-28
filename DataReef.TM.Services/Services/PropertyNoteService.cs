@@ -1252,7 +1252,8 @@ namespace DataReef.TM.Services.Services
                     Content = $"New activity on note for property {property.Name}",
                     SmartBoardID = smartboardNotificationID,
                     CreatedByID = note.CreatedByID,
-                    CreatedByName = note.CreatedByName
+                    CreatedByName = note.CreatedByName,
+                    PropertyID = property.Guid
                 });
 
                 //send notification
@@ -1508,7 +1509,8 @@ namespace DataReef.TM.Services.Services
                 Content = $"New Comment on note for property {property.Name}",
                 SmartBoardID = smartboardNotificationID,
                 CreatedByID = note.CreatedByID,
-                CreatedByName = note.CreatedByName
+                CreatedByName = note.CreatedByName,
+                PropertyID = property.Guid
             };
 
             dataContext.Notifications.Add(Notification);
