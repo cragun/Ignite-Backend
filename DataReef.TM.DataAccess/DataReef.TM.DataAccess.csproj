@@ -1275,6 +1275,10 @@
     <Compile Include="Migrations\202104280640305_Add_PropertyID_Migration.Designer.cs">
       <DependentUpon>202104280640305_Add_PropertyID_Migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104281113157_Add_PropertyIDForeignKey_Migration.cs" />
+    <Compile Include="Migrations\202104281113157_Add_PropertyIDForeignKey_Migration.Designer.cs">
+      <DependentUpon>202104281113157_Add_PropertyIDForeignKey_Migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2190,6 +2194,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104280640305_Add_PropertyID_Migration.resx">
       <DependentUpon>202104280640305_Add_PropertyID_Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104281113157_Add_PropertyIDForeignKey_Migration.resx">
+      <DependentUpon>202104281113157_Add_PropertyIDForeignKey_Migration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

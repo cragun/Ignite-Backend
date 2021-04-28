@@ -540,6 +540,11 @@ namespace DataReef.TM.Services.Services
 
                     }
 
+                    if (string.IsNullOrEmpty(property.NoteReferenceId))
+                    {
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property reference is not found" });
+                    }
+
                     var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
 
                     if (entity.ContentType == "Comment")
@@ -654,7 +659,7 @@ namespace DataReef.TM.Services.Services
                                     DateCreated = Convert.ToDateTime(reply.created),
                                     DateLastModified = Convert.ToDateTime(reply.modified),
                                     NoteID = note._id,
-                                    CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId))
+                                    CreatedByName = await _authService.Value.GetUserName(Guid.Parse(reply.personId))
                                 });
                             }
                         }
@@ -671,7 +676,7 @@ namespace DataReef.TM.Services.Services
         public async Task<PropertyNote> GetPropertyNoteById(Guid NoteID)
         {
             using (var dc = new DataContext())
-            { 
+            {  
                 var note = await _propertyNotesAdapter.Value.GetPropertyNoteById(Convert.ToString(NoteID).ToLower());
 
                 if (note != null)
@@ -748,41 +753,43 @@ namespace DataReef.TM.Services.Services
                             if (!String.IsNullOrEmpty(property.NoteReferenceId))
                             {
                                 var notesList = dc.PropertyNotes.Where(p => p.PropertyID == property.Guid && !p.IsDeleted).AsNoTracking().ToList();
-
-                                foreach (var note in notesList)
+                                if (notesList.Count() > 0 )
                                 {
-                                    var taggedPersons = GetTaggedPersons(note.Content);
-
-                                    var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == note.PersonID);
-
-                                    if (people == null)
+                                    foreach (var note in notesList)
                                     {
-                                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
-                                    }
+                                        var taggedPersons = GetTaggedPersons(note.Content);
 
-                                    var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
+                                        var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == note.PersonID);
 
-                                    note.NoteID = noteReference?.noteId;
-                                    note.ThreadID = noteReference?.threadId;
-
-                                    var comments = notesList.Where(a => a.ParentID == note.Guid).ToList();
-
-                                    foreach (var comment in comments)
-                                    {
-                                        var taggedPersonsComment = GetTaggedPersons(comment.Content);
-
-                                        comment.ThreadID = note.ThreadID;
-
-                                        var peopleComment = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == comment.PersonID);
-
-                                        if (peopleComment == null)
+                                        if (people == null)
                                         {
                                             throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                                         }
 
-                                        var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
+                                        var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
+
+                                        note.NoteID = noteReference?.noteId;
+                                        note.ThreadID = noteReference?.threadId;
+
+                                        var comments = notesList.Where(a => a.ParentID == note.Guid).ToList();
+
+                                        foreach (var comment in comments)
+                                        {
+                                            var taggedPersonsComment = GetTaggedPersons(comment.Content);
+
+                                            comment.ThreadID = note.ThreadID;
+
+                                            var peopleComment = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == comment.PersonID);
+
+                                            if (peopleComment == null)
+                                            {
+                                                throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                                            }
+
+                                            var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
+                                        }
                                     }
-                                }
+                                } 
                             }
                         }
                         catch (Exception ex)

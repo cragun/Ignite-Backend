@@ -46,11 +46,11 @@ namespace DataReef.TM.Models
         public string SmartBoardID { get; set; }
 
         [NotMapped]
-        public Guid NoteID { get; set; }
+        public Guid NoteID { get; set; } 
 
-
-        [DataMember] 
-        public Guid PropertyID { get; set; }
+        [DataMember]
+        [Index(IsUnique = false, IsClustered = false)]
+        public Guid PropertyID { get; set; } 
 
         #endregion
 
@@ -58,6 +58,11 @@ namespace DataReef.TM.Models
         [ForeignKey("PersonID")]
         [DataMember]
         public Person Person { get; set; }
+
+        [ForeignKey("PropertyID")]
+        [DataMember]
+        public Property Property { get; set; }
+
         #endregion
     }
 }
