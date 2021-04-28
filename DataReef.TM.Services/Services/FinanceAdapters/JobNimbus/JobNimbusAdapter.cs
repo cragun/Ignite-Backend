@@ -103,11 +103,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             {
                 var appointment = dc.Appointments.Where(x => x.Guid == appid).FirstOrDefault();
 
+                var property = dc.Properties.Where(x => x.Guid == appointment.PropertyID).FirstOrDefault();
+
                 AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData();
 
                 List<related> relate = new List<related>();
 
-                relate.Add(new related { id = appointment.JobNimbusLeadID });
+                relate.Add(new related { id = property.JobNimbusLeadID, type = "task" });
                 req.related = relate;
                 req.record_type_name = "Appointment";
                 req.title = appointment.Details;
@@ -153,8 +155,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
         {
             using (var dc = new DataContext())
             {
+                var property = dc.Properties.Where(x => x.Guid == note.PropertyID).FirstOrDefault();
+
                 NoteJobNimbusLeadRequestData req = new NoteJobNimbusLeadRequestData();
-                req.primary = new primary() { id = note.JobNimbusID };
+                req.primary = new primary() { id = property.JobNimbusLeadID, name = property.Name, type = "contact" };
                 req.record_type_name = "Note";
                 req.note = note.Content;
                 req.date_created = (long)(note.DateCreated - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;

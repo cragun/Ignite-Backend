@@ -82,11 +82,14 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
     public class related
     {
         public string id { get; set; }
+        public string type { get; set; }
     }
 
     public class primary
     {
         public string id { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
     }
 
     public class AppointmentJobNimbusLeadRequestData
