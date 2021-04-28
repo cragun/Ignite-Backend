@@ -48,6 +48,7 @@ namespace DataReef.TM.Models
         [NotMapped]
         public Guid NoteID { get; set; }
 
+
         [DataMember] 
         public Guid PropertyID { get; set; }
 
