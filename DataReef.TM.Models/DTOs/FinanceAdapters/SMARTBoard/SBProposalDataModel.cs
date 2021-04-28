@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.DataViews.Financing;
+﻿using DataReef.Core.Extensions;
+using DataReef.TM.Models.DataViews.Financing;
 using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.Enums;
@@ -143,12 +144,13 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
             // as per new calculation
             TotalCost = loanRequest?.TotalCostToCustomer;
-            PricePerWatt = loanRequest?.PricePerWattASP;
+            PricePerWatt = loanRequest?.PricePerWattASP.RoundValue();
 
             //FedTaxCredit = loanResponse?.TotalFederalTaxIncentive;
 
             // as per new calculation
             FedTaxCredit = loanRequest?.FederalTaxCredit;
+
 
             var stdPlan = proposalDataView?
                                     .FinancePlanOptions?
