@@ -82,7 +82,7 @@ namespace DataReef.TM.Services.Services
                     .Select(g => g.OrderByDescending(x => x.DateCreated).FirstOrDefault())
                     .OrderByDescending(x => x.DateCreated)
                     .Skip(pageNumber * itemsPerPage)
-                    .Take(itemsPerPage).ToList();
+                    .Take(itemsPerPage);
             }
         }
 
