@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.DTOs.Properties;
+﻿using DataReef.TM.Models.DTOs.FinanceAdapters;
+using DataReef.TM.Models.DTOs.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace DataReef.TM.Models.DTOs
         public Guid? Guid { get; set; }
 
         public Guid PropertyID { get; set; }
+        public Guid PersonID { get; set; }
 
         public Guid ParentID { get; set; }
         public string ContentType { get; set; }
@@ -72,6 +74,11 @@ namespace DataReef.TM.Models.DTOs
         public bool IsSendEmail { get; set; }
         public List<SBTaggedUser> TaggedUsers { get; set; }
         public IEnumerable<PropertyNoteTagDTO> ContentTags { get; set; }
+         
+        public string JobNimbusID { get; set; } 
+        public string JobNimbusLeadID { get; set; } 
+        public int Version { get; set; } 
+        public ThirdPartyPropertyType PropertyType { get; set; }
 
         public SBNoteDTO()
         {
