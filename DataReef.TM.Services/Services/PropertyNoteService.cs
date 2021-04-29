@@ -150,7 +150,9 @@ namespace DataReef.TM.Services.Services
                 {
                     var jobnimbussetting = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
 
-                    _jobNimbusAdapter.Value.CreateJobNimbusNote(entity, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
+                    var response = _jobNimbusAdapter.Value.CreateJobNimbusNote(entity, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
+
+                    entity.JobNimbusID = response?.jnid;
                 }
                 #endregion ThirdPartyPropertyType 
 
@@ -269,10 +271,7 @@ namespace DataReef.TM.Services.Services
 
                             NotifyTaggedUsers(taggedPersons, entity, property, dc);
                         }
-
                     }
-
-
                 }
             }
 
