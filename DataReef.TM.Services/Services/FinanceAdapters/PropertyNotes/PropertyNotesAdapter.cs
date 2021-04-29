@@ -192,7 +192,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                     req.taggedUsers = taggedPersons.Select(a => new NoteTaggedUser
                     {
                         email = a.EmailAddressString,
-                        phone = a.PhoneNumbers?.FirstOrDefault().Number,
+                        phone = a.PhoneNumbers?.FirstOrDefault()?.Number,
                         isSendEmail = false,
                         isSendSms = true,
                         userId = a.SmartBoardID,
