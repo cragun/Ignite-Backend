@@ -442,8 +442,7 @@ namespace DataReef.TM.Services.Services
                     PropertyType = x.PropertyType ,
                     Version = x.Version
                 });
-            }
-
+            } 
         }
 
         public IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID)
