@@ -62,10 +62,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.geo = geo;
 
                 string url = $"/api1/contacts/";
-                if (!string.IsNullOrEmpty(property.JobNimbusLeadID))
-                    url = $"{url}{property.JobNimbusLeadID}";
-
                 var request = new RestRequest(url, Method.POST);
+                if (!string.IsNullOrEmpty(property.JobNimbusLeadID))
+                {
+                    url = $"{url}{property.JobNimbusLeadID}";
+                    request = new RestRequest(url, Method.PUT);
+                }
+
                 request.AddHeader("Authorization", $"Bearer {apikey}");
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
@@ -104,6 +107,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 var appointment = dc.Appointments.Where(x => x.Guid == appid).FirstOrDefault();
 
                 var property = dc.Properties.Where(x => x.Guid == appointment.PropertyID).FirstOrDefault();
+                if (string.IsNullOrEmpty(property.JobNimbusLeadID))
+                {
+                    CreateJobNimbusLead(appointment.PropertyID, baseurl, apikey);
+                    property = dc.Properties.Where(x => x.Guid == appointment.PropertyID).FirstOrDefault();
+                }
 
                 AppointmentJobNimbusLeadRequestData req = new AppointmentJobNimbusLeadRequestData();
 
@@ -118,10 +126,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 req.customer = Convert.ToString(appointment?.CreatedByID);
 
                string url = $"/api1/tasks/";
-                if (!string.IsNullOrEmpty(appointment.JobNimbusLeadID))
-                    url = $"{url}{appointment.JobNimbusID}";
-
                 var request = new RestRequest(url, Method.POST);
+                if (!string.IsNullOrEmpty(appointment.JobNimbusID))
+                {
+                    url = $"{url}{appointment.JobNimbusID}";
+                    request = new RestRequest(url, Method.PUT);
+                }
+                
                 request.AddHeader("Authorization", $"Bearer {apikey}");
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
@@ -156,6 +167,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
             using (var dc = new DataContext())
             {
                 var property = dc.Properties.Where(x => x.Guid == note.PropertyID).FirstOrDefault();
+                if (string.IsNullOrEmpty(property.JobNimbusLeadID))
+                {
+                    CreateJobNimbusLead(note.PropertyID, baseurl, apikey);
+                    property = dc.Properties.Where(x => x.Guid == note.PropertyID).FirstOrDefault();
+                }
 
                 NoteJobNimbusLeadRequestData req = new NoteJobNimbusLeadRequestData();
                 req.primary = new primary() { id = property.JobNimbusLeadID, name = property.Name, type = "contact" };
@@ -167,6 +183,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
 
                 string url = $"/api1/activities/";
                 var request = new RestRequest(url, Method.POST);
+                if (!string.IsNullOrEmpty(note.JobNimbusID))
+                {
+                    url = $"{url}{note.JobNimbusID}";
+                    request = new RestRequest(url, Method.PUT);
+                }
                 request.AddHeader("Authorization", $"Bearer {apikey}");
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
