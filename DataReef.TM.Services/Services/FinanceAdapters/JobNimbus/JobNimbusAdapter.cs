@@ -192,7 +192,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 request.AddHeader("Content-Type", "application/json");
                 request.AddParameter("application/json", new JavaScriptSerializer().Serialize(req), ParameterType.RequestBody);
 
-
                 var client = new RestClient(baseurl);
                 var response = client.Execute(request);
 
