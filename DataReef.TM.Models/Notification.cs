@@ -63,7 +63,6 @@ namespace DataReef.TM.Models
         //[DataMember]
         [NotMapped]
         public Property Property { get; set; }
-
         #endregion
     }
 }
