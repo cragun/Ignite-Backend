@@ -70,7 +70,10 @@ namespace DataReef.TM.Services.Services
         {
             using (var dc = new DataContext())
             {
-                var query = dc.Notifications.Include(a => a.Property).Where(x => !x.IsDeleted && x.PersonID == personID).AsNoTracking().ToList();
+                //var query = dc.Notifications.Include(a => a.Property).Where(x => !x.IsDeleted && x.PersonID == personID).AsNoTracking().ToList();
+                var query = dc.Notifications.Where(x => !x.IsDeleted && x.PersonID == personID).AsNoTracking().ToList();
+
+                query.ForEach(a => a.Property = dc.Properties.FirstOrDefault(x => !x.IsDeleted && x.Guid == a.PropertyID));
 
                 if (status.HasValue)
                 {
