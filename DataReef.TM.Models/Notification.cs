@@ -64,6 +64,7 @@ namespace DataReef.TM.Models
         [NotMapped]
         public Property Property { get; set; }
 
+
         #endregion
     }
 }
