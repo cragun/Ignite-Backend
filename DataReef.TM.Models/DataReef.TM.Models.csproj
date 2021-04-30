@@ -88,6 +88,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.1\lib\net40\System.Spatial.dll</HintPath>
@@ -322,9 +323,12 @@
     <Compile Include="DTOs\Solar\Finance\Incentive.cs" />
     <Compile Include="DTOs\Solar\Finance\ComparisonFinancePlanRequestData.cs" />
     <Compile Include="DTOs\Solar\Finance\DealerIncentive.cs" />
+    <Compile Include="DTOs\Solar\Finance\JobNimbusContacts.cs" />
+    <Compile Include="DTOs\Solar\Finance\JobNimbusLead.cs" />
     <Compile Include="DTOs\Solar\Finance\LeaseParameters.cs" />
     <Compile Include="DTOs\Solar\Finance\ProductionPrice.cs" />
     <Compile Include="DTOs\Solar\Finance\Projects.cs" />
+    <Compile Include="DTOs\Solar\Finance\PropertyNotesLead.cs" />
     <Compile Include="DTOs\Solar\Finance\SunlightError.cs" />
     <Compile Include="DTOs\Solar\Finance\SunlightResponse.cs" />
     <Compile Include="DTOs\Solar\Finance\SunnovaContacts.cs" />

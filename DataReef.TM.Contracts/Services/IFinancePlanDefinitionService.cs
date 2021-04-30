@@ -7,6 +7,7 @@ using DataReef.TM.Models.Solar;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -24,13 +25,13 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinition(Guid financePlanDefinitionId);
 
         [OperationContract]
-        IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID);
+        Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID);
 
         [OperationContract]
-        SunlightResponse GetSunlightloanstatus(Guid proposalId);
+        Task<SunlightResponse> GetSunlightloanstatus(Guid proposalId);
 
         [OperationContract]
-        SunlightResponse Sunlightsendloandocs(Guid proposalId);
+        Task<SunlightResponse> Sunlightsendloandocs(Guid proposalId);
 
         [OperationContract]
         void UpdateCashPPW(double? cashPPW, double? lenderFee);

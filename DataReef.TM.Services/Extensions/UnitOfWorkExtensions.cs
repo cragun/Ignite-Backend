@@ -21,6 +21,7 @@ namespace DataReef.TM.Services.Extensions
             entities.ToList().ForEach(uow.Delete);
         }
 
+
         public static void Activate<T>(this IUnitOfWork uow, T entity) where T : EntityBase
         {
             entity.IsDeleted = false;

@@ -4,11 +4,15 @@ using DataReef.Core.Infrastructure.Repository;
 using DataReef.Core.Logging;
 using DataReef.TM.Classes;
 using DataReef.TM.Contracts.Services;
+using DataReef.TM.Contracts.Services.FinanceAdapters;
 using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs.FinanceAdapters;
+using DataReef.TM.Models.DTOs.FinanceAdapters.SST;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.SmartBoard;
+using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker;
 using System;
@@ -36,6 +40,7 @@ namespace DataReef.TM.Services
         private readonly Lazy<IPersonService> _personService;
         private readonly Lazy<ISmsService> _smsService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
+        private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
         public AppointmentService(ILogger logger,
             IOUAssociationService ouAssociationService,
             Lazy<IOUService> ouService,
@@ -46,6 +51,7 @@ namespace DataReef.TM.Services
             Lazy<IPersonService> personService,
             Lazy<ISmsService> smsService,
             Lazy<ISolarSalesTrackerAdapter> sbAdapter,
+             Lazy<IJobNimbusAdapter> jobNimbusAdapter,
             Func<IUnitOfWork> unitOfWorkFactory) : base(logger, unitOfWorkFactory)
         {
             _ouAssociationService = ouAssociationService;
@@ -57,6 +63,7 @@ namespace DataReef.TM.Services
             _personService = personService;
             _smsService = smsService;
             _sbAdapter = sbAdapter;
+            _jobNimbusAdapter = jobNimbusAdapter;
         }
 
         public Appointment SetAppointmentStatus(Guid appointmentID, AppointmentStatus status)
@@ -458,10 +465,6 @@ namespace DataReef.TM.Services
             }
             yield break;
         }
-
-
-
-
         public ICollection<Person> GetMembersWithAppointment(OUMembersRequest request, Guid ouID, string apiKey, DateTime date)
         {
             using (var uow = UnitOfWorkFactory())
@@ -509,7 +512,35 @@ namespace DataReef.TM.Services
             VerifyUserAssignmentAndInvite(entity);
             var appointment = base.Update(entity);
 
-            var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+            // var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+
+            #region ThirdPartyPropertyType
+
+            switch (entity.PropertyType)
+            {
+                default:
+                case ThirdPartyPropertyType.SolarTracker:
+                    var response = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+                    break;
+
+                case ThirdPartyPropertyType.Roofing:
+
+                    var jobnimbussetting = _ouSettingsService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
+                    break;
+
+
+                case ThirdPartyPropertyType.Both:
+                    var resp = _sbAdapter.Value.SubmitLead(appointment.PropertyID);
+
+                    var jobnimbussettings = _ouSettingsService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
+                    _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussettings?.BaseUrl, jobnimbussettings?.ApiKey);
+                    break;
+            }
+            #endregion ThirdPartyPropertyType
+
             return appointment;
         }
 
@@ -519,12 +550,16 @@ namespace DataReef.TM.Services
             entity.CreatedByID = SmartPrincipal.UserId;
             var ret = base.Insert(entity);
 
+            var jobnimbussetting = _ouSettingsService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.PropertyID, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
+
             if (ret == null)
             {
                 entity.SaveResult = SaveResult.SuccessfulInsert;
+
+                _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                 return entity;
             }
-
+            _jobNimbusAdapter.Value.CreateAppointmentJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
             return ret;
         }
 
@@ -700,5 +735,6 @@ namespace DataReef.TM.Services
                 .Value
                 .SendSms("New Appointment is created!", mobile_number);
         }
+     
     }
 }

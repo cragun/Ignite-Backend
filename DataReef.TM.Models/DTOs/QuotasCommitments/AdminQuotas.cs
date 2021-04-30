@@ -12,12 +12,12 @@ namespace DataReef.TM.Models.DTOs.QuotasCommitments
     public class AdminQuotas
     {
         public List<Types> type { get; set; }
-        public IEnumerable<GuidNamePair> user_type { get; set; }
-        public List<QuotaCommitementsDisposition> dispositions { get; set; }
+        public IEnumerable<GuidNamePair> user_type { get; set; } 
+        public List<QuotaCommitementsDisposition> dispositions { get; set; } 
     }
 
     public class Types
-    {
+    { 
         public int Id { get; set; }
         public string Name { get; set; }
     }

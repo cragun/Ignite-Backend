@@ -1,9 +1,7 @@
 ﻿using DataReef.Core.Logging;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.DataAccess.Database;
-using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Finance;
-using DataReef.TM.Models.Solar;
 using System;
 using System.Linq;
 using System.ServiceModel;
@@ -13,13 +11,10 @@ using DataReef.Core.Infrastructure.Repository;
 using DataReef.TM.Models.DTOs.Solar.Finance;
 using DataReef.TM.Models.DataViews.Financing;
 using DataReef.Core.Infrastructure.Authorization;
-using System.Text;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
-using DataReef.TM.Models.DTOs.Signatures.Proposals;
-using DataReef.TM.Services.Services.ProposalAddons.TriSMART;
-using DataReef.TM.Services.Services.ProposalAddons.TriSMART.Models;
 using DataReef.Engines.FinancialEngine.Loan;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace DataReef.TM.Services
 {
@@ -31,17 +26,20 @@ namespace DataReef.TM.Services
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
         private readonly Lazy<IFinancingCalculator> _loanCalculator;
         private readonly Lazy<IOUSettingService> _ouSettingService;
+        private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
 
         public FinancePlanDefinitionService(ILogger logger,
             Func<IUnitOfWork> unitOfWorkFactory,
             Lazy<IFinancingCalculator> loanCalculator,
             Lazy<IOUSettingService> ouSettingService,
-            Lazy<ISunlightAdapter> sunlightAdapter
+            Lazy<ISunlightAdapter> sunlightAdapter,
+            Lazy<ISunnovaAdapter> sunnovaAdapter
             ) : base(logger, unitOfWorkFactory)
         {
             _sunlightAdapter = sunlightAdapter;
             _loanCalculator = loanCalculator;
             _ouSettingService = ouSettingService;
+            _sunnovaAdapter = sunnovaAdapter;
         }
 
         public override ICollection<FinancePlanDefinition> GetMany(IEnumerable<Guid> uniqueIds, string include = "", string exclude = "", string fields = "", bool deletedItems = false)
@@ -147,14 +145,14 @@ namespace DataReef.TM.Services
         }
 
 
-        public SunlightResponse GetSunlightloanstatus(Guid proposalId)
+        public async Task<SunlightResponse> GetSunlightloanstatus(Guid proposalId)
         {
-            return _sunlightAdapter.Value.GetSunlightloanstatus(proposalId);
+            return await _sunlightAdapter.Value.GetSunlightloanstatus(proposalId);
         }
 
-        public SunlightResponse Sunlightsendloandocs(Guid proposalId)
+        public async Task<SunlightResponse> Sunlightsendloandocs(Guid proposalId)
         {
-            return _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
+            return await _sunlightAdapter.Value.Sunlightsendloandocs(proposalId);
         }
 
         public void UpdateCashPPW(double? cashPPW, double? lenderFee)
@@ -184,16 +182,16 @@ namespace DataReef.TM.Services
             }
         }
 
-        public IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
+        public async Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
         {
             using (var dc = new DataContext())
             {
-                var financePlan = dc.FinancePlaneDefinitions.FirstOrDefault(x => x.Guid == financePlanDefinitionId);
+                var financePlan = await  dc.FinancePlaneDefinitions.AsNoTracking().FirstOrDefaultAsync(x => x.Guid == financePlanDefinitionId);
 
                 if (financePlan != null)
                 {
-                    var property = dc.Properties.Include("PropertyBag").FirstOrDefault(x => x.Guid == propertyID && !x.IsDeleted);
-                    var salesperson = dc.People.FirstOrDefault(x => x.Guid == SmartPrincipal.UserId && !x.IsDeleted);
+                    var property = await dc.Properties.Include("PropertyBag").FirstOrDefaultAsync(x => x.Guid == propertyID && !x.IsDeleted);
+                    var salesperson = await dc.People.FirstOrDefaultAsync(x => x.Guid == SmartPrincipal.UserId && !x.IsDeleted);
                     if (property != null)
                     {
                         var metaData = financePlan.GetMetaData<FinancePlanDataModel>();
@@ -201,6 +199,7 @@ namespace DataReef.TM.Services
                         var creditCheckUrls = metaData?.SBMeta?.SmartBoardCreditCheckUrls ?? new List<SmartBOARDCreditCheck>();
                         foreach (var url in creditCheckUrls)
                         {
+
                             if (url.UseSMARTBoardAuthentication && url.CreditCheckUrl.Contains("{smartBoardID}"))
                             {
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{smartBoardID}", property.SmartBoardId.ToString() ?? string.Empty);
@@ -209,8 +208,6 @@ namespace DataReef.TM.Services
                             if (url.CreditCheckUrl.Contains("{loanpaldata}"))
                             {
                                 string loanpalurl = "??lname=" + property.GetMainOccupant().LastName + "&fname=" + property.GetMainOccupant().FirstName + "&street=" + property.Address1 + "&city=" + property.City + "&state=" + property.State + "&zip=" + property.ZipCode + "&email=" + property.GetMainEmailAddress() + "&phone=" + property.GetMainPhoneNumber()?.Replace("-", "") + "&srfn=" + salesperson.FirstName + "&srln=" + salesperson.LastName + "&sre=" + salesperson.EmailAddressString + "&loanterm=" + financePlan.TermExternalID
-
-                                    //+ "&loanterm=" + GetloantermID(financePlan.Name).ToString() + "&cost=" + property.Name + "&refnum=" + property.Name 
                                     + "&language=english";
                                 loanpalurl = loanpalurl.Replace(" ", "%20");
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{loanpaldata}", loanpalurl ?? string.Empty);
@@ -218,12 +215,22 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                string sunlighturl = _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
+                                string sunlighturl = await _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
+                            }
+
+                            if (url.CreditCheckUrl.Contains("{sunnovadata}"))
+                            {
+                                //var sunnovaurl = await _sunnovaAdapter.Value.PassSunnovaLeadCreditURL(property);
+                                //url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunnovadata}", sunnovaurl.Signing_URL.ToString() ?? string.Empty);
+
+                                string sunnovaurl = await _sunnovaAdapter.Value.GetSunnovaCreditURL(property);
+                                url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunnovadata}", sunnovaurl ?? string.Empty);
                             }
                         }
                         return creditCheckUrls;
                     }
+
                 }
             }
 

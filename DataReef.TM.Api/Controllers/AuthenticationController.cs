@@ -1,5 +1,6 @@
 ﻿using DataReef.Core;
 using DataReef.Core.Classes;
+using DataReef.Core.Infrastructure.Authorization;
 using DataReef.TM.Api.Bootstrap;
 using DataReef.TM.Api.Classes;
 using DataReef.TM.Contracts.Auth;
@@ -10,6 +11,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Persons;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -236,11 +238,18 @@ namespace DataReef.TM.Api.Controllers
         {
             try
             {
-
-                AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword , change.fcm_token);
-                Jwt ret = this.EncodeToken(token);
-                return Ok<Jwt>(ret);
-
+               if (ModelState.IsValid)
+                {
+                    AuthenticationToken token = authService.ChangePassword(change.UserName, change.OldPassword, change.NewPassword, change.fcm_token);
+                    Jwt ret = this.EncodeToken(token);
+                    return Ok<Jwt>(ret);
+                }
+                else
+                {
+                    var errors = ModelState.Where(ms => ms.Value.Errors.Count > 0).SelectMany(ms => ms.Value.Errors.Select(e => e.ErrorMessage)).FirstOrDefault();
+                     throw new ApplicationException(errors);
+                    //throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = errors });
+                }
             }
             catch (System.ServiceModel.FaultException fe)
             {
@@ -312,7 +321,7 @@ namespace DataReef.TM.Api.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost, Route("createuser/smartboard")]
-        [AllowAnonymous]
+        [AllowAnonymous, InjectAuthPrincipal]
         [ResponseType(typeof(SaveResult))]
         public SaveResult CreateUserFromSB([FromBody]CreateUserDTO user)
         {
@@ -321,8 +330,16 @@ namespace DataReef.TM.Api.Controllers
                 return new SaveResult { Success = false, ExceptionMessage = "request data can not null" };
             }
 
-            var ret = authService.CreateUpdateUserFromSB(user, user.apikey);
-            return ret;
+            if (ModelState.IsValid)
+            {
+                var ret = authService.CreateUpdateUserFromSB(user, user.apikey);
+                return ret;
+            }
+            else
+            {
+                var errors = ModelState.Where(ms => ms.Value.Errors.Count > 0).SelectMany(ms => ms.Value.Errors.Select(e => e.ErrorMessage)).FirstOrDefault();
+                return new SaveResult { Success = false, ExceptionMessage = errors };
+            }
         }
 
 

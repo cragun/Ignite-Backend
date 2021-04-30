@@ -22,12 +22,12 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Web.Http;
 using System.Net;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace DataReef.TM.Services.Services.PropertyAttachments
 {
@@ -558,7 +558,6 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                     return false;
                 }
 
-
                 var definitionItems = GetDefinitionTuple(entity.PropertyID, entity.AttachmentTypeID);
                 var definition = definitionItems.definition;
                 var userName = _authService.Value.GetCurrentUserFullName();
@@ -1068,15 +1067,15 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                 item = Update(item);
             }
 
-            
-                var propertyattech = base.Get(item.Guid, "Items");
+
+            var propertyattech = base.Get(item.Guid, "Items");
 
             //var propertyattechitm = propertyattech.Items.Where();
 
             var attachitm = propertyattech?.Items?.Where(i => i.SectionID == "s-0" && i.ItemID == "t-10")?.FirstOrDefault();
 
             uploadImageRequest.PropertyAttachmentID = item.Guid;
-            if(attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
+            if (attachitm != null) uploadImageRequest.PropertyAttachmentItemID = attachitm.Guid;
             uploadImageRequest.SectionID = "s-0";
             uploadImageRequest.ItemID = "t-10";
             //uploadImageRequest.ImagesWithNotes = ;
@@ -1111,7 +1110,8 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                         {
                             if (entity == null)
                                 return false;
-                             
+
+
                             //set array manually to approve all images.
                             PropertyAttachmentSubmitReviewRequest request = new PropertyAttachmentSubmitReviewRequest();
                             request.Status = ItemStatus.Approved;
@@ -1123,7 +1123,7 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
 
                             var definitionItems = GetDefinitionTuple(entity.PropertyID, entity.AttachmentTypeID);
                             var definition = definitionItems.definition;
-                          
+                            var userName = _authService.Value.GetCurrentUserFullName();
                             string reviewMessage = "";
 
                             request.Items.ForEach(itm =>
@@ -1142,7 +1142,6 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                                 }
                             }
 
-                            var userName = _authService.Value.GetCurrentUserFullName();
                             if (!string.IsNullOrEmpty(reviewMessage))
                             {
                                 var audit = new AuditItem
@@ -1157,16 +1156,18 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                         context.SaveChanges();
                         dbContextTransaction.Commit();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        dbContextTransaction.Rollback(); 
-                    }
+                        dbContextTransaction.Rollback();
+                         
+                        
 
+                        return false;
+                    }
                     return true;
                 }
             }
 
         }
-
     }
 }

@@ -23,6 +23,7 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using DataReef.Auth.Helpers;
 using DataReef.TM.Models.DTOs.Signatures;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 {
@@ -115,8 +116,8 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
             var proposal = financePlan.SolarSystem.Proposal;
             var ouid = proposal.Property.Territory.OUID;
+
             EnsureInitialized(ouid);
-            
             var integrationSettings = new IntegrationOptionSettings
             {
                 Options = ouSettings.GetByKey<ICollection<IntegrationOption>>(SolarTrackerResources.SettingName),
@@ -192,7 +193,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             return SubmitLeadRequest(integrationData, createLeadRequest, ouid);
         }
 
-
         public SstResponse SubmitLead(Guid propertyID, Guid? overrideEC = null, bool disposeRepo = true, bool IsdispositionChanged = false)
         {
             var repository = _repository.Value;
@@ -212,7 +212,6 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                             .FirstOrDefault(fp => fp.Guid == propertyID);
 
             var ouid = property.Territory.OUID;
-
             EnsureInitialized(ouid);
             var integrationSettings = new IntegrationOptionSettings
             {
@@ -243,22 +242,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                             .FirstOrDefault(p => p.Guid == SmartPrincipal.UserId);
 
             //set another person as Energy Consultant, not the one from the appointment. Spare going to the db if user is the same as dealer
-            //var closer = overrideEC == null
-            //    ? null
-            //    : overrideEC.Value == SmartPrincipal.UserId
-            //        ? dealer
-            //        : repository
-            //                    .Get<Person>()
-            //                    .FirstOrDefault(p => p.Guid == overrideEC);
+             
 
             var closer = overrideEC == null
-            // ? dealer
-            ? null
-             : overrideEC.Value == SmartPrincipal.UserId
-                 ? dealer
-                 : repository
-                             .Get<Person>()
-                             .FirstOrDefault(p => p.Guid == overrideEC);
+              //? dealer
+              ? null
+              : overrideEC.Value == SmartPrincipal.UserId
+                  ? dealer
+                  : repository
+                              .Get<Person>()
+                              .FirstOrDefault(p => p.Guid == overrideEC);
 
             //var mainOccupant = property.GetMainOccupant();
             var appointment = property.GetLatestAppointment();
@@ -341,13 +334,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
             }
 
             //get user email by its id
-           // string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+            //string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
             string email;
             using (DataContext dc = new DataContext())
             {
                 email = dc.Credentials.FirstOrDefault(x => x.UserID == SmartPrincipal.UserId)?.UserName;
             }
-
 
             var headers = new Dictionary<string, string>
             {
@@ -1060,7 +1052,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
 
         }
 
-        public SBAllUsersModel GetAllSbUsers()
+        public async Task<SBAllUsersModel> GetAllSbUsers()
         {
 
             using (DataContext dc = new DataContext())
@@ -1096,7 +1088,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 }
 
                 //get user email by its id
-               // string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
+               //string encryptedAPIkey = CryptographyHelper.getEncryptAPIKey(integrationData.ApiKey);
 
                 var headers = new Dictionary<string, string>
                 {
@@ -1115,7 +1107,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.SolarSalesTracker
                 {
                 }
 
-                return response;
+                return response; 
 
             }
         }

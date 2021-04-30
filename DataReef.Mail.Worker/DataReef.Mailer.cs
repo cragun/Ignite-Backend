@@ -45,7 +45,9 @@ namespace DataReef.Mail
             string password = ConfigurationManager.AppSettings["SendGrid-Password"];
             string server = ConfigurationManager.AppSettings["SendGrid-Server"];
 
-            SmtpClient smtpClient = new SmtpClient(server, Convert.ToInt32(587));
+            SmtpClient smtpClient = new SmtpClient(server, 25);
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(userName, password);
             smtpClient.Credentials = credentials;
             smtpClient.EnableSsl = true;

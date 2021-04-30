@@ -40,7 +40,7 @@ namespace DataReef.TM.Contracts.Services
                     .Include(tl => tl.TransfersIn)
                     .Include(tl => tl.Expenses)
                     .Include(tl => tl.TransfersOut)
-                    .Include(tl => tl.Adjustments)
+                    .Include(tl => tl.Adjustments).AsNoTracking()
                     .FirstOrDefault(tl => tl.PersonID == personID && tl.IsDeleted == false && tl.IsPrimary == true);
                 return ret;
             }
@@ -48,9 +48,8 @@ namespace DataReef.TM.Contracts.Services
 
         public LedgerDataView GetLedgerDataViewForPerson(Guid personID)
         {
-            using (DataContext dc = new DataContext())
-            {
-                TokenLedger ledger = this.GetDefaultLedgerForPerson(personID);
+
+            TokenLedger ledger = this.GetDefaultLedgerForPerson(personID);
 
                 if (ledger == null)
                 {
@@ -131,7 +130,7 @@ namespace DataReef.TM.Contracts.Services
                 ret.LedgerItems = ret.LedgerItems.OrderBy(li => li.Date).ToList();
 
                 return ret;
-            }
+            
         }
 
         public void PerformTransfers(IEnumerable<TransferDataCommand> transfers)

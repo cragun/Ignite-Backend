@@ -27,10 +27,13 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Z.EntityFramework.Plus;
+using static DataReef.TM.Models.Person;
 
 namespace DataReef.TM.Services
 {
@@ -137,7 +140,8 @@ namespace DataReef.TM.Services
                     var person = dc.People.SingleOrDefault(p => (p.SmartBoardID == prsn.SmartBoardID) && p.IsDeleted == false);
                     if (person == null)
                     {
-                        throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "Couldn't find the person among the deleted ones!" });
+                        //throw new ArgumentException("Couldn't find the person among the deleted ones!");
                     }
 
                     person.SBActivityName = prsn.SBActivityName;
@@ -275,6 +279,7 @@ namespace DataReef.TM.Services
             return sortedResult;
         }
 
+
         /// <summary>
         /// Method used to undelete a person, w/ associated User and Credential
         /// This method will also send an email letting the person know that the account has been reactivated
@@ -284,14 +289,14 @@ namespace DataReef.TM.Services
         /// <param name="environment"></param>
         public void Reactivate(Guid personId, string smartBoardId)
         {
-
             using (DataContext dc = new DataContext())
             {
                 var person = dc.People.Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true).FirstOrDefault();
 
                 if (person == null)
                 {
-                    throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "Couldn't find the person among the deleted ones!" });
+                    //throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
 
                 string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
@@ -321,6 +326,7 @@ namespace DataReef.TM.Services
 
                 // insert log for users activate - deactivate 
                 InsertActiveDeactiveUserLog(person.EmailAddressString, "Reactivate Api", oldstate, "Active", "IgniteApi-" + SmartPrincipal.UserId.ToString());
+
                 if (string.IsNullOrEmpty(smartBoardId))
                 {
                     //the method also updates the Ignite user's SmartBoardId property
@@ -360,7 +366,8 @@ namespace DataReef.TM.Services
                 var person = dc.People.SingleOrDefault(p => p.SmartBoardID == smartBoardId && p.IsDeleted == false);
                 if (person == null)
                 {
-                    throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "Couldn't find the person among the deleted ones!" });
+                    //throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
                 string oldstate = person.IsDeleted == true ? "DeActive" : "Active";
                 InsertActiveDeactiveUserLog(person.EmailAddressString, "DeactivateUser Api", oldstate, "DeActive", "IgniteApi-" + SmartPrincipal.UserId.ToString());
@@ -377,7 +384,8 @@ namespace DataReef.TM.Services
                 var person = dc.People.SingleOrDefault(p => p.Guid == personid);
                 if (person == null)
                 {
-                    throw new ArgumentException("Couldn't find the person among the deleted ones!");
+                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = System.Net.HttpStatusCode.NotFound, ReasonPhrase = "Couldn't find the person among the deleted ones!" });
+                    //throw new ArgumentException("Couldn't find the person among the deleted ones!");
                 }
 
                 string oldstate = person.IsDeleted == true ? "DeActive" : "Active";

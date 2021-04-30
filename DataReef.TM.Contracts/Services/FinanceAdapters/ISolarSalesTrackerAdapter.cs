@@ -8,6 +8,7 @@ using DataReef.TM.Models.Solar;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -58,9 +59,11 @@ namespace DataReef.TM.Contracts.Services
         string DismissNotification(Guid ouid, string smartboardNotificationID);
 
         [OperationContract]
-        void SBUpdateactivityUser(string SmartBoardID, string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid, DateTime? StartDate);
+        void SBUpdateactivityUser(string SmartBoardID , string ActivityName, string BuildVersion, DateTime? LastActivityDate, Guid prsnid, DateTime? StartDate);
 
         [OperationContract]
-        SBAllUsersModel GetAllSbUsers();
+        Task<SBAllUsersModel> GetAllSbUsers();
+
+        
     }
 }

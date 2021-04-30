@@ -368,8 +368,9 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal FinalPriceToCustomer => (FinalLoanAmount + DownPayment).RoundValue();
 
-        //public decimal FinalPricePerWatt => (FinalPriceToCustomer / SystemSize).RoundValue();
-        public decimal FinalPricePerWatt => SystemSize != 0 ? (FinalPriceToCustomer / SystemSize).RoundValue() : 0;
+       
+        //public decimal FinalPricePerWatt => SystemSize != 0 ? (FinalPriceToCustomer / SystemSize).RoundValue() : 0;
+        public decimal FinalPricePerWatt => SystemSize != 0 ? (TotalCostToCustomer / SystemSize).RoundValue() : 0;
 
         //nonQualifyingAdders 
         public decimal TotalAddersBeforeITCWithOutFinancingFee
@@ -378,7 +379,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
             {
                 return
                     Adders
-                    ?.Where(a => a.Type == AdderItemType.Adder && a.IsAppliedBeforeITC)
+                    ?.Where(a => a.Type == AdderItemType.Adder && !a.IsAppliedBeforeITC)
                     ?.Sum(a => a.CalculatedCost(SystemSize, DealerFee, false)) ?? 0;
             }
         }

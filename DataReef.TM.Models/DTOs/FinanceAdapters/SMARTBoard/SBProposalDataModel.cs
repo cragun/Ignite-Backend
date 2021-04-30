@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.DataViews.Financing;
+﻿using DataReef.Core.Extensions;
+using DataReef.TM.Models.DataViews.Financing;
 using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.Enums;
@@ -38,6 +39,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             ProductionKWH = proposal.ProductionKWH;
             ProductionKWHpercentage = proposal.ProductionKWHpercentage;
             IsManual = proposal.IsManual;
+
 
             InverterMake = inverter?.Name;
             InverterModel = inverter?.Model;
@@ -85,6 +87,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
                             })?
                             .ToList();
 
+
             IncentivesData = proposal
                             .SolarSystem
                             .AdderItems?
@@ -127,20 +130,27 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
             FinanceType = financePlan?.FinancePlanType.ToString();
             Lender = financePlan?.FinancePlanDefinition?.Provider?.Name;
-            LenderID = financeMeta?.SBMeta?.LenderID;
             LenderFee = financePlan?.FinancePlanDefinition?.LenderFee;
+            LenderID = financeMeta?.SBMeta?.LenderID;
             LeasePricePerKWH = loanRequest?.LeaseParams?.PricePerkWh;
             LeaseEscalator = loanRequest?.LeaseParams?.Escalator;
-            //FinanceTerm = financePlan?.FinancePlanDefinition?.GetTermInMonths();
+            // FinanceTerm = financePlan?.FinancePlanDefinition?.GetTermInMonths();
             FinanceTerm = financePlan.FinancePlanDefinition?.TermInYears ?? 0;
             DealerFee = loanRequest?.DealerFee;
             FinanceAPR = financePlan?.FinancePlanDefinition?.Apr;
             FinanceLabel = financePlan?.FinancePlanDefinition?.Name;
             InitialLoanAmount = loanResponse?.AmountFinanced;
-            TotalCost = loanResponse?.SolarSystemCost;
-            PricePerWatt = loanRequest?.PricePerWattASP;
+            //TotalCost = loanResponse?.SolarSystemCost;
 
-            FedTaxCredit = loanResponse?.TotalFederalTaxIncentive;
+            // as per new calculation
+            TotalCost = loanRequest?.TotalCostToCustomer;
+            PricePerWatt = loanRequest?.PricePerWattASP.RoundValue();
+
+            //FedTaxCredit = loanResponse?.TotalFederalTaxIncentive;
+
+            // as per new calculation
+            FedTaxCredit = loanRequest?.FederalTaxCredit;
+
 
             var stdPlan = proposalDataView?
                                     .FinancePlanOptions?
@@ -223,8 +233,8 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         public string FinanceType { get; set; }
         public int? FinanceTerm { get; set; }
         public double? FinanceAPR { get; set; }
-        public decimal? DealerFee { get; set; }
         public double? LenderFee { get; set; }
+        public decimal? DealerFee { get; set; }
         public string FinanceLabel { get; set; }
         public decimal? InitialLoanAmount { get; set; }
         public decimal? StandardPayment1_18 { get; set; }

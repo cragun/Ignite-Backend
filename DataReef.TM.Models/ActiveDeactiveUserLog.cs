@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataReef.TM.Models
 {
-    public class ActiveDeactiveUserLog : EntityBase
+   public class ActiveDeactiveUserLog : EntityBase
     {
         public string Username { get; set; }
         public string OldState { get; set; }

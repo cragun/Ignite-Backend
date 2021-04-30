@@ -1,5 +1,6 @@
 ﻿using DataReef.Core.Attributes;
 using DataReef.TM.Models.DataViews;
+using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Models.DTOs.Properties;
 using DataReef.TM.Models.Enums;
@@ -44,15 +45,15 @@ namespace DataReef.TM.Models
         [DataMember]
         public string Attachments { get; set; }
 
-        //[DataMember]
-        //public string JobNimbusID { get; set; }
+        [DataMember]
+        public string JobNimbusID { get; set; }
 
-        //[DataMember]
-        //public string JobNimbusLeadID { get; set; }
+        [DataMember]
+        public string JobNimbusLeadID { get; set; }
 
-        //[DataMember]
-        //public ThirdPartyPropertyType PropertyType { get; set; }
-
+        [DataMember]
+        public ThirdPartyPropertyType PropertyType { get; set; }
+ 
         #endregion
 
         #region Navigation
@@ -103,8 +104,20 @@ namespace DataReef.TM.Models
                 }
 
                 return returnList;
-            }
+            } 
         }
+
+        [NotMapped]
+        public PropertyNote ParentNote { get; set; }
+
+        [NotMapped]
+        public List<PropertyNote> Replies { get; set; }
+
+        [NotMapped]
+        public string NoteID { get; set; }
+
+        [NotMapped]
+        public string ThreadID { get; set; }
         #endregion
     }
 }
