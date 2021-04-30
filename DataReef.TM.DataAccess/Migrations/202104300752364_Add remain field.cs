@@ -3,7 +3,7 @@ namespace DataReef.TM.DataAccess.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Addremainfields : DbMigration
+    public partial class Addremainfield : DbMigration
     {
         public override void Up()
         {
@@ -19,12 +19,10 @@ namespace DataReef.TM.DataAccess.Migrations
             AddColumn("dbo.PropertyNotes", "PropertyType", c => c.Int(nullable: false));
             AddColumn("dbo.Notifications", "PropertyID", c => c.Guid(nullable: false));
             CreateIndex("dbo.Notifications", "PropertyID");
-            AddForeignKey("dbo.Notifications", "PropertyID", "dbo.Properties", "Guid");
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Notifications", "PropertyID", "dbo.Properties");
             DropIndex("dbo.Notifications", new[] { "PropertyID" });
             DropColumn("dbo.Notifications", "PropertyID");
             DropColumn("dbo.PropertyNotes", "PropertyType");
