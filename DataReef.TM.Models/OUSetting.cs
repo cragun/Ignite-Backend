@@ -82,7 +82,7 @@ namespace DataReef.TM.Models
         public static readonly string Proposal_Features_SendEmailOnSign = "Proposal.Features.Sign.SendEmail";
         public static readonly string Proposal_Features_AttachPDFOnSign = "Proposal.Features.Sign.AttachPDFToEmail";
         public static readonly string Proposal_Features_SendEmailToCustomer_Disabled = "Proposal.Features.Sign.SendEmailToCustomer.Disabled";
-        public static readonly string Proposal_GenericSettings = "Proposal.GenericSettings";
+        public static readonly string Proposal_GenericSettings = "Proposal.GenericSettings"; 
 
         public static readonly string Proposal_Agreement_Features_SendEmailOnSign = "Proposal.Agreements.Features.Sign.SendEmail";
         public static readonly string Proposal_Agreement_Features_AttachPDFOnSign = "Proposal.Agreements.Features.Sign.AttachPDFToEmail";
@@ -125,8 +125,7 @@ namespace DataReef.TM.Models
         public static readonly string LegionOUUseLogoInProposal = "Legion.OU.UseLogoInProposal";
         public static readonly string LegionOULeadSource = "Legion.OU.LeadSource";
         public static readonly string LegionOUPersonClockInfo = "Legion.OU.PersonClockInfo";
-
-
+         
         public static readonly string Legion_EventMessageHandlers = "Legion.Internal.EventMessage.Handlers";
 
         public static readonly string Utility_Rates = "Solar.Energy.Utility.NewRates";

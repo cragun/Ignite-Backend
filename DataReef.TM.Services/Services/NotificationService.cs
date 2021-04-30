@@ -70,19 +70,19 @@ namespace DataReef.TM.Services.Services
         {
             using (var dc = new DataContext())
             {
-                var query = dc.Notifications.Where(x => !x.IsDeleted && x.PersonID == personID);
+                var query = dc.Notifications.Include(a => a.Property).Where(x => !x.IsDeleted && x.PersonID == personID).AsNoTracking().ToList();
+
                 if (status.HasValue)
                 {
-                    query = query.Where(x => x.Status == status.Value);
-                }
-
+                    query = query.Where(x => x.Status == status.Value).ToList();
+                } 
 
                 return query
                     .GroupBy(x => x.Value)
                     .Select(g => g.OrderByDescending(x => x.DateCreated).FirstOrDefault())
                     .OrderByDescending(x => x.DateCreated)
                     .Skip(pageNumber * itemsPerPage)
-                    .Take(itemsPerPage).ToList();
+                    .Take(itemsPerPage);
             }
         }
 

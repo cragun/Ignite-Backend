@@ -16,18 +16,8 @@ namespace DataReef.TM.Models.DTOs.Inquiries
         public string Color { get; set; }
 
         public string Icon { get; set; }
-        public int? SBTypeId { get; set; }
-
-        public string Quota { get; set; }
-        public string Commitments { get; set; }
-
-        public string TodayQuotas { get; set; }
-        public string WeekQuotas { get; set; }
-        public string RangeQuotas { get; set; }
-
-        public string TodayCommitments { get; set; }
-        public string WeekCommitments { get; set; }
-        public string RangeCommitments { get; set; }
-
+        public int? SBTypeId { get; set; } 
+ 
     }
+
 }

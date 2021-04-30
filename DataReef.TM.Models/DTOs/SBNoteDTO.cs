@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataReef.TM.Models.DTOs.FinanceAdapters;
+using DataReef.TM.Models.DTOs.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +11,7 @@ namespace DataReef.TM.Models.DTOs
 
     public class SBNoteData
     {
-
-
+         
         public string apiKey { get; set; }
 
         public long? LeadID { get; set; }
@@ -33,13 +34,13 @@ namespace DataReef.TM.Models.DTOs
 
     public class SBNoteDTO
     {
-
-
         public string Action { get; set; }
 
         public Guid? Guid { get; set; }
 
         public Guid PropertyID { get; set; }
+        public Guid PersonID { get; set; }
+
         public Guid ParentID { get; set; }
         public string ContentType { get; set; }
         public string Attachments { get; set; }
@@ -69,16 +70,21 @@ namespace DataReef.TM.Models.DTOs
         public DateTime? DateLastModified { get; set; }
         public int? Count { get; set; }
         public DateTime? LastUpdateTime { get; set; }
-
         public bool IsSendSMS { get; set; }
         public bool IsSendEmail { get; set; }
         public List<SBTaggedUser> TaggedUsers { get; set; }
+        public IEnumerable<PropertyNoteTagDTO> ContentTags { get; set; }
+         
+        public string JobNimbusID { get; set; } 
+        public string JobNimbusLeadID { get; set; } 
+        public int Version { get; set; } 
+        public ThirdPartyPropertyType PropertyType { get; set; }
 
         public SBNoteDTO()
         {
 
-        } 
-
+        }
+         
         public SBNoteDTO(PropertyNote note, Property property, string userID)
         {
             if (note != null)
@@ -98,9 +104,6 @@ namespace DataReef.TM.Models.DTOs
             }
         }
 
-
-
-
     }
 
     public class SBTaggedUser
@@ -110,7 +113,9 @@ namespace DataReef.TM.Models.DTOs
         public bool IsSendSMS { get; set; }
         public int SmartBoardId { get; set; }
         public string PhoneNumber { get; set; }
-    }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    } 
 
     public class Territories
     {

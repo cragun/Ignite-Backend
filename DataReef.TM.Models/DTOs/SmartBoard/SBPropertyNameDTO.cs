@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataReef.TM.Models.DTOs.SmartBoard
 {
@@ -38,5 +33,8 @@ namespace DataReef.TM.Models.DTOs.SmartBoard
 
         [DataMember]
         public string UserEmailId { get; set; }
+        
+        [DataMember]
+        public string NoteReferenceId { get; set; }
     }
 }

@@ -105,18 +105,24 @@ namespace DataReef.TM.Models
         [StringLength(200)]
         public string SunnovaLeadID { get; set; }
 
-        //[DataMember]
-        //[StringLength(200)]
-        //public string JobNimbusLeadID { get; set; }
+        [DataMember]
+        public string SunnovaContactsResponse { get; set; }
 
-        //[DataMember]
-        //public ThirdPartyPropertyType PropertyType { get; set; }
+        [DataMember]
+        [StringLength(200)]
+        public string JobNimbusLeadID { get; set; }
+
+        [DataMember]
+        public ThirdPartyPropertyType PropertyType { get; set; }
 
         //notes server reference id 
+        [DataMember] 
+        [StringLength(150)]
+        public string NoteReferenceId { get; set; }
+
         [NotMapped]
-        [StringLength(200)]
-        public string ReferenceId { get; set; }
-        
+        public bool? IsNoteServer { get; set; } 
+
         #region Navigation
 
         [ForeignKey("TerritoryID")]
@@ -262,6 +268,7 @@ namespace DataReef.TM.Models
             }
         }
 
+
         private DbGeometry _location;
         public DbGeometry Location()
         {
@@ -288,6 +295,5 @@ namespace DataReef.TM.Models
 
         [NotMapped]
         public int? PropertyNotesCount { get; set; }
-       
     }
 }

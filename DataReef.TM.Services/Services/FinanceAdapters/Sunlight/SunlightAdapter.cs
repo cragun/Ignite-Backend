@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.ServiceModel;
@@ -26,14 +27,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
     [Service(typeof(ISunlightAdapter))]
     public class SunlightAdapter : ISunlightAdapter
     {
-        //private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
-        //private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Username"];
-        //private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Password"];
-        //private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
-        //private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
-        //private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
-
-        private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.url"];
+      private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.url"];
         private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Auth.Username"];
         private static readonly string AuthPassword = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Auth.Password"];
         private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Live.Username"];
@@ -131,7 +125,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             //return stateName;
         }
 
-        public string GetSunlightToken()
+        public async Task<string> GetSunlightToken()
         {
             try
             {
@@ -144,7 +138,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 var request = new RestRequest($"/gettoken/accesstoken", Method.POST);
                 request.AddJsonBody(cred);
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -188,75 +182,45 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
         public void fetchProduct(Projects data, string token)
         {
-            try
+            SunlightProducts req = new SunlightProducts();
+            Products product = new Products();
+
+            product.loanType = "Single";
+            product.term = data.term;
+            product.apr = data.apr;
+            product.isACH = true;
+            product.stateName = data.installStateName;
+
+            req.products = new List<Products>();
+            req.products.Add(product);
+
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
+            var request = new RestRequest($"/product/fetchproducts/", Method.POST);
+            request.AddJsonBody(req);
+            request.AddHeader("Authorization", "Basic " + svcCredentials);
+            request.AddHeader("SFAccessToken", "Bearer " + token);
+
+            var response = client.Execute(request);
+
+            var content = response.Content;
+            var ret = JsonConvert.DeserializeObject<SunlightProducts>(content);
+
+            if (!ret.returnCode.Equals("200"))
             {
-                SunlightProducts req = new SunlightProducts();
-                Products product = new Products();
-
-                product.loanType = "Single";
-                product.term = data.term;
-                product.apr = data.apr;
-                product.isACH = true;
-                product.stateName = data.installStateName;
-
-                req.products = new List<Products>();
-                req.products.Add(product);
-
-                string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
-                var request = new RestRequest($"/product/fetchproducts/", Method.POST);
-                request.AddJsonBody(req);
-                request.AddHeader("Authorization", "Basic " + svcCredentials);
-                request.AddHeader("SFAccessToken", "Bearer " + token);
-
-
-                //var JSON = JsonConvert.SerializeObject(request);
-
-                //ApiLogEntry apilog = new ApiLogEntry();
-                //apilog.Id = Guid.NewGuid();
-                //apilog.User = JSON;
-                //apilog.Machine = Environment.MachineName;
-                //apilog.RequestContentType = "Error";
-                //apilog.RequestRouteTemplate = "";
-                //apilog.RequestRouteData = "";
-                //apilog.RequestIpAddress = "";
-                //apilog.RequestMethod = "";
-                //apilog.RequestHeaders = "";
-                //apilog.RequestTimestamp = DateTime.UtcNow;
-                //apilog.RequestUri = "";
-                //apilog.ResponseContentBody = "";
-                //apilog.RequestContentBody = "";
-
-                //using (var dc = new DataContext())
-                //{
-                //    dc.ApiLogEntries.Add(apilog);
-                //    dc.SaveChanges();
-                //}
-
-                var response = client.Execute(request);
-
-                var content = response.Content;
-                var ret = JsonConvert.DeserializeObject<SunlightProducts>(content);
-
-                if (!ret.returnCode.Equals("200"))
-                {
-                    throw new ApplicationException("Sorry, there seems to be a problem, Error 390. No products found. Please contact Sunlight Financial at (888) 850-3359 for assistance.");
-                }
+                throw new ApplicationException("Sorry, there seems to be a problem, Error 390. No products found. Please contact Sunlight Financial at (888) 850-3359 for assistance.");
             }
-            catch (Exception ex)
-            {
-                throw new ApplicationException(ex.Message);
-            }
+
         }
 
         //  public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
-        public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
+        public async Task<string> CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
         {
-            try
-            {
+            //try
+            //{
             using (var dc = new DataContext())
             {
-                var proposal = dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefault();
-                var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                var proposal = await dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefaultAsync();
+                var proposalfianaceplan = await dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                 var resp = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan.ResponseJSON);
 
                 SunlightProjects req = new SunlightProjects();
@@ -292,31 +256,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 req.projects = new List<Projects>();
                 req.projects.Add(project);
 
-                string token = GetSunlightToken();
+                string token = await GetSunlightToken();
+                //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
-                    //string token = "00DJ0000003HLkU!AR4AQA_G63cMTXNK9VDMFKnabv6OOH6yPOEmRG_n5TKKFfOGQghYAEPmzKs0.q2X6.EcfDI48TeOyvmi8wW5MHd77ST.MO19";
 
-                    //ApiLogEntry apilog = new ApiLogEntry();
-                    //apilog.Id = Guid.NewGuid();
-                    //apilog.User = "";
-                    //apilog.Machine = Environment.MachineName;
-                    //apilog.RequestContentType = "sunlighttoken";
-                    //apilog.RequestRouteTemplate = "";
-                    //apilog.RequestRouteData = "";
-                    //apilog.RequestIpAddress = "";
-                    //apilog.RequestMethod = "";
-                    //apilog.RequestHeaders = "";
-                    //apilog.RequestTimestamp = DateTime.UtcNow;
-                    //apilog.RequestUri = token;
-                    //apilog.ResponseContentBody = "";
-                    //apilog.RequestContentBody = "";
-
-                    //using (var db = new DataContext())
-                    //{
-                    //    db.ApiLogEntries.Add(apilog);
-                    //    db.SaveChanges();
-                    //}
-                    fetchProduct(project, token);
+                fetchProduct(project, token);
 
 
                 string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
@@ -325,7 +269,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("SFAccessToken", "Bearer " + token);
 
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
 
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -338,11 +282,12 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                 using (var db = new DataContext())
                 {
-                    var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var fianacepln = await db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                     fianacepln.SunlightReqJson = ReqJson;
                     fianacepln.SunlightResponseJson = content;
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                 }
+
 
                 var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
 
@@ -353,29 +298,39 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     hashId = Uri.EscapeDataString(hashId);
                 }
 
-                string frame = FrameUrl.Replace("{tokenid}", token).Replace("{hashid}", "&pid=" + hashId);
+
+                string frame = FrameUrl.Replace("{tokenid}", token)
+                                       .Replace("{hashid}", "&pid=" + hashId);
+
+
+
+
                 return frame;
             }
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException(ex.Message + "===" + ex.InnerException.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return ex.Message;
+            //}
         }
 
-        public SunlightResponse GetSunlightloanstatus(Guid proposal)
+
+
+
+
+        public async Task<SunlightResponse> GetSunlightloanstatus(Guid proposal)
         {
             SunlightResponse snresponse = new SunlightResponse();
             try
             {
                 using (var dc = new DataContext())
                 {
-                    var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var proposalfianaceplan = await dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                     var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
                     string projectid = resp.projects?.FirstOrDefault().id;
 
                     //string requesttxt = "{'projectIds': '" + projectid + "'}";
-                    string token = GetSunlightToken();
+                    string token = await GetSunlightToken();
 
                     string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                     var request = new RestRequest($"/getstatus/status/", Method.POST);
@@ -388,7 +343,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     request.AddHeader("Authorization", "Basic " + svcCredentials);
                     request.AddHeader("SFAccessToken", "Bearer " + token);
 
-                    var response = client.Execute(request);
+                    var response = await client.ExecuteTaskAsync(request);
 
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
@@ -404,15 +359,15 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
                     using (var db = new DataContext())
                     {
-                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        var fianacepln = await db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                         fianacepln.SunlightReqJson = ReqJson;
                         fianacepln.SunlightResponseJson = content;
-                        db.SaveChanges();
-                    }
+                        await db.SaveChangesAsync();
+                    }                    
 
                     if (ret.returnCode != "200")
                     {
-                        var error = JsonConvert.DeserializeObject<SunlightError>(content);
+                        var error =  JsonConvert.DeserializeObject<SunlightError>(content);
                         snresponse.returnCode = error.returnCode;
                         snresponse.projectstatus = error.error?.FirstOrDefault()?.errorMessage;
                     }
@@ -442,14 +397,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
 
 
 
-        public SunlightResponse Sunlightsendloandocs(Guid proposal)
+        public async Task<SunlightResponse> Sunlightsendloandocs(Guid proposal)
         {
             SunlightResponse snresponse = new SunlightResponse();
             try
             {
                 using (var dc = new DataContext())
                 {
-                    var proposalfianaceplan = dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                    var proposalfianaceplan = await dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                     var resp = JsonConvert.DeserializeObject<SunlightProjects>(proposalfianaceplan.SunlightResponseJson);
                     string projectid = resp.projects?.FirstOrDefault()?.id;
 
@@ -460,7 +415,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     req.projects = new List<Projects>();
                     req.projects.Add(project);
 
-                    string token = GetSunlightToken();
+                    string token = await GetSunlightToken();
 
                     string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(AuthUsername + ":" + AuthPassword));
                     var request = new RestRequest($"/sendloandocs/request/", Method.POST);
@@ -468,7 +423,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     request.AddHeader("Authorization", "Basic " + svcCredentials);
                     request.AddHeader("SFAccessToken", "Bearer " + token);
 
-                    var response = client.Execute(request);
+                    var response = await client.ExecuteTaskAsync(request);
 
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
@@ -480,14 +435,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     var ReqJson = new JavaScriptSerializer().Serialize(req);
                     using (var db = new DataContext())
                     {
-                        var fianacepln = db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefault();
+                        var fianacepln = await db.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                         fianacepln.SunlightReqJson = ReqJson;
                         fianacepln.SunlightResponseJson = content;
-                        db.SaveChanges();
+                        await db.SaveChangesAsync();
                     }
 
                     var ret = JsonConvert.DeserializeObject<SunlightProjects>(content);
-                    // string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
+                   // string returnstr = ret.projects?.FirstOrDefault()?.projectStatus + ret.projects?.FirstOrDefault()?.message;
                     if (ret.returnCode != "200")
                     {
                         var error = JsonConvert.DeserializeObject<SunlightError>(content);

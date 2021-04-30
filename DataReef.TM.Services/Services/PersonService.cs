@@ -33,6 +33,7 @@ using System.ServiceModel.Activation;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Z.EntityFramework.Plus;
+using static DataReef.TM.Models.Person;
 
 namespace DataReef.TM.Services
 {
@@ -278,6 +279,7 @@ namespace DataReef.TM.Services
             return sortedResult;
         }
 
+
         /// <summary>
         /// Method used to undelete a person, w/ associated User and Credential
         /// This method will also send an email letting the person know that the account has been reactivated
@@ -287,7 +289,6 @@ namespace DataReef.TM.Services
         /// <param name="environment"></param>
         public void Reactivate(Guid personId, string smartBoardId)
         {
-
             using (DataContext dc = new DataContext())
             {
                 var person = dc.People.Where(p => (p.Guid == personId || (smartBoardId != null && p.SmartBoardID.Equals(smartBoardId, StringComparison.InvariantCultureIgnoreCase))) && p.IsDeleted == true).FirstOrDefault();
@@ -325,6 +326,7 @@ namespace DataReef.TM.Services
 
                 // insert log for users activate - deactivate 
                 InsertActiveDeactiveUserLog(person.EmailAddressString, "Reactivate Api", oldstate, "Active", "IgniteApi-" + SmartPrincipal.UserId.ToString());
+
                 if (string.IsNullOrEmpty(smartBoardId))
                 {
                     //the method also updates the Ignite user's SmartBoardId property

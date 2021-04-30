@@ -39,19 +39,11 @@ namespace DataReef.TM.Services
 
         public AdminQuotas GetQuotasType()
         {
-            List<Models.DTOs.QuotasCommitments.Types> typeList = new List<Models.DTOs.QuotasCommitments.Types>();
-
-            typeList.Add(new Models.DTOs.QuotasCommitments.Types() { Id = 1, Name = "Quotas" });
-            typeList.Add(new Models.DTOs.QuotasCommitments.Types() { Id = 2, Name = "Commitments" });
-
-            var ouRoles = _ouService.SBGetOuRoles();
-            var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
-
             return new AdminQuotas
             {
-                type = typeList,
-                user_type = ouRoles,
-                dispositions = dispositions
+                type = new List<Types>(2) { new Types() { Id = 1, Name = "Quotas" }, new Types() { Id = 2, Name = "Commitments" } },
+                user_type = _ouService.SBGetOuRoles(),
+                dispositions = _personService.CRMGetAvailableDispositionsQuotas()
             };
         }
 
@@ -73,18 +65,27 @@ namespace DataReef.TM.Services
 
         public QuotasCommitment InsertQuotas(QuotasCommitment entity)
         {
-            entity.CreatedByID = SmartPrincipal.UserId;
-            entity.Flags = 1;
-            entity.dispositions = JsonConvert.SerializeObject(entity.Disposition);
-            var ret = base.Insert(entity);
-
-            if (ret == null)
+            using (DataContext dc = new DataContext())
             {
-                entity.SaveResult = SaveResult.SuccessfulInsert;
+                var data = dc.QuotasCommitments.FirstOrDefault(a => entity.StartDate.Date == a.StartDate &&
+            entity.EndDate.Date == a.EndDate && a.PersonID == entity.PersonID && a.Type == entity.Type && a.Flags == 1);
+
+                entity.dispositions = JsonConvert.SerializeObject(entity.Disposition);
+
+                if (data != null)
+                {
+                    data.dispositions = entity.dispositions;
+                    base.Update(data);
+                }
+                else
+                {
+                    entity.CreatedByID = SmartPrincipal.UserId;
+                    entity.Flags = 1;
+                    base.Insert(entity);
+                }
+
                 return entity;
             }
-
-            return entity;
         }
 
         public List<List<object>> GetQuotasReport()
@@ -93,15 +94,12 @@ namespace DataReef.TM.Services
             {
                 List<List<object>> report = new List<List<object>>();
 
-                List<object> header = new List<object>();
-                header.Add($"Q1 {DateTime.Now.Year}");
-                header.Add("Start");
-                header.Add("End");
-                header.Add("Duration(Days)");
-                header.Add("Type");
-
                 var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
                 dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
+
+                List<object> header = new List<object>(5 + dispositions.Count) {
+                    $"Q1 {DateTime.Now.Year}", "Start","End","Duration(Days)" , "Type"
+                };
 
                 foreach (var item in dispositions)
                 {
@@ -110,7 +108,7 @@ namespace DataReef.TM.Services
 
                 report.Add(header);
 
-                var data = dc.QuotasCommitments.Where(a => a.Flags == 1).ToList();
+                var data = dc.QuotasCommitments.Where(a => a.Flags == 1).AsNoTracking().ToList();
 
                 for (int i = 0; i < data.Count; i++)
                 {
@@ -136,7 +134,6 @@ namespace DataReef.TM.Services
 
                     report.Add(quota);
                 }
-
                 return report;
             }
         }
@@ -145,83 +142,82 @@ namespace DataReef.TM.Services
         {
             using (DataContext dc = new DataContext())
             {
-
-                var quota = dc.QuotasCommitments.FirstOrDefault(a => a.Flags == 1 && a.Type == 1 && a.StartDate == req.StartDate && a.EndDate == req.EndDate);
+                var data = dc.QuotasCommitments.Where(a => req.StartDate.Date == a.StartDate &&
+                req.EndDate.Date == a.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
 
                 List<List<object>> report = new List<List<object>>();
-
-                if (quota != null)
+                if (data.Count > 0)
                 {
-                    quota.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(quota.dispositions);
-                    quota.Disposition = quota.Disposition.OrderBy(a => a.Disposition).ToList();
+                    var quota = data.FirstOrDefault(a => a.Flags == 1 && a.Type == 1);
 
-                    List<object> header = new List<object>();
-                    header.Add("Metric");
-                    header.Add("Quota Today");
-                    header.Add("Commitment Today");
-                    header.Add("Quota This Week");
-                    header.Add("Commitment This Week");
-                    header.Add($"Quota ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})");
-                    header.Add($"Commitment ({req.StartDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})");
-
-                    report.Add(header);
-
-                    var isUserSetCommitment = dc.QuotasCommitments.FirstOrDefault(a => a.Flags == 2 && a.Type == 2 && a.StartDate == req.StartDate && a.EndDate == req.EndDate && a.PersonID == req.PersonID);
-
-                    var isAdminSetCommitment = dc.QuotasCommitments.FirstOrDefault(a => a.Flags == 1 && a.Type == 2 && a.StartDate == req.StartDate && a.EndDate == req.EndDate);
-
-                    if (isUserSetCommitment != null)
+                    if (quota != null)
                     {
-                        isUserSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isUserSetCommitment.dispositions);
-                        isUserSetCommitment.Disposition = isUserSetCommitment.Disposition.OrderBy(a => a.Disposition).ToList();
-                    }
-                    else
-                    {
-                        if (isAdminSetCommitment != null)
+                        quota.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(quota.dispositions);
+                        quota.Disposition = quota.Disposition.OrderBy(a => a.Disposition).ToList();
+
+                        report.Add(new List<object>(7) {
+                            "Metric",
+                            "Quota Today",
+                            "Commitment Today",
+                            "Quota This Week",
+                            "Commitment This Week",
+                            $"Quota ({quota.StartDate.ToShortDateString()} - {quota.EndDate.ToShortDateString()})",
+                            $"Commitment ({quota.StartDate.ToShortDateString()} - {quota.EndDate.ToShortDateString()})"
+                        });
+
+                        var isUserSetCommitment = data.FirstOrDefault(a => a.Flags == 2 && a.Type == 2);
+                        var isAdminSetCommitment = data.FirstOrDefault(a => a.Flags == 1 && a.Type == 2);
+
+                        if (isUserSetCommitment != null)
+                        {
+                            isUserSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isUserSetCommitment.dispositions);
+                            isUserSetCommitment.Disposition = isUserSetCommitment.Disposition.OrderBy(a => a.Disposition).ToList();
+                        }
+                        else if (isAdminSetCommitment != null)
                         {
                             isAdminSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isAdminSetCommitment.dispositions);
                             isAdminSetCommitment.Disposition = isAdminSetCommitment.Disposition.OrderBy(a => a.Disposition).ToList();
                         }
-                    }
 
-                    var commitment = isUserSetCommitment != null ? isUserSetCommitment : (isAdminSetCommitment != null ? isAdminSetCommitment : null);
-
-                    foreach (var item in quota.Disposition)
-                    {
-                        if (string.IsNullOrEmpty(item.Quota))
+                        foreach (var item in quota.Disposition)
                         {
-                            item.Quota = "0";
-                        }
-                        item.TodayQuotas = (Convert.ToInt32(item.Quota) / Convert.ToInt32(quota.EndDate.Subtract(quota.StartDate).TotalDays)).ToString();
-                        item.WeekQuotas = item.Quota;
-                        item.RangeQuotas = item.Quota;
+                            if (string.IsNullOrEmpty(item.Quota))
+                            {
+                                item.Quota = "0";
+                            }
 
-                        if (isAdminSetCommitment != null && isUserSetCommitment == null)
-                        {
-                            var adminCommitment = isAdminSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
+                            item.TodayQuotas = Convert.ToString(Math.Round(Convert.ToDouble(item.Quota) / Convert.ToDouble(quota.EndDate.Subtract(quota.StartDate).TotalDays)));
+                            item.WeekQuotas = Convert.ToString(Convert.ToDouble(item.TodayQuotas) * 7);
+                            item.RangeQuotas = item.Quota;
+                            if (isUserSetCommitment != null)
+                            {
+                                var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
 
-                            item.TodayCommitments = (Convert.ToInt32(adminCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
+                                item.TodayCommitments = userCommitment.TodayCommitments;
+                                item.WeekCommitments = userCommitment.WeekCommitments;
+                                item.RangeCommitments = userCommitment.RangeCommitments;
+                            }
+                            else if (isAdminSetCommitment != null)
+                            {
+                                var adminCommitment = isAdminSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
+                                if (string.IsNullOrEmpty(adminCommitment.Commitments))
+                                {
+                                    adminCommitment.Commitments = "0";
+                                }
 
-                            item.WeekCommitments = adminCommitment.Commitments;
-                            item.RangeCommitments = adminCommitment.Commitments;
-                        }
-                        else if (isUserSetCommitment != null)
-                        {
-                            var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == item.Disposition);
+                                item.TodayCommitments = Convert.ToString(Math.Round(Convert.ToDouble(adminCommitment.Commitments) / Convert.ToDouble(isAdminSetCommitment.EndDate.Subtract(isAdminSetCommitment.StartDate).TotalDays)));
 
-                            item.TodayCommitments = (Convert.ToInt32(userCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
+                                item.WeekCommitments = Convert.ToString(Convert.ToDouble(item.TodayCommitments) * 7);
+                                item.RangeCommitments = adminCommitment.Commitments;
+                            }
+                            else
+                            {
+                                item.TodayCommitments = "0";
+                                item.WeekCommitments = "0";
+                                item.RangeCommitments = "0";
+                            }
 
-                            item.WeekCommitments = userCommitment.Commitments;
-                            item.RangeCommitments = userCommitment.Commitments;
-                        }
-                        else
-                        {
-                            item.TodayCommitments = "0";
-                            item.WeekCommitments = "0";
-                            item.RangeCommitments = "0";
-                        }
-
-                        var commitments = new List<object>{
+                            var commitments = new List<object>{
                         item.Disposition,
                         item.TodayQuotas,
                         item.TodayCommitments,
@@ -230,47 +226,57 @@ namespace DataReef.TM.Services
                         item.RangeQuotas,
                         item.RangeCommitments,
                     };
-
-                        report.Add(commitments);
+                            report.Add(commitments);
+                        }
                     }
                 }
-
                 return report;
             }
         }
 
+
         public QuotasCommitment InsertCommitments(QuotasCommitment entity)
         {
-            entity.CreatedByID = SmartPrincipal.UserId;
-
-            List<QuotaCommitementsDisposition> dispositions = new List<QuotaCommitementsDisposition>();
-
-            foreach (var item in entity.commitments)
+            using (DataContext dc = new DataContext())
             {
-                dispositions.Add(new QuotaCommitementsDisposition
+                List<QuotaCommitementsDisposition> dispositions = new List<QuotaCommitementsDisposition>();
+
+                foreach (var item in entity.commitments)
                 {
-                    DisplayName = item[0]?.ToString(),
-                    Disposition = item[0]?.ToString(),
-                    TodayQuotas = item[1]?.ToString(),
-                    TodayCommitments = item[2]?.ToString(),
-                    WeekQuotas = item[3]?.ToString(),
-                    WeekCommitments = item[4]?.ToString(),
-                    RangeQuotas = item[5]?.ToString(),
-                    RangeCommitments = item[6]?.ToString(),
-                });
-            }
+                    dispositions.Add(new QuotaCommitementsDisposition
+                    {
+                        DisplayName = Convert.ToString(item[0]),
+                        Disposition = Convert.ToString(item[0]),
+                        TodayQuotas = Convert.ToString(item[1]),
+                        TodayCommitments = Convert.ToString(item[2]),
+                        WeekQuotas = Convert.ToString(item[3]),
+                        WeekCommitments = Convert.ToString(item[4]),
+                        RangeQuotas = Convert.ToString(item[5]),
+                        RangeCommitments = Convert.ToString(item[6]),
+                    });
+                }
 
-            entity.dispositions = JsonConvert.SerializeObject(dispositions);
-            entity.Flags = 2;
-            var ret = base.Insert(entity);
+                entity.dispositions = JsonConvert.SerializeObject(dispositions);
 
-            if (ret == null)
-            {
-                entity.SaveResult = SaveResult.SuccessfulInsert;
+                var data = dc.QuotasCommitments.FirstOrDefault(a => entity.StartDate.Date == a.StartDate &&
+              entity.EndDate.Date == a.EndDate && a.PersonID == entity.PersonID && a.Type == entity.Type && a.Flags == 2);
+
+                if (data != null)
+                {
+                    data.dispositions = entity.dispositions;
+                    base.Update(data);
+                }
+                else
+                {
+                    entity.CreatedByID = SmartPrincipal.UserId;
+                    entity.Flags = 2;
+                    entity.IsCommitmentSet = true;
+
+                    base.Insert(entity);
+                }
+
                 return entity;
             }
-
-            return entity;
         }
 
         public List<List<object>> GetQuotasReportByPerson(QuotasCommitment req)
@@ -280,15 +286,14 @@ namespace DataReef.TM.Services
                 List<List<object>> report = new List<List<object>>();
 
                 var data = dc.QuotasCommitments.Where(a => (a.RoleID == req.RoleID && a.PersonID == req.PersonID && a.Type == req.Type)
-                && a.StartDate >= req.StartDate && a.EndDate <= req.EndDate).ToList();
+                && a.StartDate >= req.StartDate && a.EndDate <= req.EndDate).AsNoTracking().ToList();
 
                 if (data.Count > 0)
                 {
-                    List<object> header = new List<object>() { "UserName", "Position", "Type", "Start", "End" };
-
                     var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
                     dispositions = dispositions.OrderBy(a => a.Disposition).ToList();
 
+                    List<object> header = new List<object>(5 + dispositions.Count) { "UserName", "Position", "Type", "Start", "End" };
                     foreach (var item in dispositions)
                     {
                         header.Add(item.Disposition);
@@ -336,132 +341,136 @@ namespace DataReef.TM.Services
             }
         }
 
-        public List<List<object>> GetQuotasDateRange(QuotasCommitment req)
-        {
-            try
-            {
-                using (DataContext dc = new DataContext())
-                {
-                    req.EndDate = req.CurrentDate.AddMonths(3);
-                    List<List<object>> reportSet = new List<List<object>>();
+        //public List<List<object>> GetQuotasDateRange(QuotasCommitment req)
+        //{
+        //    try
+        //    {
+        //        using (DataContext dc = new DataContext())
+        //        { 
+        //            List<List<object>> reportSet = new List<List<object>>();
+        //            req.EndDate = req.CurrentDate.AddMonths(3);
+        //            var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.EndDate <= req.EndDate && a.PersonID == req.PersonID).AsNoTracking().ToList();
+        //            List<QuotaCommitementsDisposition> allDispositions = new List<QuotaCommitementsDisposition>();
 
-                    var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.EndDate <= req.EndDate && a.PersonID == req.PersonID).ToList();
-                    List<QuotaCommitementsDisposition> allDispositions = new List<QuotaCommitementsDisposition>();
+        //            var quotas = data.Where(a => a.Flags == 1 && a.Type == 1).ToList();
+        //            foreach (var item in quotas)
+        //            {
+        //                if (item != null)
+        //                {
+        //                    item.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(item.dispositions);
+        //                    item.Disposition = item.Disposition.OrderBy(a => a.Disposition).ToList();
 
-                    var quotas = data.Where(a => a.Flags == 1 && a.Type == 1).ToList();
-                    foreach (var item in quotas)
-                    {
-                        if (item != null)
-                        {
-                            item.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(item.dispositions);
-                            item.Disposition = item.Disposition.OrderBy(a => a.Disposition).ToList();
+        //                    var isUserSetCommitment = data.FirstOrDefault(a => a.Flags == 2 && a.Type == 2);
+        //                    var isAdminSetCommitment = data.FirstOrDefault(a => a.Flags == 1 && a.Type == 2);
 
-                            var isUserSetCommitment = data.FirstOrDefault(a => a.Flags == 2 && a.Type == 2);
-                            var isAdminSetCommitment = data.FirstOrDefault(a => a.Flags == 1 && a.Type == 2);
+        //                    if (isUserSetCommitment != null)
+        //                    {
+        //                        isUserSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isUserSetCommitment.dispositions);
+        //                    }
+        //                    else
+        //                    {
+        //                        if (isAdminSetCommitment != null)
+        //                        {
+        //                            isAdminSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isAdminSetCommitment.dispositions);
+        //                        }
+        //                    }
 
-                            if (isUserSetCommitment != null)
-                            {
-                                isUserSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isUserSetCommitment.dispositions);
-                            }
-                            else
-                            {
-                                if (isAdminSetCommitment != null)
-                                {
-                                    isAdminSetCommitment.Disposition = JsonConvert.DeserializeObject<List<QuotaCommitementsDisposition>>(isAdminSetCommitment.dispositions);
-                                }
-                            }
+        //                    var commitment = isUserSetCommitment != null ? isUserSetCommitment : (isAdminSetCommitment != null ? isAdminSetCommitment : null);
 
-                            var commitment = isUserSetCommitment != null ? isUserSetCommitment : (isAdminSetCommitment != null ? isAdminSetCommitment : null);
+        //                    foreach (var disposition in item.Disposition)
+        //                    {
+        //                        if (string.IsNullOrEmpty(disposition.Quota))
+        //                            disposition.Quota = "0";
 
-                            foreach (var disposition in item.Disposition)
-                            {
+        //                        disposition.TodayQuotas = (Convert.ToInt32(disposition.Quota) / Convert.ToInt32(item.EndDate.Subtract(item.StartDate).TotalDays)).ToString();
+        //                        disposition.WeekQuotas = Convert.ToString(Convert.ToInt32(disposition.TodayQuotas) * 7);
+        //                        disposition.RangeQuotas = disposition.Quota;
 
-                                disposition.TodayQuotas = (Convert.ToInt32(disposition.Quota) / Convert.ToInt32(item.EndDate.Subtract(item.StartDate).TotalDays)).ToString();
-                                disposition.WeekQuotas = disposition.Quota;
-                                disposition.RangeQuotas = disposition.Quota;
+        //                        if (isAdminSetCommitment != null && isUserSetCommitment == null)
+        //                        {
+        //                            var adminCommitment = isAdminSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == disposition.Disposition);
 
-                                if (isAdminSetCommitment != null && isUserSetCommitment == null)
-                                {
-                                    var adminCommitment = isAdminSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == disposition.Disposition);
+        //                            if (string.IsNullOrEmpty(adminCommitment.Commitments))
+        //                                adminCommitment.Commitments = "0";
 
-                                    disposition.TodayCommitments = (Convert.ToInt32(adminCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
+        //                            disposition.TodayCommitments = (Convert.ToInt32(adminCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
 
-                                    disposition.WeekCommitments = adminCommitment.Commitments;
-                                    disposition.RangeCommitments = adminCommitment.Commitments;
-                                }
-                                else if (isUserSetCommitment != null)
-                                {
-                                    var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == disposition.Disposition);
+        //                            disposition.WeekCommitments = Convert.ToString(Convert.ToInt32(disposition.TodayCommitments) * 7);
+        //                            disposition.RangeCommitments = adminCommitment.Commitments;
+        //                        }
+        //                        else if (isUserSetCommitment != null)
+        //                        {
+        //                            var userCommitment = isUserSetCommitment.Disposition.FirstOrDefault(a => a.Disposition == disposition.Disposition);
 
-                                    disposition.TodayCommitments = (Convert.ToInt32(userCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
+        //                            if (string.IsNullOrEmpty(userCommitment.Commitments))
+        //                                userCommitment.Commitments = "0";
 
-                                    disposition.WeekCommitments = userCommitment.Commitments;
-                                    disposition.RangeCommitments = userCommitment.Commitments;
-                                }
-                                else
-                                {
-                                    disposition.TodayCommitments = "0";
-                                    disposition.WeekCommitments = "0";
-                                    disposition.RangeCommitments = "0";
-                                }
+        //                            disposition.TodayCommitments = (Convert.ToInt32(userCommitment.Commitments) / Convert.ToInt32(commitment.EndDate.Subtract(commitment.StartDate).TotalDays)).ToString();
 
-                                allDispositions.Add(disposition);
-                            }
+        //                            disposition.WeekCommitments = Convert.ToString(Convert.ToInt32(disposition.TodayCommitments) * 7);
+        //                            disposition.RangeCommitments = userCommitment.Commitments;
+        //                        }
+        //                        else
+        //                        {
+        //                            disposition.Commitments = "0";
+        //                            disposition.TodayCommitments = "0";
+        //                            disposition.WeekCommitments = "0";
+        //                            disposition.RangeCommitments = "0";
+        //                        }
 
-                        }
-                    }
+        //                        allDispositions.Add(disposition);
+        //                    }
+        //                }
+        //            }
 
-                    var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
+        //            var dispositions = _personService.CRMGetAvailableDispositionsQuotas();
 
-                    List<object> header = new List<object>() { "Metric", "Quota Today", "Commitment Today", "Quota This Week", "Commitment This Week", "Quota (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")", "Commitment (" + req.CurrentDate.ToShortDateString() + " - " + req.EndDate.ToShortDateString() + ")" };
+        //            reportSet.Add(new List<object>(7) { "Metric", "Quota Today", "Commitment Today", "Quota This Week", "Commitment This Week", $"Quota ({req.CurrentDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})", $"Commitment ({req.CurrentDate.ToShortDateString()} - {req.EndDate.ToShortDateString()})" });
 
-                    reportSet.Add(header);
+        //            foreach (var item in dispositions)
+        //            {
+        //                var itemDis = allDispositions.Where(a => a.Disposition == item.Disposition).ToList().GroupBy(r => r.Disposition)
+        //                                                .Select(group => new QuotaCommitementsDisposition
+        //                                                {
+        //                                                    Disposition = group.Key,
+        //                                                    TodayQuotas = group.Sum(rp => Convert.ToInt32(rp.TodayQuotas)).ToString(),
+        //                                                    WeekQuotas = group.Sum(rp => Convert.ToInt32(rp.WeekQuotas)).ToString(),
+        //                                                    RangeQuotas = group.Sum(rp => Convert.ToInt32(rp.RangeQuotas)).ToString(),
+        //                                                    TodayCommitments = group.Sum(rp => Convert.ToInt32(rp.TodayCommitments)).ToString(),
+        //                                                    WeekCommitments = group.Sum(rp => Convert.ToInt32(rp.WeekCommitments)).ToString(),
+        //                                                    RangeCommitments = group.Sum(rp => Convert.ToInt32(rp.RangeCommitments)).ToString()
+        //                                                }).FirstOrDefault(); 
 
-                    foreach (var item in dispositions)
-                    {
-                        var itemDis = allDispositions.Where(a => a.Disposition == item.Disposition).ToList().GroupBy(r => r.Disposition)
-                                                        .Select(group => new QuotaCommitementsDisposition
-                                                        {
-                                                            Disposition = group.Key,
-                                                            TodayQuotas = group.Sum(rp => Convert.ToInt32(rp.TodayQuotas)).ToString(),
-                                                            WeekQuotas = group.Sum(rp => Convert.ToInt32(rp.WeekQuotas)).ToString(),
-                                                            RangeQuotas = group.Sum(rp => Convert.ToInt32(rp.RangeQuotas)).ToString(),
-                                                            TodayCommitments = group.Sum(rp => Convert.ToInt32(rp.TodayCommitments)).ToString(),
-                                                            WeekCommitments = group.Sum(rp => Convert.ToInt32(rp.WeekCommitments)).ToString(),
-                                                            RangeCommitments = group.Sum(rp => Convert.ToInt32(rp.RangeCommitments)).ToString()
-                                                        }).FirstOrDefault();
+        //                reportSet.Add(new List<object>(7){
+        //                item.Disposition,
+        //                itemDis?.TodayQuotas != null ? itemDis?.TodayQuotas : "0",
+        //                itemDis?.TodayCommitments  != null ? itemDis?.TodayCommitments : "0",
+        //                itemDis?.WeekQuotas  != null ? itemDis?.WeekQuotas : "0",
+        //                itemDis?.WeekCommitments  != null ? itemDis?.WeekCommitments : "0",
+        //                itemDis?.RangeQuotas  != null ? itemDis?.RangeQuotas : "0",
+        //                itemDis?.RangeCommitments  != null ? itemDis?.RangeCommitments : "0"
+        //            });
+        //            }
 
-                        reportSet.Add(new List<object>{
-                        item.Disposition,
-                        itemDis?.TodayQuotas != null ? itemDis?.TodayQuotas : "0",
-                        itemDis?.WeekQuotas  != null ? itemDis?.WeekQuotas : "0",
-                        itemDis?.RangeQuotas  != null ? itemDis?.RangeQuotas : "0",
-                        itemDis?.TodayCommitments  != null ? itemDis?.TodayCommitments : "0",
-                        itemDis?.WeekCommitments  != null ? itemDis?.WeekCommitments : "0",
-                        itemDis?.RangeCommitments  != null ? itemDis?.RangeCommitments : "0"
-                    });
-                    }
+        //            return reportSet;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new List<List<object>>();
+        //    }
+        //} 
 
-                    return reportSet;
-                }
-            }
-            catch (Exception ex)
-            {
-                return new List<List<object>>();
-            }
-        }
-
-        public bool IsCommitmentsSetByUser(QuotasCommitment req)
+        public QuotasCommitment IsCommitmentsSetByUser(QuotasCommitment req)
         {
             using (DataContext dc = new DataContext())
             {
-                bool isSet = false;
-                var data = dc.QuotasCommitments.Where(a => a.StartDate >= req.CurrentDate && a.PersonID == req.PersonID).ToList();
-                if (data.Count > 0)
+                var data = dc.QuotasCommitments.Where(a => req.CurrentDate.Date >= a.StartDate && req.CurrentDate.Date <= a.EndDate && a.PersonID == req.PersonID).AsNoTracking().FirstOrDefault();
+                if (data != null)
                 {
-                    isSet = true;
+                    data.IsQuotatSet = true;
                 }
-                return isSet;
+                return data;
             }
         }
     }

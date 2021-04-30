@@ -369,6 +369,7 @@ namespace DataReef.Application.Services
             }
 
         }
+
         public bool updateUser(bool value, Guid userId)
         {
             using (DataContext dc = new DataContext())
@@ -810,6 +811,15 @@ namespace DataReef.Application.Services
             using (var ctx = new DataContext())
             {
                 return ctx.People.FirstOrDefault(p => p.Guid == SmartPrincipal.UserId)?.Name;
+            }
+        }
+
+        public async Task<string> GetUserName(Guid guid)
+        {
+            using (var ctx = new DataContext())
+            {
+                var people = await ctx.People.AsNoTracking().FirstOrDefaultAsync(p => p.Guid == guid);
+                return people?.Name;
             }
         }
 

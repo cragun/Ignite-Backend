@@ -35,6 +35,7 @@ namespace DataReef.TM.Models
 
         [DataMember]
         public bool IsCommitmentSet { get; set; }
+
         [NotMapped]
         public List<QuotaCommitementsDisposition> Disposition { get; set; }
 
@@ -70,9 +71,9 @@ namespace DataReef.TM.Models
         [DataMember]
         [ForeignKey("RoleID")]
         public OURole OURole { get; set; }
-
+         
         #endregion
-
+         
         public override void FilterCollections<T>(string inclusionPath = "")
         {
             bool alreadyProcessed;
@@ -81,8 +82,8 @@ namespace DataReef.TM.Models
             {
                 return;
             }
-
-            OURole = FilterEntity(OURole, newInclusionPath);
+             
+            OURole = FilterEntity(OURole, newInclusionPath); 
         }
     }
 }

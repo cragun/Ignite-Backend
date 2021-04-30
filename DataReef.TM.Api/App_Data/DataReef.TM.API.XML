@@ -381,6 +381,34 @@
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetNoteCommentsForSmartboard(System.Int64,System.String,DataReef.TM.Models.DTOs.SBNoteDTO)">
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.AddEditNote(DataReef.TM.Models.PropertyNote)">
+            <summary>
+            transfer a new note in note server
+            </summary>
+            <param name="entity"></param> 
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetPropertyNotes(System.Guid)">
+            <summary>
+            Gets all PropertyNotes linked with specified propertyID from notes server
+            </summary>
+            <param name="propertyID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetPropertyNoteById(System.Guid)">
+            <summary>
+            Gets PropertyNote linked with specified id from notes server
+            </summary> 
+            <param name="noteID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.ImportNotes(System.Int32)">
+            <summary>
+            import notes to property server
+            </summary>
+            <param name="limit"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetApikey(System.Int64,System.String,System.Int64)">
             <summary>
             Gets apikey
@@ -451,11 +479,8 @@
         </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.UpdateSmartboardIdByEmail">
             <summary>
-            / Update SmartboardId By Email.
+            Update SmartboardId By Email.
             </summary>
-            <param name="request"></param>
-            <param name="apiKey"></param>
-            <returns></returns>
         </member>
         <member name="T:DataReef.TM.Api.Controllers.PropertYSurveysController">
             <summary>

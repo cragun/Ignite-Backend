@@ -6,6 +6,7 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Persons;
 using System;
 using System.ServiceModel;
+using System.Threading.Tasks;
 
 namespace DataReef.TM.Contracts.Services
 {
@@ -45,6 +46,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string GetCurrentUserFullName();
+
+        [OperationContract]
+        Task<string> GetUserName(Guid guid);
 
         [OperationContract]
         bool CheckUserExist(string email);
