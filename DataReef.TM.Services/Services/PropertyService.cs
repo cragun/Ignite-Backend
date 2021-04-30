@@ -444,9 +444,7 @@ namespace DataReef.TM.Services.Services
 
                             #endregion
 
-                            dataContext.SaveChanges();
-
-
+                            dataContext.SaveChanges(); 
 
                             ret = base.Update(entity, dataContext);
 
