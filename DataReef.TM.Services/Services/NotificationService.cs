@@ -48,6 +48,7 @@ namespace DataReef.TM.Services.Services
             _ouSettingService = ouSettingService;
         }
 
+
         public IEnumerable<Notification> MarkAllNotificationsAsRead(Guid personID, int pageNumber = 0, int itemsPerPage = 10)
         {
             using (var dc = new DataContext())
