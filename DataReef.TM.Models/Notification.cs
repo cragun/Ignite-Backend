@@ -59,8 +59,9 @@ namespace DataReef.TM.Models
         [DataMember]
         public Person Person { get; set; }
 
-        [ForeignKey("PropertyID")]
-        [DataMember]
+        //[ForeignKey("PropertyID")]
+        //[DataMember]
+        [NotMapped]
         public Property Property { get; set; }
 
         #endregion
