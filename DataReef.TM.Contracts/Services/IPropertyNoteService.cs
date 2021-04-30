@@ -62,10 +62,9 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string SendEmailForTest(string emailid);
-
+ 
 
         [OperationContract]
-        Task<string> UpdateSmartboardIdByEmail();
-        
+        Task<string> UpdateSmartboardIdByEmail(); 
     }
 }

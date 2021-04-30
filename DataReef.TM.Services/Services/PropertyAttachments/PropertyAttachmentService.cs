@@ -1140,8 +1140,8 @@ namespace DataReef.TM.Services.Services.PropertyAttachments
                                     entity.Status = ItemStatus.Approved;
                                     reviewMessage += "Changed status to Approved.";
                                 }
-                            }
-
+                            } 
+                            
                             if (!string.IsNullOrEmpty(reviewMessage))
                             {
                                 var audit = new AuditItem

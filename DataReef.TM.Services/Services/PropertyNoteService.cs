@@ -22,11 +22,11 @@ using System.Data.SqlClient;
 using Newtonsoft.Json;
 using DataReef.TM.Models.DTOs.FinanceAdapters;
 using DataReef.TM.Contracts.Services.FinanceAdapters;
-using System.Web.Http;
+using System.Web.Http; 
 using System.Net;
 using System.Net.Http;
 using DataReef.TM.Models.DTOs.Solar.Finance;
-using Note = DataReef.TM.Models.DTOs.Solar.Finance.Note;
+using Note = DataReef.TM.Models.DTOs.Solar.Finance.Note; 
 
 namespace DataReef.TM.Services.Services
 {
@@ -941,7 +941,7 @@ namespace DataReef.TM.Services.Services
                                 }
                             }
                         }
-
+ 
                         SendEmailNotification(note.Content, note.CreatedByName, sendemails, property, emailnoteid, true);
                     }
                 }
@@ -1344,7 +1344,7 @@ namespace DataReef.TM.Services.Services
                     .FirstOrDefault(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
 
                 if (property == null)
-                {
+                { 
                     throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
                 }
                 property.PropertyNotes = property.PropertyNotes?.Where(p => !p.IsDeleted)?.ToList();
@@ -1378,7 +1378,7 @@ namespace DataReef.TM.Services.Services
                 var property = await dc.Properties.AsNoTracking().FirstOrDefaultAsync(x => x.SmartBoardId == smartboardLeadID || x.Id == igniteID);
 
                 if (property == null)
-                {
+                { 
                     throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
                 }
                 //validate the token
@@ -1401,7 +1401,7 @@ namespace DataReef.TM.Services.Services
                 var property = await dc.Properties.FirstOrDefaultAsync(x => x.SmartBoardId == smartboardLeadID);
 
                 if (property == null)
-                {
+                { 
                     throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "No lead found with the specified ID(s)" });
                 }
 
@@ -1433,7 +1433,7 @@ namespace DataReef.TM.Services.Services
                 {
                     // insert log for SendEmail
                     _personService.Value.InsertActiveDeactiveUserLog(email, $"New Comment on note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, $"Exception: " + ex.Message, IsSmartboard.ToString());
-                }
+                } 
             });
 
         }
@@ -1453,9 +1453,9 @@ namespace DataReef.TM.Services.Services
 
                 var body = $"Note Sent by: {Username}<br/><br/>New activity has been recorded on a note you were tagged in. <br/> The note is for {property.Name} at {property.Address1} {property.City}, {property.State}. <br/> Here's the note content: <br/><br/> {content} . <br/><br/><b>Do not Reply</b><br/><br/>{directNoteLinks}";
                 var to = string.Join(";", emails);
-
+ 
                 //Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
-
+ 
                 try
                 {
                     Mail.Library.SendEmail(to, string.Empty, $"New note for {property.Name} at {property.Address1} {property.City}, {property.State}", body, true, null, IsSmartboard);
@@ -1585,7 +1585,7 @@ namespace DataReef.TM.Services.Services
             {
                 return ex.Message;
             }
-        }
+        } 
 
         public async Task<string> UpdateSmartboardIdByEmail()
         {
