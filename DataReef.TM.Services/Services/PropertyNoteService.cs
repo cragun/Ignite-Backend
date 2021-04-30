@@ -435,10 +435,14 @@ namespace DataReef.TM.Services.Services
                     ParentID = x.ParentID,
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified,
-                    ContentTags = x.ContentTags
+                    ContentTags = x.ContentTags,
+                    PersonID = x.PersonID,
+                    JobNimbusID = x.JobNimbusID,
+                    JobNimbusLeadID = x.JobNimbusLeadID,
+                    PropertyType = x.PropertyType ,
+                    Version = x.Version
                 });
-            }
-
+            } 
         }
 
         public IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID)
@@ -466,7 +470,12 @@ namespace DataReef.TM.Services.Services
                     ParentID = x.ParentID,
                     Count = property.PropertyNotes?.Count(a => a.ParentID == x.Guid),
                     LastUpdateTime = property.PropertyNotes?.Where(a => a.ParentID == x.Guid && !a.IsDeleted).OrderByDescending(a => a.DateLastModified).FirstOrDefault()?.DateLastModified,
-                    ContentTags = x.ContentTags
+                    ContentTags = x.ContentTags,
+                    PersonID = x.PersonID,
+                    JobNimbusID = x.JobNimbusID,
+                    JobNimbusLeadID = x.JobNimbusLeadID,
+                    PropertyType = x.PropertyType,
+                    Version = x.Version
                 });
             }
         }
