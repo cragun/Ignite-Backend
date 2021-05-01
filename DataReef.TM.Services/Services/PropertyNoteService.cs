@@ -439,10 +439,10 @@ namespace DataReef.TM.Services.Services
                     PersonID = x.PersonID,
                     JobNimbusID = x.JobNimbusID,
                     JobNimbusLeadID = x.JobNimbusLeadID,
-                    PropertyType = x.PropertyType ,
+                    PropertyType = x.PropertyType,
                     Version = x.Version
                 });
-            } 
+            }
         }
 
         public IEnumerable<SBNoteDTO> GetNoteComments(long? smartboardLeadID, long? igniteID, string apiKey, Guid ParentID)
@@ -684,7 +684,7 @@ namespace DataReef.TM.Services.Services
         public async Task<PropertyNote> GetPropertyNoteById(Guid NoteID)
         {
             using (var dc = new DataContext())
-            {  
+            {
                 var note = await _propertyNotesAdapter.Value.GetPropertyNoteById(Convert.ToString(NoteID).ToLower());
 
                 if (note != null)
@@ -720,37 +720,69 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public List<SMARTBoardIntegrationOptionData> getapikey(List<Guid> ouids)
+        {
+            using (var dc = new DataContext())
+            {
+                var OUs = dc.OUs.Where(a => ouids.Contains(a.Guid)).AsNoTracking().Select(a => a.Guid).ToList();
+                List<SMARTBoardIntegrationOptionData> apiKeyList = new List<SMARTBoardIntegrationOptionData>();
+
+                foreach (var ouid in OUs)
+                {
+                    var sbSettings = _ouSettingService
+                                       .Value
+                                       .GetSettingsByOUID(ouid)
+                                       ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                       ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                       .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                       .Data?
+                                       .SMARTBoard;
+
+                    apiKeyList.Add(new SMARTBoardIntegrationOptionData
+                    {
+                        ApiKey = sbSettings?.ApiKey,
+                        ouid = ouid
+                    });
+                }
+
+                return apiKeyList;
+            }
+        }
+
         public string ImportNotes(int limit)
         {
             using (var dc = new DataContext())
             {
                 try
                 {
-                    var properties = dc.Properties.Include(x => x.Territory).Where(a => a.NoteReferenceId == null).OrderByDescending(a => a.DateCreated).Take(limit).ToList();
+                    var properties = dc.Properties.Include(x => x.Territory).Include(x => x.PropertyNotes).Where(a => a.NoteReferenceId == null && a.SmartBoardId == null).OrderByDescending(a => a.DateCreated).Take(limit).ToList();
 
                     if (properties.Count() == 0)
                     {
                         throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
                     }
 
+                    var territoryIDs = properties.Select(a => a.TerritoryID).Distinct().ToList();
+
+                    var territories = dc.Territories.Where(t => !t.IsDeleted && !t.IsArchived && territoryIDs.Contains(t.Guid)).AsNoTracking().ToList();
+
+                    var ouIDs = territories.Select(a => a.OUID).Distinct().ToList();
+
+                    var apikeyList = getapikey(ouIDs);
+
+                    var peopleList = dc.People.AsNoTracking().ToList();
+
                     foreach (var property in properties)
                     {
                         try
                         {
-                            var territory = dc.Territories.AsNoTracking().FirstOrDefault(t => !t.IsDeleted && !t.IsArchived && t.Guid == property.TerritoryID);
+                            var territory = territories.FirstOrDefault(t => t.Guid == property.TerritoryID);
                             if (territory == null)
                             {
                                 throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Territory not found" });
                             }
 
-                            var sbSettings = _ouSettingService
-                                         .Value
-                                         .GetSettingsByOUID(territory.OUID)
-                                         ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
-                                         ?.GetValue<ICollection<SelectedIntegrationOption>>()?
-                                         .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
-                                         .Data?
-                                         .SMARTBoard;
+                            var sbSettings = apikeyList.FirstOrDefault(a => a.ouid == territory.OUID);
 
                             var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(property, sbSettings?.ApiKey);
                             property.NoteReferenceId = reference?.refId;
@@ -760,26 +792,28 @@ namespace DataReef.TM.Services.Services
 
                             if (!String.IsNullOrEmpty(property.NoteReferenceId))
                             {
-                                var notesList = dc.PropertyNotes.Where(p => p.PropertyID == property.Guid && !p.IsDeleted).AsNoTracking().ToList();
-                                if (notesList.Count() > 0 )
-                                {
-                                    foreach (var note in notesList)
-                                    {
-                                        var taggedPersons = GetTaggedPersons(note.Content);
+                                var allnotesList = property.PropertyNotes.ToList();
+                                var parentnotesList = allnotesList.Where(a => a.ContentType != "Comment");
 
-                                        var people = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == note.PersonID);
+                                if (parentnotesList.Count() > 0)
+                                {
+                                    foreach (var note in parentnotesList)
+                                    {
+                                        var people = peopleList.FirstOrDefault(x => x.Guid == note.PersonID);
 
                                         if (people == null)
                                         {
                                             throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                                         }
 
+                                        var taggedPersons = GetTaggedPersons(note.Content);
+
                                         var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
 
                                         note.NoteID = noteReference?.noteId;
                                         note.ThreadID = noteReference?.threadId;
 
-                                        var comments = notesList.Where(a => a.ParentID == note.Guid).ToList();
+                                        var comments = allnotesList.Where(a => a.ContentType == "Comment" && a.ParentID == note.Guid).ToList();
 
                                         foreach (var comment in comments)
                                         {
@@ -787,7 +821,7 @@ namespace DataReef.TM.Services.Services
 
                                             comment.ThreadID = note.ThreadID;
 
-                                            var peopleComment = dc.People.AsNoTracking().FirstOrDefault(x => x.Guid == comment.PersonID);
+                                            var peopleComment = peopleList.FirstOrDefault(x => x.Guid == comment.PersonID);
 
                                             if (peopleComment == null)
                                             {
@@ -795,9 +829,10 @@ namespace DataReef.TM.Services.Services
                                             }
 
                                             var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
+
                                         }
                                     }
-                                } 
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -905,7 +940,7 @@ namespace DataReef.TM.Services.Services
                             }
                         }
                     }
-                } 
+                }
                 dc.PropertyNotes.Add(note);
                 dc.SaveChanges();
 

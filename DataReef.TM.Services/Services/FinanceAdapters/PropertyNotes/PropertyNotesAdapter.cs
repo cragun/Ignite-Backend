@@ -195,7 +195,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                         email = a.EmailAddressString,
                         phone = a.PhoneNumbers?.FirstOrDefault()?.Number,
                         isSendEmail = false,
-                        isSendSms = true,
+                        isSendSms = false,
                         userId = a.SmartBoardID,
                         firstName = a.FirstName,
                         lastName = a.LastName
@@ -226,18 +226,22 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-                throw new ApplicationException($"AddEditNote Failed. {response.ErrorMessage} {response.StatusCode}");
+                //throw new ApplicationException($"AddEditNote Failed. {response.ErrorMessage} {response.StatusCode}");
             }
             try
             {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                //SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+
+                return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
             }
             catch (Exception)
             {
-                throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
-            }
+                //throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
 
-            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
+
+                return new NoteResponse();
+            } 
         }
 
         //​send email notification
