@@ -157,8 +157,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
 
         //To create note
         public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
-        {
-
+        { 
             NoteRequest req = new NoteRequest();
             req.message = note.Content;
 
