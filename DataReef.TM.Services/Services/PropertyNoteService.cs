@@ -764,8 +764,7 @@ namespace DataReef.TM.Services.Services
 
                     var territoryIDs = properties.Select(a => a.TerritoryID).Distinct().ToList();
 
-                    //var territories = dc.Territories.Where(t => !t.IsDeleted && !t.IsArchived && territoryIDs.Contains(t.Guid)).AsNoTracking().ToList();
-
+                    //var territories = dc.Territories.Where(t => !t.IsDeleted && !t.IsArchived && territoryIDs.Contains(t.Guid)).AsNoTracking().ToList(); 
                     var territories = dc.Territories.Where(t => territoryIDs.Contains(t.Guid)).AsNoTracking().ToList();
 
                     var ouIDs = territories.Select(a => a.OUID).Distinct().ToList();
