@@ -87,8 +87,6 @@ namespace DataReef.TM.Api.Controllers
             return Ok<ICollection<User>>(ret);
         }
 
-
-
         [HttpGet, AllowAnonymous, InjectAuthPrincipal]
         [Route("{ouID:guid}/users/active")]
         public async Task<HttpResponseMessage> GetActiveUsers(Guid ouID)
