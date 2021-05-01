@@ -1243,41 +1243,9 @@
     <Compile Include="Migrations\201912021123555_Added SmartBoardID to notification.Designer.cs">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103181005055_Deploy.cs" />
-    <Compile Include="Migrations\202103181005055_Deploy.Designer.cs">
-      <DependentUpon>202103181005055_Deploy.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103200942289_Add ThirdPartyType.cs" />
-    <Compile Include="Migrations\202103200942289_Add ThirdPartyType.Designer.cs">
-      <DependentUpon>202103200942289_Add ThirdPartyType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103221640515_Add FinanceField.cs" />
-    <Compile Include="Migrations\202103221640515_Add FinanceField.Designer.cs">
-      <DependentUpon>202103221640515_Add FinanceField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103231149278_Check_Migration.cs" />
-    <Compile Include="Migrations\202103231149278_Check_Migration.Designer.cs">
-      <DependentUpon>202103231149278_Check_Migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103231203483_Check_Migration_New.cs" />
-    <Compile Include="Migrations\202103231203483_Check_Migration_New.Designer.cs">
-      <DependentUpon>202103231203483_Check_Migration_New.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202104051229472_Add_NoteReferenceId_Migration.cs" />
-    <Compile Include="Migrations\202104051229472_Add_NoteReferenceId_Migration.Designer.cs">
-      <DependentUpon>202104051229472_Add_NoteReferenceId_Migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202104090939282_migration.cs" />
-    <Compile Include="Migrations\202104090939282_migration.Designer.cs">
-      <DependentUpon>202104090939282_migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202104280640305_Add_PropertyID_Migration.cs" />
-    <Compile Include="Migrations\202104280640305_Add_PropertyID_Migration.Designer.cs">
-      <DependentUpon>202104280640305_Add_PropertyID_Migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202104281113157_Add_PropertyIDForeignKey_Migration.cs" />
-    <Compile Include="Migrations\202104281113157_Add_PropertyIDForeignKey_Migration.Designer.cs">
-      <DependentUpon>202104281113157_Add_PropertyIDForeignKey_Migration.cs</DependentUpon>
+    <Compile Include="Migrations\202104301326129_check migrate with live db.cs" />
+    <Compile Include="Migrations\202104301326129_check migrate with live db.Designer.cs">
+      <DependentUpon>202104301326129_check migrate with live db.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2171,32 +2139,8 @@
     <EmbeddedResource Include="Migrations\201912021123555_Added SmartBoardID to notification.resx">
       <DependentUpon>201912021123555_Added SmartBoardID to notification.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103181005055_Deploy.resx">
-      <DependentUpon>202103181005055_Deploy.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103200942289_Add ThirdPartyType.resx">
-      <DependentUpon>202103200942289_Add ThirdPartyType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103221640515_Add FinanceField.resx">
-      <DependentUpon>202103221640515_Add FinanceField.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103231149278_Check_Migration.resx">
-      <DependentUpon>202103231149278_Check_Migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103231203483_Check_Migration_New.resx">
-      <DependentUpon>202103231203483_Check_Migration_New.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202104051229472_Add_NoteReferenceId_Migration.resx">
-      <DependentUpon>202104051229472_Add_NoteReferenceId_Migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202104090939282_migration.resx">
-      <DependentUpon>202104090939282_migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202104280640305_Add_PropertyID_Migration.resx">
-      <DependentUpon>202104280640305_Add_PropertyID_Migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202104281113157_Add_PropertyIDForeignKey_Migration.resx">
-      <DependentUpon>202104281113157_Add_PropertyIDForeignKey_Migration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202104301326129_check migrate with live db.resx">
+      <DependentUpon>202104301326129_check migrate with live db.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

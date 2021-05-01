@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Check_Migration : IMigrationMetadata
+    public sealed partial class checkmigratewithlivedb : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Check_Migration));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(checkmigratewithlivedb));
         
         string IMigrationMetadata.Id
         {
-            get { return "202103231149278_Check_Migration"; }
+            get { return "202104301326129_check migrate with live db"; }
         }
         
         string IMigrationMetadata.Source
