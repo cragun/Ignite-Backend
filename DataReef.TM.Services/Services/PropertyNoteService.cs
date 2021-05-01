@@ -782,6 +782,7 @@ namespace DataReef.TM.Services.Services
                                 throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Territory not found" });
                             }
 
+
                             var sbSettings = apikeyList.FirstOrDefault(a => a.ouid == territory.OUID);
 
                             var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(property, sbSettings?.ApiKey);
