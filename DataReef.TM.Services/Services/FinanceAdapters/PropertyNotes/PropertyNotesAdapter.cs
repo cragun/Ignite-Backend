@@ -82,10 +82,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
             try
             {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                //SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
             }
             catch (Exception)
             {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
                 throw new ApplicationException($"GetPropertyReferenceId Failed. {response.StatusCode}");
             }
 
