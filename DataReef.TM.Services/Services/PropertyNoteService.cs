@@ -641,12 +641,12 @@ namespace DataReef.TM.Services.Services
                             Guid = String.IsNullOrEmpty(note.guid) ? Guid.Empty : Guid.Parse(note.guid),
                             Attachments = String.Join(",", note.attachments, 1),
                             PropertyType = note.propertyType,
-                            PersonID = Guid.Parse(note.personId),
+                            PersonID =  note.source == "Ignite" ? Guid.Parse(note.personId) : Guid.Empty,
                             PropertyID = PropertyID,
                             Content = note.message,
                             DateCreated = Convert.ToDateTime(note.created),
                             DateLastModified = Convert.ToDateTime(note.modified),
-                            CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId)),
+                            CreatedByName = note.source == "Ignite" ? await _authService.Value.GetUserName(Guid.Parse(note.personId)) : "Noted By API",
                             NoteID = note._id,
                             ThreadID = note.threadId,
                             Replies = new List<PropertyNote>()
@@ -661,13 +661,13 @@ namespace DataReef.TM.Services.Services
                                     Guid = String.IsNullOrEmpty(reply.guid) ? Guid.Empty : Guid.Parse(reply.guid),
                                     Attachments = String.Join(",", reply.attachments, 1),
                                     PropertyType = reply.propertyType,
-                                    PersonID = Guid.Parse(reply.personId),
+                                    PersonID =  reply.source == "Ignite" ? Guid.Parse(reply.personId) : Guid.Empty,
                                     PropertyID = PropertyID,
                                     Content = reply.message,
                                     DateCreated = Convert.ToDateTime(reply.created),
                                     DateLastModified = Convert.ToDateTime(reply.modified),
                                     NoteID = note._id,
-                                    CreatedByName = await _authService.Value.GetUserName(Guid.Parse(reply.personId))
+                                    CreatedByName = reply.source == "Ignite" ? await _authService.Value.GetUserName(Guid.Parse(reply.personId)) : "Noted By API"
                                 });
                             }
                         }
