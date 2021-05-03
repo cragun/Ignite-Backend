@@ -164,7 +164,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             {
                 taggedPersons.ForEach(itm =>
                 {
-                    note.Content.Replace($"[email:'{itm.EmailAddressString}']{itm.FirstName} {itm.LastName} [/email]" , $"{itm.FirstName} {itm.LastName}" );
+                    note.Content =  note.Content.Replace($"[email:'{itm.EmailAddressString}']{itm.FirstName} {itm.LastName} [/email]" , $"{itm.FirstName} {itm.LastName}" );
                 });  
             } 
 

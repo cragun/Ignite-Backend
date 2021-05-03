@@ -637,7 +637,7 @@ namespace DataReef.TM.Services.Services
                     {
                         note.taggedUsers.ForEach(itm =>
                         {
-                            note.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
+                            note.message = note.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
                         });
 
                         var data = new PropertyNote
@@ -681,7 +681,7 @@ namespace DataReef.TM.Services.Services
                             {
                                 reply.taggedUsers.ForEach(itm =>
                                 {
-                                    reply.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
+                                    reply.message = reply.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
                                 });
 
                                 var rep = new PropertyNote
