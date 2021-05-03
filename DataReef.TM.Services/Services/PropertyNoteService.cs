@@ -716,6 +716,7 @@ namespace DataReef.TM.Services.Services
                                     rep.PersonID = reply.personId != null ? Guid.Parse(reply.personId) : Guid.Empty;
                                     rep.CreatedByName = await _authService.Value.GetUserName(Guid.Parse(reply.personId));
                                 }
+
                                 data.Replies.Add(rep);
                             }
                         }
