@@ -94,6 +94,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public int? version { get; set; }
         public ThirdPartyPropertyType propertyType { get; set; }
         public List<NoteTaggedUser> user { get; set; } 
+        public List<NoteTaggedUser> taggedUsers { get; set; } 
     }
       
     public class AllNotes

@@ -180,7 +180,7 @@ namespace DataReef.TM.Services.Services
         }
 
         public override PropertyNote Insert(PropertyNote entity, DataContext dataContext)
-        { 
+        {
             var ret = base.Insert(entity, dataContext);
 
             using (var dc = new DataContext())
@@ -552,7 +552,7 @@ namespace DataReef.TM.Services.Services
                         throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property reference is not found" });
                     }
 
-                    var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
+                    var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons.ToList(), people);
 
                     if (entity.ContentType == "Comment")
                     {
@@ -635,6 +635,11 @@ namespace DataReef.TM.Services.Services
 
                     if (note != null)
                     {
+                        note.taggedUsers.ForEach(itm =>
+                        {
+                            note.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
+                        });
+
                         var data = new PropertyNote
                         {
                             Guid = String.IsNullOrEmpty(note.guid) ? Guid.Empty : Guid.Parse(note.guid),
@@ -674,6 +679,11 @@ namespace DataReef.TM.Services.Services
                         {
                             foreach (var reply in item.replies)
                             {
+                                reply.taggedUsers.ForEach(itm =>
+                                {
+                                    reply.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
+                                });
+
                                 var rep = new PropertyNote
                                 {
                                     Guid = String.IsNullOrEmpty(reply.guid) ? Guid.Empty : Guid.Parse(reply.guid),
@@ -683,7 +693,7 @@ namespace DataReef.TM.Services.Services
                                     Content = reply.message,
                                     DateCreated = Convert.ToDateTime(reply.created),
                                     DateLastModified = Convert.ToDateTime(reply.modified),
-                                    NoteID = note._id,
+                                    NoteID = reply._id,
                                 };
 
                                 if (reply.source == "Smartboard")
@@ -705,7 +715,7 @@ namespace DataReef.TM.Services.Services
                                 {
                                     rep.PersonID = reply.personId != null ? Guid.Parse(reply.personId) : Guid.Empty;
                                     rep.CreatedByName = await _authService.Value.GetUserName(Guid.Parse(reply.personId));
-                                } 
+                                }
                                 data.Replies.Add(rep);
                             }
                         }
@@ -847,7 +857,7 @@ namespace DataReef.TM.Services.Services
 
                                         var taggedPersons = GetTaggedPersons(note.Content);
 
-                                        var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
+                                        var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons.ToList(), people);
 
                                         note.NoteID = noteReference?.noteId;
                                         note.ThreadID = noteReference?.threadId;
@@ -867,7 +877,7 @@ namespace DataReef.TM.Services.Services
                                                 throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                                             }
 
-                                            var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
+                                            var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment.ToList(), peopleComment);
 
                                         }
                                     }
