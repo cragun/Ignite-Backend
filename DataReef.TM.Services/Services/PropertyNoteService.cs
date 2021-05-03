@@ -726,8 +726,7 @@ namespace DataReef.TM.Services.Services
 
                 return noteList;
             }
-        }
-
+        } 
 
         public async Task<PropertyNote> GetPropertyNoteById(Guid NoteID)
         {
