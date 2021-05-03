@@ -208,11 +208,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                         userId = a.SmartBoardID,
                         firstName = a.FirstName,
                         lastName = a.LastName
-                    }).Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s);
+                    }).ToList();
+                    //.Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s)
                 }
                 else
                 {
-                    req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+                    //req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+                    req.taggedUsers = new List<NoteTaggedUser>();
                 }
 
                 req.user = new NoteTaggedUser()
