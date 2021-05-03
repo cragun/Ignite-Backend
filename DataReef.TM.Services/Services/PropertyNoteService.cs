@@ -670,8 +670,7 @@ namespace DataReef.TM.Services.Services
                                     CreatedByName = reply.source == "Ignite" ? await _authService.Value.GetUserName(Guid.Parse(reply.personId)) : "Noted By API"
                                 });
                             }
-                        }
-
+                        } 
                         noteList.Add(data);
                     }
                 }
