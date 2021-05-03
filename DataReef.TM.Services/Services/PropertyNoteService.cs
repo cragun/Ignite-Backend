@@ -180,8 +180,7 @@ namespace DataReef.TM.Services.Services
         }
 
         public override PropertyNote Insert(PropertyNote entity, DataContext dataContext)
-        {
-
+        { 
             var ret = base.Insert(entity, dataContext);
 
             using (var dc = new DataContext())
