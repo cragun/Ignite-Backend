@@ -641,36 +641,76 @@ namespace DataReef.TM.Services.Services
                             Guid = String.IsNullOrEmpty(note.guid) ? Guid.Empty : Guid.Parse(note.guid),
                             Attachments = String.Join(",", note.attachments, 1),
                             PropertyType = note.propertyType,
-                            PersonID =  note.source == "Ignite" ? Guid.Parse(note.personId) : Guid.Empty,
                             PropertyID = PropertyID,
                             Content = note.message,
                             DateCreated = Convert.ToDateTime(note.created),
                             DateLastModified = Convert.ToDateTime(note.modified),
-                            CreatedByName = note.source == "Ignite" ? await _authService.Value.GetUserName(Guid.Parse(note.personId)) : "Noted By API",
                             NoteID = note._id,
                             ThreadID = note.threadId,
                             Replies = new List<PropertyNote>()
                         };
 
+                        if (note.source == "Smartboard")
+                        {
+                            string sbid = note.user.FirstOrDefault()?.userId;
+                            var sbUser = dc.People.Where(a => a.SmartBoardID == sbid).AsNoTracking().FirstOrDefault();
+                            if (sbUser != null)
+                            {
+                                data.CreatedByName = sbUser.Name;
+                                data.PersonID = Guid.Parse(Convert.ToString(sbUser.Guid));
+                            }
+                            else
+                            {
+                                data.CreatedByName = "Noted By API";
+                                data.PersonID = Guid.Empty;
+                            }
+                        }
+                        else
+                        {
+                            data.PersonID = note.personId != null ? Guid.Parse(note.personId) : Guid.Empty;
+                            data.CreatedByName = await _authService.Value.GetUserName(Guid.Parse(note.personId));
+                        }
+
                         if (item.replies != null)
                         {
                             foreach (var reply in item.replies)
                             {
-                                data.Replies.Add(new PropertyNote
+                                var rep = new PropertyNote
                                 {
                                     Guid = String.IsNullOrEmpty(reply.guid) ? Guid.Empty : Guid.Parse(reply.guid),
                                     Attachments = String.Join(",", reply.attachments, 1),
                                     PropertyType = reply.propertyType,
-                                    PersonID =  reply.source == "Ignite" ? Guid.Parse(reply.personId) : Guid.Empty,
                                     PropertyID = PropertyID,
                                     Content = reply.message,
                                     DateCreated = Convert.ToDateTime(reply.created),
                                     DateLastModified = Convert.ToDateTime(reply.modified),
                                     NoteID = note._id,
-                                    CreatedByName = reply.source == "Ignite" ? await _authService.Value.GetUserName(Guid.Parse(reply.personId)) : "Noted By API"
-                                });
+                                };
+
+                                if (reply.source == "Smartboard")
+                                {
+                                    string sbid = reply.user.FirstOrDefault()?.userId;
+                                    var sbUser = dc.People.Where(a => a.SmartBoardID == sbid).AsNoTracking().FirstOrDefault();
+                                    if (sbUser != null)
+                                    {
+                                        rep.CreatedByName = sbUser.Name;
+                                        rep.PersonID = Guid.Parse(Convert.ToString(sbUser.Guid));
+                                    }
+                                    else
+                                    {
+                                        rep.CreatedByName = "Noted By API";
+                                        rep.PersonID = Guid.Empty;
+                                    }
+                                }
+                                else
+                                {
+                                    rep.PersonID = reply.personId != null ? Guid.Parse(reply.personId) : Guid.Empty;
+                                    rep.CreatedByName = await _authService.Value.GetUserName(Guid.Parse(reply.personId));
+                                }
+
+                                data.Replies.Add(rep);
                             }
-                        } 
+                        }
                         noteList.Add(data);
                     }
                 }
