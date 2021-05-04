@@ -614,6 +614,7 @@ namespace DataReef.TM.Services.Services
                     dc.SaveChanges();
 
                     throw new ApplicationException(ex.Message);
+
                 }
             }
         }
