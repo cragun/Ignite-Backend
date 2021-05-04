@@ -50,6 +50,7 @@ namespace DataReef.Mail
             smtpClient.Credentials = new System.Net.NetworkCredential("AKIA4L2PBU2P6QM4ECEN", "BGPxa0Z7drmVzIHo6ADj+f2ACjl1JhMe0Hs8PMogme1H");
             smtpClient.Send(email);
         }
+
         //public static void SendMail(MailMessage email)
         //{
         //    string userName = ConfigurationManager.AppSettings["SendGrid-UserName"];
