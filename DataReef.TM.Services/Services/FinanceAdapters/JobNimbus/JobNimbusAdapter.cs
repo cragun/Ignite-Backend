@@ -198,7 +198,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.JobNimbus
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
                     SaveRequest(JsonConvert.SerializeObject(request), response.Content, baseurl + url, response.StatusCode, apikey);
-                    throw new ApplicationException($"CreateJobNimbusNote Failed. {response.ErrorMessage}  {response.StatusCode}");
+                    throw new ApplicationException($"CreateJobNimbusLead Failed. {response.ErrorMessage}  {response.StatusCode}");
                 }
                 try
                 {
