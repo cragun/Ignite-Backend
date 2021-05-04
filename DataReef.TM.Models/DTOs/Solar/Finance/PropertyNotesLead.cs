@@ -42,7 +42,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string refId { get; set; }
         public string noteId { get; set; }
         public string threadId { get; set; }
-        public string replyId { get; set; } 
+        public string replyId { get; set; }
     }
 
     public class NoteRequest
@@ -54,10 +54,11 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string message { get; set; }
         public string created { get; set; }
         public string modified { get; set; }
-        public string source { get; set; } 
+        public string source { get; set; }
         public List<string> attachments { get; set; }
         public List<string> parentIds { get; set; }
-        public Dictionary<int, NoteTaggedUser> taggedUsers { get; set; }
+        //public Dictionary<int, NoteTaggedUser> taggedUsers { get; set; }
+        public List<NoteTaggedUser> taggedUsers { get; set; }
         public NoteTaggedUser user { get; set; }
         public string personId { get; set; }
         public string jobNimbusId { get; set; }
@@ -65,7 +66,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public int version { get; set; }
         public ThirdPartyPropertyType propertyType { get; set; }
     }
-     
+
     public class NoteTaggedUser
     {
         public string email { get; set; }
@@ -79,10 +80,10 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
     public class Note
     {
-        public List<string> attachments { get; set; } 
+        public List<string> attachments { get; set; }
         public string _id { get; set; }
         public string guid { get; set; }
-        public string referenceId { get; set; } 
+        public string referenceId { get; set; }
         public string message { get; set; }
         public string created { get; set; }
         public string modified { get; set; }
@@ -93,22 +94,23 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string jobNimbusLeadId { get; set; }
         public int? version { get; set; }
         public ThirdPartyPropertyType propertyType { get; set; }
-
+        public List<NoteTaggedUser> user { get; set; }
+        public List<NoteTaggedUser> taggedUsers { get; set; }
     }
-      
+
     public class AllNotes
     {
         public Note notes { get; set; }
-        public List<Note> replies { get; set; } 
+        public List<Note> replies { get; set; }
     }
 
     public class EmailNotifications
-    {  
+    {
         public string type { get; set; }
         public string from { get; set; }
-        public string to { get; set; } 
-        public string subject { get; set; } 
-        public string message { get; set; } 
+        public string to { get; set; }
+        public string subject { get; set; }
+        public string message { get; set; }
     }
 }
 

@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace DataReef.TM.Models.DTOs.Integrations
 {
     public class SMARTBoardIntegrationOptionData
@@ -10,6 +12,8 @@ namespace DataReef.TM.Models.DTOs.Integrations
         public string HomeUrl { get; set; }
 
         public string CreditApplicationUrl { get; set; }
+
+        public Guid ouid { get; set; }
     }
 
 
