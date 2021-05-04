@@ -57,7 +57,8 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public string source { get; set; } 
         public List<string> attachments { get; set; }
         public List<string> parentIds { get; set; }
-        public Dictionary<int, NoteTaggedUser> taggedUsers { get; set; }
+        //public Dictionary<int, NoteTaggedUser> taggedUsers { get; set; }
+        public List<NoteTaggedUser> taggedUsers { get; set; }
         public NoteTaggedUser user { get; set; }
         public string personId { get; set; }
         public string jobNimbusId { get; set; }
@@ -94,6 +95,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public int? version { get; set; }
         public ThirdPartyPropertyType propertyType { get; set; }
         public List<NoteTaggedUser> user { get; set; } 
+        public List<NoteTaggedUser> taggedUsers { get; set; } 
     }
       
     public class AllNotes

@@ -156,9 +156,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         }
 
         //To create note
-        public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
+        public NoteResponse AddEditNote(string referenceId, PropertyNote note, List<Person> taggedPersons, Person user)
         { 
             NoteRequest req = new NoteRequest();
+
+            if (!String.IsNullOrEmpty(note.Content) && taggedPersons.Count() > 0)
+            {
+                taggedPersons.ForEach(itm =>
+                {
+                    note.Content =  note.Content.Replace($"[email:'{itm.EmailAddressString}']{itm.FirstName} {itm.LastName} [/email]" , $"{itm.FirstName} {itm.LastName}" );
+                });  
+            } 
+
             req.message = note.Content;
 
             string comment = "";
@@ -199,11 +208,13 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                         userId = a.SmartBoardID,
                         firstName = a.FirstName,
                         lastName = a.LastName
-                    }).Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s);
+                    }).ToList();
+                    //.Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s)
                 }
                 else
                 {
-                    req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+                    //req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+                    req.taggedUsers = new List<NoteTaggedUser>();
                 }
 
                 req.user = new NoteTaggedUser()
