@@ -40,14 +40,31 @@ namespace DataReef.Mail
         }
 
 
+        //public static void SendMail(MailMessage email)
+        //{
+        //    SmtpClient smtpClient = new SmtpClient();
+        //    smtpClient.Host = "email-smtp.us-west-2.amazonaws.com";
+        //    smtpClient.Port = 587;
+        //    smtpClient.EnableSsl = true;
+        //    smtpClient.UseDefaultCredentials = false;
+        //    smtpClient.Credentials = new System.Net.NetworkCredential("AKIA4L2PBU2P6QM4ECEN", "BGPxa0Z7drmVzIHo6ADj+f2ACjl1JhMe0Hs8PMogme1H");
+        //    smtpClient.Send(email);
+        //}
+
+
         public static void SendMail(MailMessage email)
         {
+            string userName = ConfigurationManager.AppSettings["SendGrid-UserName"];
+            string password = ConfigurationManager.AppSettings["SendGrid-Password"];
+            string server = ConfigurationManager.AppSettings["SendGrid-Server"];
+
+
             SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Host = "email-smtp.us-west-2.amazonaws.com";
+            smtpClient.Host = server;
             smtpClient.Port = 587;
             smtpClient.EnableSsl = true;
             smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new System.Net.NetworkCredential("AKIA4L2PBU2P6QM4ECEN", "BGPxa0Z7drmVzIHo6ADj+f2ACjl1JhMe0Hs8PMogme1H");
+            smtpClient.Credentials = new System.Net.NetworkCredential(userName, password);
             smtpClient.Send(email);
         }
 
