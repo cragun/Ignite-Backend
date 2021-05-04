@@ -566,10 +566,17 @@ namespace DataReef.TM.Services.Services
                     entity.ThreadID = reference?.threadId;
 
                     //send email notification to user 
-                    var emails = taggedPersons?.Select(x => x.EmailAddressString);
+                    var emails = taggedPersons?.Select(x => x.EmailAddressString).ToList();
                     if (emails.Count() > 0)
                     {
-                        emails = emails.Distinct();
+                        emails = emails.Distinct().ToList();
+
+                        //don't send email to cretor if creator tagged
+                        bool isCreator = emails.Contains(people.EmailAddressString);
+                        if (isCreator)
+                        {
+                            emails.Remove(people.EmailAddressString);
+                        }
 
                         string content = entity.Content;
 
@@ -635,7 +642,7 @@ namespace DataReef.TM.Services.Services
 
                     if (note != null)
                     {
-                        note.taggedUsers.ForEach(itm =>
+						note.taggedUsers.ForEach(itm =>
                         {
                             note.message = note.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
                         });
@@ -654,10 +661,10 @@ namespace DataReef.TM.Services.Services
                             Replies = new List<PropertyNote>()
                         };
 
-                        if (note.source == "Smartboard")
+						if (note.source == "Smartboard")
                         {
                             string sbid = note.user.FirstOrDefault()?.userId;
-                            var sbUser = dc.People.Where(a => a.SmartBoardID == sbid).AsNoTracking().FirstOrDefault();
+                            var sbUser = await dc.People.FirstOrDefaultAsync(a => a.SmartBoardID == sbid);
                             if (sbUser != null)
                             {
                                 data.CreatedByName = sbUser.Name;
@@ -699,7 +706,7 @@ namespace DataReef.TM.Services.Services
                                 if (reply.source == "Smartboard")
                                 {
                                     string sbid = reply.user.FirstOrDefault()?.userId;
-                                    var sbUser = dc.People.Where(a => a.SmartBoardID == sbid).AsNoTracking().FirstOrDefault();
+                                    var sbUser = await dc.People.FirstOrDefaultAsync(a => a.SmartBoardID == sbid);
                                     if (sbUser != null)
                                     {
                                         rep.CreatedByName = sbUser.Name;
