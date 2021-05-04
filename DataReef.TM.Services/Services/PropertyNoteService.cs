@@ -861,7 +861,7 @@ namespace DataReef.TM.Services.Services
 
                                         var taggedPersons = GetTaggedPersons(note.Content);
 
-                                        var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons.ToList(), people);
+                                        var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
 
                                         note.NoteID = noteReference?.noteId;
                                         note.ThreadID = noteReference?.threadId;
@@ -881,7 +881,7 @@ namespace DataReef.TM.Services.Services
                                                 throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
                                             }
 
-                                            var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment.ToList(), peopleComment);
+                                            var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
 
                                         }
                                     }
@@ -904,6 +904,7 @@ namespace DataReef.TM.Services.Services
                             dc.SaveChanges();
                         }
                     }
+
                     return "success";
                 }
                 catch (Exception ex)
