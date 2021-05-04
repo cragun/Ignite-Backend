@@ -364,6 +364,16 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
+        [Route("send/Email")]
+        [HttpGet]
+        [AllowAnonymous, InjectAuthPrincipal]
+        public async Task<IHttpActionResult> SendEmailForTest(string emailid)
+        {
+            var result = _propertyNoteService.SendEmailForTest(emailid);
+            return Ok(result);
+        }
+
+
         [Route("send/notification")]
         [HttpPost]
         [AllowAnonymous, InjectAuthPrincipal]
