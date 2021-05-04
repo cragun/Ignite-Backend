@@ -1150,17 +1150,9 @@
     <Compile Include="Migrations\202104300752364_Add remain field.Designer.cs">
       <DependentUpon>202104300752364_Add remain field.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202105040543566_Add_Blank_Migration.cs" />
-    <Compile Include="Migrations\202105040543566_Add_Blank_Migration.Designer.cs">
-      <DependentUpon>202105040543566_Add_Blank_Migration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202105040556224_Add_Blank_Migration1.cs" />
-    <Compile Include="Migrations\202105040556224_Add_Blank_Migration1.Designer.cs">
-      <DependentUpon>202105040556224_Add_Blank_Migration1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202105040758387_Add_Blank_Migrations.cs" />
-    <Compile Include="Migrations\202105040758387_Add_Blank_Migrations.Designer.cs">
-      <DependentUpon>202105040758387_Add_Blank_Migrations.cs</DependentUpon>
+    <Compile Include="Migrations\202105041019392_Add_ForeignKeyPropertyID.cs" />
+    <Compile Include="Migrations\202105041019392_Add_ForeignKeyPropertyID.Designer.cs">
+      <DependentUpon>202105041019392_Add_ForeignKeyPropertyID.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -1981,14 +1973,8 @@
     <EmbeddedResource Include="Migrations\202104300752364_Add remain field.resx">
       <DependentUpon>202104300752364_Add remain field.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202105040543566_Add_Blank_Migration.resx">
-      <DependentUpon>202105040543566_Add_Blank_Migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202105040556224_Add_Blank_Migration1.resx">
-      <DependentUpon>202105040556224_Add_Blank_Migration1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202105040758387_Add_Blank_Migrations.resx">
-      <DependentUpon>202105040758387_Add_Blank_Migrations.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202105041019392_Add_ForeignKeyPropertyID.resx">
+      <DependentUpon>202105041019392_Add_ForeignKeyPropertyID.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

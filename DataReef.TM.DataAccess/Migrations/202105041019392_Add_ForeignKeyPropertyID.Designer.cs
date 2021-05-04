@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Add_Blank_Migrations : IMigrationMetadata
+    public sealed partial class Add_ForeignKeyPropertyID : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Add_Blank_Migrations));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Add_ForeignKeyPropertyID));
         
         string IMigrationMetadata.Id
         {
-            get { return "202105040758387_Add_Blank_Migrations"; }
+            get { return "202105041019392_Add_ForeignKeyPropertyID"; }
         }
         
         string IMigrationMetadata.Source
