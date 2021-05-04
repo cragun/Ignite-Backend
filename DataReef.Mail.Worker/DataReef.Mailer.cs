@@ -39,7 +39,6 @@ namespace DataReef.Mail
             }
         }
 
-
         public static void SendMail(MailMessage email)
         {
             SmtpClient smtpClient = new SmtpClient();
