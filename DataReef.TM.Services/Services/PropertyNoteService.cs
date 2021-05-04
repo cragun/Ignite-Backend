@@ -548,8 +548,7 @@ namespace DataReef.TM.Services.Services
                         parentNote.CreatedByID = parent?.Guid;
                         parentNote.CreatedByName = parent?.Name;
 
-                        NotifyComment(parentNote.PersonID, parentNote, property, dc);
-
+                        NotifyComment(parentNote.PersonID, parentNote, property, dc); 
                     }
 
                     if (string.IsNullOrEmpty(property.NoteReferenceId))
