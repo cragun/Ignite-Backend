@@ -82,10 +82,11 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
             try
             {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                //SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
             }
             catch (Exception)
             {
+				SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
                 throw new ApplicationException($"GetPropertyReferenceId Failed. {response.StatusCode}");
             }
 
@@ -155,10 +156,18 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         }
 
         //To create note
-        public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
-        {
+       	public NoteResponse AddEditNote(string referenceId, PropertyNote note, List<Person> taggedPersons, Person user)
+        { 
 
             NoteRequest req = new NoteRequest();
+
+            if (!String.IsNullOrEmpty(note.Content) && taggedPersons.Count() > 0)
+            {
+                taggedPersons.ForEach(itm =>
+                {
+                    note.Content =  note.Content.Replace($"[email:'{itm.EmailAddressString}']{itm.FirstName} {itm.LastName} [/email]" , $"{itm.FirstName} {itm.LastName}" );
+                });  
+            } 
             req.message = note.Content;
 
             string comment = "";
@@ -195,15 +204,17 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                         email = a.EmailAddressString,
                         phone = a.PhoneNumbers?.FirstOrDefault()?.Number,
                         isSendEmail = false,
-                        isSendSms = true,
+                        isSendSms = false,
                         userId = a.SmartBoardID,
                         firstName = a.FirstName,
                         lastName = a.LastName
-                    }).Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s);
+                    }).ToList();
+                    //.Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s)
                 }
                 else
                 {
-                    req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+                    //req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
+                    req.taggedUsers = new List<NoteTaggedUser>();
                 }
 
                 req.user = new NoteTaggedUser()
@@ -226,18 +237,22 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-                throw new ApplicationException($"AddEditNote Failed. {response.ErrorMessage} {response.StatusCode}");
+                //throw new ApplicationException($"AddEditNote Failed. {response.ErrorMessage} {response.StatusCode}");
             }
             try
             {
-                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                //SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+
+                return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
             }
             catch (Exception)
             {
-                throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
-            }
+                //throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
 
-            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
+
+                return new NoteResponse();
+            } 
         }
 
         //​send email notification
