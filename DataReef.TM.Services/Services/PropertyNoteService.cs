@@ -557,7 +557,7 @@ namespace DataReef.TM.Services.Services
                         throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property reference is not found" });
                     }
 
-                    var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons.ToList(), people);
+                    var reference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, entity, taggedPersons, people);
 
                     if (entity.ContentType == "Comment")
                     {
@@ -641,10 +641,10 @@ namespace DataReef.TM.Services.Services
 
                     if (note != null)
                     {
-                        note.taggedUsers.ForEach(itm =>
+                        foreach (var itm in note.taggedUsers)
                         {
                             note.message = note.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
-                        });
+                        } 
 
                         var data = new PropertyNote
                         {
@@ -685,10 +685,10 @@ namespace DataReef.TM.Services.Services
                         {
                             foreach (var reply in item.replies)
                             {
-                                reply.taggedUsers.ForEach(itm =>
+                                foreach (var itm in reply.taggedUsers)
                                 {
                                     reply.message = reply.message.Replace($"{itm.firstName} {itm.lastName}", $"[email:'{itm.email}']{itm.firstName} {itm.lastName} [/email]");
-                                });
+                                } 
 
                                 var rep = new PropertyNote
                                 {
@@ -815,7 +815,7 @@ namespace DataReef.TM.Services.Services
                         throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
                     }
 
-                    var territoryIDs = properties.Select(a => a.TerritoryID).Distinct().ToList();
+                    var territoryIDs = properties.Select(a => a.TerritoryID).Distinct();
                      
                     var territories = dc.Territories.Where(t => territoryIDs.Contains(t.Guid)).AsNoTracking().ToList();
 

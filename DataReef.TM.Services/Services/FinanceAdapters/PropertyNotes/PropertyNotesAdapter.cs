@@ -156,16 +156,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         }
 
         //To create note
-        public NoteResponse AddEditNote(string referenceId, PropertyNote note, List<Person> taggedPersons, Person user)
+        public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
         {
             NoteRequest req = new NoteRequest();
 
             if (!String.IsNullOrEmpty(note.Content) && taggedPersons.Count() > 0)
-            {
-                taggedPersons.ForEach(itm =>
+            { 
+                foreach (var itm in taggedPersons)
                 {
                     note.Content = note.Content.Replace($"[email:'{itm.EmailAddressString}']{itm.FirstName} {itm.LastName} [/email]", $"{itm.FirstName} {itm.LastName}");
-                });
+                } 
             }
 
             req.message = note.Content;
