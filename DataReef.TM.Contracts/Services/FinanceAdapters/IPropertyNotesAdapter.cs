@@ -25,7 +25,7 @@ namespace DataReef.TM.Contracts.Services
         Task<Models.DTOs.Solar.Finance.Note> GetPropertyNoteById(string noteID);
 
         [OperationContract]
-        NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user);
+        NoteResponse AddEditNote(string referenceId, PropertyNote note, List<Person> taggedPersons, Person user);
 
         [OperationContract]
         Task<NoteResponse> SendEmailNotification(string subject, string body, string to);
