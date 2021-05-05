@@ -801,13 +801,13 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public string ImportNotes(int limit)
+        public string ImportNotes(int page, int limit)
         {
             using (var dc = new DataContext())
             {
                 try
                 {
-                    var properties = dc.Properties.Include(x => x.Territory).Include(x => x.PropertyNotes).Where(a => a.NoteReferenceId == null && a.SmartBoardId == null).OrderByDescending(a => a.DateCreated).Take(limit).ToList();
+                    var properties = dc.Properties.Include(x => x.Territory).Include(x => x.PropertyNotes).Where(a => a.NoteReferenceId == null && a.SmartBoardId == null).OrderByDescending(a => a.DateCreated).Skip((page - 1) * limit).Take(limit).ToList();  
 
                     if (properties.Count() == 0)
                     {
