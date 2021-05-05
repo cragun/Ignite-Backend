@@ -33,7 +33,7 @@ namespace DataReef.TM.Contracts.Services
         Task<PropertyNote> GetPropertyNoteById(Guid NoteID); 
 
         [OperationContract]
-        string ImportNotes(int limit);
+        string ImportNotes(int page, int limit);
 
         [OperationContract]        
         SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);

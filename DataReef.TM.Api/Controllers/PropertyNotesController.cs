@@ -157,13 +157,14 @@ namespace DataReef.TM.Api.Controllers
         /// <summary>
         /// import notes to property server
         /// </summary>
+        /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        [Route("import/{limit}")] 
+        [Route("import/{limit}/{page}")] 
         [HttpGet]
-        public IHttpActionResult ImportNotes(int limit)
+        public IHttpActionResult ImportNotes(int page, int limit)
         {
-            var result = _propertyNoteService.ImportNotes(limit);
+            var result = _propertyNoteService.ImportNotes(page,limit);
             return Ok(result);
         } 
 
