@@ -1064,7 +1064,6 @@ namespace DataReef.TM.Api.Controllers
             {
                 var response = _smartBoardAdapter.Value.SubmitLead(i, null, false, false);
             }
-
             return Ok();
         }
 
