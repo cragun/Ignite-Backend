@@ -1060,22 +1060,14 @@ namespace DataReef.TM.Api.Controllers
             Live.Add(Guid.Parse("D035F748-81E8-4919-AF42-BE11180B3D9C"));
             Live.Add(Guid.Parse("E6AF360E-E915-48D8-A1CA-6C25473FD9E5"));
 
-
-            var list = new List<test>();
-
             foreach (var i in Live)
             {
-                var response = _smartBoardAdapter.Value.SubmitLead(i);
+                var response = _smartBoardAdapter.Value.SubmitLead(i, null, false, false);
             }
 
             return Ok();
         }
 
-        public class test
-        {
-            public string guid { get; set; }
-
-        }
         #endregion Common API
 
         #region Private
