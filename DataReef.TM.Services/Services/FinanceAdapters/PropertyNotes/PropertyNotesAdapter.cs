@@ -240,8 +240,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
             }
 
-            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
-
+            return JsonConvert.DeserializeObject<NoteResponse>(response.Content); 
         }
 
         //​send email notification
