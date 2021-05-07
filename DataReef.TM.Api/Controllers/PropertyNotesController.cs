@@ -152,21 +152,6 @@ namespace DataReef.TM.Api.Controllers
            
             var result = await _propertyNoteService.GetPropertyNoteById(noteID);
             return Ok(result);
-        }
-
-        /// <summary>
-        /// import notes to property server
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
-        [Route("import/{limit}/{page}")] 
-        [HttpGet]
-        public IHttpActionResult ImportNotes(int page, int limit)
-        {
-
-            var result = _propertyNoteService.ImportNotes(page,limit);
-            return Ok(result);
         } 
 
         #endregion
