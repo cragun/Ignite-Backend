@@ -529,8 +529,7 @@ namespace DataReef.TM.Services.Services
                     VerifyUserAssignmentsAndInvite(taggedPersonIds, property, true, null);
 
                     NotifyTaggedUsers(taggedPersons, entity, property, dc);
-                }
-
+                } 
 
                 var parentNote = entity.ParentNote;
                 if (entity.ContentType == "Comment")
@@ -754,6 +753,89 @@ namespace DataReef.TM.Services.Services
                 }
             }
         }
+
+        public string ImportNotesByIds(List<Guid> noteid)
+        {
+            using (var dc = new DataContext())
+            {
+                try
+                {
+                    foreach (var id in noteid)
+                    {
+                        try
+                        {
+                            var allnotesList = dc.PropertyNotes.Where(x => !x.IsDeleted && noteid.Contains(x.Guid)).ToList();
+
+                            var parentnotesList = allnotesList.Where(a => a.ContentType != "Comment");
+
+                            foreach (var note in parentnotesList)
+                            {
+                                var property = dc.Properties.FirstOrDefault(x => x.Guid == note.PropertyID);
+
+                                if (property == null)
+                                {
+                                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "property with the specified ID was not found" });
+                                }
+
+                                var people = dc.People.FirstOrDefault(x => x.Guid == note.PersonID);
+
+                                if (people == null)
+                                {
+                                    throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                                }
+
+                                var taggedPersons = GetTaggedPersons(note.Content);
+
+                                var noteReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, note, taggedPersons, people);
+
+                                note.NoteID = noteReference?.noteId;
+                                note.ThreadID = noteReference?.threadId;
+
+                                var comments = allnotesList.Where(a => a.ContentType == "Comment" && a.ParentID == note.Guid).ToList();
+
+                                foreach (var comment in comments)
+                                {
+                                    var taggedPersonsComment = GetTaggedPersons(comment.Content);
+
+                                    comment.ThreadID = note.ThreadID;
+
+                                    var peopleComment = dc.People.FirstOrDefault(x => x.Guid == comment.PersonID);
+
+                                    if (peopleComment == null)
+                                    {
+                                        throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "User with the specified ID was not found" });
+                                    }
+
+                                    var commentReference = _propertyNotesAdapter.Value.AddEditNote(property.NoteReferenceId, comment, taggedPersonsComment, peopleComment);
+
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            dc.ApiLogEntries.Add(new ApiLogEntry()
+                            {
+                                Id = Guid.NewGuid(),
+                                User = Convert.ToString(SmartPrincipal.UserId),
+                                Machine = Environment.MachineName,
+                                RequestContentType = "Import Notes By ID",
+                                RequestContentBody = JsonConvert.SerializeObject(id),
+                                RequestTimestamp = DateTime.UtcNow,
+                                RequestUri = "Import Notes By ID",
+                                ResponseContentBody = ex.Message
+                            });
+                            dc.SaveChanges();
+                        }
+                    }
+                    return "success";
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException(ex.Message);
+                }
+            }
+        }
+
 
         #endregion
 

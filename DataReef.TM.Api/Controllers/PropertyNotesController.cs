@@ -152,7 +152,21 @@ namespace DataReef.TM.Api.Controllers
            
             var result = await _propertyNoteService.GetPropertyNoteById(noteID);
             return Ok(result);
-        } 
+        }
+
+
+        /// <summary>
+        /// Import notes by id
+        /// </summary> 
+        /// <param name="noteid"></param>
+        /// <returns></returns>
+        [Route("import")] 
+        [HttpPost]
+        public async Task<IHttpActionResult> ImportNotesByIds(List<Guid> noteid)
+        { 
+            var result = _propertyNoteService.ImportNotesByIds(noteid);
+            return Ok(result);
+        }
 
         #endregion
 
