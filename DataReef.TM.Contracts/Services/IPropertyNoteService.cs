@@ -34,8 +34,10 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         string ImportNotesByIds(List<Guid> NoteID);
-        
 
+        [OperationContract]
+        string DeleteNotesByIds(List<Guid> NoteID); 
+        
         [OperationContract]        
         SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 

@@ -409,6 +409,13 @@
             <param name="noteid"></param>
             <returns></returns>
         </member>
+        <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.DeleteNotesByIds(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            delete notes by id
+            </summary> 
+            <param name="noteid"></param>
+            <returns></returns>
+        </member>
         <member name="M:DataReef.TM.Api.Controllers.PropertyNotesController.GetApikey(System.Int64,System.String,System.Int64)">
             <summary>
             Gets apikey
