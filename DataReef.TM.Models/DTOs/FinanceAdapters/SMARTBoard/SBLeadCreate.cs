@@ -127,6 +127,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
         [JsonProperty("disposition_type_id")]
         public int? DispositionTypeId { get; set; }
 
+        [JsonProperty("note_reference_id")]
         public string NoteReferenceId { get; set; }
         public string HoaName { get; set; }
 
