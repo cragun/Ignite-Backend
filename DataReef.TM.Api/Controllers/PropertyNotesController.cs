@@ -168,6 +168,20 @@ namespace DataReef.TM.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// delete notes by id
+        /// </summary> 
+        /// <param name="noteid"></param>
+        /// <returns></returns>
+        [Route("delete")]
+        [HttpPost]
+        public async Task<IHttpActionResult> DeleteNotesByIds(List<Guid> noteid)
+        {
+            var result = _propertyNoteService.DeleteNotesByIds(noteid);
+            return Ok(result);
+        }
+
+
         #endregion
 
 

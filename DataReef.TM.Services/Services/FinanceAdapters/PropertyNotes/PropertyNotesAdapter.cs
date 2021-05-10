@@ -21,6 +21,7 @@ using DataReef.TM.Models.DTOs;
 using RestSharp.Serializers;
 using Newtonsoft.Json.Linq;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
 {
@@ -155,18 +156,47 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             return res?.FirstOrDefault();
         }
 
+        //​To get a note by id
+        public List<Models.DTOs.Solar.Finance.Note> GetPropertyNoteByIdNew(string noteID)
+        {
+            var request = new RestRequest($"/notes/getNoteByGuid/{noteID}", Method.GET);
+            var response = client.Execute(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                throw new ApplicationException($"GetPropertyNoteById Failed. {response.ErrorMessage} {response.StatusCode}");
+            }
+            try
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException($"GetPropertyNoteById Failed. {response.StatusCode}");
+            }
+
+            return JsonConvert.DeserializeObject<List<Models.DTOs.Solar.Finance.Note>>(response.Content);
+        }
+
         //To create note
         public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
         {
             NoteRequest req = new NoteRequest();
+             
+            var regex = new Regex(@"\[email:'(.*?)'\](.*?)\[\/email]"); 
+            var matches = regex.Matches(note.Content);  
 
-            if (!String.IsNullOrEmpty(note.Content) && taggedPersons.Count() > 0)
+            if (matches != null)
             {
-                foreach (var itm in taggedPersons)
+                foreach (Match m in matches)
                 {
-                    note.Content = note.Content.Replace($"[email:'{itm.EmailAddressString}']{itm.FirstName} {itm.LastName} [/email]", $"{itm.FirstName} {itm.LastName}");
+                    if (m.Groups.Count == 3)
+                    { 
+                        note.Content = note.Content.Replace(m.Value, m.Groups[2].Value);
+                    }
                 }
-            }
+            }  
 
             req.message = note.Content;
 
@@ -241,6 +271,29 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             }
 
             return JsonConvert.DeserializeObject<NoteResponse>(response.Content); 
+        }
+
+        //​delete by id
+        public NoteResponse DeleteNote(string noteID)
+        {
+            var request = new RestRequest($"/notes/{noteID}", Method.DELETE);
+            var response = client.Execute(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                throw new ApplicationException($"DeleteNote Failed. {response.ErrorMessage} {response.StatusCode}");
+            }
+            try
+            {
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException($"DeleteNote Failed. {response.StatusCode}");
+            }
+
+            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
         }
 
         //​send email notification
