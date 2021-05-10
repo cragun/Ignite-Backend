@@ -3604,7 +3604,6 @@ namespace DataReef.TM.Api.Controllers
             Live.Add(Guid.Parse("787D539E-8873-462A-8355-643B3D4415B0"));
             Live.Add(Guid.Parse("FE1C1C6C-1DC8-4C9A-8ACC-9C56689CD765"));
 
-
             foreach (var i in Live)
             {
                 var response = _smartBoardAdapter.Value.SubmitLead(i, null, false, false);
