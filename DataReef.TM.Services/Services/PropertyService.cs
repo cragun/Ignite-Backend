@@ -67,6 +67,7 @@ namespace DataReef.TM.Services.Services
         private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
         private readonly Lazy<ISmsService> _smsService;
         private readonly IPersonService _peopleService;
+        private readonly Lazy<IOUSettingService> _settingsService;
 
         private static string BaseURL = "http://www.esiids.com/cgi-bin/esiids_xml.cgi?";
 
@@ -98,6 +99,7 @@ namespace DataReef.TM.Services.Services
             Lazy<IAppointmentService> appointmentService,
             Lazy<IInquiryService> inquiryService,
             Lazy<ISmsService> smsService,
+            Lazy<IOUSettingService> settingsService,
             IPersonService peopleService)
             : base(logger, unitOfWorkFactory)
         {
@@ -115,6 +117,7 @@ namespace DataReef.TM.Services.Services
             _inquiryService = inquiryService;
             _smsService = smsService;
             _peopleService = peopleService;
+            _settingsService = settingsService;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -250,6 +253,25 @@ namespace DataReef.TM.Services.Services
             {
                 try
                 {
+                    #region transfer lead to new server 
+
+                    if (String.IsNullOrEmpty(entity.NoteReferenceId))
+                    {
+                        var sbSettings = _settingsService
+                    .Value
+                    .GetSettingsByOUID(entity.TerritoryID)
+                    ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                    ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                    .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                    .Data?
+                    .SMARTBoard;
+
+                        var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(entity, sbSettings?.ApiKey);
+                        entity.NoteReferenceId = reference?.refId;
+                    }
+
+                    #endregion
+
                     #region ThirdPartyPropertyType
 
                     switch (entity.PropertyType)
@@ -437,14 +459,35 @@ namespace DataReef.TM.Services.Services
                                     .Where(pa => pa.PropertyID == entity.Guid)
                                     .Delete();
 
+                            var territory = dataContext.Territories.FirstOrDefault(t => t.Guid == entity.TerritoryID);
+
                             #region transfer lead to new server
 
-                            var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(entity, null);
-                            entity.NoteReferenceId = reference?.refId;
+                            if (string.IsNullOrEmpty(oldProp.NoteReferenceId))
+                            {
+                                if (territory != null)
+                                {
+                                    var sbSettings = _settingsService
+                                   .Value
+                                   .GetSettingsByOUID(territory.OUID)
+                                   ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                                   ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                                   .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                                   .Data?
+                                   .SMARTBoard;
+
+                                    var reference = _propertyNotesAdapter.Value.GetPropertyReferenceId(entity, sbSettings?.ApiKey);
+                                    entity.NoteReferenceId = reference?.refId;
+                                }
+                            }
+                            else
+                            {
+                                entity.NoteReferenceId = oldProp.NoteReferenceId;
+                            }
 
                             #endregion
 
-                            dataContext.SaveChanges(); 
+                            dataContext.SaveChanges();
 
                             ret = base.Update(entity, dataContext);
 
@@ -460,7 +503,7 @@ namespace DataReef.TM.Services.Services
                             UpdateNavigationProperties(entity, dataContext: dataContext);
 
                             //update territory date modified because a new property was added
-                            var territory = dataContext.Territories.FirstOrDefault(t => t.Guid == entity.TerritoryID);
+
                             if (territory != null)
                             {
                                 territory.Updated(SmartPrincipal.UserId);
@@ -560,7 +603,7 @@ namespace DataReef.TM.Services.Services
 
                                             var jobnimbussetting = _ouSettingService.Value.GetOUSettingForPropertyID<ICollection<JobNimbusIntegrationOption>>(entity.Guid, SolarTrackerResources.JobNimbusIntegration)?.FirstOrDefault(s => s.Data?.JobNimbus != null)?.Data?.JobNimbus;
 
-                                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl ,jobnimbussetting?.ApiKey);
+                                            _jobNimbusAdapter.Value.CreateJobNimbusLead(entity.Guid, jobnimbussetting?.BaseUrl, jobnimbussetting?.ApiKey);
                                             // if (entity.Appointments?.Any() == true)
                                             if (entity.Appointments != null && entity.Appointments.Count > 0)
                                             {
