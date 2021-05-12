@@ -32,7 +32,7 @@ namespace DataReef.TM.Services.Tests
         private Mock<IJobNimbusAdapter> _jobNimbusAdapter;
         private Mock<IOUService> _ouService;
         private Mock<IOUSettingService> _ouSettingService;
-       // private Mock<ITerritoryService> _territoryService;
+        private Mock<IPersonService> _peopleService;
 
         [SetUp]
         public void Init()
@@ -49,7 +49,7 @@ namespace DataReef.TM.Services.Tests
             _jobNimbusAdapter = new Mock<IJobNimbusAdapter>();
             _ouService = new Mock<IOUService>();
             _ouSettingService = new Mock<IOUSettingService>();
-           // _territoryService = new Mock<ITerritoryService>();
+            _peopleService = new Mock<IPersonService>();
         }
 
         private PropertyService GetService()
@@ -66,8 +66,7 @@ namespace DataReef.TM.Services.Tests
                 new Lazy<IJobNimbusAdapter>(() => _jobNimbusAdapter.Object),
                 new Lazy<IOUService>(() => _ouService.Object),
                 new Lazy<IOUSettingService>(() => _ouSettingService.Object),
-               // new Lazy<ITerritoryService>(() => _territoryService.Object),
-                null,
+                new Lazy<IPersonService>(() => _peopleService.Object), 
                 null,
                 null,
                 null);
