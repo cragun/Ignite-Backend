@@ -81,10 +81,6 @@ namespace DataReef.TM.Models
         [StringLength(50)]
         public string OldDisposition { get; set; }
 
-        [DataMember]
-        [StringLength(100)]
-        public string SalesRepName { get; set; }
-
         #endregion
 
         #region Navigation
