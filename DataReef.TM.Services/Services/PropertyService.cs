@@ -57,17 +57,16 @@ namespace DataReef.TM.Services.Services
         private readonly Func<IGeographyBridge> _geographyBridgeFactory;
         private readonly Lazy<IDeviceService> _deviceService;
         private readonly Lazy<ISolarSalesTrackerAdapter> _sbAdapter;
-        private readonly Lazy<IPropertyNotesAdapter> _propertyNotesAdapter;
-        private readonly Lazy<IOUService> _ouService;
-        private readonly Lazy<IOUSettingService> _ouSettingService;
-        private readonly Lazy<IAppointmentService> _appointmentService;
-        private readonly Lazy<IInquiryService> _inquiryService;
+        private readonly Lazy<IPropertyNotesAdapter> _propertyNotesAdapter; 
         private readonly Lazy<ISunlightAdapter> _sunlightAdapter;
         private readonly Lazy<ISunnovaAdapter> _sunnovaAdapter;
         private readonly Lazy<IJobNimbusAdapter> _jobNimbusAdapter;
-        private readonly Lazy<ISmsService> _smsService;
-        private readonly IPersonService _peopleService;
-        private readonly Lazy<IOUSettingService> _settingsService;
+        private readonly Lazy<IOUService> _ouService;
+        private readonly Lazy<IOUSettingService> _ouSettingService;
+        private readonly Lazy<IPersonService> _peopleService;
+        private readonly Lazy<ISmsService> _smsService; 
+        private readonly Lazy<IAppointmentService> _appointmentService;
+        private readonly Lazy<IInquiryService> _inquiryService;
 
         private static string BaseURL = "http://www.esiids.com/cgi-bin/esiids_xml.cgi?";
 
@@ -96,11 +95,10 @@ namespace DataReef.TM.Services.Services
             Lazy<IJobNimbusAdapter> jobNimbusAdapter,
             Lazy<IOUService> ouService,
             Lazy<IOUSettingService> ouSettingService,
+            Lazy<IPersonService> peopleService,
             Lazy<IAppointmentService> appointmentService,
             Lazy<IInquiryService> inquiryService,
-            Lazy<ISmsService> smsService,
-            Lazy<IOUSettingService> settingsService,
-            IPersonService peopleService)
+            Lazy<ISmsService> smsService)
             : base(logger, unitOfWorkFactory)
         {
             _geoProvider = geoProvider;
@@ -113,11 +111,10 @@ namespace DataReef.TM.Services.Services
             _jobNimbusAdapter = jobNimbusAdapter;
             _ouService = ouService;
             _ouSettingService = ouSettingService;
+            _peopleService = peopleService; 
             _appointmentService = appointmentService;
             _inquiryService = inquiryService;
             _smsService = smsService;
-            _peopleService = peopleService;
-            _settingsService = settingsService;
         }
 
         public override ICollection<Property> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
@@ -257,7 +254,7 @@ namespace DataReef.TM.Services.Services
 
                     if (String.IsNullOrEmpty(entity.NoteReferenceId))
                     {
-                        var sbSettings = _settingsService
+                        var sbSettings = _ouSettingService
                     .Value
                     .GetSettingsByOUID(entity.TerritoryID)
                     ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
@@ -467,7 +464,7 @@ namespace DataReef.TM.Services.Services
                             {
                                 if (territory != null)
                                 {
-                                    var sbSettings = _settingsService
+                                    var sbSettings = _ouSettingService
                                    .Value
                                    .GetSettingsByOUID(territory.OUID)
                                    ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
@@ -494,7 +491,7 @@ namespace DataReef.TM.Services.Services
                             if (oldProp.LatestDisposition != entity.LatestDisposition)
                             {
                                 //Update StartDate and Sb User StartDate
-                                _peopleService.UpdateStartDate();
+                                _peopleService.Value.UpdateStartDate();
                                 //person clocktime 
                                 _inquiryService.Value.UpdatePersonClockTime(ret.Guid);
                             }
