@@ -66,7 +66,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
             //as per new calculation 
 
-            FinalPPW = plan.Type == FinancePlanType.Lease ? 0 : request?.FinalPricePerWatt ?? 0;
+            FinalPPW = plan.Type == FinancePlanType.Lease ? 0 : request?.FinalPricePerWatt.RoundValue() ?? 0;
             PPW = (double)FinalPPW;
             LenderFeesInAmount =  request?.LenderFeesInAmount ?? 0;
         }

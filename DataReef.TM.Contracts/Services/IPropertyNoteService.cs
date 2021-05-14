@@ -30,10 +30,7 @@ namespace DataReef.TM.Contracts.Services
         Task<IEnumerable<PropertyNote>> GetPropertyNotes(Guid PropertyID);
 
         [OperationContract]
-        Task<PropertyNote> GetPropertyNoteById(Guid NoteID); 
-
-        [OperationContract]
-        string ImportNotes(int limit);
+        Task<PropertyNote> GetPropertyNoteById(Guid NoteID);  
 
         [OperationContract]        
         SBNoteDTO AddNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
@@ -42,8 +39,7 @@ namespace DataReef.TM.Contracts.Services
         SBNoteDTO EditNoteFromSmartboard(SBNoteDTO noteRequest, string apiKey);
 
         [OperationContract]
-        Task<IEnumerable<Territories>> GetTerritoriesList(long smartboardLeadID, string apiKey);
-
+        Task<IEnumerable<Territories>> GetTerritoriesList(long smartboardLeadID, string apiKey); 
 
         [OperationContract]
         SBNoteDTO DeleteNoteFromSmartboard(Guid noteID, string userID, string apiKey, string email);

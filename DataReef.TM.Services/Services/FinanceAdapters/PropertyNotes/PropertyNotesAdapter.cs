@@ -21,6 +21,7 @@ using DataReef.TM.Models.DTOs;
 using RestSharp.Serializers;
 using Newtonsoft.Json.Linq;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
 {
@@ -156,17 +157,23 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
         }
 
         //To create note
-        public NoteResponse AddEditNote(string referenceId, PropertyNote note, List<Person> taggedPersons, Person user)
-        { 
+        public NoteResponse AddEditNote(string referenceId, PropertyNote note, IEnumerable<Person> taggedPersons, Person user)
+        {
             NoteRequest req = new NoteRequest();
 
-            if (!String.IsNullOrEmpty(note.Content) && taggedPersons.Count() > 0)
+            var regex = new Regex(@"\[email:'(.*?)'\](.*?)\[\/email]");
+            var matches = regex.Matches(note.Content);
+
+            if (matches != null)
             {
-                taggedPersons.ForEach(itm =>
+                foreach (Match m in matches)
                 {
-                    note.Content =  note.Content.Replace($"[email:'{itm.EmailAddressString}']{itm.FirstName} {itm.LastName} [/email]" , $"{itm.FirstName} {itm.LastName}" );
-                });  
-            } 
+                    if (m.Groups.Count == 3)
+                    {
+                        note.Content = note.Content.Replace(m.Value, m.Groups[2].Value);
+                    }
+                }
+            }
 
             req.message = note.Content;
 
@@ -197,25 +204,16 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
                 req.version = note.Version;
                 req.propertyType = note.PropertyType;
 
-                if (taggedPersons.Count() > 0)
+                req.taggedUsers = taggedPersons.Select(a => new NoteTaggedUser
                 {
-                    req.taggedUsers = taggedPersons.Select(a => new NoteTaggedUser
-                    {
-                        email = a.EmailAddressString,
-                        phone = a.PhoneNumbers?.FirstOrDefault()?.Number,
-                        isSendEmail = false,
-                        isSendSms = false,
-                        userId = a.SmartBoardID,
-                        firstName = a.FirstName,
-                        lastName = a.LastName
-                    }).ToList();
-                    //.Select((s, i) => new { s, i }).ToDictionary(x => x.i, x => x.s)
-                }
-                else
-                {
-                    //req.taggedUsers = new Dictionary<int, NoteTaggedUser>();
-                    req.taggedUsers = new List<NoteTaggedUser>();
-                }
+                    email = a.EmailAddressString,
+                    phone = a.PhoneNumbers?.FirstOrDefault()?.Number,
+                    isSendEmail = false,
+                    isSendSms = String.Equals(a.EmailAddressString, user.EmailAddressString) ? false : true,
+                    userId = a.SmartBoardID,
+                    firstName = a.FirstName,
+                    lastName = a.LastName
+                }).ToList();
 
                 req.user = new NoteTaggedUser()
                 {
@@ -237,22 +235,19 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.PropertyNotes
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-                //throw new ApplicationException($"AddEditNote Failed. {response.ErrorMessage} {response.StatusCode}");
+                throw new ApplicationException($"AddEditNote Failed. {response.ErrorMessage} {response.StatusCode}");
             }
             try
             {
-                //SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
-
-                return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
             }
             catch (Exception)
             {
-                //throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
                 SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+                throw new ApplicationException($"AddEditNote Failed. {response.StatusCode}");
+            }
 
-
-                return new NoteResponse();
-            } 
+            return JsonConvert.DeserializeObject<NoteResponse>(response.Content);
         }
 
         //​send email notification
