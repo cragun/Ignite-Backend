@@ -499,8 +499,7 @@ namespace DataReef.TM.Services.Services
                             {
                                 territory.Updated(SmartPrincipal.UserId);
                                 dataContext.SaveChanges();
-                            }
-
+                            } 
 
                             transaction.Commit();
 
