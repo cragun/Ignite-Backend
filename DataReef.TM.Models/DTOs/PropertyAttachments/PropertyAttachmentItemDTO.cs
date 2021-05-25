@@ -46,8 +46,9 @@ namespace DataReef.TM.Models.DTOs.PropertyAttachments
             UpdateDate = item.DateLastModified;
             SectionID = item.SectionID;
             ItemID = item.ItemID;
-            RejectionMessage = item.RejectionMessage;
-            Images = item.GetImages();
+            RejectionMessage = item.RejectionMessage; 
+            //Images = item.GetImages();
+            Images = item.GetProxifyImages();
             Status = item.Status;
         }
     }

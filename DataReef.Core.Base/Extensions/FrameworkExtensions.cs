@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 public static class FrameworkExtensions
 {
@@ -33,6 +35,24 @@ public static class FrameworkExtensions
         var uri = new Uri(value);
         return uri.AbsolutePath.TrimStart('/');
     }
+
+    public static string GetAWSProxifyUrl(this string url)
+    {
+        string proxy_path = ConfigurationManager.AppSettings["AWS_S3_ProxyUrl"];
+
+        Regex regexA = new Regex(@"^https:\/\/(?<bucket>.+)\.s3(.+)?\.amazonaws\.com\/(?<filepath>.+)(?:\?.+)?$");
+        Match matchA = regexA.Match(url);
+
+        Regex regexB = new Regex(@"^https:\/\/s3-(?<region>.+)?\.amazonaws\.com\/(?<bucket>[^\/]+)\/(?<filepath>.+)(?:\?.*)?$");
+        Match matchB = regexB.Match(url);
+
+        if (matchA.Success)
+            return $"{proxy_path}/{matchA.Groups["bucket"].Value}/{matchA.Groups["filepath"].Value}";
+        else if (matchB.Success)
+            return $"{proxy_path}/{matchB.Groups["bucket"].Value}/{matchB.Groups["filepath"].Value}";
+        else
+            return url;
+    } 
 
     public static bool IsTrue(this string value)
     {

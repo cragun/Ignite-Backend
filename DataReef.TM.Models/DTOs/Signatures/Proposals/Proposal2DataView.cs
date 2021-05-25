@@ -103,8 +103,8 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
                             .Select(dl => new ProposalMediaItemDataView
                             {
                                 Type = ProposalMediaItemDataViewType.Data_SolarSystem,
-                                Url = dl.ContentURL,
-                                ThumbUrl = dl.ThumbContentURL,
+                                Url = dl.ContentURL?.GetAWSProxifyUrl(),
+                                ThumbUrl = dl.ThumbContentURL?.GetAWSProxifyUrl(),
                                 DataJSON = dl.DataJSON,
                             })
                             .ToList();
@@ -118,7 +118,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
                                     .Select(ui => new ProposalMediaItemDataView
                                     {
                                         Type = ProposalMediaItemDataViewType.Data_SignersImage,
-                                        Url = ui.ValidationUrl?.LastOrDefault(),
+                                        Url = ui.ValidationUrl?.LastOrDefault()?.GetAWSProxifyUrl(),
                                         DataJSON = ui.DataJSON
                                     })
                                     .ToList();
@@ -129,8 +129,8 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
                             .Select(ui => new ProposalMediaItemDataView
                             {
                                 Type = ui.Type.ToProposalEnum(),
-                                Url = ui.ContentURL,
-                                ThumbUrl = ui.ThumbContentURL,
+                                Url = ui.ContentURL?.GetAWSProxifyUrl(),
+                                ThumbUrl = ui.ThumbContentURL?.GetAWSProxifyUrl(),
                                 DataJSON = ui.DataJSON
                             })
                             .ToList();
