@@ -198,6 +198,7 @@ namespace DataReef.TM.Api.Controllers
             using (var dc = new DataContext())
             {
                 var txt = dc.Database.SqlQuery<string>("exec IsValidWellKnownText {0}", item.WellKnownText).FirstOrDefault();
+
                 if (string.IsNullOrEmpty(txt))
                 {
                     var res = item.Shapes.Select(x => x.WellKnownText).ToList();
