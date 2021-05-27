@@ -131,6 +131,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             FinanceType = financePlan?.FinancePlanType.ToString();
             Lender = financePlan?.FinancePlanDefinition?.Provider?.Name;
             //LenderFee = financePlan?.FinancePlanDefinition?.LenderFee;
+
             LenderFee = financePlan?.FinancePlanDefinition?.DealerFee;
             LenderID = financeMeta?.SBMeta?.LenderID;
             LeasePricePerKWH = loanRequest?.LeaseParams?.PricePerkWh;
