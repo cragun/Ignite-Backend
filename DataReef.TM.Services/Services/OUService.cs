@@ -710,6 +710,7 @@ namespace DataReef.TM.Services.Services
                 {
                     var masterterritoryShapes = dc.TerritoryShapes.Where(a => a.TerritoryID == masterterritory.Guid);
                     dc.TerritoryShapes.RemoveRange(masterterritoryShapes);
+
                     //foreach (var item in masterterritoryShapes)
                     //{
                     //    item.IsDeleted = true;
