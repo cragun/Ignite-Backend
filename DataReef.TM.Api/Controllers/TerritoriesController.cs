@@ -193,7 +193,6 @@ namespace DataReef.TM.Api.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-
             using (var dc = new DataContext())
             {
                 var txt = dc.Database.SqlQuery<string>("exec IsValidWellKnownText {0}", item.WellKnownText).FirstOrDefault();
