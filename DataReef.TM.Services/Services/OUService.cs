@@ -581,12 +581,7 @@ namespace DataReef.TM.Services.Services
                                    .FirstOrDefault(oua => !oua.IsDeleted && oua.PersonID == SmartPrincipal.UserId && oua.OUID == ouid);
 
                 if (ouAssociations != null && ouAssociations.RoleType == OURoleType.Installer)
-                {
-                    var dispSettings = ou.Settings?.FirstOrDefault(s => s.Name == OUSetting.NewDispositions);
-
-                    if (dispSettings != null)
-
-                    {
+                { 
                         var installerDisposition = uow
                                   .Get<OUSetting>()
                                   .FirstOrDefault(oua => oua.Name == OUSetting.Installer_Dispositions);
@@ -598,8 +593,7 @@ namespace DataReef.TM.Services.Services
                             {
                                 sett.Value = JsonConvert.SerializeObject(dispositions);
                             }
-                        }
-                    }
+                        } 
                 }
                 return ou;
             }
