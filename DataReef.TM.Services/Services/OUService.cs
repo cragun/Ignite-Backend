@@ -585,6 +585,7 @@ namespace DataReef.TM.Services.Services
                     var dispSettings = ou.Settings?.FirstOrDefault(s => s.Name == OUSetting.NewDispositions);
 
                     if (dispSettings != null)
+
                     {
                         var installerDisposition = uow
                                   .Get<OUSetting>()
@@ -600,7 +601,6 @@ namespace DataReef.TM.Services.Services
                         }
                     }
                 }
-
                 return ou;
             }
         }
