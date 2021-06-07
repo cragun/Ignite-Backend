@@ -31,6 +31,9 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         [DataMember]
         public string MetaData { get; set; }
 
+        [DataMember]
+        public int TermExternalID { get; set; } 
+
         public FinancePlanDataView() : base()
         { }
     }

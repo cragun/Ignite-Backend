@@ -14,6 +14,7 @@ using DataReef.TM.Models.DataViews.Inquiries;
 using DataReef.TM.Models.DataViews.OnBoarding;
 using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs;
+using DataReef.TM.Models.DTOs.Inquiries;
 using DataReef.TM.Models.DTOs.Integrations;
 using DataReef.TM.Models.DTOs.OUs;
 using DataReef.TM.Models.DTOs.Persons;
@@ -557,23 +558,51 @@ namespace DataReef.TM.Services.Services
 
         public OU GetByShapesVersion(Guid ouid, ICollection<OuShapeVersion> ouShapeVersions, bool deletedItems = false, string include = "")
         {
-            var ou = Get(ouid, include, deletedItems: deletedItems);
-            ou.WellKnownText = null;
-
-            if (ou.Children != null && ouShapeVersions != null)
+            using (var uow = UnitOfWorkFactory())
             {
-                foreach (var childOu in ou.Children)
+                var ou = Get(ouid, include, deletedItems: deletedItems);
+                ou.WellKnownText = null;
+
+                if (ou.Children != null && ouShapeVersions != null)
                 {
-                    var ouShape = ouShapeVersions.FirstOrDefault(s => s.Ouid == childOu.Guid);
+                    foreach (var childOu in ou.Children)
+                    {
+                        var ouShape = ouShapeVersions.FirstOrDefault(s => s.Ouid == childOu.Guid);
 
-                    if (childOu.ShapesVersion == ouShape?.Version)
-                        childOu.WellKnownText = null;
+                        if (childOu.ShapesVersion == ouShape?.Version)
+                            childOu.WellKnownText = null;
+                    }
                 }
+
+                ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();
+
+                var ouAssociations = uow
+                                   .Get<OUAssociation>()
+                                   .FirstOrDefault(oua => !oua.IsDeleted && oua.PersonID == SmartPrincipal.UserId && oua.OUID == ouid);
+
+                if (ouAssociations != null && ouAssociations.RoleType == OURoleType.Installer)
+                {
+                    var dispSettings = ou.Settings?.FirstOrDefault(s => s.Name == OUSetting.NewDispositions);
+
+                    if (dispSettings != null)
+                    {
+                        var installerDisposition = uow
+                                  .Get<OUSetting>()
+                                  .FirstOrDefault(oua => oua.Name == OUSetting.Installer_Dispositions);
+                        var dispositions = installerDisposition?.GetValue<IEnumerable<DispositionV2DataView>>();
+
+                        foreach (var sett in ou.Settings)
+                        {
+                            if (sett != null && sett.Name == OUSetting.NewDispositions)
+                            {
+                                sett.Value = JsonConvert.SerializeObject(dispositions);
+                            }
+                        }
+                    }
+                }
+
+                return ou;
             }
-
-            ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();
-
-            return ou;
         }
 
         public override OU Insert(OU entity)
@@ -595,7 +624,8 @@ namespace DataReef.TM.Services.Services
             {
                 using (var dc = new DataContext())
                 {
-                    var roleIds = entity.Associations.Select(x => x.OURoleID);
+                    var roleIds = entity.Associations.Select
+                        (x => x.OURoleID);
                     var roles = dc.OURoles.Where(x => roleIds.Contains(x.Guid)).ToList();
 
                     foreach (var assoc in entity.Associations)
@@ -1767,6 +1797,7 @@ namespace DataReef.TM.Services.Services
                                         PPW = sp.PPW,
                                         IntegrationProvider = sp.IntegrationProvider,
                                         MetaData = sp.MetaDataJSON,
+                                        TermExternalID = sp.TermExternalID
                                     })
                                     .ToList();
                 }
@@ -2774,7 +2805,7 @@ namespace DataReef.TM.Services.Services
         public async Task<OU> GetOuPermissions(Guid ouid)
         {
             using (var dc = new DataContext())
-            { 
+            {
                 return await dc.OUs.FirstOrDefaultAsync(x => x.Guid == ouid);
             }
         }

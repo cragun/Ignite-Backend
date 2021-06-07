@@ -38,8 +38,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
             ProductionKWH = proposal.ProductionKWH;
             ProductionKWHpercentage = proposal.ProductionKWHpercentage;
-            IsManual = proposal.IsManual;
-
+            IsManual = proposal.IsManual; 
 
             InverterMake = inverter?.Name;
             InverterModel = inverter?.Model;
@@ -130,7 +129,8 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
             FinanceType = financePlan?.FinancePlanType.ToString();
             Lender = financePlan?.FinancePlanDefinition?.Provider?.Name;
-            LenderFee = financePlan?.FinancePlanDefinition?.LenderFee;
+            //LenderFee = financePlan?.FinancePlanDefinition?.LenderFee;
+            LenderFee = financePlan?.FinancePlanDefinition?.DealerFee;
             LenderID = financeMeta?.SBMeta?.LenderID;
             LeasePricePerKWH = loanRequest?.LeaseParams?.PricePerkWh;
             LeaseEscalator = loanRequest?.LeaseParams?.Escalator;

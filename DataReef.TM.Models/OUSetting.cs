@@ -119,6 +119,7 @@ namespace DataReef.TM.Models
         public static readonly string Solar_AvailableDispositions = "AvailableDispositions";
         public static readonly string NewDispositions = "Disposition.Options";
         public static readonly string Inquiry_Dispositions = "Inquiry.Dispositions";
+        public static readonly string Installer_Dispositions = "Installer.Dispositions";
 
         public static readonly string LegionOUFreeHiResImages = "Legion.OU.FreeHiResImages";
         public static readonly string LegionOULogoImageUrl = "Legion.OU.LogoImageUrl";
