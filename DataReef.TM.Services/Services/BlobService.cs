@@ -125,7 +125,8 @@ namespace DataReef.TM.Services
                     Key = name.ToLowerInvariant(),
                     InputStream = stream,
                     ContentType = blob.ContentType,
-                    CannedACL = GetAccessRights(access)
+                    //CannedACL = GetAccessRights(access)
+                    CannedACL = S3CannedACL.Private
                 };
 
                 var response = Client.PutObject(request);
@@ -208,8 +209,10 @@ namespace DataReef.TM.Services
                 DestinationBucket = destinationBucket ?? _s3BucketName,
                 SourceKey = sourceName.ToLowerInvariant(),
                 DestinationKey = destinationName.ToLowerInvariant(),
-                CannedACL = GetAccessRights(access)
+                //CannedACL = GetAccessRights(access)
+                CannedACL = S3CannedACL.Private
             };
+
 
             var response = Client.CopyObject(req);
         }
