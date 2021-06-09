@@ -15,7 +15,9 @@ namespace DataReef.TM.Models.DTOs.OUs
         public string WellKnownText { get; set; }
 
         public int ShapesVersion { get; set; }
+
         public float Lat { get; set; }
+
         public float Lon { get; set; }
 
         public EntityWithShape(OU ou)
