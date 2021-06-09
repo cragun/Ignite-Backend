@@ -22,8 +22,7 @@ namespace DataReef.TM.Services
         private static readonly string _s3AccessKeyId = ConfigurationManager.AppSettings["AWS_S3_AccessKeyID"];
         private static readonly string _s3SecretAccessKey = ConfigurationManager.AppSettings["AWS_S3_SecretAccessKey"];
         private static readonly string _s3BucketName = ConfigurationManager.AppSettings["AWS_S3_BucketName"];
-        private static readonly string _s3BucketNamePrivate = ConfigurationManager.AppSettings["AWS_S3_BucketName_Private"];
-        
+        private static readonly string _s3BucketNamePrivate = ConfigurationManager.AppSettings["AWS_S3_BucketName_Private"]; 
         private static readonly RegionEndpoint _region = RegionEndpoint.USWest2;
         private static readonly int UrlValidityDays = 3650;
 
