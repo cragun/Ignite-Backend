@@ -147,6 +147,7 @@ namespace DataReef.TM.Services
             return GetFileURL(name, bucketName);
         }
 
+
         public void UploadByNamePrivateBucket(String name, BlobModel blob, BlobAccessRights access, string bucketName = null)
         {
             using (var stream = new MemoryStream(blob.Content))
