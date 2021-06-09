@@ -19,6 +19,9 @@ namespace DataReef.TM.Contracts.Services
         string UploadByNameGetFileUrl(string name, BlobModel blob, BlobAccessRights access, string bucketName = null);
 
         [OperationContract]
+        string UploadByNameGetFileUrlPrivateBucket(string name, BlobModel blob, BlobAccessRights access, string bucketName = null); 
+
+        [OperationContract]
         BlobModel Download(Guid guid, string bucketName = null);
 
         [OperationContract]

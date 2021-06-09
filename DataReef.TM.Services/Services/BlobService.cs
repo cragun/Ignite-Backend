@@ -22,6 +22,8 @@ namespace DataReef.TM.Services
         private static readonly string _s3AccessKeyId = ConfigurationManager.AppSettings["AWS_S3_AccessKeyID"];
         private static readonly string _s3SecretAccessKey = ConfigurationManager.AppSettings["AWS_S3_SecretAccessKey"];
         private static readonly string _s3BucketName = ConfigurationManager.AppSettings["AWS_S3_BucketName"];
+        private static readonly string _s3BucketNamePrivate = ConfigurationManager.AppSettings["AWS_S3_BucketName_Private"];
+        
         private static readonly RegionEndpoint _region = RegionEndpoint.USWest2;
         private static readonly int UrlValidityDays = 3650;
 
@@ -125,8 +127,7 @@ namespace DataReef.TM.Services
                     Key = name.ToLowerInvariant(),
                     InputStream = stream,
                     ContentType = blob.ContentType,
-                    //CannedACL = GetAccessRights(access)
-                    CannedACL = S3CannedACL.Private
+                    CannedACL = GetAccessRights(access)
                 };
 
                 var response = Client.PutObject(request);
@@ -142,6 +143,32 @@ namespace DataReef.TM.Services
             {
                 return GetUrl(name, bucketName ?? _s3BucketName);
             }
+
+            return GetFileURL(name, bucketName);
+        }
+
+        public void UploadByNamePrivateBucket(String name, BlobModel blob, BlobAccessRights access, string bucketName = null)
+        {
+            using (var stream = new MemoryStream(blob.Content))
+            {
+                PutObjectRequest request = new PutObjectRequest
+                {
+                    BucketName = bucketName ?? _s3BucketNamePrivate,
+                    Key = name.ToLowerInvariant(),
+                    InputStream = stream,
+                    ContentType = blob.ContentType, 
+                    CannedACL = S3CannedACL.Private
+                };
+
+                var response = Client.PutObject(request);
+            }
+        }
+
+        public string UploadByNameGetFileUrlPrivateBucket(string name, BlobModel blob, BlobAccessRights access, string bucketName = null)
+        {
+            bucketName = bucketName ?? _s3BucketNamePrivate;
+            name = name.ToLowerInvariant();
+            UploadByNamePrivateBucket(name, blob, access, bucketName); 
 
             return GetFileURL(name, bucketName);
         }
@@ -209,8 +236,7 @@ namespace DataReef.TM.Services
                 DestinationBucket = destinationBucket ?? _s3BucketName,
                 SourceKey = sourceName.ToLowerInvariant(),
                 DestinationKey = destinationName.ToLowerInvariant(),
-                //CannedACL = GetAccessRights(access)
-                CannedACL = S3CannedACL.Private
+                CannedACL = GetAccessRights(access)
             };
 
 
