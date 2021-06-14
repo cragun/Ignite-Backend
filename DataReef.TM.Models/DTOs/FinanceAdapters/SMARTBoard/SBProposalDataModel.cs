@@ -149,6 +149,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             InitialLoanAmount = loanRequest?.AmountToFinance.RoundValue();
             FedTaxCredit = loanRequest?.FederalTaxCredit;
 
+
             //FedTaxCredit = loanResponse?.TotalFederalTaxIncentive;
 
             var stdPlan = proposalDataView?
