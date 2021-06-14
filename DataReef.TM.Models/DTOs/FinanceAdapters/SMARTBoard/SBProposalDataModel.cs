@@ -143,6 +143,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             FinanceLabel = financePlan?.FinancePlanDefinition?.Name;
             InitialLoanAmount = loanResponse?.AmountFinanced;
             //TotalCost = loanResponse?.SolarSystemCost;
+            
 
             // as per new calculation
             TotalCost = loanRequest?.TotalCostToCustomer.RoundValue();
