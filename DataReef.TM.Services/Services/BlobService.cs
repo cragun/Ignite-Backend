@@ -66,6 +66,7 @@ namespace DataReef.TM.Services
                     throw new Exception("404 " + exception.Message);
                 }
                 throw exception;
+
             }
 
             using (var ms = new MemoryStream())
