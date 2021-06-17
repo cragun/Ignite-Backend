@@ -1571,8 +1571,7 @@ namespace DataReef.TM.Services.Services
                                                .Include(p => p.SolarSystem.SystemProduction)
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.SolarSystem.Proposal.Tariff))
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Details))
-                                               .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Provider))
-                                               .AsNoTracking()
+                                               .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Provider)) 
                                                .FirstOrDefault(p => p.Guid == proposalData.ProposalID);
 
                     financePlan = proposal.SolarSystem.FinancePlans.FirstOrDefault();
