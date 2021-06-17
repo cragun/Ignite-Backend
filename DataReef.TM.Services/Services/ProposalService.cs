@@ -1574,6 +1574,7 @@ namespace DataReef.TM.Services.Services
                                                .Include(p => p.SolarSystem.FinancePlans.Select(fp => fp.FinancePlanDefinition.Provider)) 
                                                .FirstOrDefault(p => p.Guid == proposalData.ProposalID);
 
+
                     financePlan = proposal.SolarSystem.FinancePlans.FirstOrDefault();
                 }
 
