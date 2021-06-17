@@ -1576,6 +1576,7 @@ namespace DataReef.TM.Services.Services
                                                .FirstOrDefault(p => p.Guid == proposalData.ProposalID);
 
                     financePlan = proposal.SolarSystem.FinancePlans.FirstOrDefault();
+
                 }
 
                 if (proposal == null)
