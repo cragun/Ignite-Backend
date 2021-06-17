@@ -1856,7 +1856,8 @@ namespace DataReef.TM.Services.Services
                             CreatedByID = SmartPrincipal.UserId,
                             CreatedByName = "InternalPortal",
                             IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd,
-                            MinModule = req.BasicInfo.MinModule
+                            MinModule = req.BasicInfo.MinModule,
+                            Permissions = req.BasicInfo.Permissions
                         };
 
                         dc.OUs.Add(ou);
@@ -2050,6 +2051,7 @@ namespace DataReef.TM.Services.Services
                 ou.Name = req.BasicInfo.OUName;
                 ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
                 ou.MinModule = req.BasicInfo.MinModule;
+                ou.Permissions = req.BasicInfo.Permissions;
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 var wkt = await HandleOUStates(ouid, req.BasicInfo.States, dc);
