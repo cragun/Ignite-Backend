@@ -114,6 +114,8 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public bool IsTerritoryAdd { get; set; }
         public int MinModule { get; set; }
         public PermissionType Permissions { get; set; }
+        public bool InheritRolesPermissionsSettings { get; set; }
+        
     }
 
     public class NewOUEquipmentDataView : NewOUBaseDataView

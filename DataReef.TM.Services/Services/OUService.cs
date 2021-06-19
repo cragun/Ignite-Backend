@@ -581,19 +581,19 @@ namespace DataReef.TM.Services.Services
                                    .FirstOrDefault(oua => !oua.IsDeleted && oua.PersonID == SmartPrincipal.UserId && oua.OUID == ouid);
 
                 if (ouAssociations != null && ouAssociations.RoleType == OURoleType.Installer)
-                { 
-                        var installerDisposition = uow
-                                  .Get<OUSetting>()
-                                  .FirstOrDefault(oua => oua.Name == OUSetting.Installer_Dispositions);
-                        var dispositions = installerDisposition?.GetValue<IEnumerable<DispositionV2DataView>>();
+                {
+                    var installerDisposition = uow
+                              .Get<OUSetting>()
+                              .FirstOrDefault(oua => oua.Name == OUSetting.Installer_Dispositions);
+                    var dispositions = installerDisposition?.GetValue<IEnumerable<DispositionV2DataView>>();
 
-                        foreach (var sett in ou.Settings)
+                    foreach (var sett in ou.Settings)
+                    {
+                        if (sett != null && sett.Name == OUSetting.NewDispositions)
                         {
-                            if (sett != null && sett.Name == OUSetting.NewDispositions)
-                            {
-                                sett.Value = JsonConvert.SerializeObject(dispositions);
-                            }
-                        } 
+                            sett.Value = JsonConvert.SerializeObject(dispositions);
+                        }
+                    }
                 }
 
                 return ou;
@@ -733,7 +733,7 @@ namespace DataReef.TM.Services.Services
                 if (masterterritory != null)
                 {
                     var masterterritoryShapes = dc.TerritoryShapes.Where(a => a.TerritoryID == masterterritory.Guid);
-                    dc.TerritoryShapes.RemoveRange(masterterritoryShapes); 
+                    dc.TerritoryShapes.RemoveRange(masterterritoryShapes);
                     //foreach (var item in masterterritoryShapes)
                     //{
                     //    item.IsDeleted = true;
@@ -2051,7 +2051,7 @@ namespace DataReef.TM.Services.Services
                 ou.Name = req.BasicInfo.OUName;
                 ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
                 ou.MinModule = req.BasicInfo.MinModule;
-                ou.Permissions = req.BasicInfo.Permissions;
+
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 var wkt = await HandleOUStates(ouid, req.BasicInfo.States, dc);
@@ -2065,6 +2065,19 @@ namespace DataReef.TM.Services.Services
                     .OUSettings
                     .Where(s => s.OUID == ou.Guid)
                     .ToListAsync();
+
+                if (req.BasicInfo.InheritRolesPermissionsSettings)
+                {
+                    var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
+                    if (parentOu != null)
+                    {
+                        ou.Permissions = parentOu.Permissions;
+                    }
+                }
+                else
+                {
+                    ou.Permissions = req.BasicInfo.Permissions;
+                }
 
                 req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
 
