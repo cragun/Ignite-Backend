@@ -1940,8 +1940,7 @@ namespace DataReef.TM.Services.Services
 
                 await dc.SaveChangesAsync();
             }
-        }
-
+        } 
 
         public async Task AddOUSettingsTest()
         {
@@ -2069,10 +2068,8 @@ namespace DataReef.TM.Services.Services
                 if (req.BasicInfo.InheritRolesPermissionsSettings)
                 {
                     var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
-                    if (parentOu != null)
-                    {
-                        ou.Permissions = parentOu.Permissions;
-                    }
+                    if (parentOu != null) 
+                        ou.Permissions = parentOu.Permissions; 
                 }
                 else
                 {
