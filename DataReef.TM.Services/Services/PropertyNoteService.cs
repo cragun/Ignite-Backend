@@ -612,6 +612,7 @@ namespace DataReef.TM.Services.Services
                     throw new HttpResponseException(new HttpResponseMessage() { StatusCode = HttpStatusCode.NotFound, ReasonPhrase = "Property not found" });
                 }
 
+
                 var response = await _propertyNotesAdapter.Value.GetPropertyNotes(property.NoteReferenceId);
 
                 List<PropertyNote> noteList = new List<PropertyNote>();
