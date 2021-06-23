@@ -627,7 +627,7 @@ namespace DataReef.TM.Services.Services
 
                         var data = new PropertyNote
                         {
-                            Guid = String.IsNullOrEmpty(note.guid) ? Guid.Empty : Guid.Parse(note.guid),
+                            Guid = String.IsNullOrEmpty(note.guid) ? Guid.NewGuid() : Guid.Parse(note.guid),
                             Attachments = String.Join(",", note.attachments, 1),
                             PropertyType = note.propertyType,
                             PropertyID = PropertyID,
@@ -671,7 +671,7 @@ namespace DataReef.TM.Services.Services
 
                                 var rep = new PropertyNote
                                 {
-                                    Guid = String.IsNullOrEmpty(reply.guid) ? Guid.Empty : Guid.Parse(reply.guid),
+                                    Guid = String.IsNullOrEmpty(reply.guid) ? Guid.NewGuid() : Guid.Parse(reply.guid),
                                     Attachments = String.Join(",", reply.attachments, 1),
                                     PropertyType = reply.propertyType,
                                     PropertyID = PropertyID,
