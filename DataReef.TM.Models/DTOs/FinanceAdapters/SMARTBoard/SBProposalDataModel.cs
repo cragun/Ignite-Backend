@@ -4,6 +4,7 @@ using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.DTOs.Signatures.Proposals;
 using DataReef.TM.Models.Enums;
 using DataReef.TM.Models.Solar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -140,13 +141,13 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             DealerFee = loanRequest?.DealerFee;
             FinanceAPR = financePlan?.FinancePlanDefinition?.Apr;
             FinanceLabel = financePlan?.FinancePlanDefinition?.Name;
-            InitialLoanAmount = loanResponse?.AmountFinanced;
+            //InitialLoanAmount = loanResponse?.AmountFinanced;
             //TotalCost = loanResponse?.SolarSystemCost; 
 
             // as per new calculation
-            TotalCost = loanRequest?.TotalCostToCustomer;
+            TotalCost = Math.Round(loanRequest?.TotalCostToCustomer ?? 0);
             PricePerWatt = loanRequest?.FinalPricePerWatt;
-            InitialLoanAmount = loanRequest?.AmountToFinance;
+            InitialLoanAmount = Math.Round(loanRequest?.AmountToFinance ?? 0);
             FedTaxCredit = loanRequest?.FederalTaxCredit;
 
             //FedTaxCredit = loanResponse?.TotalFederalTaxIncentive; 
