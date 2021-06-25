@@ -85,8 +85,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
                                 UsageReductionType = a.UsageReductionType,
                                 TotalCost = a.CalculatedCost(proposal.SolarSystem.SystemSize)
                             })?
-                            .ToList();
-
+                            .ToList(); 
 
             IncentivesData = proposal
                             .SolarSystem
