@@ -85,8 +85,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
                                 UsageReductionType = a.UsageReductionType,
                                 TotalCost = a.CalculatedCost(proposal.SolarSystem.SystemSize)
                             })?
-                            .ToList();
-
+                            .ToList(); 
 
             IncentivesData = proposal
                             .SolarSystem
@@ -142,8 +141,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             FinanceAPR = financePlan?.FinancePlanDefinition?.Apr;
             FinanceLabel = financePlan?.FinancePlanDefinition?.Name;
             InitialLoanAmount = loanResponse?.AmountFinanced;
-            //TotalCost = loanResponse?.SolarSystemCost;
-            
+            //TotalCost = loanResponse?.SolarSystemCost; 
 
             // as per new calculation
             TotalCost = loanRequest?.TotalCostToCustomer.RoundValue(0);
