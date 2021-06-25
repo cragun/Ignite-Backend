@@ -146,7 +146,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             // as per new calculation
             TotalCost = loanRequest?.TotalCostToCustomer;
             //PricePerWatt = loanRequest?.FinalPricePerWatt;
-            PricePerWatt = 3;
+            PricePerWatt = 3; 
             InitialLoanAmount = loanRequest?.AmountToFinance;
             FedTaxCredit = loanRequest?.FederalTaxCredit; 
 
