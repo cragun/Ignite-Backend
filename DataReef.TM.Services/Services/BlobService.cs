@@ -166,6 +166,7 @@ namespace DataReef.TM.Services
             }
         }
 
+
         private string GetUrl(string key, string bucket)
         {
             return $"https://{bucket}.s3.amazonaws.com/{key.ToLowerInvariant()}";
