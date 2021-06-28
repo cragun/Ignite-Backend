@@ -47,7 +47,8 @@ namespace DataReef.TM.Models.DTOs.PropertyAttachments
             SectionID = item.SectionID;
             ItemID = item.ItemID;
             RejectionMessage = item.RejectionMessage;
-            Images = item.GetImages();
+            //Images = item.GetImages();
+            Images = item.GetProxifyImages();
             Status = item.Status;
         }
     }

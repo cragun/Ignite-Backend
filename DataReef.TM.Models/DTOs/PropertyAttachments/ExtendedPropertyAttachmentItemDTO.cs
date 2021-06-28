@@ -22,6 +22,7 @@ namespace DataReef.TM.Models.DTOs.PropertyAttachments
         {
             SectionName = definition?.Data?.Sections?.FirstOrDefault(x => x.Id.Equals(SectionID))?.Name;
             ItemName = definition?.Data?.Tasks?.FirstOrDefault(x => x.Id.Equals(ItemID))?.Name;
+            Images = item.GetProxifyImages();
         }
 
         
