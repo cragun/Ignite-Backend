@@ -164,8 +164,7 @@ namespace DataReef.TM.Services
                 case BlobAccessRights.PublicReadWrite: return S3CannedACL.PublicReadWrite;
                 default: return S3CannedACL.Private;
             }
-        }
-
+        } 
 
         private string GetUrl(string key, string bucket)
         {
