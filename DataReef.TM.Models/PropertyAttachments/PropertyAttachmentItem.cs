@@ -54,6 +54,16 @@ namespace DataReef.TM.Models.PropertyAttachments
             return JsonConvert.DeserializeObject<List<Image>>(ImagesJson);
         }
 
+        public List<Image> GetProxifyImages()
+        {
+            return GetImages().Select(c =>
+            {
+                c.Url = c.Url?.GetAWSProxifyUrl();
+                c.Thumbnails = c.Thumbnails.Select(a => { a.Url = a.Url?.GetAWSProxifyUrl(); return a; }).ToList();
+                return c;
+            }).ToList();
+        }
+
         public void SetImages(IEnumerable<Image> imagesList)
         {
             ImagesJson = imagesList?.Any() == true ? JsonConvert.SerializeObject(imagesList) : null;

@@ -1119,7 +1119,7 @@ namespace DataReef.TM.Services.Services
 
                     //var planName = financePlan.Name;
 
-                    var documentsLinks = string.Join("<br/>", signedDocuments.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for {homeOwnerName}<a/>"));
+                    var documentsLinks = string.Join("<br/>", signedDocuments.Select(pd => $"<a target='_blank' href='{pd.Url?.GetAWSProxifyUrl()}'>{pd.Name} for {homeOwnerName}<a/>"));
 
                     Task.Factory.StartNew(() =>
                     {
@@ -1365,7 +1365,7 @@ namespace DataReef.TM.Services.Services
 
                     //var planName = financePlan.Name;
 
-                    var documentsLinks = string.Join("<br/>", documentUrls.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for {homeOwnerName}<a/>"));
+                    var documentsLinks = string.Join("<br/>", documentUrls.Select(pd => $"<a target='_blank' href='{pd.Url?.GetAWSProxifyUrl()}'>{pd.Name} for {homeOwnerName}<a/>"));
 
                     Task.Factory.StartNew(() =>
                     {
@@ -1378,7 +1378,7 @@ namespace DataReef.TM.Services.Services
                                             .Select(pdf => new System.Net.Mail.Attachment(new MemoryStream(pdf.Item1), pdf.Item2))
                                             .ToList();
                         }
-                        var mediaItemLinks = string.Join("<br/>", mediaItems.Select(mi => $"<a target='_blank' href='{mi.Value}'>{mi.Key}</a>"));
+                        var mediaItemLinks = string.Join("<br/>", mediaItems.Select(mi => $"<a target='_blank' href='{mi.Value?.GetAWSProxifyUrl()}'>{mi.Key}</a>"));
                         var mediaItemsBody = mediaItems.Count == 0 ? "" : $"<br/>Attached documents and images: <br/>{mediaItemLinks}";
 
                         var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";
@@ -1687,7 +1687,7 @@ namespace DataReef.TM.Services.Services
                 return uow
                             .Get<ProposalData>()
                             .FirstOrDefault(pd => pd.ProposalID == proposalID)?
-                            .DocumentDataLinks;
+                            .ProxifyDocumentDataLinks;
             }
         }
 
@@ -1699,7 +1699,7 @@ namespace DataReef.TM.Services.Services
                             .Get<ProposalData>()
                             .Where(pd => pd.ProposalID == proposalID && pd.DocumentDataLinksJSON != null)?
                             .ToList()?
-                            .SelectMany(x => x.DocumentDataLinks)?
+                            .SelectMany(x => x.ProxifyDocumentDataLinks)?
                             .ToList();
             }
         }
@@ -1723,7 +1723,7 @@ namespace DataReef.TM.Services.Services
                         .Select(mi => new Models.DataViews.KeyValue
                         {
                             Key = mi.Name,
-                            Value = _blobService.Value.GetFileURL(mi.Url, expirationDays: sharedMediaItemsExpirationDays)
+                            Value = _blobService.Value.GetFileURL(mi.Url, expirationDays: sharedMediaItemsExpirationDays)?.GetAWSProxifyUrl()
                         })
                         .ToList();
         }
@@ -2613,7 +2613,7 @@ namespace DataReef.TM.Services.Services
 
                 string ccEmails = ouSettings?.FirstOrDefault(os => os.Name == OUSetting.Proposal_Features_EmailsToCC)?.Value;
 
-                var documentsLinks = string.Join("<br/>", documentUrls.Select(pd => $"<a target='_blank' href='{pd.Url}'>{pd.Name} for {homeOwnerName}<a/>"));
+                var documentsLinks = string.Join("<br/>", documentUrls.Select(pd => $"<a target='_blank' href='{pd.Url?.GetAWSProxifyUrl()}'>{pd.Name} for {homeOwnerName}<a/>"));
 
                 await Task.Factory.StartNew(() =>
                 {
@@ -2626,7 +2626,7 @@ namespace DataReef.TM.Services.Services
                                         .Select(pdf => new System.Net.Mail.Attachment(new MemoryStream(pdf.Item1), pdf.Item2))
                                         .ToList();
                     }
-                    var mediaItemLinks = string.Join("<br/>", mediaItems.Select(mi => $"<a target='_blank' href='{mi.Value}'>{mi.Key}</a>"));
+                    var mediaItemLinks = string.Join("<br/>", mediaItems.Select(mi => $"<a target='_blank' href='{mi.Value?.GetAWSProxifyUrl()}'>{mi.Key}</a>"));
                     var mediaItemsBody = mediaItems.Count == 0 ? "" : $"<br/>Attached documents and images: <br/>{mediaItemLinks}";
 
                     var body = $"You will find the proposal for {homeOwnerName} at {propertyAddress} [{planName}] using the link below: <br/> <br/> {documentsLinks} <br/>{mediaItemsBody}";

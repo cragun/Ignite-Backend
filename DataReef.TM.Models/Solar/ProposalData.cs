@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using System.Linq;
 
 namespace DataReef.TM.Models.Solar
 {
@@ -101,6 +102,21 @@ namespace DataReef.TM.Models.Solar
             {
                 DocumentDataLinksJSON = value == null ? null : JsonConvert.SerializeObject(value);
             }
+        }
+
+        [NotMapped]
+        public List<DocumentDataLink> ProxifyDocumentDataLinks
+        {
+            get
+            {
+                return DocumentDataLinks?.Select(a =>
+                {
+                    a.ContentURL = a.ContentURL?.GetAWSProxifyUrl();
+                    a.ThumbContentURL = a.ThumbContentURL?.GetAWSProxifyUrl();
+                    return a;
+                }).ToList();
+            }
+
         }
 
         [NotMapped]
