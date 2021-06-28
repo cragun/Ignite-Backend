@@ -51,5 +51,6 @@ namespace DataReef.TM.Models.DTOs.PropertyAttachments
             Images = item.GetProxifyImages();
             Status = item.Status;
         }
+
     }
 }
