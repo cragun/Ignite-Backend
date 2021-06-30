@@ -144,10 +144,10 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
             //TotalCost = loanResponse?.SolarSystemCost; 
 
             // as per new calculation
-            TotalCost = loanRequest?.TotalCostToCustomer.RoundValue(0);
+            TotalCost = loanRequest?.TotalCostToCustomer.RoundValue();
             PricePerWatt = loanRequest?.FinalPricePerWatt.RoundValue(7);
 
-            InitialLoanAmount = loanRequest?.AmountToFinance.RoundValue(0);
+            InitialLoanAmount = loanRequest?.AmountToFinance.RoundValue();
             FedTaxCredit = loanRequest?.FederalTaxCredit;
 
             //FedTaxCredit = loanResponse?.TotalFederalTaxIncentive; 
