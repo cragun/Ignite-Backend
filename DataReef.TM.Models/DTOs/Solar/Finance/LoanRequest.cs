@@ -368,7 +368,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal FinalPriceToCustomer => (FinalLoanAmount + DownPayment).RoundValue(); 
        
-        public decimal FinalPricePerWatt => SystemSize != 0 ? (TotalCostToCustomer.RoundValue() / SystemSize) : 0;  
+        public decimal FinalPricePerWatt => SystemSize != 0 ? (TotalCostToCustomer.RoundValue(0) / SystemSize) : 0;  
 
         //nonQualifyingAdders 
         public decimal TotalAddersBeforeITCWithOutFinancingFee
