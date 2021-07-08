@@ -25,6 +25,9 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public NewOUFinancingDataView Financing { get; set; }
         public NewOUPermissionsDataView Permissions { get; set; }
         public NewOURoofDetailsDataView RoofDetails { get; set; }
+        public NewOUGenericProposalsDataView GenericProposalSettings { get; set; }
+
+
 
         //public List<Guid> CashAndMortgageIDs { get; set; }
 
@@ -110,7 +113,7 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public bool IsSolarTenant { get; set; }
 
         public string LogoImage { get; set; }
-        public bool UseLogoOnProposal { get; set; }
+        public bool UseLogoOnProposal { get; set; } 
         public bool IsTerritoryAdd { get; set; }
         public int MinModule { get; set; }
         public PermissionType Permissions { get; set; }
@@ -154,6 +157,16 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public int DefaultRoofTilt { get; set; }
     }
 
+    public class NewOUGenericProposalsDataView : NewOUBaseDataView
+    {
+        public string HeaderLogoImage { get; set; }
+        public string HeaderLogoUrl { get; set; }
+        public string FooterLogoImage { get; set; }
+        public string FooterLogoUrl { get; set; }
+        public string WelcomeText { get; set; }
+        public string Color { get; set; }
+
+    }
     public class OUSettingDataView
     {
         public string Name { get; set; }

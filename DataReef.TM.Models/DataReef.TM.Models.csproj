@@ -104,6 +104,7 @@
     <Compile Include="ActiveDeactiveUserLog.cs" />
     <Compile Include="ApiKey.cs" />
     <Compile Include="DTOs\Persons\IOSVersionDTO.cs" />
+    <Compile Include="DTOs\Proposals\ProposalWarrenties.cs" />
     <Compile Include="DTOs\QuotasCommitments\AdminQuotas.cs" />
     <Compile Include="DTOs\Solar\Finance\JobNimbusContacts.cs" />
     <Compile Include="DTOs\Solar\Finance\PropertyNotesLead.cs" />

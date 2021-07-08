@@ -11,6 +11,7 @@ using DataReef.TM.DataAccess.Database;
 using DataReef.TM.Models;
 using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DataViews.ClientAPI;
+using DataReef.TM.Models.DataViews.OnBoarding;
 using DataReef.TM.Models.DTOs;
 using DataReef.TM.Models.DTOs.Blobs;
 using DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard;
@@ -679,6 +680,8 @@ namespace DataReef.TM.Services.Services
                     data.UsesNoSQLAggregatedData = false;
                 }
 
+                data.WarrentiesJSON = JsonConvert.SerializeObject(ProposalWarrenties.GetWarrenties());
+
                 dataContext.ProposalData.Add(data);
                 proposal.Property?.Territory?.Updated(SmartPrincipal.UserId);
 
@@ -815,7 +818,7 @@ namespace DataReef.TM.Services.Services
                 return OUSettingService.GetOuSettings(ouid.Value);
             }
             return null;
-        }
+        } 
 
         private List<SignedDocumentDTO> GetProposalURLs(string contractorID, Guid propososalDataGuid, List<SignedDocumentDTO> signedDocuments = null, List<OUSetting> ouSettings = null)
         {
@@ -839,16 +842,17 @@ namespace DataReef.TM.Services.Services
                                     .Value ?? baseUrl;
                 }
 
+
                 var genericProposal = settings
-                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.Proposal_GenericSettings, StringComparison.InvariantCultureIgnoreCase))
+                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.GenericProposal_Enable, StringComparison.InvariantCultureIgnoreCase))
                                         .Value?.Value;
 
-                if (genericProposal == "1")
+                if (genericProposal != null &&  genericProposal == "1")
                 {
-                    if (settings.ContainsKey(OUSetting.Proposal_TemplateGenericUrl))
+                    if (settings.ContainsKey(OUSetting.GenericProposal_TemplateUrl))
                     {
                         baseUrl = settings
-                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.Proposal_TemplateGenericUrl, StringComparison.InvariantCultureIgnoreCase))
+                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.GenericProposal_TemplateUrl, StringComparison.InvariantCultureIgnoreCase))
                                         .Value?
                                         .Value ?? baseUrl;
                     }
@@ -923,6 +927,21 @@ namespace DataReef.TM.Services.Services
                                     .FirstOrDefault(s => s.Key.Equals(Models.OUSetting.Proposal_TemplateBaseUrl, StringComparison.InvariantCultureIgnoreCase))
                                     .Value
                                     .Value;
+
+            var genericProposal = ouSettings
+                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.GenericProposal_Enable, StringComparison.InvariantCultureIgnoreCase))
+                                        .Value?.Value;
+
+            if (genericProposal == "1")
+            {
+                if (ouSettings.ContainsKey(OUSetting.GenericProposal_TemplateUrl))
+                {
+                    baseAddress = ouSettings
+                                    .FirstOrDefault(s => s.Key.Equals(OUSetting.GenericProposal_TemplateUrl, StringComparison.InvariantCultureIgnoreCase))
+                                    .Value?
+                                    .Value ;
+                }
+            }
 
             var contractRelativePath = (ouSettings.ContainsKey(OUSetting.Proposal_Features_PostSignInternalPaths) ? ouSettings[OUSetting.Proposal_Features_PostSignInternalPaths] : null)?.Value;
 
@@ -1230,8 +1249,7 @@ namespace DataReef.TM.Services.Services
                     data.MetaInformation = metaInfo;
                 }
 
-                data.SignatureDate = SmartPrincipal.DeviceDate.LocalDateTime;
-
+                data.SignatureDate = SmartPrincipal.DeviceDate.LocalDateTime; 
                 if (request.UserInput != null)
                 {
                     var existingUserInputLinks = data.UserInputLinks ?? new List<UserInputDataLinks>();
@@ -1634,6 +1652,20 @@ namespace DataReef.TM.Services.Services
 
                 // get the OU settings
                 var settings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
+
+                var genericProposal = settings
+                                   .FirstOrDefault(s => s.Name.Equals(OUSetting.GenericProposal_Enable, StringComparison.InvariantCultureIgnoreCase))?.Value;
+
+                if (genericProposal != null && genericProposal == "1")
+                { 
+                      var genericSettings = settings
+                                        .FirstOrDefault(s => s.Name.Equals(OUSetting.GenericProposal_Settings, StringComparison.InvariantCultureIgnoreCase)) 
+                                        ?.Value;
+                    if (!String.IsNullOrEmpty(genericSettings))
+                    {
+                        proposalDV.GenericProposalSettings = JsonConvert.DeserializeObject<NewOUGenericProposalsDataView>(genericSettings);
+                    } 
+                } 
 
                 // Based on settings, add additional information to the proposal
                 var summaryFeature = settings?.FirstOrDefault(sett => sett.Name == OUSetting.Proposal_Features_Summary);
@@ -2451,6 +2483,23 @@ namespace DataReef.TM.Services.Services
                 }
             }
         }
+
+        public void UpdateProposalWarrenties(string WarrentiesJSON, Guid ProposalID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var existing = dataContext.ProposalData.FirstOrDefault(i => i.Guid == ProposalID);
+
+                if (existing == null)
+                {
+                    throw new Exception("Data not found");
+                }
+
+                existing.WarrentiesJSON = WarrentiesJSON;
+                dataContext.SaveChanges();
+            }
+        } 
+
         public int GetProposalCount(Guid PropertyID)
         {
             using (var dc = new DataContext())

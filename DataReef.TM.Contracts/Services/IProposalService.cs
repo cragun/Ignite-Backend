@@ -98,6 +98,9 @@ namespace DataReef.TM.Contracts.Services
         void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID);
 
         [OperationContract]
+        void UpdateProposalWarrenties(string WarrentiesJSON, Guid ProposalID);
+        
+        [OperationContract]
         void DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID);
 
         [OperationContract]

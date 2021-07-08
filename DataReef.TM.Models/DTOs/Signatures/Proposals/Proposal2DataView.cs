@@ -1,4 +1,5 @@
-﻿using DataReef.TM.Models.DTOs.Proposals;
+﻿using DataReef.TM.Models.DataViews.OnBoarding;
+using DataReef.TM.Models.DTOs.Proposals;
 using DataReef.TM.Models.Enums;
 using Newtonsoft.Json;
 using System;
@@ -41,6 +42,8 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         /// Dynamic object, containing proposal data set by the customer/sales rep before signing the proposal
         /// </summary>
         public string ProposalDataJSON { get; set; }
+        public List<ProposalWarrenties> WarrentiesJSON { get; set; }
+        public NewOUGenericProposalsDataView GenericProposalSettings { get; set; }
 
         public ICollection<string> Tags { get; set; }
 
@@ -71,6 +74,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         public Proposal2DataView(ProposalDVConstructor param, bool roundAmounts = false)
         {
             Guid = param.Data.Guid;
+            WarrentiesJSON = JsonConvert.DeserializeObject<List<ProposalWarrenties>>(param.Data.WarrentiesJSON);
             ProposalID = param.Proposal.Guid;
             SignedDate = param.Data.SignatureDate;
             UsageCollected = param.Proposal.Property.UsageCollected;

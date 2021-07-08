@@ -405,6 +405,17 @@ namespace DataReef.TM.Api.Controllers
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
+        [Route("UpdateProposalWarrenties/{ProposalID}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateProposalWarrenties(Guid ProposalID, [FromBody] GenericRequest<string> request)
+        {
+            _proposalService.UpdateProposalWarrenties(request?.Request, ProposalID);
+            return Ok(new GenericResponse<string> { Response = request?.Request });
+        }
+
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
         [Route("DeleteAddersIncentives/{ProposalID}")]
         [HttpPost]
         public async Task<IHttpActionResult> DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID)
