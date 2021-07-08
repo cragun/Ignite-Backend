@@ -3,9 +3,7 @@ using DataReef.TM.Models.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace DataReef.TM.Models.DataViews.OnBoarding
 {
@@ -156,18 +154,21 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public int DefaultRoofTilt { get; set; }
     }
 
+    [DataContract]
     public class NewOUGenericProposalsDataView : NewOUBaseDataView
-    {
-        [JsonIgnore]
+    { 
         public string HeaderLogoImage { get; set; }
-        public string HeaderLogoUrl { get; set; }
-        [JsonIgnore]
+        [DataMember]
+        public string HeaderLogoUrl { get; set; } 
         public string FooterLogoImage { get; set; }
+        [DataMember]
         public string FooterLogoUrl { get; set; }
+        [DataMember]
         public string WelcomeText { get; set; }
+        [DataMember]
         public string Color { get; set; }
-
     }
+
     public class OUSettingDataView
     {
         public string Name { get; set; }
