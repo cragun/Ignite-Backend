@@ -27,9 +27,7 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public NewOUPermissionsDataView Permissions { get; set; }
         public NewOURoofDetailsDataView RoofDetails { get; set; }
         public NewOUGenericProposalsDataView GenericProposalSettings { get; set; }
-
-
-
+         
         //public List<Guid> CashAndMortgageIDs { get; set; }
 
         public void Validate(bool isNew)
