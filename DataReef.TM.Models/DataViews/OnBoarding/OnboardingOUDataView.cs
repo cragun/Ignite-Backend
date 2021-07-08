@@ -1,5 +1,6 @@
 ﻿using DataReef.TM.Models.DataViews.Settings;
 using DataReef.TM.Models.Enums;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -159,8 +160,10 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
 
     public class NewOUGenericProposalsDataView : NewOUBaseDataView
     {
+        [JsonIgnore]
         public string HeaderLogoImage { get; set; }
         public string HeaderLogoUrl { get; set; }
+        [JsonIgnore]
         public string FooterLogoImage { get; set; }
         public string FooterLogoUrl { get; set; }
         public string WelcomeText { get; set; }
