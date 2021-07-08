@@ -162,8 +162,7 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public string FooterLogoUrl { get; set; } 
         public string WelcomeText { get; set; } 
         public string Color { get; set; }
-    }
-
+    } 
 
     public class OUSettingDataView
     {
@@ -172,7 +171,6 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public OUSettingGroupType Group { get; set; }
         public SettingValueType ValueType { get; set; }
         public bool IsDeleted { get; set; }
-
     }
 
 }
