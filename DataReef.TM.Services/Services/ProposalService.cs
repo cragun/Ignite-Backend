@@ -2026,6 +2026,7 @@ namespace DataReef.TM.Services.Services
             }
         }
          
+
         public LoanResponse ReCalculateFinancing(FinancePlan financePlan)
         {
             switch (financePlan.FinancePlanType)
