@@ -422,13 +422,19 @@ internal static class DataViewExtensions
             }
 
             dv.Settings.Add(new OUSettingDataView
-            { 
+            {
                 Name = OUSetting.GenericProposal_Settings,
-                Value = JsonConvert.SerializeObject(dv.GenericProposalSettings),
+                Value = JsonConvert.SerializeObject(new NewOUGenericProposalsDataView
+                {
+                    FooterLogoUrl = dv.GenericProposalSettings.FooterLogoUrl,
+                    HeaderLogoUrl = dv.GenericProposalSettings.HeaderLogoUrl,
+                    WelcomeText = dv.GenericProposalSettings.WelcomeText,
+                    Color = dv.GenericProposalSettings.Color
+                }),
                 Group = OUSettingGroupType.ConfigurationFile,
                 ValueType = SettingValueType.String
-            }); 
-        } 
+            });
+        }
     }
 
     private static OUSetting GetByName(this List<OUSetting> settings, string name, Guid ouid)

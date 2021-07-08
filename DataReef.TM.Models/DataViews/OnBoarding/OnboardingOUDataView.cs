@@ -153,19 +153,14 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
     {
         public int DefaultRoofTilt { get; set; }
     }
-
-    [DataContract]
+     
     public class NewOUGenericProposalsDataView : NewOUBaseDataView
     { 
-        public string HeaderLogoImage { get; set; }
-        [DataMember]
+        public string HeaderLogoImage { get; set; } 
         public string HeaderLogoUrl { get; set; } 
-        public string FooterLogoImage { get; set; }
-        [DataMember]
-        public string FooterLogoUrl { get; set; }
-        [DataMember]
-        public string WelcomeText { get; set; }
-        [DataMember]
+        public string FooterLogoImage { get; set; } 
+        public string FooterLogoUrl { get; set; } 
+        public string WelcomeText { get; set; } 
         public string Color { get; set; }
     }
 
