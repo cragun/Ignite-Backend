@@ -2025,7 +2025,7 @@ namespace DataReef.TM.Services.Services
                 uow.SaveChanges();
             }
         }
-
+         
         public LoanResponse ReCalculateFinancing(FinancePlan financePlan)
         {
             switch (financePlan.FinancePlanType)
