@@ -35,6 +35,21 @@
             Base64 encoded value of the screenshot data used in personKPI
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Content">
+            <summary>
+            Base64 representation of the media content
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.ContentType">
+            <summary>
+            Item content-type
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Notes">
+            <summary>
+            Optional image notes
+            </summary>
+        </member>
         <member name="M:DataReef.TM.Models.DTOs.Solar.Finance.Incentive.GetGrandTotal(System.Int64)">
             <summary>
             Get the total incentives for all period
@@ -3166,21 +3181,6 @@
             Optional parameter. Will be used to identify attachment item if ID is not present. If attachment item is not identified, one will be created from this and SectionID
             </summary>
         </member>
-        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Content">
-            <summary>
-            Base64 representation of the media content
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.ContentType">
-            <summary>
-            Item content-type
-            </summary>
-        </member>
-        <member name="P:DataReef.TM.Models.DTOs.Proposals.ProposalMediaUploadRequest.Notes">
-            <summary>
-            Optional image notes
-            </summary>
-        </member>
         <member name="P:DataReef.TM.Models.DTOs.SBNoteDTO.APIKey">
             <summary>
             You may send the Ignite ID, as a backup if LeadID is not saved in Ignite.
@@ -4480,6 +4480,11 @@
             <summary>
             Other proposal related data captured and stored here
             (e.g. Location of the user that signed/accepted the proposal)
+            </summary>
+        </member>
+        <member name="P:DataReef.TM.Models.Solar.ProposalData.WarrentiesJSON">
+            <summary>
+            A JSON containing INDUSTRY LEADING WARRANTIES Information.
             </summary>
         </member>
         <member name="P:DataReef.TM.Models.Solar.FinanceDocument.DocumentID">
