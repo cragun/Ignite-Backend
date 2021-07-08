@@ -169,6 +169,7 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public string Color { get; set; }
     }
 
+
     public class OUSettingDataView
     {
         public string Name { get; set; }
