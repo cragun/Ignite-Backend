@@ -74,7 +74,7 @@ namespace DataReef.TM.Models.DTOs.Signatures.Proposals
         public Proposal2DataView(ProposalDVConstructor param, bool roundAmounts = false)
         {
             Guid = param.Data.Guid;
-            WarrentiesJSON = JsonConvert.DeserializeObject<List<ProposalWarrenties>>(param.Data.WarrentiesJSON);
+            WarrentiesJSON = param.Data.WarrentiesJSON != null ? JsonConvert.DeserializeObject<List<ProposalWarrenties>>(param.Data.WarrentiesJSON) : new List<ProposalWarrenties>();
             ProposalID = param.Proposal.Guid;
             SignedDate = param.Data.SignatureDate;
             UsageCollected = param.Proposal.Property.UsageCollected;
