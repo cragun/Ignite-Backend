@@ -403,6 +403,19 @@ internal static class DataViewExtensions
                         }, BlobAccessRights.PublicRead);
 
             dv.GenericProposalSettings.HeaderLogoUrl = headerUrl;
+
+            ApiLogEntry apilog = new ApiLogEntry();
+            apilog.Id = Guid.NewGuid();
+            apilog.User = SmartPrincipal.UserId.ToString();
+            apilog.Machine = Environment.MachineName;
+            apilog.RequestContentType = headerUrl; 
+            apilog.RequestTimestamp = DateTime.UtcNow;
+            apilog.RequestUri = "HandleGenericProposalHeaderLogoImage"; 
+            using (var dc = new DataContext())
+            {
+                dc.ApiLogEntries.Add(apilog);
+                dc.SaveChanges();
+            }
         }
 
         if (!string.IsNullOrEmpty(footerlogoImage))
@@ -427,6 +440,19 @@ internal static class DataViewExtensions
                  }, BlobAccessRights.PublicRead);
 
             dv.GenericProposalSettings.FooterLogoUrl = footerUrl;
+
+            ApiLogEntry apilog = new ApiLogEntry();
+            apilog.Id = Guid.NewGuid();
+            apilog.User = SmartPrincipal.UserId.ToString();
+            apilog.Machine = Environment.MachineName;
+            apilog.RequestContentType = footerUrl;
+            apilog.RequestTimestamp = DateTime.UtcNow;
+            apilog.RequestUri = "HandleGenericProposalFooterLogoImage";
+            using (var dc = new DataContext())
+            {
+                dc.ApiLogEntries.Add(apilog);
+                dc.SaveChanges();
+            }
         } 
 
         dv.Settings.Add(new OUSettingDataView
@@ -442,6 +468,7 @@ internal static class DataViewExtensions
             Group = OUSettingGroupType.ConfigurationFile,
             ValueType = SettingValueType.String
         });
+
     }
 
     private static OUSetting GetByName(this List<OUSetting> settings, string name, Guid ouid)
