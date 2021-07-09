@@ -424,8 +424,7 @@ internal static class DataViewExtensions
                     dv.GenericProposalSettings.FooterLogoUrl = footerUrl;
                 }
             }
-
-
+             
             dv.Settings.Add(new OUSettingDataView
             {
                 Name = OUSetting.GenericProposal_Settings,
