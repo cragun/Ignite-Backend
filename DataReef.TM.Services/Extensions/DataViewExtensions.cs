@@ -368,45 +368,32 @@ internal static class DataViewExtensions
         var headerlogoImage = dv.GenericProposalSettings.HeaderLogoImage?.Split(',')?[1];
         var footerlogoImage = dv.GenericProposalSettings.FooterLogoImage?.Split(',')?[1];
 
-        if (!string.IsNullOrEmpty(headerlogoImage) || !string.IsNullOrEmpty(footerlogoImage))
+        var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
+        NewOUGenericProposalsDataView settings = new NewOUGenericProposalsDataView();
+
+        if (logoSetting != null)
         {
-            var logoSettingGuid = Guid.NewGuid();
+            settings = logoSetting.GetValue<NewOUGenericProposalsDataView>();
+        }
 
-            var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
+        var logoSettingGuid = Guid.NewGuid();
 
-            if (logoSetting != null)
+        if (!string.IsNullOrEmpty(headerlogoImage))
+        {
+            logoSettingGuid = logoSetting.Guid;
+
+            if (settings != null && !String.IsNullOrEmpty(settings.HeaderLogoUrl))
             {
-                var settings = logoSetting.GetValue<NewOUGenericProposalsDataView>(); 
-                logoSettingGuid = logoSetting.Guid;
-                if (!string.IsNullOrEmpty(headerlogoImage))
+                try
                 {
-                    if (settings != null && !String.IsNullOrEmpty(settings.HeaderLogoUrl))
-                    {
-                        try
-                        {
-                            var start = settings.HeaderLogoUrl.IndexOf("/ous/generic-proposal/header/");
-                            var end = settings.HeaderLogoUrl.IndexOf("?");
-                            var path = settings.HeaderLogoUrl.Substring(start + 1, end - start - 1);
-                            blobService.DeleteByName(path);
-                        }
-                        catch { }
-                    } 
+                    var start = settings.HeaderLogoUrl.IndexOf("/ous/generic-proposal/header/");
+                    var end = settings.HeaderLogoUrl.IndexOf("?");
+                    var path = settings.HeaderLogoUrl.Substring(start + 1, end - start - 1);
+                    blobService.DeleteByName(path);
                 }
-                else if (!string.IsNullOrEmpty(footerlogoImage)  && !String.IsNullOrEmpty(settings.FooterLogoUrl))
-                {
-                    if (settings != null)
-                    {
-                        try
-                        {
-                            var start = settings.FooterLogoUrl.IndexOf("/ous/generic-proposal/footer/");
-                            var end = settings.FooterLogoUrl.IndexOf("?");
-                            var path = settings.FooterLogoUrl.Substring(start + 1, end - start - 1);
-                            blobService.DeleteByName(path);
-                        }
-                        catch { }
-                    }  
-                }
+                catch { }
             }
+
 
             var headerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/header/{ouid}/{logoSettingGuid}",
                         new BlobModel
@@ -416,31 +403,45 @@ internal static class DataViewExtensions
                         }, BlobAccessRights.PublicRead);
 
             dv.GenericProposalSettings.HeaderLogoUrl = headerUrl;
+        }
+
+        if (!string.IsNullOrEmpty(footerlogoImage))
+        {
+            if (settings != null && !String.IsNullOrEmpty(settings.FooterLogoUrl))
+            {
+                try
+                {
+                    var start = settings.FooterLogoUrl.IndexOf("/ous/generic-proposal/footer/");
+                    var end = settings.FooterLogoUrl.IndexOf("?");
+                    var path = settings.FooterLogoUrl.Substring(start + 1, end - start - 1);
+                    blobService.DeleteByName(path);
+                }
+                catch { }
+            }
 
             var footerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/footer/{ouid}/{logoSettingGuid}",
-                      new BlobModel
-                      {
-                          Content = Convert.FromBase64String(footerlogoImage),
-                          ContentType = "image/jpeg"
-                      }, BlobAccessRights.PublicRead);
+                 new BlobModel
+                 {
+                     Content = Convert.FromBase64String(footerlogoImage),
+                     ContentType = "image/jpeg"
+                 }, BlobAccessRights.PublicRead);
 
             dv.GenericProposalSettings.FooterLogoUrl = footerUrl;
+        } 
 
-            dv.Settings.Add(new OUSettingDataView
+        dv.Settings.Add(new OUSettingDataView
+        {
+            Name = OUSetting.GenericProposal_Settings,
+            Value = JsonConvert.SerializeObject(new NewOUGenericProposalsDataView
             {
-                Name = OUSetting.GenericProposal_Settings,
-                Value = JsonConvert.SerializeObject(new NewOUGenericProposalsDataView
-                {
-                    FooterLogoUrl = dv.GenericProposalSettings.FooterLogoUrl,
-                    HeaderLogoUrl = dv.GenericProposalSettings.HeaderLogoUrl,
-                    WelcomeText = dv.GenericProposalSettings.WelcomeText,
-                    Color = dv.GenericProposalSettings.Color
-                }),
-                Group = OUSettingGroupType.ConfigurationFile,
-                ValueType = SettingValueType.String
-            });
-
-        }
+                FooterLogoUrl = dv.GenericProposalSettings.FooterLogoUrl,
+                HeaderLogoUrl = dv.GenericProposalSettings.HeaderLogoUrl,
+                WelcomeText = dv.GenericProposalSettings.WelcomeText,
+                Color = dv.GenericProposalSettings.Color
+            }),
+            Group = OUSettingGroupType.ConfigurationFile,
+            ValueType = SettingValueType.String
+        });
     }
 
     private static OUSetting GetByName(this List<OUSetting> settings, string name, Guid ouid)
