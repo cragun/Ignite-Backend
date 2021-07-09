@@ -379,7 +379,7 @@ internal static class DataViewExtensions
                 logoSettingGuid = logoSetting.Guid;
                 if (!string.IsNullOrEmpty(headerlogoImage))
                 {
-                    if (settings != null)
+                    if (settings != null && !String.IsNullOrEmpty(settings.HeaderLogoUrl))
                     {
                         try
                         {
@@ -391,7 +391,7 @@ internal static class DataViewExtensions
                         catch { }
                     }
 
-                    var headerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal//header/{ouid}/{logoSettingGuid}",
+                    var headerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/header/{ouid}/{logoSettingGuid}",
                          new BlobModel
                          {
                              Content = Convert.FromBase64String(headerlogoImage),
@@ -400,7 +400,7 @@ internal static class DataViewExtensions
 
                     dv.GenericProposalSettings.HeaderLogoUrl = headerUrl;
                 }
-                else if (!string.IsNullOrEmpty(footerlogoImage))
+                else if (!string.IsNullOrEmpty(footerlogoImage)  && !String.IsNullOrEmpty(settings.FooterLogoUrl))
                 {
                     if (settings != null)
                     {
