@@ -367,15 +367,16 @@ internal static class DataViewExtensions
 
         var headerlogoImage = dv.GenericProposalSettings.HeaderLogoImage?.Split(',')?[1];
         var footerlogoImage = dv.GenericProposalSettings.FooterLogoImage?.Split(',')?[1];
-        var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
 
         if (!string.IsNullOrEmpty(headerlogoImage) || !string.IsNullOrEmpty(footerlogoImage))
         {
             var logoSettingGuid = Guid.NewGuid();
+
+            var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
+
             if (logoSetting != null)
             {
-                var settings = logoSetting.GetValue<NewOUGenericProposalsDataView>();
-
+                var settings = logoSetting.GetValue<NewOUGenericProposalsDataView>(); 
                 logoSettingGuid = logoSetting.Guid;
                 if (!string.IsNullOrEmpty(headerlogoImage))
                 {
@@ -389,16 +390,7 @@ internal static class DataViewExtensions
                             blobService.DeleteByName(path);
                         }
                         catch { }
-                    }
-
-                    var headerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/header/{ouid}/{logoSettingGuid}",
-                         new BlobModel
-                         {
-                             Content = Convert.FromBase64String(headerlogoImage),
-                             ContentType = "image/jpeg"
-                         }, BlobAccessRights.PublicRead);
-
-                    dv.GenericProposalSettings.HeaderLogoUrl = headerUrl;
+                    } 
                 }
                 else if (!string.IsNullOrEmpty(footerlogoImage)  && !String.IsNullOrEmpty(settings.FooterLogoUrl))
                 {
@@ -412,19 +404,28 @@ internal static class DataViewExtensions
                             blobService.DeleteByName(path);
                         }
                         catch { }
-                    }
-
-                    var footerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/footer/{ouid}/{logoSettingGuid}",
-                         new BlobModel
-                         {
-                             Content = Convert.FromBase64String(footerlogoImage),
-                             ContentType = "image/jpeg"
-                         }, BlobAccessRights.PublicRead);
-
-                    dv.GenericProposalSettings.FooterLogoUrl = footerUrl;
+                    }  
                 }
             }
-             
+
+            var headerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/header/{ouid}/{logoSettingGuid}",
+                        new BlobModel
+                        {
+                            Content = Convert.FromBase64String(headerlogoImage),
+                            ContentType = "image/jpeg"
+                        }, BlobAccessRights.PublicRead);
+
+            dv.GenericProposalSettings.HeaderLogoUrl = headerUrl;
+
+            var footerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/footer/{ouid}/{logoSettingGuid}",
+                      new BlobModel
+                      {
+                          Content = Convert.FromBase64String(footerlogoImage),
+                          ContentType = "image/jpeg"
+                      }, BlobAccessRights.PublicRead);
+
+            dv.GenericProposalSettings.FooterLogoUrl = footerUrl;
+
             dv.Settings.Add(new OUSettingDataView
             {
                 Name = OUSetting.GenericProposal_Settings,
