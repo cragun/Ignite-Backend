@@ -367,8 +367,8 @@ internal static class DataViewExtensions
 
         var headerlogoImage = dv.GenericProposalSettings.HeaderLogoImage?.Split(',')?[1];
         var footerlogoImage = dv.GenericProposalSettings.FooterLogoImage?.Split(',')?[1];
-
         var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
+
         if (!string.IsNullOrEmpty(headerlogoImage) || !string.IsNullOrEmpty(footerlogoImage))
         {
             var logoSettingGuid = Guid.NewGuid();
