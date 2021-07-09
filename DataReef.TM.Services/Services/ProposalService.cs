@@ -1667,6 +1667,7 @@ namespace DataReef.TM.Services.Services
                     } 
                 } 
 
+
                 // Based on settings, add additional information to the proposal
                 var summaryFeature = settings?.FirstOrDefault(sett => sett.Name == OUSetting.Proposal_Features_Summary);
 
