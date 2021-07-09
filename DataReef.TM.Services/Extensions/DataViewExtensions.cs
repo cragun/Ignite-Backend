@@ -439,6 +439,7 @@ internal static class DataViewExtensions
                 Group = OUSettingGroupType.ConfigurationFile,
                 ValueType = SettingValueType.String
             });
+
         }
     }
 
