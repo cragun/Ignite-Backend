@@ -2356,8 +2356,7 @@ namespace DataReef.TM.Services.Services
                     {
                         child.Parent = null;
                     }
-                }
-
+                } 
                 if (summary)
                 {
                     foreach (var child in ou.Children)
