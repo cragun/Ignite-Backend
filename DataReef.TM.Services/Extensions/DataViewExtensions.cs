@@ -122,6 +122,19 @@ internal static class DataViewExtensions
                         settings.HandleSetting(ret, sett.Name, sett.Value, ouid, auditService, OUSettingGroupType.DealerSettings, SettingValueType.JSON, true);
                     }
                 }
+                 
+                if (sett.Name == OUSetting.GenericProposal_Settings)
+                {
+                    var settingValue = JsonConvert.DeserializeObject<NewOUGenericProposalsDataView>(sett.Value);
+                    if (settingValue != null)
+                    {
+                        settingValue = HandleGenericProposalLogoImage(settingValue, ouid ,settings, blobService.Value);
+                        sett.Value = JsonConvert.SerializeObject(settingValue);
+
+                        settings.HandleSetting(ret, sett.Name, sett.Value, ouid, auditService, OUSettingGroupType.DealerSettings, SettingValueType.JSON, true);
+                    }
+                }
+
             }
         }
 
@@ -360,13 +373,13 @@ internal static class DataViewExtensions
         }
     }
 
-    public static void HandleGenericProposalLogoImage(this OnboardingOUDataView dv, Guid ouid, List<OUSetting> existingSettings, BlobService blobService)
+    public static NewOUGenericProposalsDataView HandleGenericProposalLogoImage(NewOUGenericProposalsDataView dv, Guid ouid, List<OUSetting> existingSettings, BlobService blobService)
     { 
         ApiLogEntry apilogbefore = new ApiLogEntry();
         apilogbefore.Id = Guid.NewGuid();
         apilogbefore.User = SmartPrincipal.UserId.ToString();
         apilogbefore.Machine = Environment.MachineName;
-        apilogbefore.RequestContentType = JsonConvert.SerializeObject(dv.GenericProposalSettings);
+        apilogbefore.RequestContentType = JsonConvert.SerializeObject(dv);
         apilogbefore.RequestTimestamp = DateTime.UtcNow;
         apilogbefore.RequestUri = "Before - HandleGenericProposalHeaderLogoImage";
         using (var dc = new DataContext())
@@ -374,14 +387,14 @@ internal static class DataViewExtensions
             dc.ApiLogEntries.Add(apilogbefore);
             dc.SaveChanges();
         }
-        if (dv.GenericProposalSettings.HeaderLogoImage == null && dv.GenericProposalSettings.FooterLogoImage == null)
-            return;
+        if (dv.HeaderLogoImage == null && dv.FooterLogoImage == null)
+            return new NewOUGenericProposalsDataView();
 
         ApiLogEntry apilogmid = new ApiLogEntry();
         apilogmid.Id = Guid.NewGuid();
         apilogmid.User = SmartPrincipal.UserId.ToString();
         apilogmid.Machine = Environment.MachineName;
-        apilogmid.RequestContentType = JsonConvert.SerializeObject(dv.GenericProposalSettings);
+        apilogmid.RequestContentType = JsonConvert.SerializeObject(dv);
         apilogmid.RequestTimestamp = DateTime.UtcNow;
         apilogmid.RequestUri = "Mid - HandleGenericProposalHeaderLogoImage";
         using (var dc = new DataContext())
@@ -390,14 +403,14 @@ internal static class DataViewExtensions
             dc.SaveChanges();
         }
 
-        var headerlogoImage = dv.GenericProposalSettings.HeaderLogoImage?.Split(',')?[1];
-        var footerlogoImage = dv.GenericProposalSettings.FooterLogoImage?.Split(',')?[1];
+        var headerlogoImage = dv.HeaderLogoImage?.Split(',')?[1];
+        var footerlogoImage = dv.FooterLogoImage?.Split(',')?[1];
 
         ApiLogEntry apiloglast = new ApiLogEntry();
         apiloglast.Id = Guid.NewGuid();
         apiloglast.User = SmartPrincipal.UserId.ToString();
         apiloglast.Machine = Environment.MachineName;
-        apiloglast.RequestContentType = JsonConvert.SerializeObject(dv.GenericProposalSettings);
+        apiloglast.RequestContentType = JsonConvert.SerializeObject(dv);
         apiloglast.ResponseContentBody = headerlogoImage;
         apiloglast.ResponseContentType = footerlogoImage;
         apiloglast.RequestTimestamp = DateTime.UtcNow;
@@ -441,7 +454,7 @@ internal static class DataViewExtensions
                             ContentType = "image/jpeg"
                         }, BlobAccessRights.PublicRead);
 
-            dv.GenericProposalSettings.HeaderLogoUrl = headerUrl; 
+            dv.HeaderLogoUrl = headerUrl; 
             ApiLogEntry apilog = new ApiLogEntry();
             apilog.Id = Guid.NewGuid();
             apilog.User = SmartPrincipal.UserId.ToString();
@@ -477,7 +490,7 @@ internal static class DataViewExtensions
                      ContentType = "image/jpeg"
                  }, BlobAccessRights.PublicRead);
 
-            dv.GenericProposalSettings.FooterLogoUrl = footerUrl;
+            dv.FooterLogoUrl = footerUrl;
 
             ApiLogEntry apilog = new ApiLogEntry();
             apilog.Id = Guid.NewGuid();
@@ -493,20 +506,16 @@ internal static class DataViewExtensions
             }
         } 
 
-        dv.Settings.Add(new OUSettingDataView
-        {
-            Name = OUSetting.GenericProposal_Settings,
-            Value = JsonConvert.SerializeObject(new NewOUGenericProposalsDataView
-            {
-                FooterLogoUrl = dv.GenericProposalSettings.FooterLogoUrl,
-                HeaderLogoUrl = dv.GenericProposalSettings.HeaderLogoUrl,
-                WelcomeText = dv.GenericProposalSettings.WelcomeText,
-                Color = dv.GenericProposalSettings.Color
-            }),
-            Group = OUSettingGroupType.ConfigurationFile,
-            ValueType = SettingValueType.String
-        });
 
+        var genericSettings = new NewOUGenericProposalsDataView
+        {
+            FooterLogoUrl = dv.FooterLogoUrl,
+            HeaderLogoUrl = dv.HeaderLogoUrl,
+            WelcomeText = dv.WelcomeText,
+            Color = dv.Color
+        };
+
+        return genericSettings;
     }
 
     private static OUSetting GetByName(this List<OUSetting> settings, string name, Guid ouid)

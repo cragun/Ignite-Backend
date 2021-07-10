@@ -1873,12 +1873,7 @@ namespace DataReef.TM.Services.Services
                                         .Where(s => s.OUID == ou.Guid)
                                         .ToListAsync();
 
-                        req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
-
-                        if (req.GenericProposalSettings != null )
-                        {
-                            req.HandleGenericProposalLogoImage(ou.Guid, existingSettings, _blobService.Value); 
-                        }
+                        req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value); 
 
                         var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
 
@@ -2083,10 +2078,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
-                if (req.GenericProposalSettings != null)
-                {
-                    req.HandleGenericProposalLogoImage(ou.Guid, existingSettings, _blobService.Value);
-                }
+               
                 var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
 
                 if (settings.Count > 0)
