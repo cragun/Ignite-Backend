@@ -1729,6 +1729,7 @@ namespace DataReef.TM.Services.Services
                     //            .OUSettings
                     //            .Any(os => ancestorIds.Contains(os.OUID) && os.Name == OUSetting.Solar_IsTenant && !os.IsDeleted);
 
+
                     var genericSettings = settings.GetByKey<NewOUGenericProposalsDataView>(OUSetting.GenericProposal_Settings);
                     if (genericSettings != null)
                     {
