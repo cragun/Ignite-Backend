@@ -432,8 +432,7 @@ internal static class DataViewExtensions
                     blobService.DeleteByName(path);
                 }
                 catch { }
-            }
-
+            } 
 
             var headerUrl = blobService.UploadByNameGetFileUrl($"ous/generic-proposal/header/{ouid}/{logoSettingGuid}",
                         new BlobModel
