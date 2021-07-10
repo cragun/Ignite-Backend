@@ -361,12 +361,52 @@ internal static class DataViewExtensions
     }
 
     public static void HandleGenericProposalLogoImage(this OnboardingOUDataView dv, Guid ouid, List<OUSetting> existingSettings, BlobService blobService)
-    {
+    { 
+        ApiLogEntry apilogbefore = new ApiLogEntry();
+        apilogbefore.Id = Guid.NewGuid();
+        apilogbefore.User = SmartPrincipal.UserId.ToString();
+        apilogbefore.Machine = Environment.MachineName;
+        apilogbefore.RequestContentType = JsonConvert.SerializeObject(dv.GenericProposalSettings);
+        apilogbefore.RequestTimestamp = DateTime.UtcNow;
+        apilogbefore.RequestUri = "Before - HandleGenericProposalHeaderLogoImage";
+        using (var dc = new DataContext())
+        {
+            dc.ApiLogEntries.Add(apilogbefore);
+            dc.SaveChanges();
+        }
         if (dv.GenericProposalSettings.HeaderLogoImage == null && dv.GenericProposalSettings.FooterLogoImage == null)
             return;
 
+        ApiLogEntry apilogmid = new ApiLogEntry();
+        apilogmid.Id = Guid.NewGuid();
+        apilogmid.User = SmartPrincipal.UserId.ToString();
+        apilogmid.Machine = Environment.MachineName;
+        apilogmid.RequestContentType = JsonConvert.SerializeObject(dv.GenericProposalSettings);
+        apilogmid.RequestTimestamp = DateTime.UtcNow;
+        apilogmid.RequestUri = "Mid - HandleGenericProposalHeaderLogoImage";
+        using (var dc = new DataContext())
+        {
+            dc.ApiLogEntries.Add(apilogmid);
+            dc.SaveChanges();
+        }
+
         var headerlogoImage = dv.GenericProposalSettings.HeaderLogoImage?.Split(',')?[1];
         var footerlogoImage = dv.GenericProposalSettings.FooterLogoImage?.Split(',')?[1];
+
+        ApiLogEntry apiloglast = new ApiLogEntry();
+        apiloglast.Id = Guid.NewGuid();
+        apiloglast.User = SmartPrincipal.UserId.ToString();
+        apiloglast.Machine = Environment.MachineName;
+        apiloglast.RequestContentType = JsonConvert.SerializeObject(dv.GenericProposalSettings);
+        apiloglast.ResponseContentBody = headerlogoImage;
+        apiloglast.ResponseContentType = footerlogoImage;
+        apiloglast.RequestTimestamp = DateTime.UtcNow;
+        apiloglast.RequestUri = "Last - HandleGenericProposalHeaderLogoImage";
+        using (var dc = new DataContext())
+        {
+            dc.ApiLogEntries.Add(apiloglast);
+            dc.SaveChanges();
+        }
 
         var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
         NewOUGenericProposalsDataView settings = new NewOUGenericProposalsDataView();
@@ -402,8 +442,7 @@ internal static class DataViewExtensions
                             ContentType = "image/jpeg"
                         }, BlobAccessRights.PublicRead);
 
-            dv.GenericProposalSettings.HeaderLogoUrl = headerUrl;
-
+            dv.GenericProposalSettings.HeaderLogoUrl = headerUrl; 
             ApiLogEntry apilog = new ApiLogEntry();
             apilog.Id = Guid.NewGuid();
             apilog.User = SmartPrincipal.UserId.ToString();
