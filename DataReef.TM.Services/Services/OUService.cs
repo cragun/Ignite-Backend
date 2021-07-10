@@ -376,6 +376,22 @@ namespace DataReef.TM.Services.Services
             OU ou = base.Get(uniqueId, getInclude, exclude, fields, deletedItems);
             ou = OUBuilder(ou, include, exclude, fields, includeAncestors, deletedItems);
 
+            var genericSettings = ou?.Settings?.FirstOrDefault(a => a.Name == OUSetting.GenericProposal_Settings);
+            if (genericSettings != null)
+            {
+                var sett = JsonConvert.DeserializeObject<NewOUGenericProposalsDataView>(genericSettings.Value);
+                sett.HeaderLogoUrl = sett.HeaderLogoUrl.GetAWSProxifyUrl();
+                sett.FooterLogoUrl = sett.FooterLogoUrl.GetAWSProxifyUrl();
+
+                foreach (var item in ou?.Settings)
+                {
+                    if (item.Name == OUSetting.GenericProposal_Settings)
+                    {
+                        item.Value = JsonConvert.SerializeObject(sett);
+                    }
+                }
+            }
+
             using (var context = new DataContext())
             {
                 var favouriteOus = context.FavouriteOus.Where(f => f.PersonID == SmartPrincipal.UserId).ToList();
