@@ -374,52 +374,12 @@ internal static class DataViewExtensions
     }
 
     public static NewOUGenericProposalsDataView HandleGenericProposalLogoImage(NewOUGenericProposalsDataView dv, Guid ouid, List<OUSetting> existingSettings, BlobService blobService)
-    { 
-        ApiLogEntry apilogbefore = new ApiLogEntry();
-        apilogbefore.Id = Guid.NewGuid();
-        apilogbefore.User = SmartPrincipal.UserId.ToString();
-        apilogbefore.Machine = Environment.MachineName;
-        apilogbefore.RequestContentType = JsonConvert.SerializeObject(dv);
-        apilogbefore.RequestTimestamp = DateTime.UtcNow;
-        apilogbefore.RequestUri = "Before - HandleGenericProposalHeaderLogoImage";
-        using (var dc = new DataContext())
-        {
-            dc.ApiLogEntries.Add(apilogbefore);
-            dc.SaveChanges();
-        }
+    {  
         if (dv.HeaderLogoImage == null && dv.FooterLogoImage == null)
-            return new NewOUGenericProposalsDataView();
-
-        ApiLogEntry apilogmid = new ApiLogEntry();
-        apilogmid.Id = Guid.NewGuid();
-        apilogmid.User = SmartPrincipal.UserId.ToString();
-        apilogmid.Machine = Environment.MachineName;
-        apilogmid.RequestContentType = JsonConvert.SerializeObject(dv);
-        apilogmid.RequestTimestamp = DateTime.UtcNow;
-        apilogmid.RequestUri = "Mid - HandleGenericProposalHeaderLogoImage";
-        using (var dc = new DataContext())
-        {
-            dc.ApiLogEntries.Add(apilogmid);
-            dc.SaveChanges();
-        }
-
+            return new NewOUGenericProposalsDataView(); 
+   
         var headerlogoImage = dv.HeaderLogoImage?.Split(',')?[1];
-        var footerlogoImage = dv.FooterLogoImage?.Split(',')?[1];
-
-        ApiLogEntry apiloglast = new ApiLogEntry();
-        apiloglast.Id = Guid.NewGuid();
-        apiloglast.User = SmartPrincipal.UserId.ToString();
-        apiloglast.Machine = Environment.MachineName;
-        apiloglast.RequestContentType = JsonConvert.SerializeObject(dv);
-        apiloglast.ResponseContentBody = headerlogoImage;
-        apiloglast.ResponseContentType = footerlogoImage;
-        apiloglast.RequestTimestamp = DateTime.UtcNow;
-        apiloglast.RequestUri = "Last - HandleGenericProposalHeaderLogoImage";
-        using (var dc = new DataContext())
-        {
-            dc.ApiLogEntries.Add(apiloglast);
-            dc.SaveChanges();
-        }
+        var footerlogoImage = dv.FooterLogoImage?.Split(',')?[1]; 
 
         var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
         NewOUGenericProposalsDataView settings = new NewOUGenericProposalsDataView();
@@ -452,21 +412,7 @@ internal static class DataViewExtensions
                         {
                             Content = Convert.FromBase64String(headerlogoImage),
                             ContentType = "image/jpeg"
-                        }, BlobAccessRights.PublicRead);
-
-            dv.HeaderLogoUrl = headerUrl; 
-            ApiLogEntry apilog = new ApiLogEntry();
-            apilog.Id = Guid.NewGuid();
-            apilog.User = SmartPrincipal.UserId.ToString();
-            apilog.Machine = Environment.MachineName;
-            apilog.RequestContentType = headerUrl; 
-            apilog.RequestTimestamp = DateTime.UtcNow;
-            apilog.RequestUri = "HandleGenericProposalHeaderLogoImage"; 
-            using (var dc = new DataContext())
-            {
-                dc.ApiLogEntries.Add(apilog);
-                dc.SaveChanges();
-            }
+                        }, BlobAccessRights.PublicRead); 
         }
 
         if (!string.IsNullOrEmpty(footerlogoImage))
@@ -490,20 +436,7 @@ internal static class DataViewExtensions
                      ContentType = "image/jpeg"
                  }, BlobAccessRights.PublicRead);
 
-            dv.FooterLogoUrl = footerUrl;
-
-            ApiLogEntry apilog = new ApiLogEntry();
-            apilog.Id = Guid.NewGuid();
-            apilog.User = SmartPrincipal.UserId.ToString();
-            apilog.Machine = Environment.MachineName;
-            apilog.RequestContentType = footerUrl;
-            apilog.RequestTimestamp = DateTime.UtcNow;
-            apilog.RequestUri = "HandleGenericProposalFooterLogoImage";
-            using (var dc = new DataContext())
-            {
-                dc.ApiLogEntries.Add(apilog);
-                dc.SaveChanges();
-            }
+            dv.FooterLogoUrl = footerUrl; 
         } 
 
 

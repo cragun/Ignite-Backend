@@ -1729,11 +1729,28 @@ namespace DataReef.TM.Services.Services
                     //            .OUSettings
                     //            .Any(os => ancestorIds.Contains(os.OUID) && os.Name == OUSetting.Solar_IsTenant && !os.IsDeleted);
 
+                    var genericSettings = settings.GetByKey<NewOUGenericProposalsDataView>(OUSetting.GenericProposal_Settings);
+                    if (genericSettings != null)
+                    {
+                        genericSettings.HeaderLogoUrl = genericSettings.HeaderLogoUrl.GetAWSProxifyUrl();
+                        genericSettings.FooterLogoUrl = genericSettings.FooterLogoUrl.GetAWSProxifyUrl();
+
+                        foreach (var item in settings)
+                        {
+                            if (item.Key == OUSetting.GenericProposal_Settings)
+                            {
+                                item.Value.Value = JsonConvert.SerializeObject(genericSettings);
+                            }
+                        }
+                    }
+
                     ret.ParentSettings = settings;
 
                     var panelIds = new List<Guid>();
                     var inverterIds = new List<Guid>();
-                    var financePlans = new List<FinancingSettingsDataView>();
+                    var financePlans = new List<FinancingSettingsDataView>(); 
+
+
 
                     // only read the Ids if it has a Tenant Ancestor
                     //if (ret.HasTenantAncestor)
