@@ -380,8 +380,8 @@ namespace DataReef.TM.Services.Services
             if (genericSettings != null)
             {
                 var sett = JsonConvert.DeserializeObject<NewOUGenericProposalsDataView>(genericSettings.Value);
-                sett.HeaderLogoUrl = sett.HeaderLogoUrl.GetAWSProxifyUrl();
-                sett.FooterLogoUrl = sett.FooterLogoUrl.GetAWSProxifyUrl();
+                sett.HeaderLogoUrl = sett.HeaderLogoUrl?.GetAWSProxifyUrl();
+                sett.FooterLogoUrl = sett.FooterLogoUrl?.GetAWSProxifyUrl();
 
                 foreach (var item in ou?.Settings)
                 {
