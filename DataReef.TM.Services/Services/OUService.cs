@@ -413,8 +413,7 @@ namespace DataReef.TM.Services.Services
 
                         PopulateOUSummary(child);
                     }
-                }
-
+                } 
                 return ou;
             }
         }
