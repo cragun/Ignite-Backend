@@ -170,7 +170,6 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public OUSettingGroupType Group { get; set; }
         public SettingValueType ValueType { get; set; }
         public bool IsDeleted { get; set; }
-    }
-
+    } 
 }
 
