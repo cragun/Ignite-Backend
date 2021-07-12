@@ -387,6 +387,9 @@ internal static class DataViewExtensions
         if (logoSetting != null)
         {
             settings = logoSetting.GetValue<NewOUGenericProposalsDataView>();
+
+            dv.HeaderLogoUrl = settings.HeaderLogoUrl;
+            dv.FooterLogoUrl = settings.FooterLogoUrl;
         }
 
         var logoSettingGuid = Guid.NewGuid();
@@ -412,8 +415,10 @@ internal static class DataViewExtensions
                         {
                             Content = Convert.FromBase64String(headerlogoImage),
                             ContentType = "image/jpeg"
-                        }, BlobAccessRights.PublicRead); 
-        }
+                        }, BlobAccessRights.PublicRead);
+
+            dv.HeaderLogoUrl = headerUrl;
+        } 
 
         if (!string.IsNullOrEmpty(footerlogoImage))
         {
