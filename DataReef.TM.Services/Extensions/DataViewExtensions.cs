@@ -376,8 +376,7 @@ internal static class DataViewExtensions
     public static NewOUGenericProposalsDataView HandleGenericProposalLogoImage(NewOUGenericProposalsDataView dv, Guid ouid, List<OUSetting> existingSettings, BlobService blobService)
     {    
         var headerlogoImage = dv.HeaderLogoImage?.Split(',')?[1];
-        var footerlogoImage = dv.FooterLogoImage?.Split(',')?[1]; 
-
+        var footerlogoImage = dv.FooterLogoImage?.Split(',')?[1];  
         var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
         NewOUGenericProposalsDataView settings = new NewOUGenericProposalsDataView();
 
