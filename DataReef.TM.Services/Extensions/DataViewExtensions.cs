@@ -380,20 +380,18 @@ internal static class DataViewExtensions
         var logoSetting = existingSettings.FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Settings);
         NewOUGenericProposalsDataView settings = new NewOUGenericProposalsDataView();
 
+        var logoSettingGuid = Guid.NewGuid();
         if (logoSetting != null)
         {
             settings = logoSetting.GetValue<NewOUGenericProposalsDataView>();
 
             dv.HeaderLogoUrl = settings.HeaderLogoUrl;
             dv.FooterLogoUrl = settings.FooterLogoUrl;
-        }
-
-        var logoSettingGuid = Guid.NewGuid();
+            logoSettingGuid = logoSetting.Guid;
+        } 
 
         if (!string.IsNullOrEmpty(headerlogoImage))
-        {
-            logoSettingGuid = logoSetting.Guid;
-
+        { 
             if (settings != null && !String.IsNullOrEmpty(settings.HeaderLogoUrl))
             {
                 try
