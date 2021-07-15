@@ -911,9 +911,9 @@ namespace DataReef.Application.Services
 
                     if (newUser.RoleID != Guid.Empty && newUser.RoleID != null)
                     {
-                        var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
-                        dc.OUAssociations.RemoveRange(OUAssociations);
-                        dc.SaveChanges();
+                        //var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
+                        //dc.OUAssociations.RemoveRange(OUAssociations);
+                        //dc.SaveChanges();
 
                         using (var transaction = dc.Database.BeginTransaction())
                         {
@@ -944,30 +944,34 @@ namespace DataReef.Application.Services
                                     {
                                         //check to see if the user is already part of the OU
                                         var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == isExist.Guid && oua.OUID == ouSetting.OUID);
-                                        if (organizationalUnitAssociation == null)
+
+                                        var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
+
+                                        if (organizationalUnitAssociation != null)
                                         {
-                                            var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
-                                            if (Ou != null)
-                                            {
-                                                var role = dc.OURoles.FirstOrDefault(r => r.Guid == newUser.RoleID);
-
-
-                                                //add the OU association and the Role to that Association
-                                                organizationalUnitAssociation = new OUAssociation
-                                                {
-                                                    OUID = ouSetting.OUID,
-                                                    PersonID = isExist.Guid,
-                                                    OURoleID = newUser.RoleID,
-                                                    RoleType = role.RoleType
-                                                };
-                                                dc.OUAssociations.Add(organizationalUnitAssociation);
-                                            }
+                                            dc.OUAssociations.Remove(organizationalUnitAssociation);
                                         }
-                                    }
+
+                                        var Ou = dc.OUs.FirstOrDefault(x => x.Guid == ouSetting.OUID);
+                                        if (Ou != null)
+                                        {
+                                            //add the OU association and the Role to that Association
+                                            organizationalUnitAssociation = new OUAssociation
+                                            {
+                                                OUID = ouSetting.OUID,
+                                                PersonID = isExist.Guid,
+                                                OURoleID = newUser.RoleID,
+                                                RoleType = role.RoleType
+                                            };
+                                            dc.OUAssociations.Add(organizationalUnitAssociation);
+                                        }
+                                    } 
                                 }
 
-                                dc.SaveChanges();
+                               
                                 transaction.Commit();
+                                dc.SaveChanges();
+
                                 if (!String.IsNullOrEmpty(not_avail))
                                 {
                                     not_avail = not_avail.TrimEnd(',');
