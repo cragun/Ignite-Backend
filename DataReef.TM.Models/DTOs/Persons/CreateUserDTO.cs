@@ -28,5 +28,6 @@ namespace DataReef.TM.Models.DTOs.Persons
         public string ID { get; set; }
 
         public string[] apikey { get; set; }
+
     }
 }
