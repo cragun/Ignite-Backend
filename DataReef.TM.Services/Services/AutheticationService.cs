@@ -870,9 +870,9 @@ namespace DataReef.Application.Services
                         var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
                         if (isExistCredentials != null)
                         {
-                            isExistCredentials.UserName = newUser.EmailAddress;
-                            isExistCredentials.PasswordRaw = newUser.Password;
-                            isExistCredentials.PerformHash();
+                            //isExistCredentials.UserName = newUser.EmailAddress;
+                            //isExistCredentials.PasswordRaw = newUser.Password;
+                            //isExistCredentials.PerformHash();
                         }
                     }
 
