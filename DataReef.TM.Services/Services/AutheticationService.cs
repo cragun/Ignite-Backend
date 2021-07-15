@@ -967,9 +967,8 @@ namespace DataReef.Application.Services
                                     } 
                                 }
 
-                               
+                                dc.SaveChanges(); 
                                 transaction.Commit();
-                                dc.SaveChanges();
 
                                 if (!String.IsNullOrEmpty(not_avail))
                                 {
