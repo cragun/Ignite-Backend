@@ -873,6 +873,7 @@ namespace DataReef.Application.Services
                             //isExistCredentials.UserName = newUser.EmailAddress;
                             //isExistCredentials.PasswordRaw = newUser.Password;
                             //isExistCredentials.PerformHash();
+
                         }
                     }
 
