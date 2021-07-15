@@ -939,6 +939,7 @@ namespace DataReef.Application.Services
 
                                 dc.SaveChanges();
                                 transaction.Commit();
+
                                 if (!String.IsNullOrEmpty(not_avail))
                                 {
                                     not_avail = not_avail.TrimEnd(',');
