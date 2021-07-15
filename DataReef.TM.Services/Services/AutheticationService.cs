@@ -918,8 +918,7 @@ namespace DataReef.Application.Services
                         using (var transaction = dc.Database.BeginTransaction())
                         {
                             try
-                            {
-
+                            { 
                                 foreach (var item in apikey)
                                 {
                                     var ouSetting = dc.OUSettings.Where(x => x.Name == SolarTrackerResources.SelectedSettingName).ToList()
