@@ -818,7 +818,7 @@ namespace DataReef.TM.Services.Services
                 return OUSettingService.GetOuSettings(ouid.Value);
             }
             return null;
-        } 
+        }
 
         private List<SignedDocumentDTO> GetProposalURLs(string contractorID, Guid propososalDataGuid, List<SignedDocumentDTO> signedDocuments = null, List<OUSetting> ouSettings = null)
         {
@@ -826,40 +826,36 @@ namespace DataReef.TM.Services.Services
 
             var baseUrl = _templateDefaultUrl;
 
-            var contractorIdSettings = ouSettings?.Where(ous => ous.Name == OUSetting.Solar_ContractorID)?.ToList()
-                ?? _ouSettingService.Value.List(filter: $"name={OUSetting.Solar_ContractorID}&value={contractorID}").ToList();
+            var genericProposal = ouSettings
+                                    .FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Enable);
 
-            if (contractorIdSettings.Any())
+            if (genericProposal != null && genericProposal.Value == "1")
             {
-                var ouid = contractorIdSettings.FirstOrDefault().OUID;
-                var settings = _ouSettingService.Value.GetSettings(ouid, null);
+                baseUrl = ouSettings
+                                .FirstOrDefault(a => a.Name == OUSetting.GenericProposal_TemplateUrl)?
+                                .Value ?? baseUrl;
+            }
+            else
+            {
+                var contractorIdSettings = ouSettings?.Where(ous => ous.Name == OUSetting.Solar_ContractorID)?.ToList()
+             ?? _ouSettingService.Value.List(filter: $"name={OUSetting.Solar_ContractorID}&value={contractorID}").ToList();
 
-                if (settings.ContainsKey(OUSetting.Proposal_TemplateBaseUrl))
+                if (contractorIdSettings.Any())
                 {
-                    baseUrl = settings
-                                    .FirstOrDefault(s => s.Key.Equals(OUSetting.Proposal_TemplateBaseUrl, StringComparison.InvariantCultureIgnoreCase))
-                                    .Value?
-                                    .Value ?? baseUrl;
-                }
+                    var ouid = contractorIdSettings.FirstOrDefault().OUID;
+                    var settings = _ouSettingService.Value.GetSettings(ouid, null);
 
-
-                var genericProposal = settings
-                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.GenericProposal_Enable, StringComparison.InvariantCultureIgnoreCase))
-                                        .Value?.Value;
-
-                if (genericProposal != null &&  genericProposal == "1")
-                {
-                    if (settings.ContainsKey(OUSetting.GenericProposal_TemplateUrl))
+                    if (settings.ContainsKey(OUSetting.Proposal_TemplateBaseUrl))
                     {
                         baseUrl = settings
-                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.GenericProposal_TemplateUrl, StringComparison.InvariantCultureIgnoreCase))
+                                        .FirstOrDefault(s => s.Key.Equals(OUSetting.Proposal_TemplateBaseUrl, StringComparison.InvariantCultureIgnoreCase))
                                         .Value?
                                         .Value ?? baseUrl;
-                    }
-                } 
-            }
+                    } 
+                }
+            } 
 
-            baseUrl = baseUrl.TrimEnd('/'); 
+            baseUrl = baseUrl.TrimEnd('/');
 
             result.Add(new SignedDocumentDTO { Name = "Proposal", Url = $"{baseUrl}/{propososalDataGuid}" });
 
@@ -939,7 +935,7 @@ namespace DataReef.TM.Services.Services
                     baseAddress = ouSettings
                                     .FirstOrDefault(s => s.Key.Equals(OUSetting.GenericProposal_TemplateUrl, StringComparison.InvariantCultureIgnoreCase))
                                     .Value?
-                                    .Value ;
+                                    .Value;
                 }
             }
 
@@ -1249,7 +1245,7 @@ namespace DataReef.TM.Services.Services
                     data.MetaInformation = metaInfo;
                 }
 
-                data.SignatureDate = SmartPrincipal.DeviceDate.LocalDateTime; 
+                data.SignatureDate = SmartPrincipal.DeviceDate.LocalDateTime;
                 if (request.UserInput != null)
                 {
                     var existingUserInputLinks = data.UserInputLinks ?? new List<UserInputDataLinks>();
@@ -1403,7 +1399,7 @@ namespace DataReef.TM.Services.Services
 
                         Mail.Library.SendEmail(to, ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
 
-                        Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments); 
+                        Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Signed Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                     });
                 }
                 //var isSolarSalesTrackerEnabled = ouSettings.GetValue<SSTSettings>(SolarTrackerResources.SettingName)?.Enabled?.IsTrue() == true;
@@ -1657,15 +1653,15 @@ namespace DataReef.TM.Services.Services
                                    .FirstOrDefault(s => s.Name.Equals(OUSetting.GenericProposal_Enable, StringComparison.InvariantCultureIgnoreCase))?.Value;
 
                 if (genericProposal != null && genericProposal == "1")
-                { 
-                      var genericSettings = settings
-                                        .FirstOrDefault(s => s.Name.Equals(OUSetting.GenericProposal_Settings, StringComparison.InvariantCultureIgnoreCase)) 
-                                        ?.Value;
+                {
+                    var genericSettings = settings
+                                      .FirstOrDefault(s => s.Name.Equals(OUSetting.GenericProposal_Settings, StringComparison.InvariantCultureIgnoreCase))
+                                      ?.Value;
                     if (!String.IsNullOrEmpty(genericSettings))
                     {
                         proposalDV.GenericProposalSettings = JsonConvert.DeserializeObject<NewOUGenericProposalsDataView>(genericSettings);
-                    } 
-                } 
+                    }
+                }
 
 
                 // Based on settings, add additional information to the proposal
@@ -2026,7 +2022,7 @@ namespace DataReef.TM.Services.Services
                 uow.SaveChanges();
             }
         }
-         
+
 
         public LoanResponse ReCalculateFinancing(FinancePlan financePlan)
         {
@@ -2274,7 +2270,7 @@ namespace DataReef.TM.Services.Services
                     adder.DynamicSettingsJSON = adderItem.DynamicSettingsJSON;
                     adder.ApplyDealerFee = adderItem.ApplyDealerFee;
 
-                    var adderObj = AdderDataView.ToDbModel(adder , existingProposal.ProposalID);
+                    var adderObj = AdderDataView.ToDbModel(adder, existingProposal.ProposalID);
 
                     result.Adders.Add(adderObj);
                 }
@@ -2294,13 +2290,13 @@ namespace DataReef.TM.Services.Services
                     incentive.RateType = adderItem.RateType;
                     incentive.IsAppliedBeforeITC = adderItem.IsAppliedBeforeITC;
                     incentive.AllowsQuantitySelection = Convert.ToBoolean(adderItem.AllowsQuantitySelection);
-                    
+
                     result.Incentives.Add(incentive);
                 }
 
                 existingFinancePlan.RequestJSON = JsonConvert.SerializeObject(result);
                 dataContext.SaveChanges();
-                
+
                 if (existingProposal.UsesNoSQLAggregatedData == true)
                 {
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
@@ -2441,7 +2437,7 @@ namespace DataReef.TM.Services.Services
                     PushProposalDataToNoSQL(existingProposal.FinancePlanID, existingProposal);
                 }
             }
-        } 
+        }
 
         public void UpdateProposalFinancePlan(Guid ProposalID, FinancePlan financePlan)
         {
@@ -2500,7 +2496,7 @@ namespace DataReef.TM.Services.Services
                 existing.WarrentiesJSON = WarrentiesJSON;
                 dataContext.SaveChanges();
             }
-        } 
+        }
 
         public int GetProposalCount(Guid PropertyID)
         {
@@ -2686,6 +2682,6 @@ namespace DataReef.TM.Services.Services
             }
 
             return "send";
-        } 
+        }
     }
 }
