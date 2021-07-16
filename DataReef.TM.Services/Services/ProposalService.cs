@@ -660,7 +660,7 @@ namespace DataReef.TM.Services.Services
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
 
                 //var contractorOUSettings = GetOUSettingsForContractorID(data.ContractorID);
-                var documentUrls = GetProposalURLs(data.ContractorID, data.Guid, null, ouSettings);
+                var documentUrls = GetProposalURLs(data.ContractorID, data.Guid, proposal.Property.Territory.OUID ,null, ouSettings);
                 var proposalUrl = documentUrls.FirstOrDefault().Url;
                 proposal.ProposalURL = proposalUrl;
 
@@ -821,14 +821,14 @@ namespace DataReef.TM.Services.Services
             return null;
         }
 
-        private List<SignedDocumentDTO> GetProposalURLs(string contractorID, Guid propososalDataGuid, List<SignedDocumentDTO> signedDocuments = null, List<OUSetting> ouSettings = null)
+        private List<SignedDocumentDTO> GetProposalURLs(string contractorID, Guid propososalDataGuid, Guid ouId, List<SignedDocumentDTO> signedDocuments = null, List<OUSetting> ouSettings = null)
         {
             var result = new List<SignedDocumentDTO>();
 
             var baseUrl = _templateDefaultUrl;
 
             var genericProposal = ouSettings
-                                    .FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Enable);
+                                    .FirstOrDefault(s => s.Name == OUSetting.GenericProposal_Enable && s.OUID == ouId);
 
             if (genericProposal != null && genericProposal.Value == "1")
             {
@@ -1277,7 +1277,7 @@ namespace DataReef.TM.Services.Services
                     catch (Exception) { }
                 }
 
-                var documentUrls = GetProposalURLs(contractorID, data.Guid, signedDocuments, ouSettings);
+                var documentUrls = GetProposalURLs(contractorID, data.Guid, proposal.Property.Territory.OUID ,signedDocuments, ouSettings);
                 var planName = financePlan.Name;
 
 
@@ -2621,7 +2621,7 @@ namespace DataReef.TM.Services.Services
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
 
                 var contractorID = data.ContractorID;
-                var documentUrls = GetProposalURLs(contractorID, data.Guid, null, ouSettings);
+                var documentUrls = GetProposalURLs(contractorID, data.Guid, proposal.Property.Territory.OUID ,null, ouSettings);
                 var planName = financePlan.Name;
 
                 var attachmentPDFs = new List<Tuple<byte[], string>>();
