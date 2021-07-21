@@ -702,7 +702,7 @@ namespace DataReef.Application.Services
                     //throw new FaultException<PreconditionFailedFault>(f, reason);
                     var token = new AuthenticationToken
                     {
-                        isAlreadyMember = true
+                        Audience = "Accepted"
                     }; 
                     return token;
                 }
