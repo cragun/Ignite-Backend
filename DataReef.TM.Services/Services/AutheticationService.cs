@@ -731,7 +731,7 @@ namespace DataReef.Application.Services
                     //string reason = "User is already a member of the Organization OU.";  
                     var token = new AuthenticationToken
                     {
-                       isAlreadyMember = true
+                        Audience = "Accepted"
                     };
 
                     return token; 

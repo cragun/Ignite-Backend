@@ -152,7 +152,7 @@ namespace DataReef.TM.Api.Controllers
                 }
 
                 AuthenticationToken token = authService.CreateUser(user);
-                if (token?.isAlreadyMember == true)
+                if (token?.Audience == "Accepted")
                 { 
                     return Redirect(PathExtensions.ToAbsoluteUrl("/home/AlreadyAccepted"));
                 }
