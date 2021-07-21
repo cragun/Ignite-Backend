@@ -578,11 +578,7 @@ namespace DataReef.TM.Services
 
             return distinctLeadsources.ToList();
         }
-
-
-
-
-
+         
 
         //public PaginatedResult<Property> CRMGetProperties(CRMFilterRequest request)
         //{
