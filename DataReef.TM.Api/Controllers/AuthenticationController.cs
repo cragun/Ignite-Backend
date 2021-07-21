@@ -1,6 +1,7 @@
 ﻿using DataReef.Core;
 using DataReef.Core.Classes;
 using DataReef.Core.Infrastructure.Authorization;
+using DataReef.TM.Api.Areas.HelpPage.Extensions;
 using DataReef.TM.Api.Bootstrap;
 using DataReef.TM.Api.Classes;
 using DataReef.TM.Contracts.Auth;
@@ -126,6 +127,10 @@ namespace DataReef.TM.Api.Controllers
                 }
 
                 AuthenticationToken token = authService.CreateUser(user);
+                if (token?.isAlreadyMember == true)
+                {
+                    return Redirect(PathExtensions.ToAbsoluteUrl("/home/AlreadyAccepted"));
+                }
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
             }

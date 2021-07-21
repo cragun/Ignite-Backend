@@ -62,6 +62,12 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public string excludeProposalJSON { get; set; }
 
+        /// <summary>
+        /// A JSON containing INDUSTRY LEADING WARRANTIES Information.
+        /// </summary>
+        [DataMember]
+        public string WarrentiesJSON { get; set; }
+
         #region Computed Properties
 
         [NotMapped]

@@ -103,8 +103,8 @@ namespace DataReef.TM.Contracts.Services
         [OperationContract]
         Task AddOUSettingsTest();
 
-        [OperationContract]
-        Task AddGenericProposalOUSettings();
+        //[OperationContract]
+        //Task AddGenericProposalOUSettings();
 
         [OperationContract]
         OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false);

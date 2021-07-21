@@ -1965,51 +1965,51 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public async Task AddGenericProposalOUSettings()
-        {
-            using (var dc = new DataContext())
-            {
-                using (var transaction = dc.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        var ignite = await dc.OUs.ToListAsync();
+        //public async Task AddGenericProposalOUSettings()
+        //{
+        //    using (var dc = new DataContext())
+        //    {
+        //        using (var transaction = dc.Database.BeginTransaction())
+        //        {
+        //            try
+        //            {
+        //                var ignite = await dc.OUs.ToListAsync();
 
-                        foreach (var item in ignite)
-                        {
-                            OUSetting setting = new OUSetting();
-                            setting.OUID = item.Guid;
-                            setting.Value = "0";
-                            setting.Group = OUSettingGroupType.ConfigurationFile;
-                            setting.Inheritable = true;
-                            setting.Name = "Proposal.GenericSettings";
-                            setting.ValueType = SettingValueType.String;
+        //                foreach (var item in ignite)
+        //                {
+        //                    OUSetting setting = new OUSetting();
+        //                    setting.OUID = item.Guid;
+        //                    setting.Value = "0";
+        //                    setting.Group = OUSettingGroupType.ConfigurationFile;
+        //                    setting.Inheritable = true;
+        //                    setting.Name = "Proposal.GenericSettings";
+        //                    setting.ValueType = SettingValueType.String;
 
-                            dc.OUSettings.Add(setting);
+        //                    dc.OUSettings.Add(setting);
 
-                            OUSetting generic = new OUSetting();
-                            generic.OUID = item.Guid;
-                            generic.Value = "http://ignite-proposals.s3-website-us-west-2.amazonaws.com/generic/";
-                            generic.Group = OUSettingGroupType.ConfigurationFile;
-                            generic.Inheritable = true;
-                            generic.Name = "Proposal.Template.GenericUrl";
-                            generic.ValueType = SettingValueType.String;
+        //                    OUSetting generic = new OUSetting();
+        //                    generic.OUID = item.Guid;
+        //                    generic.Value = "http://ignite-proposals.s3-website-us-west-2.amazonaws.com/generic/";
+        //                    generic.Group = OUSettingGroupType.ConfigurationFile;
+        //                    generic.Inheritable = true;
+        //                    generic.Name = "Proposal.Template.GenericUrl";
+        //                    generic.ValueType = SettingValueType.String;
 
-                            dc.OUSettings.Add(generic);
-                        }
+        //                    dc.OUSettings.Add(generic);
+        //                }
 
-                        await dc.SaveChangesAsync();
+        //                await dc.SaveChangesAsync();
 
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-        }
+        //                transaction.Commit();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                transaction.Rollback();
+        //                throw ex;
+        //            }
+        //        }
+        //    }
+        //}
 
         public async Task EditOU(Guid ouid, OnboardingOUDataView req)
         {

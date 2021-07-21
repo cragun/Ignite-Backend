@@ -54,6 +54,8 @@ namespace DataReef.TM.Contracts.Auth
         [DataMember]
         public string RefreshToken { get; set; }
 
+        [DataMember]
+        public bool isAlreadyMember { get; set; }
 
         public static AuthenticationToken FromEncryptedString(string token, X509Certificate2 decryptionCertificate)
         {
