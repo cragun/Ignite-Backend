@@ -2,11 +2,13 @@
 using DataReef.Core.Extensions;
 using DataReef.TM.Api.Classes.Enums;
 using DataReef.TM.Api.Classes.ViewModels;
+using DataReef.TM.Classes;
 using DataReef.TM.Contracts.Services;
 using DataReef.TM.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 
@@ -226,6 +228,16 @@ namespace DataReef.TM.Api.Controllers.Web
             return File(path, "text/plain");
 
         }
+
+        [HttpGet]
+        public ActionResult AlreadyAccepted()
+        {
+            var template = new UserInvitationTemplate
+            {
+                DownloadURL = ConfigurationManager.AppSettings["LegionDownloadURL"]
+            };
+            return View("InvitationAccepted", template);
+        } 
 
         public static string GetCustomURL(NameValueCollection queryString)
         {

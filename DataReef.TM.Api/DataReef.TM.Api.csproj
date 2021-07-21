@@ -640,6 +640,7 @@
     <Content Include="Templates\Email\TerritoryAssignmentNotification.cshtml" />
     <Content Include="Templates\Email\UserInvitation.cshtml" />
     <Content Include="Templates\Email\UserReactivation.cshtml" />
+    <Content Include="Views\Home\InvitationAccepted.cshtml" />
     <None Include="Web.QA.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

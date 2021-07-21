@@ -4482,6 +4482,11 @@
             (e.g. Location of the user that signed/accepted the proposal)
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.Solar.ProposalData.WarrentiesJSON">
+            <summary>
+            A JSON containing INDUSTRY LEADING WARRANTIES Information.
+            </summary>
+        </member>
         <member name="P:DataReef.TM.Models.Solar.FinanceDocument.DocumentID">
             <summary>
             We add an index on this column to quickly find it when RightSignature callsback

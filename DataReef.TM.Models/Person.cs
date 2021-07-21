@@ -176,6 +176,9 @@ namespace DataReef.TM.Models
         [NotMapped]
         public bool IsFavourite { get; set; }
 
+        [DataMember]
+        public bool IsHiResImg { get; set; }
+
         #endregion
 
         #region Navigation
