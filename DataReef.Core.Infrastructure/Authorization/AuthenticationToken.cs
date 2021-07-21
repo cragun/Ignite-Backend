@@ -52,10 +52,7 @@ namespace DataReef.TM.Contracts.Auth
         /// A token used to automatically refresh auth
         /// </summary>
         [DataMember]
-        public string RefreshToken { get; set; }
-
-        [DataMember]
-        public bool isAlreadyMember { get; set; }
+        public string RefreshToken { get; set; } 
 
         public static AuthenticationToken FromEncryptedString(string token, X509Certificate2 decryptionCertificate)
         {
