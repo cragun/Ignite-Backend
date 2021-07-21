@@ -149,8 +149,7 @@ namespace DataReef.TM.Api.Controllers
                 if (user == null)
                 {
                     throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.PreconditionFailed));
-                }
-
+                } 
                 AuthenticationToken token = authService.CreateUser(user);
                 if (token?.Audience == "Accepted")
                 { 
