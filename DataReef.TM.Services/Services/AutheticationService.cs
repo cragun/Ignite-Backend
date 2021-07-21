@@ -695,6 +695,7 @@ namespace DataReef.Application.Services
 
                 //check to see if the user is already part of the OU
                 var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == userInvitation.OUID);
+
                 if (organizationalUnitAssociation != null)
                 {
                     //string reason = "User is already a member of the Organization OU.";
