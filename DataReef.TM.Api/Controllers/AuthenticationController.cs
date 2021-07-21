@@ -1,8 +1,10 @@
 ﻿using DataReef.Core;
 using DataReef.Core.Classes;
 using DataReef.Core.Infrastructure.Authorization;
+using DataReef.TM.Api.Areas.HelpPage.Extensions;
 using DataReef.TM.Api.Bootstrap;
 using DataReef.TM.Api.Classes;
+using DataReef.TM.Classes;
 using DataReef.TM.Contracts.Auth;
 using DataReef.TM.Contracts.FaultContracts;
 using DataReef.TM.Contracts.Services;
@@ -11,13 +13,15 @@ using DataReef.TM.Models.DataViews;
 using DataReef.TM.Models.DTOs.Persons;
 using Newtonsoft.Json;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.Description; 
 
 namespace DataReef.TM.Api.Controllers
 {
@@ -148,6 +152,10 @@ namespace DataReef.TM.Api.Controllers
                 }
 
                 AuthenticationToken token = authService.CreateUser(user);
+                if (token?.isAlreadyMember == true)
+                { 
+                    return Redirect(PathExtensions.ToAbsoluteUrl("/home/AlreadyAccepted"));
+                }
                 Jwt ret = this.EncodeToken(token);
                 return Ok<Jwt>(ret);
             }

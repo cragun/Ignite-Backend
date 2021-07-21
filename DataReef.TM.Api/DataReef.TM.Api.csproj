@@ -309,7 +309,6 @@
   <ItemGroup>
     <Folder Include="Views\FinanceIntegrations\" />
     <Folder Include="Views\Layers\" />
-    <Folder Include="Views\QuotasCommitments\" />
     <Folder Include="Views\SpruceGenDocsRequest\" />
   </ItemGroup>
   <ItemGroup>
@@ -627,6 +626,7 @@
     <Content Include="Templates\Email\UserInvitation.cshtml" />
     <Content Include="Templates\Email\UserReactivation.cshtml" />
     <Content Include="web.config" />
+    <Content Include="Views\Home\InvitationAccepted.cshtml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
       <SubType>Designer</SubType>

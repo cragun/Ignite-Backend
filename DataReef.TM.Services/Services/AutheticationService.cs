@@ -728,9 +728,13 @@ namespace DataReef.Application.Services
                 var organizationalUnitAssociation = dc.OUAssociations.FirstOrDefault(oua => oua.PersonID == person.Guid && oua.OUID == userInvitation.OUID);
                 if (organizationalUnitAssociation != null)
                 {
-                    string reason = "User is already a member of the Organization OU.";
-                    PreconditionFailedFault f = new PreconditionFailedFault(102, reason);
-                    throw new FaultException<PreconditionFailedFault>(f, reason);
+                    //string reason = "User is already a member of the Organization OU.";  
+                    var token = new AuthenticationToken
+                    {
+                       isAlreadyMember = true
+                    };
+
+                    return token; 
                 }
 
                 var role = dc.OURoles.FirstOrDefault(r => r.Guid == userInvitation.RoleID);

@@ -1,0 +1,18 @@
+﻿@model DataReef.TM.Classes.UserInvitationTemplate
+@{
+    Layout = "~/Views/Shared/_Layout-Legion.cshtml";
+    ViewBag.Title = "Ignite - Invitation Accepted";
+}
+<div class="loginscreen-wrapper">
+    <div class="loginscreen">
+        <div class="header-area">
+            <p>Welcome to Ignite</p>
+            <p>You already accepted invitaion.Please use your Smartboard Credentials to Login.</p>
+            <p>Make sure IGNITE application is installed on your iOS device. If IGNITE is not installed, please check the information below to download it.</p>
+            @if (!string.IsNullOrWhiteSpace(Model.DownloadURL))
+            {
+                <p><a href="Model.DownloadURL">Download app</a></p>
+            }
+        </div>
+    </div>
+</div>
