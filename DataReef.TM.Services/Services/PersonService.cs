@@ -175,8 +175,7 @@ namespace DataReef.TM.Services
                 return ret;
             }
 
-            return prsn;
-
+            return prsn; 
         } 
 
         public override ICollection<Person> List(bool deletedItems = false, int pageNumber = 1, int itemsPerPage = 20, string filter = "", string include = "", string exclude = "", string fields = "")
