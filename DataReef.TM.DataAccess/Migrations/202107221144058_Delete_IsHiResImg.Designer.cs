@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Add_IsHiResImg : IMigrationMetadata
+    public sealed partial class Delete_IsHiResImg : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Add_IsHiResImg));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Delete_IsHiResImg));
         
         string IMigrationMetadata.Id
         {
-            get { return "202107210858021_Add_IsHiResImg"; }
+            get { return "202107221144058_Delete_IsHiResImg"; }
         }
         
         string IMigrationMetadata.Source

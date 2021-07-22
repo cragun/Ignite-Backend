@@ -7,13 +7,13 @@ namespace DataReef.TM.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Add_WarrentiesJson : IMigrationMetadata
+    public sealed partial class Add_WarrentiesJSON : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Add_WarrentiesJson));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Add_WarrentiesJSON));
         
         string IMigrationMetadata.Id
         {
-            get { return "202107081018028_Add_WarrentiesJson"; }
+            get { return "202107221158188_Add_WarrentiesJSON"; }
         }
         
         string IMigrationMetadata.Source

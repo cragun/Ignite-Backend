@@ -1255,13 +1255,21 @@
     <Compile Include="Migrations\202105140533359_check migrate.Designer.cs">
       <DependentUpon>202105140533359_check migrate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202107081018028_Add_WarrentiesJson.cs" />
-    <Compile Include="Migrations\202107081018028_Add_WarrentiesJson.Designer.cs">
-      <DependentUpon>202107081018028_Add_WarrentiesJson.cs</DependentUpon>
+    <Compile Include="Migrations\202107221140170_Delete_WarrentiesJSON.cs" />
+    <Compile Include="Migrations\202107221140170_Delete_WarrentiesJSON.Designer.cs">
+      <DependentUpon>202107221140170_Delete_WarrentiesJSON.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202107210858021_Add_IsHiResImg.cs" />
-    <Compile Include="Migrations\202107210858021_Add_IsHiResImg.Designer.cs">
-      <DependentUpon>202107210858021_Add_IsHiResImg.cs</DependentUpon>
+    <Compile Include="Migrations\202107221144058_Delete_IsHiResImg.cs" />
+    <Compile Include="Migrations\202107221144058_Delete_IsHiResImg.Designer.cs">
+      <DependentUpon>202107221144058_Delete_IsHiResImg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202107221154003_Add_IsHiResImg.cs" />
+    <Compile Include="Migrations\202107221154003_Add_IsHiResImg.Designer.cs">
+      <DependentUpon>202107221154003_Add_IsHiResImg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202107221158188_Add_WarrentiesJSON.cs" />
+    <Compile Include="Migrations\202107221158188_Add_WarrentiesJSON.Designer.cs">
+      <DependentUpon>202107221158188_Add_WarrentiesJSON.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2164,11 +2172,17 @@
     <EmbeddedResource Include="Migrations\202105140533359_check migrate.resx">
       <DependentUpon>202105140533359_check migrate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202107081018028_Add_WarrentiesJson.resx">
-      <DependentUpon>202107081018028_Add_WarrentiesJson.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202107221140170_Delete_WarrentiesJSON.resx">
+      <DependentUpon>202107221140170_Delete_WarrentiesJSON.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202107210858021_Add_IsHiResImg.resx">
-      <DependentUpon>202107210858021_Add_IsHiResImg.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202107221144058_Delete_IsHiResImg.resx">
+      <DependentUpon>202107221144058_Delete_IsHiResImg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202107221154003_Add_IsHiResImg.resx">
+      <DependentUpon>202107221154003_Add_IsHiResImg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202107221158188_Add_WarrentiesJSON.resx">
+      <DependentUpon>202107221158188_Add_WarrentiesJSON.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
