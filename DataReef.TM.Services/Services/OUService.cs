@@ -1580,6 +1580,7 @@ namespace DataReef.TM.Services.Services
                     Name = ou.Name,
                     Territory= matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
                 };
+
             }
         }
 
