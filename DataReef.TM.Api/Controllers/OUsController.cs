@@ -326,6 +326,24 @@ namespace DataReef.TM.Api.Controllers
             return await ouService.GetOUWithChildrenAnTerritories(ouid);
         }
 
+        [HttpGet]
+        [Route("rootouandterritory")]
+        public async Task<IHttpActionResult> GetRootOUWithTerritoryForPerson()
+        {
+            var res = await ouService.GetRootOUWithTerritoryForPerson();
+
+            return Ok(new
+            {
+                Response = String.IsNullOrEmpty(res.ErrorMessage)? new
+                {
+                    res.OUID,
+                    res.Name,
+                    res.Territory
+                } : null,
+                res.ErrorMessage
+            });
+        }
+
 
         [HttpGet]
         [InjectAuthPrincipal]
@@ -672,7 +690,7 @@ namespace DataReef.TM.Api.Controllers
         public override async Task<HttpResponseMessage> ActivateByGuid(Guid guid)
         {
             return await base.ActivateByGuid(guid);
-        } 
+        }
 
         public override async Task<OU> Post(OU item)
         {

@@ -134,6 +134,9 @@ namespace DataReef.TM.Contracts.Services
         Task<OUChildrenAndTerritories> GetOUWithChildrenAnTerritories(Guid ouID);
 
         [OperationContract]
+        Task<OUAndTerritoryForPerson> GetRootOUWithTerritoryForPerson();
+
+        [OperationContract]
         List<GuidNamePair> GetAncestorsForOU(Guid ouID);
 
         [OperationContract]

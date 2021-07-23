@@ -413,7 +413,7 @@ namespace DataReef.TM.Services.Services
 
                         PopulateOUSummary(child);
                     }
-                } 
+                }
                 return ou;
             }
         }
@@ -1526,6 +1526,63 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async Task<OUAndTerritoryForPerson> GetRootOUWithTerritoryForPerson()
+        {
+            using (var dc = new DataContext())
+            {
+                var userAssociations = await dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId).AsNoTracking().ToListAsync();
+
+                if (userAssociations.Count != 1)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Multiple OUs assigned for this user"
+                    };
+                }
+
+                var parentOu = userAssociations.FirstOrDefault();
+
+                var ou = await dc
+                              .OUs
+                              .Include(o => o.Territories)
+                              .Include(o => o.Territories.Select(x => x.Assignments))
+                              .FirstOrDefaultAsync(o => !o.IsDeleted && o.Guid == parentOu.OUID);
+
+                if (ou == null)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Ou is not exist"
+                    };
+                }
+
+                if (parentOu.OURole.RoleType == OURoleType.Manager || parentOu.OURole.RoleType == OURoleType.SuperAdmin || parentOu.OURole.RoleType == OURoleType.Owner)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Multiple Territories assigned for this user"
+                    };
+                }
+
+                var matchingTerritories = ou.Territories.Where(t => !t.IsDeleted && !t.IsArchived && t.Assignments?.Any(a => a.PersonID == SmartPrincipal.UserId) == true);
+
+                if (matchingTerritories.Count() != 1)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Multiple Territories assigned for this user"
+                    };
+                }
+
+                return new OUAndTerritoryForPerson
+                {
+                    OUID = parentOu.OUID,
+                    Name = parentOu.Name,
+                    Territory= matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
+                };
+            }
+        }
+
         public async Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "")
         {
             using (var dataContext = new DataContext())
@@ -1764,7 +1821,7 @@ namespace DataReef.TM.Services.Services
 
                     var panelIds = new List<Guid>();
                     var inverterIds = new List<Guid>();
-                    var financePlans = new List<FinancingSettingsDataView>(); 
+                    var financePlans = new List<FinancingSettingsDataView>();
 
 
 
@@ -1906,7 +1963,7 @@ namespace DataReef.TM.Services.Services
                                         .Where(s => s.OUID == ou.Guid)
                                         .ToListAsync();
 
-                        req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value); 
+                        req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
 
                         var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
 
@@ -1975,7 +2032,7 @@ namespace DataReef.TM.Services.Services
 
                 await dc.SaveChangesAsync();
             }
-        } 
+        }
 
         public async Task AddOUSettingsTest()
         {
@@ -2103,8 +2160,8 @@ namespace DataReef.TM.Services.Services
                 if (req.BasicInfo.InheritRolesPermissionsSettings)
                 {
                     var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
-                    if (parentOu != null) 
-                        ou.Permissions = parentOu.Permissions; 
+                    if (parentOu != null)
+                        ou.Permissions = parentOu.Permissions;
                 }
                 else
                 {
@@ -2112,7 +2169,7 @@ namespace DataReef.TM.Services.Services
                 }
 
                 req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
-               
+
                 var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
 
                 if (settings.Count > 0)
@@ -2355,7 +2412,7 @@ namespace DataReef.TM.Services.Services
                     {
                         child.Parent = null;
                     }
-                } 
+                }
                 if (summary)
                 {
                     foreach (var child in ou.Children)
