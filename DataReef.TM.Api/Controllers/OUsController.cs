@@ -342,8 +342,7 @@ namespace DataReef.TM.Api.Controllers
                 } : null,
                 res.ErrorMessage
             });
-        }
-
+        } 
 
         [HttpGet]
         [InjectAuthPrincipal]
