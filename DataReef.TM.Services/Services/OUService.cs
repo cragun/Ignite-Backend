@@ -1577,7 +1577,7 @@ namespace DataReef.TM.Services.Services
                 return new OUAndTerritoryForPerson
                 {
                     OUID = parentOu.OUID,
-                    Name = parentOu.Name,
+                    Name = ou.Name,
                     Territory= matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
                 };
             }
