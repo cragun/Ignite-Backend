@@ -2509,6 +2509,33 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public List<SBProposalMonthData> GetProposalUsageData(Guid proposalDataId)
+        {
+
+            using (var uow = UnitOfWorkFactory())
+            {
+                var proposal = uow
+                             .Get<Proposal>()
+                             .Include(p => p.SolarSystem.SystemProduction.Months).AsNoTracking()
+                             .FirstOrDefault(p => p.Guid == proposalDataId);
+
+                var MonthlyProduction = proposal
+                .SolarSystem?
+                .SystemProduction?
+                .Months?
+                .Select(m => new SBProposalMonthData
+                {
+                    Month = m.Month,
+                    Production = m.Production,
+                    Consumption = m.Consumption,
+                })?
+                .ToList();
+
+
+                return MonthlyProduction;
+            }
+        }
+
         public string Getproposalpdftest(string s)
         {
             Guid id = Guid.Parse("F56985B9-4660-4EBF-9979-1CDD22146F6E");

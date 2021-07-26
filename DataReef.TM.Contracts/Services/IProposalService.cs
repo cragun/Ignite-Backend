@@ -110,6 +110,9 @@ namespace DataReef.TM.Contracts.Services
         int GetProposalCount(Guid PropertyID);
 
         [OperationContract]
+        List<SBProposalMonthData> GetProposalUsageData(Guid proposalDataId);
+
+        [OperationContract]
         string Getproposalpdftest(string s);
 
         [OperationContract]

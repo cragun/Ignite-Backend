@@ -91,6 +91,13 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
+        [HttpGet, Route("proposal/{proposalDataId}/usage")] 
+        public async Task<List<SBProposalMonthData>> GetProposalUsageData(Guid proposalDataId)
+        {
+            return _proposalService.GetProposalUsageData(proposalDataId); 
+        }
+
+
         [HttpGet, Route("proposalpdftest")]
         public async Task<IHttpActionResult> Getproposalpdftest()
         {
