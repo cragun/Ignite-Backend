@@ -91,10 +91,10 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [HttpGet, Route("proposal/{proposalDataId}/usage")] 
-        public async Task<List<SBProposalMonthData>> GetProposalUsageData(Guid proposalDataId)
+        [HttpGet, Route("{proposalId}/usage")] 
+        public async Task<List<SBProposalMonthData>> GetProposalUsageData(Guid proposalId)
         {
-            return _proposalService.GetProposalUsageData(proposalDataId); 
+            return _proposalService.GetProposalUsageData(proposalId); 
         } 
 
         [HttpGet, Route("proposalpdftest")]

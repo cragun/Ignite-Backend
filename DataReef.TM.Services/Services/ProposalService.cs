@@ -2509,7 +2509,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public List<SBProposalMonthData> GetProposalUsageData(Guid proposalDataId)
+        public List<SBProposalMonthData> GetProposalUsageData(Guid proposalId)
         {
 
             using (var uow = UnitOfWorkFactory())
@@ -2517,7 +2517,9 @@ namespace DataReef.TM.Services.Services
                 var proposal = uow
                              .Get<Proposal>()
                              .Include(p => p.SolarSystem.SystemProduction.Months).AsNoTracking()
-                             .FirstOrDefault(p => p.Guid == proposalDataId);
+                             .FirstOrDefault(p => p.Guid == proposalId);
+
+                if (proposal == null) throw new ApplicationException("Invalid Proposal");
 
                 var MonthlyProduction = proposal
                 .SolarSystem?
@@ -2530,7 +2532,6 @@ namespace DataReef.TM.Services.Services
                     Consumption = m.Consumption,
                 })?
                 .ToList();
-
 
                 return MonthlyProduction;
             }
