@@ -2708,8 +2708,7 @@ namespace DataReef.TM.Services.Services
 
                     Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                 });
-            }
-
+            } 
             return "send";
         }
     }
