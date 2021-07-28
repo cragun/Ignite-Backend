@@ -147,7 +147,7 @@ namespace DataReef.TM.Services
                     person.SBActivityName = prsn.SBActivityName;
                     person.BuildVersion = prsn.BuildVersion;
                     person.SBLastActivityDate = prsn.SBLastActivityDate;
-
+                    person.IsHiResImg = prsn.IsHiResImg;
                     person.ModifiedTime = DateTime.UtcNow;
                     var ret = base.Update(person);
                     return ret;
@@ -161,7 +161,7 @@ namespace DataReef.TM.Services
                 prsndetails.ActivityName = prsn.ActivityName;
                 prsndetails.BuildVersion = prsn.BuildVersion;
                 prsndetails.LastActivityDate = prsn.LastActivityDate;
-
+                prsndetails.IsHiResImg = prsn.IsHiResImg;
                 prsndetails.ModifiedTime = DateTime.UtcNow;
                 var ret = base.Update(prsndetails);
 
