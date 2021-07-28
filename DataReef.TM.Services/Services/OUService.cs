@@ -1841,7 +1841,8 @@ namespace DataReef.TM.Services.Services
                             CreatedByID = SmartPrincipal.UserId,
                             CreatedByName = "InternalPortal",
                             IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd,
-                            MinModule = req.BasicInfo.MinModule
+                            MinModule = req.BasicInfo.MinModule,
+                            Permissions = req.BasicInfo.Permissions
                         };
 
                         dc.OUs.Add(ou);
@@ -2035,6 +2036,7 @@ namespace DataReef.TM.Services.Services
                 ou.Name = req.BasicInfo.OUName;
                 ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
                 ou.MinModule = req.BasicInfo.MinModule;
+                
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 var wkt = await HandleOUStates(ouid, req.BasicInfo.States, dc);
@@ -2048,6 +2050,19 @@ namespace DataReef.TM.Services.Services
                     .OUSettings
                     .Where(s => s.OUID == ou.Guid)
                     .ToListAsync();
+
+                if (req.BasicInfo.InheritRolesPermissionsSettings)
+                {
+                    var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
+                    if (parentOu != null)
+                    {
+                        ou.Permissions = parentOu.Permissions;
+                    }
+                }
+                else
+                {
+                    ou.Permissions = req.BasicInfo.Permissions;
+                }
 
                 req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
 

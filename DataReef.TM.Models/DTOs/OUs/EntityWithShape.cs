@@ -15,6 +15,8 @@ namespace DataReef.TM.Models.DTOs.OUs
         public string WellKnownText { get; set; }
 
         public int ShapesVersion { get; set; }
+        public float Lat { get; set; }
+        public float Lon { get; set; }
 
         public EntityWithShape(OU ou)
         {
@@ -22,6 +24,8 @@ namespace DataReef.TM.Models.DTOs.OUs
             Name = ou.Name;
             WellKnownText = ou.WellKnownText;
             ShapesVersion = ou.ShapesVersion;
+            Lat = ou.CentroidLat;
+            Lon = ou.CentroidLon;
         }
 
         public EntityWithShape(Territory territory)
@@ -30,6 +34,8 @@ namespace DataReef.TM.Models.DTOs.OUs
             Name = territory.Name;
             WellKnownText = territory.WellKnownText;
             ShapesVersion = territory.ShapesVersion;
+            Lat = territory.CentroidLat;
+            Lon = territory.CentroidLon;
         }
     }
 }
