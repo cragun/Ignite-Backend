@@ -37,5 +37,6 @@ namespace DataReef.TM.Models.DTOs.OUs
             Lat = territory.CentroidLat;
             Lon = territory.CentroidLon;
         }
+
     }
 }
