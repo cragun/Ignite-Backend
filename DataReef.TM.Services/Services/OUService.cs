@@ -1500,6 +1500,64 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async Task<OUAndTerritoryForPerson> GetRootOUWithTerritoryForPerson()
+        {
+            using (var dc = new DataContext())
+            {
+                var userAssociations = await dc.OUAssociations.Include(oa => oa.OURole).Where(oa => !oa.IsDeleted && oa.PersonID == SmartPrincipal.UserId).AsNoTracking().ToListAsync();
+
+                if (userAssociations.Count != 1)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Multiple OUs assigned for this user"
+                    };
+                }
+
+                var parentOu = userAssociations.FirstOrDefault();
+
+                var ou = await dc
+                              .OUs
+                              .Include(o => o.Territories)
+                              .Include(o => o.Territories.Select(x => x.Assignments))
+                              .FirstOrDefaultAsync(o => !o.IsDeleted && o.Guid == parentOu.OUID);
+
+                if (ou == null)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Ou is not exist"
+                    };
+                }
+
+                if (parentOu.OURole.RoleType == OURoleType.Manager || parentOu.OURole.RoleType == OURoleType.SuperAdmin || parentOu.OURole.RoleType == OURoleType.Owner)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Multiple Territories assigned for this user"
+                    };
+                }
+
+                var matchingTerritories = ou.Territories.Where(t => !t.IsDeleted && !t.IsArchived && t.Assignments?.Any(a => a.PersonID == SmartPrincipal.UserId) == true);
+
+                if (matchingTerritories.Count() != 1)
+                {
+                    return new OUAndTerritoryForPerson
+                    {
+                        ErrorMessage = "Multiple Territories assigned for this user"
+                    };
+                }
+
+                return new OUAndTerritoryForPerson
+                {
+                    OUID = parentOu.OUID,
+                    Name = ou.Name,
+                    Territory = matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
+                };
+
+            }
+        }
+
         public async Task<ICollection<FinancePlanDefinition>> GetFinancePlanDefinitions(Guid ouid, string include = "", string exclude = "", string fields = "")
         {
             using (var dataContext = new DataContext())
