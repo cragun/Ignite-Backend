@@ -1483,8 +1483,7 @@ namespace DataReef.TM.Services.Services
                 {
                     return null;
                 }
-
-
+                 
 
                 var matchingTerritories = canViewAll
                     ? ou.Territories.Where(t => !t.IsDeleted)
@@ -1495,8 +1494,7 @@ namespace DataReef.TM.Services.Services
                     OUID = ouID,
                     Children = ou.Children.Where(o => !o.IsDeleted && !o.IsArchived).Select(o => new EntityWithShape(o)),
                     Territories = matchingTerritories.Select(t => new EntityWithShape(t))
-                };
-
+                }; 
             }
         }
 
