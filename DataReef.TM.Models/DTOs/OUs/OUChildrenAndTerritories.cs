@@ -21,4 +21,22 @@ namespace DataReef.TM.Models.DTOs.OUs
         [DataMember]
         public IEnumerable<EntityWithShape> Territories { get; set; }
     }
+
+
+    [DataContract]
+    [NotMapped]
+    public class OUAndTerritoryForPerson
+    {
+        [DataMember]
+        public Guid OUID { get; set; }
+
+        [DataMember]
+        public string Name { get; set; }
+
+        [DataMember]
+        public EntityWithShape Territory { get; set; }
+
+        [DataMember]
+        public string ErrorMessage { get; set; }
+    }
 }
