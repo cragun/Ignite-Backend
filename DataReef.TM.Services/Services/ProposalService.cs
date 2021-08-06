@@ -2515,6 +2515,7 @@ namespace DataReef.TM.Services.Services
             }
         } 
 
+
         public int GetProposalCount(Guid PropertyID)
         {
             using (var dc = new DataContext())
