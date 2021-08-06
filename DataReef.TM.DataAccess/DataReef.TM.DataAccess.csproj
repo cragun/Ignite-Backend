@@ -1271,6 +1271,10 @@
     <Compile Include="Migrations\202107221158188_Add_WarrentiesJSON.Designer.cs">
       <DependentUpon>202107221158188_Add_WarrentiesJSON.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202108061101267_Add_IsDefaultProposal.cs" />
+    <Compile Include="Migrations\202108061101267_Add_IsDefaultProposal.Designer.cs">
+      <DependentUpon>202108061101267_Add_IsDefaultProposal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2183,6 +2187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202107221158188_Add_WarrentiesJSON.resx">
       <DependentUpon>202107221158188_Add_WarrentiesJSON.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108061101267_Add_IsDefaultProposal.resx">
+      <DependentUpon>202108061101267_Add_IsDefaultProposal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

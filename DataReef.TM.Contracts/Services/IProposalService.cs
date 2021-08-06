@@ -99,7 +99,10 @@ namespace DataReef.TM.Contracts.Services
 
         [OperationContract]
         void UpdateProposalWarrenties(string WarrentiesJSON, Guid ProposalID);
-        
+
+        [OperationContract]
+        void SetDefaultProposal(bool IsDefault, Guid ProposalID); 
+
         [OperationContract]
         void DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID);
 

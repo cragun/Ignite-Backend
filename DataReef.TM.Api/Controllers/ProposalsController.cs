@@ -91,11 +91,11 @@ namespace DataReef.TM.Api.Controllers
         }
 
 
-        [HttpGet, Route("{proposalId}/usage")] 
+        [HttpGet, Route("{proposalId}/usage")]
         public async Task<List<SBProposalMonthData>> GetProposalUsageData(Guid proposalId)
         {
-            return _proposalService.GetProposalUsageData(proposalId); 
-        } 
+            return _proposalService.GetProposalUsageData(proposalId);
+        }
 
         [HttpGet, Route("proposalpdftest")]
         public async Task<IHttpActionResult> Getproposalpdftest()
@@ -197,7 +197,7 @@ namespace DataReef.TM.Api.Controllers
         {
             return Ok(_proposalService.GetProposalMediaItemsAsShareableLinks(proposalID));
         }
-        
+
 
         [Route("media/{proposalMediaId:guid}/{thumb}")]
         [ResponseType(typeof(byte[]))]
@@ -221,7 +221,7 @@ namespace DataReef.TM.Api.Controllers
         [HttpPost]
         [ResponseType(typeof(SBGetDocument))]
         public async Task<IHttpActionResult> GetDocuments(Guid propertyID)
-        { 
+        {
             var response = _proposalService.GetDocuments(propertyID);
             return Ok(response);
         }
@@ -247,7 +247,7 @@ namespace DataReef.TM.Api.Controllers
                 using (var binaryReader = new System.IO.BinaryReader(PicFile.InputStream))
                 {
                     fileData = binaryReader.ReadBytes((Int32)PicFile.ContentLength);
-                   // base64String = Convert.ToBase64String(fileData, 0, fileData.Length);
+                    // base64String = Convert.ToBase64String(fileData, 0, fileData.Length);
                 }
 
                 if (PicFile != null && !string.IsNullOrWhiteSpace(PicFile.FileName))
@@ -419,6 +419,16 @@ namespace DataReef.TM.Api.Controllers
             return Ok(new GenericResponse<string> { Response = request?.Request });
         }
 
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
+        [Route("setDefault/{ProposalID}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SetDefaultProposal(Guid ProposalID, Proposal proposal)
+        {
+            _proposalService.SetDefaultProposal(proposal.IsDefault, ProposalID);
+            return Ok();
+        }
+
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
@@ -506,7 +516,7 @@ namespace DataReef.TM.Api.Controllers
         {
 
             exclude = string.IsNullOrEmpty(exclude) ? $"Property.Proposals" : $"{exclude},Property.Proposals";
-            var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);     
+            var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
             if(results.Count == 0)
             {
                 results = new List<Proposal>();
@@ -529,6 +539,6 @@ namespace DataReef.TM.Api.Controllers
         {
             var cnt = await _proposalService.SendProposalEmailToEC(proposalId);
             return Ok(new GenericResponse<string> { Response = cnt });
-        } 
+        }
     }
 }

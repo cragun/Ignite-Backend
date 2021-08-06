@@ -2022,7 +2022,7 @@ namespace DataReef.TM.Services.Services
 
                 uow.SaveChanges();
             }
-        }
+        } 
 
 
         public LoanResponse ReCalculateFinancing(FinancePlan financePlan)
@@ -2499,6 +2499,22 @@ namespace DataReef.TM.Services.Services
             }
         }
 
+        public async void SetDefaultProposal(bool IsDefault, Guid ProposalID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var existing = await dataContext.Proposal.FirstOrDefaultAsync(i => i.Guid == ProposalID);
+
+                if (existing == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                existing.IsDefault = IsDefault;
+                dataContext.SaveChanges();
+            }
+        } 
+
         public int GetProposalCount(Guid PropertyID)
         {
             using (var dc = new DataContext())
@@ -2708,7 +2724,7 @@ namespace DataReef.TM.Services.Services
 
                     Mail.Library.SendEmail("hevin.android@gmail.com", ccEmails, $"Proposal for {homeOwnerName} at {propertyAddress}", body, true, attachments);
                 });
-            } 
+            }
             return "send";
         }
     }

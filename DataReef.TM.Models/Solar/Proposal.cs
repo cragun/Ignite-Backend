@@ -126,10 +126,10 @@ namespace DataReef.TM.Models.Solar
         public bool IsManual { get; set; }
 
         [DataMember]
-        public double SystemSize { get; set; }
+        public double SystemSize { get; set; } 
 
-
-
+        [DataMember]
+        public bool IsDefault { get; set; }
 
         #region Navigation properties
 
