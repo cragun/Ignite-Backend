@@ -424,9 +424,8 @@ namespace DataReef.TM.Api.Controllers
         public async Task<IHttpActionResult> SetDefaultProposal(Guid ProposalID, Proposal proposal)
         {
             var res = await _proposalService.SetDefaultProposal(proposal.IsDefault, ProposalID);
-            return Ok(new GenericResponse<string> { Response = res);
-        }
-
+            return Ok(new GenericResponse<string> { Response = res });
+        } 
          
         [Route("{ProposalID}/url")]
         [HttpGet]
