@@ -852,9 +852,9 @@ namespace DataReef.TM.Services.Services
                                         .FirstOrDefault(s => s.Key.Equals(OUSetting.Proposal_TemplateBaseUrl, StringComparison.InvariantCultureIgnoreCase))
                                         .Value?
                                         .Value ?? baseUrl;
-                    } 
+                    }
                 }
-            } 
+            }
 
             baseUrl = baseUrl.TrimEnd('/');
 
@@ -1277,7 +1277,7 @@ namespace DataReef.TM.Services.Services
                     catch (Exception) { }
                 }
 
-                var documentUrls = GetProposalURLs(contractorID, data.Guid, proposal.Property.Territory.OUID ,signedDocuments, ouSettings);
+                var documentUrls = GetProposalURLs(contractorID, data.Guid, proposal.Property.Territory.OUID, signedDocuments, ouSettings);
                 var planName = financePlan.Name;
 
 
@@ -2022,7 +2022,7 @@ namespace DataReef.TM.Services.Services
 
                 uow.SaveChanges();
             }
-        } 
+        }
 
 
         public LoanResponse ReCalculateFinancing(FinancePlan financePlan)
@@ -2308,7 +2308,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem,Guid ProposalID)
+        public SystemCostItem UpdateQuantityAddersIncentives(AdderItem adderItem, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2499,7 +2499,7 @@ namespace DataReef.TM.Services.Services
             }
         }
 
-        public async void SetDefaultProposal(bool IsDefault, Guid ProposalID)
+        public async Task<string> SetDefaultProposal(bool IsDefault, Guid ProposalID)
         {
             using (var dataContext = new DataContext())
             {
@@ -2512,9 +2512,24 @@ namespace DataReef.TM.Services.Services
 
                 existing.IsDefault = IsDefault;
                 dataContext.SaveChanges();
+                return "success";
             }
-        } 
+        }
 
+        public async Task<string> GetProposalUrl(Guid ProposalID)
+        {
+            using (var dc = new DataContext())
+            {
+                var existing = await dc.Proposal.FirstOrDefaultAsync(x => x.Guid == ProposalID);
+
+                if (existing == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                return existing?.ProposalURL;
+            }
+        }
 
         public int GetProposalCount(Guid PropertyID)
         {
@@ -2666,7 +2681,7 @@ namespace DataReef.TM.Services.Services
                 var ouSettings = OUSettingService.GetOuSettings(proposal.Property.Territory.OUID);
 
                 var contractorID = data.ContractorID;
-                var documentUrls = GetProposalURLs(contractorID, data.Guid, proposal.Property.Territory.OUID ,null, ouSettings);
+                var documentUrls = GetProposalURLs(contractorID, data.Guid, proposal.Property.Territory.OUID, null, ouSettings);
                 var planName = financePlan.Name;
 
                 var attachmentPDFs = new List<Tuple<byte[], string>>();

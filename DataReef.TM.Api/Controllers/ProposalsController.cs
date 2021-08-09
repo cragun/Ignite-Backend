@@ -418,15 +418,22 @@ namespace DataReef.TM.Api.Controllers
             _proposalService.UpdateProposalWarrenties(request?.Request, ProposalID);
             return Ok(new GenericResponse<string> { Response = request?.Request });
         }
-
-        [AllowAnonymous]
-        [InjectAuthPrincipal]
+         
         [Route("setDefault/{ProposalID}")]
         [HttpPost]
         public async Task<IHttpActionResult> SetDefaultProposal(Guid ProposalID, Proposal proposal)
         {
-            _proposalService.SetDefaultProposal(proposal.IsDefault, ProposalID);
-            return Ok();
+            var res = await _proposalService.SetDefaultProposal(proposal.IsDefault, ProposalID);
+            return Ok(new GenericResponse<string> { Response = res);
+        }
+
+         
+        [Route("{ProposalID}/url")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetProposalUrl(Guid ProposalID)
+        {
+           string url = await _proposalService.GetProposalUrl(ProposalID);
+            return Ok(new GenericResponse<string> { Response = url });
         }
 
 
@@ -444,7 +451,7 @@ namespace DataReef.TM.Api.Controllers
         [Route("UpdateProposalFinancePlan/{ProposalID}")]
         [InjectAuthPrincipal]
         [HttpPost]
-        public async Task<IHttpActionResult> UpdateProposalFinancePlan([FromUri]Guid ProposalID,FinancePlan plan)
+        public async Task<IHttpActionResult> UpdateProposalFinancePlan([FromUri]Guid ProposalID, FinancePlan plan)
         {
             _proposalService.UpdateProposalFinancePlan(ProposalID, plan);
             return Ok();
@@ -517,7 +524,7 @@ namespace DataReef.TM.Api.Controllers
 
             exclude = string.IsNullOrEmpty(exclude) ? $"Property.Proposals" : $"{exclude},Property.Proposals";
             var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
-            if(results.Count == 0)
+            if (results.Count == 0)
             {
                 results = new List<Proposal>();
                 Proposal pro = new Proposal();
