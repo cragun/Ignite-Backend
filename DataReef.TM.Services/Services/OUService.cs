@@ -1578,7 +1578,7 @@ namespace DataReef.TM.Services.Services
                 {
                     OUID = parentOu.OUID,
                     Name = ou.Name,
-                    Territory= matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
+                    Territory = matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
                 };
 
             }
@@ -2167,6 +2167,29 @@ namespace DataReef.TM.Services.Services
                 else
                 {
                     ou.Permissions = req.BasicInfo.Permissions;
+
+                    var childIds = GetOUTree(ouid);
+                    childIds.Remove(ouid);
+                    childIds = childIds.Distinct().ToList();
+
+                    var childOUs = await dc.OUs.Where(o => childIds.Contains(o.Guid)).ToListAsync();
+                     
+                    var allOUSettings = (await dc
+                                    .OUSettings
+                                    .Where(ous => childIds.Contains(ous.OUID) && ous.Name == OUSetting.RolesPermissions_InheritSettings
+                                    && !ous.IsDeleted)
+                                    .AsNoTracking()
+                                    .ToListAsync());
+
+                    var disableInherit = allOUSettings.Where(a => a.Value == "0").ToList(); 
+
+                    foreach (var item in childOUs)
+                    {
+                        if (!Convert.ToBoolean(disableInherit?.Any(os => os.OUID == item.Guid)))
+                        {
+                            item.Permissions = ou.Permissions;
+                        }
+                    }
                 }
 
                 req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
