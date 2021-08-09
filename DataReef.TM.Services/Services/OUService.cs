@@ -2190,8 +2190,7 @@ namespace DataReef.TM.Services.Services
                             item.Permissions = ou.Permissions;
                         }
                     }
-                }
-
+                } 
                 req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
 
                 var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
