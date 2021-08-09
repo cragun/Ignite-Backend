@@ -129,6 +129,7 @@ namespace DataReef.TM.Models.DTOs.FinanceAdapters.SMARTBoard
 
         [JsonProperty("note_reference_id")]
         public string NoteReferenceId { get; set; }
+
         public string HoaName { get; set; }
 
         public string HoaPhoneEmail { get; set; }
