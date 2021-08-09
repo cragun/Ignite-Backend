@@ -433,8 +433,7 @@ namespace DataReef.TM.Api.Controllers
         {
            string url = await _proposalService.GetProposalUrl(ProposalID);
             return Ok(new GenericResponse<string> { Response = url });
-        }
-
+        } 
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
