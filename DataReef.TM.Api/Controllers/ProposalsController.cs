@@ -546,7 +546,6 @@ namespace DataReef.TM.Api.Controllers
                     } 
                 } 
             }
-
             return results;
         }
 
