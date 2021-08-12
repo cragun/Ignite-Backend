@@ -522,6 +522,7 @@ namespace DataReef.TM.Api.Controllers
 
             exclude = string.IsNullOrEmpty(exclude) ? $"Property.Proposals" : $"{exclude},Property.Proposals";
             var results = await base.List(deletedItems, pageNumber, itemsPerPage, include, exclude, fields);
+
             if (results.Count == 0)
             {
                 results = new List<Proposal>();
@@ -534,6 +535,18 @@ namespace DataReef.TM.Api.Controllers
                 results.Add(pro);
                 return results;
             }
+
+            foreach (var item in results)
+            {
+                foreach (var plan in item.SolarSystem?.FinancePlans)
+                {
+                    if (plan.Name.ToLower().Contains("sunlight"))
+                    {
+                        plan.plan = "Sunlight";
+                    } 
+                } 
+            }
+
             return results;
         }
 
