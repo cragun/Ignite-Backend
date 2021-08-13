@@ -215,13 +215,22 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         }
 
         //  public string CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
-        public async Task<string> CreateSunlightAccount(Property property, FinancePlanDefinition financePlan)
+        public async Task<string> CreateSunlightAccount(Property property, FinancePlanDefinition financePlan , Guid? proposalId)
         {
             //try
             //{
             using (var dc = new DataContext())
             {
-                var proposal = await dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefaultAsync();
+                Guid proposal;
+                if (proposalId != null && Guid.Empty != proposalId)
+                {
+                     proposal = await dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted && x.Guid == proposalId).Select(y => y.Guid).FirstOrDefaultAsync(); 
+                }
+                else
+                {
+                     proposal = await dc.Proposal.Where(x => x.PropertyID == property.Guid && !x.IsDeleted).Select(y => y.Guid).FirstOrDefaultAsync();
+
+                }
                 var proposalfianaceplan = await dc.FinancePlans.Where(x => x.SolarSystemID == proposal && !x.IsDeleted).FirstOrDefaultAsync();
                 var resp = JsonConvert.DeserializeObject<LoanResponse>(proposalfianaceplan.ResponseJSON);
 

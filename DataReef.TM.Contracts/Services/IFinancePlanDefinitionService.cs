@@ -25,7 +25,7 @@ namespace DataReef.TM.Contracts.Services
         IEnumerable<SmartBOARDCreditCheck> GetCreditCheckUrlForFinancePlanDefinition(Guid financePlanDefinitionId);
 
         [OperationContract]
-        Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID);
+        Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID , Guid? proposalId);
 
         [OperationContract]
         Task<SunlightResponse> GetSunlightloanstatus(Guid proposalId);

@@ -43,22 +43,30 @@ namespace DataReef.TM.Api.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetSunlightloanstatus(Guid proposalId)
         {
-            return Ok( await _financePlanDefinitionService.Value.GetSunlightloanstatus(proposalId));
+            return Ok(await _financePlanDefinitionService.Value.GetSunlightloanstatus(proposalId));
         }
 
         [Route("{proposalid:guid}/Sunlightsendloandocs")]
         [HttpGet]
         public async Task<IHttpActionResult> Sunlightsendloandocs(Guid proposalId)
         {
-            return Ok( await _financePlanDefinitionService.Value.Sunlightsendloandocs(proposalId));
+            return Ok(await _financePlanDefinitionService.Value.Sunlightsendloandocs(proposalId));
         }
 
         [Route("{financePlanDefinitionId:guid}/{propertyId:guid}/creditcheckurls")]
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
         public async Task<IHttpActionResult> GetPropertyCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID)
-        {            
-            return Ok(await _financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID));
+        {
+            return Ok(await _financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID, null));
+        }
+
+        [Route("{financePlanDefinitionId:guid}/{propertyId:guid}/{proposalId:guid}/creditcheckurls")]
+        [HttpGet]
+        [ResponseType(typeof(IEnumerable<SmartBOARDCreditCheck>))]
+        public async Task<IHttpActionResult> GetProposalCreditCheckUrl(Guid financePlanDefinitionId, Guid propertyID, Guid? proposalId)
+        {
+            return Ok(await _financePlanDefinitionService.Value.GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(financePlanDefinitionId, propertyID, proposalId));
         }
 
         [Route("updatePPW")]

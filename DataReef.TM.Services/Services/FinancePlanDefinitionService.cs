@@ -182,7 +182,7 @@ namespace DataReef.TM.Services
             }
         }
 
-        public async Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID)
+        public async Task<IEnumerable<SmartBOARDCreditCheck>> GetCreditCheckUrlForFinancePlanDefinitionAndPropertyID(Guid financePlanDefinitionId, Guid propertyID, Guid? proposalId)
         {
             using (var dc = new DataContext())
             {
@@ -215,7 +215,7 @@ namespace DataReef.TM.Services
 
                             if (url.CreditCheckUrl.Contains("{sunlightdata}"))
                             {
-                                string sunlighturl = await _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan);
+                                string sunlighturl = await _sunlightAdapter.Value.CreateSunlightAccount(property, financePlan, proposalId);
                                 url.CreditCheckUrl = url.CreditCheckUrl.Replace("{sunlightdata}", sunlighturl ?? string.Empty);
                             }
 
