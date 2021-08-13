@@ -25,7 +25,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     [ServiceBehavior(AddressFilterMode = AddressFilterMode.Any)]
     [Service(typeof(ISunlightAdapter))]
-    public class SunlightAdapter : ISunlightAdapter
+    public class SunlightAdapter : FinancialAdapterBase , ISunlightAdapter
     {
         private static readonly string url = System.Configuration.ConfigurationManager.AppSettings["Sunlight.test.url"];
         private static readonly string AuthUsername = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Auth.Username"];
@@ -33,7 +33,9 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
         private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
         private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
-
+        public SunlightAdapter(Lazy<IOUSettingService> ouSettingService) : base("PropertyNotes", ouSettingService)
+        {
+        }
         private RestClient client
         {
             get
@@ -201,7 +203,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
             request.AddHeader("SFAccessToken", "Bearer " + token);
 
             var response = client.Execute(request);
-
+            SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
             var content = response.Content;
             var ret = JsonConvert.DeserializeObject<SunlightProducts>(content);
 
@@ -270,10 +272,14 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                 request.AddHeader("SFAccessToken", "Bearer " + token);
 
                 var response = await client.ExecuteTaskAsync(request);
-
+                SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
+
+
                     throw new ApplicationException($"CreateSunlightApplicant Failed. {response.Content}");
+
                 }
 
                 var content = response.Content;
@@ -424,9 +430,10 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
                     request.AddHeader("SFAccessToken", "Bearer " + token);
 
                     var response = await client.ExecuteTaskAsync(request);
-
+                    SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
+                        SaveRequest(JsonConvert.SerializeObject(request), response.Content, url, response.StatusCode, null);
                         throw new ApplicationException($"Sunlightsendloandocs Failed. {response.Content}");
                     }
 
@@ -526,5 +533,25 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         //    }
 
         //}
+
+        public override string GetBaseUrl(Guid ouid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override AuthenticationContext GetAuthenticationContext(Guid ouid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Services.TokenResponse AuthorizeAdapter(AuthenticationContext authenticationContext)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Dictionary<string, string> GetCustomHeaders(Services.TokenResponse tokenResponse)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
