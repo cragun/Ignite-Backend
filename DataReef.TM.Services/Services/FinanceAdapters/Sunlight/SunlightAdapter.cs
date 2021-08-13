@@ -33,7 +33,7 @@ namespace DataReef.TM.Services.Services.FinanceAdapters.Sunlight
         private static readonly string Username = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Username"];
         private static readonly string Password = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Password"];
         private static readonly string FrameUrl = System.Configuration.ConfigurationManager.AppSettings["Sunlight.Frame.Url"];
-        public SunlightAdapter(Lazy<IOUSettingService> ouSettingService) : base("PropertyNotes", ouSettingService)
+        public SunlightAdapter(Lazy<IOUSettingService> ouSettingService) : base("Sunlight", ouSettingService)
         {
         }
         private RestClient client
