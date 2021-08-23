@@ -231,6 +231,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             //proposal.Financing.MonthlyPayment = (double)smarterPlan.Payment19M;
             proposal.Financing.MonthlyPayment = (double)smartPlan.MonthlySavings;
 
+
             #endregion
 
             if (proposal.ForecastScenario != null)
