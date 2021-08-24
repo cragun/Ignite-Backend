@@ -41,6 +41,9 @@ namespace DataReef.TM.Models.Solar
         [DataMember]
         public string SunlightResponseJson { get; set; }
 
+        [NotMapped]
+        public string plan { get; set; }
+
         #region Navigation
 
         [DataMember]

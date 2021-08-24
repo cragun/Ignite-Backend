@@ -2454,6 +2454,39 @@ namespace DataReef.TM.Services.Services
 
             }
         }
+
+        public async Task<string> SetDefaultProposal(bool IsDefault, Guid ProposalID)
+        {
+            using (var dataContext = new DataContext())
+            {
+                var existing = await dataContext.Proposal.FirstOrDefaultAsync(i => i.Guid == ProposalID);
+
+                if (existing == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                existing.IsDefault = IsDefault;
+                dataContext.SaveChanges();
+                return "success";
+            }
+        }
+
+        public async Task<string> GetProposalUrl(Guid ProposalID)
+        {
+            using (var dc = new DataContext())
+            {
+                var existing = await dc.Proposal.FirstOrDefaultAsync(x => x.Guid == ProposalID);
+
+                if (existing == null)
+                {
+                    throw new Exception("Proposal not found");
+                }
+
+                return existing?.ProposalURL;
+            }
+        }
+
         public int GetProposalCount(Guid PropertyID)
         {
             using (var dc = new DataContext())

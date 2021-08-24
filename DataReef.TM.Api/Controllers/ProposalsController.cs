@@ -404,6 +404,24 @@ namespace DataReef.TM.Api.Controllers
 
         [AllowAnonymous]
         [InjectAuthPrincipal]
+        [Route("setDefault/{ProposalID}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SetDefaultProposal(Guid ProposalID, Proposal proposal)
+        { 
+            var res = await _proposalService.SetDefaultProposal(proposal.IsDefault, ProposalID);
+            return Ok(new GenericResponse<string> { Response = res });
+        }
+
+        [Route("{ProposalID}/url")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetProposalUrl(Guid ProposalID)
+        {
+            string url = await _proposalService.GetProposalUrl(ProposalID);
+            return Ok(new GenericResponse<string> { Response = url });
+        }
+
+        [AllowAnonymous]
+        [InjectAuthPrincipal]
         [Route("DeleteAddersIncentives/{ProposalID}")]
         [HttpPost]
         public async Task<IHttpActionResult> DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID)
@@ -501,6 +519,18 @@ namespace DataReef.TM.Api.Controllers
                 results.Add(pro);
                 return results;
             }
+
+            foreach (var item in results)
+            {
+                foreach (var plan in item.SolarSystem?.FinancePlans)
+                {
+                    if (plan.Name.ToLower().Contains("sunlight"))
+                    {
+                        plan.plan = "Sunlight";
+                    }
+                }
+            } 
+
             return results;
         }
 
