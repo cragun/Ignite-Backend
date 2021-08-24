@@ -98,6 +98,12 @@ namespace DataReef.TM.Contracts.Services
         void UpdateExcludeProposalData(string excludeProposalJSON, Guid ProposalID);
 
         [OperationContract]
+        Task<string> SetDefaultProposal(bool IsDefault, Guid ProposalID);
+
+        [OperationContract]
+        Task<string> GetProposalUrl(Guid ProposalID);
+
+        [OperationContract]
         void DeleteAddersIncentives(AdderItem adderItem, Guid ProposalID);
 
         [OperationContract]

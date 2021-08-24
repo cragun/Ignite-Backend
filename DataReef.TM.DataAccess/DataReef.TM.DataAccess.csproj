@@ -1166,6 +1166,10 @@
     <Compile Include="Migrations\202107211126430_Add_IsHiResImg.Designer.cs">
       <DependentUpon>202107211126430_Add_IsHiResImg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202108240904134_Add_IsDefaultProposal.cs" />
+    <Compile Include="Migrations\202108240904134_Add_IsDefaultProposal.Designer.cs">
+      <DependentUpon>202108240904134_Add_IsDefaultProposal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -1996,6 +2000,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202107211126430_Add_IsHiResImg.resx">
       <DependentUpon>202107211126430_Add_IsHiResImg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108240904134_Add_IsDefaultProposal.resx">
+      <DependentUpon>202108240904134_Add_IsDefaultProposal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
