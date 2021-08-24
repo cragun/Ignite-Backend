@@ -135,5 +135,6 @@ namespace DataReef.TM.Models
         public static readonly string Legion_Photos_Suffix = "Definition";
 
         public static readonly string OU_Reporting_Settings = "Reporting.Settings";
+        public static readonly string RolesPermissions_InheritSettings = "RolesPermissions.InheritFromParent";
     }
 }
