@@ -228,7 +228,8 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             var smarterPlan = smarterResponse.ToPlanOption(SubPlan_Smarter.ToUpper(), "Apply All Incentives and Savings", PlanOptionType.Smarter, introMonthlyPayment);
 
             proposal.FinancePlanOptions = new List<ProposalFinancePlanOption> { stdPlan, smartPlan, smarterPlan };
-            proposal.Financing.MonthlyPayment = (double)smarterPlan.Payment19M;
+            //proposal.Financing.MonthlyPayment = (double)smarterPlan.Payment19M;
+            proposal.Financing.MonthlyPayment = (double)smartPlan.Payment19M;
 
             #endregion
 

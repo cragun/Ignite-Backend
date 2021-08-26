@@ -1578,7 +1578,7 @@ namespace DataReef.TM.Services.Services
                 {
                     OUID = parentOu.OUID,
                     Name = ou.Name,
-                    Territory= matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
+                    Territory = matchingTerritories.Select(t => new EntityWithShape(t)).FirstOrDefault()
                 };
 
             }
@@ -1867,6 +1867,11 @@ namespace DataReef.TM.Services.Services
                                     .OrderBy(gnp => gnp.Name)
                                     .ToList();
 
+                    ret.Roles = (await dc
+                               .OURoles.AsNoTracking().ToListAsync())
+                               .Select(sp => new GuidNamePair { Guid = sp.Guid, Name = sp.Name })
+                               .ToList();
+
                     ret.FinancePlans = (await dc
                                     .FinancePlaneDefinitions
                                     .Include(fp => fp.Provider)
@@ -1948,536 +1953,537 @@ namespace DataReef.TM.Services.Services
                             CreatedByName = "InternalPortal",
                             IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd,
                             MinModule = req.BasicInfo.MinModule,
-                            Permissions = req.BasicInfo.Permissions
-                        };
+                            Permissions = req.BasicInfo.Permissions,
+                            OURoleID = req.BasicInfo.OURoleID
+                    };
 
-                        dc.OUs.Add(ou);
+                    dc.OUs.Add(ou);
 
-                        var wkt = await HandleOUStates(ou.Guid, req.BasicInfo.States, dc);
-                        if (!string.IsNullOrWhiteSpace(wkt))
-                        {
-                            ou.WellKnownText = wkt;
-                        }
-
-                        var existingSettings = await dc
-                                        .OUSettings
-                                        .Where(s => s.OUID == ou.Guid)
-                                        .ToListAsync();
-
-                        req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
-
-                        var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
-
-                        if (settings.Count > 0)
-                        {
-                            dc.OUSettings.AddRange(settings);
-                        }
-
-                        await dc.SaveChangesAsync();
-
-                        var firstName = req?.BasicInfo?.OwnerFirstName;
-
-                        if (!string.IsNullOrEmpty(firstName) && firstName != "none")
-                        {
-                            var invite = new UserInvitation
-                            {
-                                FromPersonID = SmartPrincipal.UserId,
-                                EmailAddress = req.BasicInfo.OwnerEmail,
-                                FirstName = req.BasicInfo.OwnerFirstName,
-                                LastName = req.BasicInfo.OwnerLastName,
-                                OUID = ou.Guid,
-                                RoleID = OURole.OwnerRoleID,
-                                CreatedByID = SmartPrincipal.UserId,
-                            };
-                            _userInvitationService.Value.Insert(invite, dc);
-                        }
-
-                        transaction.Commit();
+                    var wkt = await HandleOUStates(ou.Guid, req.BasicInfo.States, dc);
+                    if (!string.IsNullOrWhiteSpace(wkt))
+                    {
+                        ou.WellKnownText = wkt;
                     }
+
+                    var existingSettings = await dc
+                                    .OUSettings
+                                    .Where(s => s.OUID == ou.Guid)
+                                    .ToListAsync();
+
+                    req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
+
+                    var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
+
+                    if (settings.Count > 0)
+                    {
+                        dc.OUSettings.AddRange(settings);
+                    }
+
+                    await dc.SaveChangesAsync();
+
+                    var firstName = req?.BasicInfo?.OwnerFirstName;
+
+                    if (!string.IsNullOrEmpty(firstName) && firstName != "none")
+                    {
+                        var invite = new UserInvitation
+                        {
+                            FromPersonID = SmartPrincipal.UserId,
+                            EmailAddress = req.BasicInfo.OwnerEmail,
+                            FirstName = req.BasicInfo.OwnerFirstName,
+                            LastName = req.BasicInfo.OwnerLastName,
+                            OUID = ou.Guid,
+                            RoleID = OURole.OwnerRoleID,
+                            CreatedByID = SmartPrincipal.UserId,
+                        };
+                        _userInvitationService.Value.Insert(invite, dc);
+                    }
+
+                    transaction.Commit();
+                }
 
                     catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-
+                {
+                    transaction.Rollback();
+                    throw ex;
                 }
+
             }
         }
+    }
 
-        public async Task EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req)
+    public async Task EditOUSettings(Guid ouID, OnboardingOUSettingsDataView req)
+    {
+        using (var dc = new DataContext())
         {
-            using (var dc = new DataContext())
+            var ou = await dc
+                        .OUs
+                        .FirstOrDefaultAsync(o => o.Guid == ouID
+                                          && !o.IsDeleted);
+
+            if (ou == null)
             {
-                var ou = await dc
-                            .OUs
-                            .FirstOrDefaultAsync(o => o.Guid == ouID
-                                              && !o.IsDeleted);
-
-                if (ou == null)
-                {
-                    throw new ApplicationException("OU does not exist!");
-                }
-
-                var existingSettings = await dc
-                    .OUSettings
-                    .Where(s => s.OUID == ou.Guid)
-                    .ToListAsync();
-
-                var settings = req.HandleSettingsLite(ou.Guid, existingSettings, _auditService, _blobService);
-
-                if (settings.Count > 0)
-                {
-                    dc.OUSettings.AddRange(settings);
-                }
-
-                await dc.SaveChangesAsync();
+                throw new ApplicationException("OU does not exist!");
             }
-        }
 
-        public async Task AddOUSettingsTest()
-        {
-            using (var dc = new DataContext())
+            var existingSettings = await dc
+                .OUSettings
+                .Where(s => s.OUID == ou.Guid)
+                .ToListAsync();
+
+            var settings = req.HandleSettingsLite(ou.Guid, existingSettings, _auditService, _blobService);
+
+            if (settings.Count > 0)
             {
-                Guid igniteid = Guid.Parse("3F78B1B0-C0C5-4987-A5D5-32EE1C893460");
-                Guid sbclientsid = Guid.Parse("9E0D3BE2-40CC-4FD5-BDB5-3BAAB201BD8C");
-                var ignite = await dc
-                    .OUSettings
-                    .Where(s => s.OUID == igniteid)
-                    .ToListAsync();
+                dc.OUSettings.AddRange(settings);
+            }
+
+            await dc.SaveChangesAsync();
+        }
+    }
+
+    public async Task AddOUSettingsTest()
+    {
+        using (var dc = new DataContext())
+        {
+            Guid igniteid = Guid.Parse("3F78B1B0-C0C5-4987-A5D5-32EE1C893460");
+            Guid sbclientsid = Guid.Parse("9E0D3BE2-40CC-4FD5-BDB5-3BAAB201BD8C");
+            var ignite = await dc
+                .OUSettings
+                .Where(s => s.OUID == igniteid)
+                .ToListAsync();
 
 
-                var sbclients = await dc
-                 .OUSettings
-                 .Where(s => s.OUID == sbclientsid)
-                 .ToListAsync();
+            var sbclients = await dc
+             .OUSettings
+             .Where(s => s.OUID == sbclientsid)
+             .ToListAsync();
 
-                foreach (var item in ignite)
+            foreach (var item in ignite)
+            {
+                var isExist = sbclients.FirstOrDefault(a => a.Name == item.Name);
+                if (isExist == null)
                 {
-                    var isExist = sbclients.FirstOrDefault(a => a.Name == item.Name);
-                    if (isExist == null)
+                    OUSetting setting = new OUSetting();
+                    setting.OUID = sbclientsid;
+                    setting.Value = item.Value;
+                    setting.Group = item.Group;
+                    setting.Inheritable = item.Inheritable;
+                    setting.Name = item.Name;
+                    setting.ValueType = item.ValueType;
+
+                    dc.OUSettings.Add(setting);
+                }
+            }
+
+            await dc.SaveChangesAsync();
+        }
+    }
+
+    public async Task AddGenericProposalOUSettings()
+    {
+        using (var dc = new DataContext())
+        {
+            using (var transaction = dc.Database.BeginTransaction())
+            {
+                try
+                {
+                    var ignite = await dc.OUs.ToListAsync();
+
+                    foreach (var item in ignite)
                     {
                         OUSetting setting = new OUSetting();
-                        setting.OUID = sbclientsid;
-                        setting.Value = item.Value;
-                        setting.Group = item.Group;
-                        setting.Inheritable = item.Inheritable;
-                        setting.Name = item.Name;
-                        setting.ValueType = item.ValueType;
+                        setting.OUID = item.Guid;
+                        setting.Value = "0";
+                        setting.Group = OUSettingGroupType.ConfigurationFile;
+                        setting.Inheritable = true;
+                        setting.Name = "Proposal.GenericSettings";
+                        setting.ValueType = SettingValueType.String;
 
                         dc.OUSettings.Add(setting);
+
+                        OUSetting generic = new OUSetting();
+                        generic.OUID = item.Guid;
+                        generic.Value = "http://ignite-proposals-stage.s3-website-us-west-2.amazonaws.com/generic/";
+                        generic.Group = OUSettingGroupType.ConfigurationFile;
+                        generic.Inheritable = true;
+                        generic.Name = "Proposal.Template.GenericUrl";
+                        generic.ValueType = SettingValueType.String;
+
+                        dc.OUSettings.Add(generic);
                     }
+
+                    await dc.SaveChangesAsync();
+
+                    transaction.Commit();
                 }
-
-                await dc.SaveChangesAsync();
-            }
-        }
-
-        public async Task AddGenericProposalOUSettings()
-        {
-            using (var dc = new DataContext())
-            {
-                using (var transaction = dc.Database.BeginTransaction())
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        var ignite = await dc.OUs.ToListAsync();
-
-                        foreach (var item in ignite)
-                        {
-                            OUSetting setting = new OUSetting();
-                            setting.OUID = item.Guid;
-                            setting.Value = "0";
-                            setting.Group = OUSettingGroupType.ConfigurationFile;
-                            setting.Inheritable = true;
-                            setting.Name = "Proposal.GenericSettings";
-                            setting.ValueType = SettingValueType.String;
-
-                            dc.OUSettings.Add(setting);
-
-                            OUSetting generic = new OUSetting();
-                            generic.OUID = item.Guid;
-                            generic.Value = "http://ignite-proposals-stage.s3-website-us-west-2.amazonaws.com/generic/";
-                            generic.Group = OUSettingGroupType.ConfigurationFile;
-                            generic.Inheritable = true;
-                            generic.Name = "Proposal.Template.GenericUrl";
-                            generic.ValueType = SettingValueType.String;
-
-                            dc.OUSettings.Add(generic);
-                        }
-
-                        await dc.SaveChangesAsync();
-
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
+                    transaction.Rollback();
+                    throw ex;
                 }
             }
         }
+    }
 
-        public async Task EditOU(Guid ouid, OnboardingOUDataView req)
+    public async Task EditOU(Guid ouid, OnboardingOUDataView req)
+    {
+        using (var dc = new DataContext())
         {
-            using (var dc = new DataContext())
+            var ou = await dc
+                        .OUs
+                        .FirstOrDefaultAsync(o => o.Guid == ouid
+                                          && !o.IsDeleted);
+
+            if (ou == null)
             {
-                var ou = await dc
-                            .OUs
-                            .FirstOrDefaultAsync(o => o.Guid == ouid
-                                              && !o.IsDeleted);
-
-                if (ou == null)
-                {
-                    throw new ApplicationException("OU does not exist!");
-                }
-
-                var existingContractor = req.ValidateContractorID(ou.Guid, dc);
-
-                if (!string.IsNullOrEmpty(existingContractor))
-                {
-                    throw new ApplicationException($"There's another OU ({existingContractor}) with that contractor ID! Please choose another Contractor ID.");
-                }
-
-                ou.Name = req.BasicInfo.OUName;
-                ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
-                ou.MinModule = req.BasicInfo.MinModule;
-
-                ou.Updated(SmartPrincipal.UserId, "InternalPortal");
-
-                var wkt = await HandleOUStates(ouid, req.BasicInfo.States, dc);
-                if (!string.IsNullOrWhiteSpace(wkt))
-                {
-                    ou.WellKnownText = wkt;
-                    ou.ShapesVersion += 1;
-                }
-
-                var existingSettings = await dc
-                    .OUSettings
-                    .Where(s => s.OUID == ou.Guid)
-                    .ToListAsync();
-
-                if (req.BasicInfo.InheritRolesPermissionsSettings)
-                {
-                    var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
-                    if (parentOu != null)
-                        ou.Permissions = parentOu.Permissions;
-                }
-                else
-                {
-                    ou.Permissions = req.BasicInfo.Permissions;
-
-                    var childIds = GetOUTree(ouid);
-                    childIds.Remove(ouid);
-                    childIds = childIds.Distinct().ToList();
-
-                    var childOUs = await dc.OUs.Where(o => childIds.Contains(o.Guid)).ToListAsync();
-                     
-                    var allOUSettings = (await dc
-                                    .OUSettings
-                                    .Where(ous => childIds.Contains(ous.OUID) && ous.Name == OUSetting.RolesPermissions_InheritSettings
-                                    && !ous.IsDeleted)
-                                    .AsNoTracking()
-                                    .ToListAsync());
-
-                    var disableInherit = allOUSettings.Where(a => a.Value == "0").ToList(); 
-
-                    foreach (var item in childOUs)
-                    {
-                        if (!Convert.ToBoolean(disableInherit?.Any(os => os.OUID == item.Guid)))
-                        {
-                            item.Permissions = ou.Permissions;
-                        }
-                    }
-                } 
-                req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
-
-                var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
-
-                if (settings.Count > 0)
-                {
-                    dc.OUSettings.AddRange(settings);
-                }
-
-                await dc.SaveChangesAsync();
+                throw new ApplicationException("OU does not exist!");
             }
+
+            var existingContractor = req.ValidateContractorID(ou.Guid, dc);
+
+            if (!string.IsNullOrEmpty(existingContractor))
+            {
+                throw new ApplicationException($"There's another OU ({existingContractor}) with that contractor ID! Please choose another Contractor ID.");
+            }
+
+            ou.Name = req.BasicInfo.OUName;
+            ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
+            ou.MinModule = req.BasicInfo.MinModule;
+            ou.OURoleID = req.BasicInfo.OURoleID;
+            ou.Updated(SmartPrincipal.UserId, "InternalPortal");
+
+            var wkt = await HandleOUStates(ouid, req.BasicInfo.States, dc);
+            if (!string.IsNullOrWhiteSpace(wkt))
+            {
+                ou.WellKnownText = wkt;
+                ou.ShapesVersion += 1;
+            }
+
+            var existingSettings = await dc
+                .OUSettings
+                .Where(s => s.OUID == ou.Guid)
+                .ToListAsync();
+
+            if (req.BasicInfo.InheritRolesPermissionsSettings)
+            {
+                var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
+                if (parentOu != null)
+                    ou.Permissions = parentOu.Permissions;
+            }
+            else
+            {
+                ou.Permissions = req.BasicInfo.Permissions;
+
+                var childIds = GetOUTree(ouid);
+                childIds.Remove(ouid);
+                childIds = childIds.Distinct().ToList();
+
+                var childOUs = await dc.OUs.Where(o => childIds.Contains(o.Guid)).ToListAsync();
+
+                var allOUSettings = (await dc
+                                .OUSettings
+                                .Where(ous => childIds.Contains(ous.OUID) && ous.Name == OUSetting.RolesPermissions_InheritSettings
+                                && !ous.IsDeleted)
+                                .AsNoTracking()
+                                .ToListAsync());
+
+                var disableInherit = allOUSettings.Where(a => a.Value == "0").ToList();
+
+                foreach (var item in childOUs)
+                {
+                    if (!Convert.ToBoolean(disableInherit?.Any(os => os.OUID == item.Guid)))
+                    {
+                        item.Permissions = ou.Permissions;
+                    }
+                }
+            }
+            req.HandleLogoImage(ou.Guid, existingSettings, _blobService.Value);
+
+            var settings = req.HandleSettings(ou.Guid, existingSettings, _auditService, _blobService);
+
+            if (settings.Count > 0)
+            {
+                dc.OUSettings.AddRange(settings);
+            }
+
+            await dc.SaveChangesAsync();
         }
+    }
 
-        /// <summary>
-        /// Method that verifies if the states provided need to update the ouid
-        /// </summary>
-        /// <param name="ouid"></param>
-        /// <param name="states"></param>
-        /// <param name="dc"></param>
-        /// <returns></returns>
-        private async Task<string> HandleOUStates(Guid ouid, List<string> states, DataContext dc)
+    /// <summary>
+    /// Method that verifies if the states provided need to update the ouid
+    /// </summary>
+    /// <param name="ouid"></param>
+    /// <param name="states"></param>
+    /// <param name="dc"></param>
+    /// <returns></returns>
+    private async Task<string> HandleOUStates(Guid ouid, List<string> states, DataContext dc)
+    {
+        var ouShapeNames = new HashSet<string>(await dc
+                                                .OUShapes
+                                                .Where(ous => ous.OUID == ouid && !ous.IsDeleted)
+                                                .Select(ous => ous.Name)
+                                                .ToListAsync());
+        if (ouShapeNames.SequenceEqual(states))
         {
-            var ouShapeNames = new HashSet<string>(await dc
-                                                    .OUShapes
-                                                    .Where(ous => ous.OUID == ouid && !ous.IsDeleted)
-                                                    .Select(ous => ous.Name)
-                                                    .ToListAsync());
-            if (ouShapeNames.SequenceEqual(states))
-            {
-                return null;
-            }
-
-
-            var ouStates = await dc
-                                .OUShapes
-                                .Where(s => s.OUID == ouid
-                                        && !s.IsDeleted
-                                        && (s.ShapeTypeID == "state" || s.ShapeTypeID == "country")
-                                        && s.Name != "New OUShape")
-                                .ToListAsync();
-
-            var ouStateNames = ouStates
-                                .Select(os => os.Name);
-
-            var statesToRemove = ouStates
-                                    .Where(s => !states.Contains(s.Name, StringComparer.OrdinalIgnoreCase));
-
-            var statesLeftAfterRemoval = ouStates
-                                            .Where(s => !statesToRemove.Contains(s)).ToList();
-            var statesToAdd = states
-                                .Where(s => !ouStateNames.Contains(s, StringComparer.OrdinalIgnoreCase)).ToList();
-
-            var shapesUpdated = statesToRemove.Count() > 0 || statesToAdd.Count() > 0;
-
-            foreach (var state in statesToRemove)
-            {
-                dc.OUShapes.Remove(state);
-            }
-
-            if (statesToAdd.Count() > 0)
-            {
-                var geoStates = _geoBridge.Value.GetShapesForStates(statesToAdd);
-                var stateShapes = geoStates
-                            .Select(s => new OUShape
-                            {
-                                Name = s.ShapeName,
-                                OUID = ouid,
-                                CentroidLat = s.CentroidLat,
-                                CentroidLon = s.CentroidLon,
-                                CreatedByID = SmartPrincipal.UserId,
-                                Radius = s.Radius,
-                                WellKnownText = s.ShapeReduced,
-                                ExternalID = s.ShapeID,
-                                ShapeTypeID = s.ShapeTypeID,
-                                ShapeID = new Guid(s.ShapeID),
-                                ParentID = !string.IsNullOrWhiteSpace(s.ParentID) ? new Guid(s.ParentID) : (Guid?)null,
-                            })
-                            .ToList();
-                foreach (var state in stateShapes)
-                {
-                    dc.OUShapes.Add(state);
-                }
-                statesLeftAfterRemoval.AddRange(stateShapes);
-
-                // add shapes in master territories 
-
-                var masterterritory = await dc.Territories.Include(t => t.Shapes).FirstOrDefaultAsync(a => a.OUID == ouid && a.Status == TerritoryStatus.Master);
-                if (masterterritory != null)
-                {
-                    var masterterritoryShapes = geoStates
-                           .Select(s => new TerritoryShape
-                           {
-                               Name = s.ShapeName,
-                               TerritoryID = masterterritory.Guid,
-                               CentroidLat = s.CentroidLat,
-                               CentroidLon = s.CentroidLon,
-                               CreatedByID = SmartPrincipal.UserId,
-                               Radius = s.Radius,
-                               WellKnownText = s.ShapeReduced,
-                               ExternalID = s.ShapeID,
-                               ShapeTypeID = s.ShapeTypeID,
-                               ShapeID = new Guid(s.ShapeID),
-                               ParentID = !string.IsNullOrWhiteSpace(s.ParentID) ? new Guid(s.ParentID) : (Guid?)null,
-                           })
-                           .ToList();
-                    foreach (var item in masterterritoryShapes)
-                    {
-                        dc.TerritoryShapes.Add(item);
-                    }
-                }
-            }
-
-            if (shapesUpdated)
-            {
-                // update the OU WKT
-                var stateWKTs = statesLeftAfterRemoval.Select(s => DbGeography.FromText(s.WellKnownText)).ToList();
-                var first = stateWKTs.First();
-
-                foreach (var wkt in stateWKTs)
-                {
-                    if (wkt == first)
-                    {
-                        continue;
-                    }
-                    first = first.Union(wkt);
-                }
-
-                return first.WellKnownValue.WellKnownText;
-            }
-
             return null;
         }
 
-        public List<GuidNamePair> GetAncestorsForOU(Guid ouID)
+
+        var ouStates = await dc
+                            .OUShapes
+                            .Where(s => s.OUID == ouid
+                                    && !s.IsDeleted
+                                    && (s.ShapeTypeID == "state" || s.ShapeTypeID == "country")
+                                    && s.Name != "New OUShape")
+                            .ToListAsync();
+
+        var ouStateNames = ouStates
+                            .Select(os => os.Name);
+
+        var statesToRemove = ouStates
+                                .Where(s => !states.Contains(s.Name, StringComparer.OrdinalIgnoreCase));
+
+        var statesLeftAfterRemoval = ouStates
+                                        .Where(s => !statesToRemove.Contains(s)).ToList();
+        var statesToAdd = states
+                            .Where(s => !ouStateNames.Contains(s, StringComparer.OrdinalIgnoreCase)).ToList();
+
+        var shapesUpdated = statesToRemove.Count() > 0 || statesToAdd.Count() > 0;
+
+        foreach (var state in statesToRemove)
         {
-            return GetAncestors(ouID);
+            dc.OUShapes.Remove(state);
         }
 
-        private List<GuidNamePair> GetAncestors(Guid ouid, DataContext dc = null)
+        if (statesToAdd.Count() > 0)
         {
-            var dcExists = dc != null;
-            if (!dcExists)
-            {
-                dc = new DataContext();
-            }
-            var allAncestorIDs = dc
-                                .Database
-                                .SqlQuery<Guid>($"select * from OUTreeUP('{ouid}')")
-                                .ToList();
-            // need to reverse the list. Last is the root OU
-            allAncestorIDs.Reverse();
-            //var firstAncestor = -1;
-            var foundFirst = false;
-            var myIDs = new List<Guid>();
-
-            var associationIds = dc
-                                .OUAssociations
-                                .Where(oua => allAncestorIDs.Contains(oua.OUID) && oua.PersonID == SmartPrincipal.UserId)
-                                .Select(oua => oua.OUID)
-                                .ToList();
-
-            for (int i = 0; i < allAncestorIDs.Count; i++)
-            {
-                var ancestorId = allAncestorIDs[i];
-                if (!foundFirst)
-                {
-                    foundFirst = associationIds.Contains(ancestorId);
-                }
-
-                if (foundFirst)
-                {
-                    myIDs.Add(ancestorId);
-                }
-            }
-
-            var result = dc
-                        .OUs
-                        .Where(o => myIDs.Contains(o.Guid))
-                        .ToList()
-                        .Select(o => new GuidNamePair(o))
-                        .OrderBy(o => myIDs.IndexOf(o.Guid))
+            var geoStates = _geoBridge.Value.GetShapesForStates(statesToAdd);
+            var stateShapes = geoStates
+                        .Select(s => new OUShape
+                        {
+                            Name = s.ShapeName,
+                            OUID = ouid,
+                            CentroidLat = s.CentroidLat,
+                            CentroidLon = s.CentroidLon,
+                            CreatedByID = SmartPrincipal.UserId,
+                            Radius = s.Radius,
+                            WellKnownText = s.ShapeReduced,
+                            ExternalID = s.ShapeID,
+                            ShapeTypeID = s.ShapeTypeID,
+                            ShapeID = new Guid(s.ShapeID),
+                            ParentID = !string.IsNullOrWhiteSpace(s.ParentID) ? new Guid(s.ParentID) : (Guid?)null,
+                        })
                         .ToList();
-
-            if (!dcExists)
+            foreach (var state in stateShapes)
             {
-                dc.Dispose();
+                dc.OUShapes.Add(state);
             }
+            statesLeftAfterRemoval.AddRange(stateShapes);
+
+            // add shapes in master territories 
+
+            var masterterritory = await dc.Territories.Include(t => t.Shapes).FirstOrDefaultAsync(a => a.OUID == ouid && a.Status == TerritoryStatus.Master);
+            if (masterterritory != null)
+            {
+                var masterterritoryShapes = geoStates
+                       .Select(s => new TerritoryShape
+                       {
+                           Name = s.ShapeName,
+                           TerritoryID = masterterritory.Guid,
+                           CentroidLat = s.CentroidLat,
+                           CentroidLon = s.CentroidLon,
+                           CreatedByID = SmartPrincipal.UserId,
+                           Radius = s.Radius,
+                           WellKnownText = s.ShapeReduced,
+                           ExternalID = s.ShapeID,
+                           ShapeTypeID = s.ShapeTypeID,
+                           ShapeID = new Guid(s.ShapeID),
+                           ParentID = !string.IsNullOrWhiteSpace(s.ParentID) ? new Guid(s.ParentID) : (Guid?)null,
+                       })
+                       .ToList();
+                foreach (var item in masterterritoryShapes)
+                {
+                    dc.TerritoryShapes.Add(item);
+                }
+            }
+        }
+
+        if (shapesUpdated)
+        {
+            // update the OU WKT
+            var stateWKTs = statesLeftAfterRemoval.Select(s => DbGeography.FromText(s.WellKnownText)).ToList();
+            var first = stateWKTs.First();
+
+            foreach (var wkt in stateWKTs)
+            {
+                if (wkt == first)
+                {
+                    continue;
+                }
+                first = first.Union(wkt);
+            }
+
+            return first.WellKnownValue.WellKnownText;
+        }
+
+        return null;
+    }
+
+    public List<GuidNamePair> GetAncestorsForOU(Guid ouID)
+    {
+        return GetAncestors(ouID);
+    }
+
+    private List<GuidNamePair> GetAncestors(Guid ouid, DataContext dc = null)
+    {
+        var dcExists = dc != null;
+        if (!dcExists)
+        {
+            dc = new DataContext();
+        }
+        var allAncestorIDs = dc
+                            .Database
+                            .SqlQuery<Guid>($"select * from OUTreeUP('{ouid}')")
+                            .ToList();
+        // need to reverse the list. Last is the root OU
+        allAncestorIDs.Reverse();
+        //var firstAncestor = -1;
+        var foundFirst = false;
+        var myIDs = new List<Guid>();
+
+        var associationIds = dc
+                            .OUAssociations
+                            .Where(oua => allAncestorIDs.Contains(oua.OUID) && oua.PersonID == SmartPrincipal.UserId)
+                            .Select(oua => oua.OUID)
+                            .ToList();
+
+        for (int i = 0; i < allAncestorIDs.Count; i++)
+        {
+            var ancestorId = allAncestorIDs[i];
+            if (!foundFirst)
+            {
+                foundFirst = associationIds.Contains(ancestorId);
+            }
+
+            if (foundFirst)
+            {
+                myIDs.Add(ancestorId);
+            }
+        }
+
+        var result = dc
+                    .OUs
+                    .Where(o => myIDs.Contains(o.Guid))
+                    .ToList()
+                    .Select(o => new GuidNamePair(o))
+                    .OrderBy(o => myIDs.IndexOf(o.Guid))
+                    .ToList();
+
+        if (!dcExists)
+        {
+            dc.Dispose();
+        }
+        return result;
+    }
+
+    public async Task<IEnumerable<Person>> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email)
+    {
+        using (var dc = new DataContext())
+        {
+            var allAncestorIDs = await dc
+                            .Database
+                            .SqlQuery<Guid>($"select * from OUTreeUP('{ouID}')")
+                            .ToListAsync();
+
+            var associationsQuery = dc
+                                .OUAssociations
+                                .Include(x => x.Person)
+                                .Where(oua => allAncestorIDs.Contains(oua.OUID) && !oua.IsDeleted);
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                associationsQuery = associationsQuery.Where(x => x.Person.EmailAddressString.Contains(email));
+            }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                associationsQuery = associationsQuery.Where(x => x.Person.Name.Contains(name));
+            }
+
+            var result = await associationsQuery.AsNoTracking()
+                        .Select(a => a.Person)
+                        .Where(p => !p.IsDeleted)
+                        .Distinct()
+                        .OrderBy(p => p.Name)
+                        .ToListAsync();
+
+
             return result;
         }
 
-        public async Task<IEnumerable<Person>> GetPersonsAssociatedWithOUOrAncestor(Guid ouID, string name, string email)
+    }
+
+    public OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false)
+    {
+        OU ou = GetOU(uniqueId, include, exclude, fields, deletedItems, true);
+        //ou = OUBuilder(ou, include, exclude, fields, true, true);
+
+        if (ou.Children != null)
         {
-            using (var dc = new DataContext())
+            if (!string.IsNullOrWhiteSpace(query))
             {
-                var allAncestorIDs = await dc
-                                .Database
-                                .SqlQuery<Guid>($"select * from OUTreeUP('{ouID}')")
-                                .ToListAsync();
+                var childIds = GetChildOUIDs(new List<Guid> { uniqueId }, query);
+                ou.Children = base.GetMany(childIds, include, exclude, fields, deletedItems);
 
-                var associationsQuery = dc
-                                    .OUAssociations
-                                    .Include(x => x.Person)
-                                    .Where(oua => allAncestorIDs.Contains(oua.OUID) && !oua.IsDeleted);
-
-                if (!string.IsNullOrEmpty(email))
+                // if Parent is present, it will break the serialization
+                foreach (var child in ou.Children)
                 {
-                    associationsQuery = associationsQuery.Where(x => x.Person.EmailAddressString.Contains(email));
-                }
-
-                if (!string.IsNullOrEmpty(name))
-                {
-                    associationsQuery = associationsQuery.Where(x => x.Person.Name.Contains(name));
-                }
-
-                var result = await associationsQuery.AsNoTracking()
-                            .Select(a => a.Person)
-                            .Where(p => !p.IsDeleted)
-                            .Distinct()
-                            .OrderBy(p => p.Name)
-                            .ToListAsync();
-
-
-                return result;
-            }
-
-        }
-
-        public OU GetWithAncestors(Guid uniqueId, string include = "", string exclude = "", string fields = "", bool summary = true, string query = "", bool deletedItems = false)
-        {
-            OU ou = GetOU(uniqueId, include, exclude, fields, deletedItems, true);
-            //ou = OUBuilder(ou, include, exclude, fields, true, true);
-
-            if (ou.Children != null)
-            {
-                if (!string.IsNullOrWhiteSpace(query))
-                {
-                    var childIds = GetChildOUIDs(new List<Guid> { uniqueId }, query);
-                    ou.Children = base.GetMany(childIds, include, exclude, fields, deletedItems);
-
-                    // if Parent is present, it will break the serialization
-                    foreach (var child in ou.Children)
-                    {
-                        child.Parent = null;
-                    }
-                }
-                if (summary)
-                {
-                    foreach (var child in ou.Children)
-                    {
-                        PopulateOUSummary(child);
-                    }
+                    child.Parent = null;
                 }
             }
-
-            return ou;
-        }
-
-        public async Task<List<OUWithAncestors>> GetSubOUsForOuSetting(Guid parentOUID, string settingName)
-        {
-            using (DataContext dataContext = new DataContext())
+            if (summary)
             {
-                var userOus = ListAllForPerson(SmartPrincipal.UserId) ?? new List<OU>();
-
-                var ids = GetOUAndChildrenGuids(parentOUID);
-                ids?.Remove(parentOUID);
-
-                var ouSettings = await dataContext.OUSettings.Where(o => ids.Contains(o.OUID) && o.Name.Equals(settingName) && !o.IsDeleted).AsNoTracking().ToListAsync();
-
-                return userOus
-                    .Where(o => ids?.Contains(o.Guid) == true && ouSettings?.Any(os => os.OUID == o.Guid) == true)
-                    .Select(o => new OUWithAncestors
-                    {
-                        Guid = o.Guid,
-                        Name = o.Name,
-                        Ancestors = GetAncestors(o.Guid, dataContext)
-                    }).ToList();
+                foreach (var child in ou.Children)
+                {
+                    PopulateOUSummary(child);
+                }
             }
         }
 
-        public async Task<Tuple<string, List<ActiveUserDTO>>> GetActiveUsersForOrgID(Guid ouid)
-        {
+        return ou;
+    }
 
-            using (DataContext dataContext = new DataContext())
-            {
-                var activeUsers = await dataContext
-                         .Database
-                         .SqlQuery<ActiveUserDTO>(@"SELECT P.Guid AS Guid, FirstName, LastName, P.Name, EmailAddressString, R.Name AS RoleName
+    public async Task<List<OUWithAncestors>> GetSubOUsForOuSetting(Guid parentOUID, string settingName)
+    {
+        using (DataContext dataContext = new DataContext())
+        {
+            var userOus = ListAllForPerson(SmartPrincipal.UserId) ?? new List<OU>();
+
+            var ids = GetOUAndChildrenGuids(parentOUID);
+            ids?.Remove(parentOUID);
+
+            var ouSettings = await dataContext.OUSettings.Where(o => ids.Contains(o.OUID) && o.Name.Equals(settingName) && !o.IsDeleted).AsNoTracking().ToListAsync();
+
+            return userOus
+                .Where(o => ids?.Contains(o.Guid) == true && ouSettings?.Any(os => os.OUID == o.Guid) == true)
+                .Select(o => new OUWithAncestors
+                {
+                    Guid = o.Guid,
+                    Name = o.Name,
+                    Ancestors = GetAncestors(o.Guid, dataContext)
+                }).ToList();
+        }
+    }
+
+    public async Task<Tuple<string, List<ActiveUserDTO>>> GetActiveUsersForOrgID(Guid ouid)
+    {
+
+        using (DataContext dataContext = new DataContext())
+        {
+            var activeUsers = await dataContext
+                     .Database
+                     .SqlQuery<ActiveUserDTO>(@"SELECT P.Guid AS Guid, FirstName, LastName, P.Name, EmailAddressString, R.Name AS RoleName
                                                     FROM People P
                                                     INNER JOIN OUAssociations OUA 
                                                     ON P.Guid = OUA.PersonID
@@ -2494,519 +2500,519 @@ namespace DataReef.TM.Services.Services
                                         )
                                         AND P.IsDeleted = 0 AND OUA.IsDeleted = 0
                                         Order by Name", ouid)
-                        .ToListAsync();
+                    .ToListAsync();
 
-                var users = activeUsers
-                        .GroupBy(au => au.Guid)
-                        .Select(g => g.HighestRole())
-                        .ToList();
+            var users = activeUsers
+                    .GroupBy(au => au.Guid)
+                    .Select(g => g.HighestRole())
+                    .ToList();
 
-                var ouName = (await dataContext.OUs.AsNoTracking().FirstOrDefaultAsync(o => o.Guid == ouid))?.Name;
-                return new Tuple<string, List<ActiveUserDTO>>(ouName, users);
-            }
+            var ouName = (await dataContext.OUs.AsNoTracking().FirstOrDefaultAsync(o => o.Guid == ouid))?.Name;
+            return new Tuple<string, List<ActiveUserDTO>>(ouName, users);
         }
+    }
 
-        public async Task<OUActiveUsersCSV> GetActiveUsersCSV(Guid ouid)
+    public async Task<OUActiveUsersCSV> GetActiveUsersCSV(Guid ouid)
+    {
+        var data = await GetActiveUsersForOrgID(ouid);
+
+        var response = new OUActiveUsersCSV
         {
-            var data = await GetActiveUsersForOrgID(ouid);
+            OUName = data.Item1,
+        };
 
-            var response = new OUActiveUsersCSV
+        using (var memStream = new MemoryStream())
+        {
+            using (var writer = new StreamWriter(memStream))
             {
-                OUName = data.Item1,
-            };
-
-            using (var memStream = new MemoryStream())
-            {
-                using (var writer = new StreamWriter(memStream))
+                using (var csv = new CsvWriter(writer))
                 {
-                    using (var csv = new CsvWriter(writer))
-                    {
-                        csv.WriteRecords(data.Item2);
-                        writer.Flush();
-                    }
+                    csv.WriteRecords(data.Item2);
+                    writer.Flush();
                 }
-                response.ActiveUsersCSV = memStream.ToArray();
             }
-
-            return response;
+            response.ActiveUsersCSV = memStream.ToArray();
         }
 
-        //using (var writer = new StreamWriter("path\\to\\file.csv"))
-        //using (var csv = new CsvWriter(writer))
-        //{
-        //    csv.WriteRecords(records);
-        //}
+        return response;
+    }
+
+    //using (var writer = new StreamWriter("path\\to\\file.csv"))
+    //using (var csv = new CsvWriter(writer))
+    //{
+    //    csv.WriteRecords(records);
+    //}
 
 
-        public async Task<IEnumerable<zapierOus>> GetzapierOusList(float? Lat, float? Lon, string apiKey)
+    public async Task<IEnumerable<zapierOus>> GetzapierOusList(float? Lat, float? Lon, string apiKey)
+    {
+        using (var dc = new DataContext())
         {
-            using (var dc = new DataContext())
+            //-- exec usp_GetOUIdsNameForGeoCoordinates 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
+            var zapierOusList = await dc
+         .Database
+         .SqlQuery<zapierOus>("exec usp_GetOUIdsNameForGeoCoordinates @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", apiKey))
+         .ToListAsync();
+
+            return zapierOusList;
+        }
+    }
+
+    public string GetApikeyByOU(Guid ouid)
+    {
+        // validate apiKey
+        var sbSettings = _settingsService
+                            .Value
+                            .GetSettingsByOUID(ouid)
+                            ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
+                            ?.GetValue<ICollection<SelectedIntegrationOption>>()?
+                            .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
+                            .Data?
+                            .SMARTBoard;
+
+        return sbSettings.ApiKey;
+    }
+
+    public async Task<IEnumerable<Territories>> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
+    {
+        Lat = Lat == null ? 0 : Lat;
+        Lon = Lon == null ? 0 : Lon;
+        using (var dc = new DataContext())
+        {
+            //-- exec usp_GetTerritoryIdsNameByapiKey 29.920071,-95.498855,NULL,'1E9E5809-45F2-4CEE-AACB-6617DD232A40'
+            var TerritoriesList = await dc
+         .Database
+         .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey, @ouid", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", "NULL"), new SqlParameter("@ouid", ouid))
+         .ToListAsync();
+
+            return TerritoriesList;
+        }
+    }
+
+    public async Task<IEnumerable<OURole>> GetOuRoles()
+    {
+        using (var dc = new DataContext())
+        {
+            var ouRoles = await dc.OURoles.Where(a => a.IsActive == true).AsNoTracking().ToListAsync();
+            return ouRoles;
+        }
+    }
+
+    public void UpdateOuRoles(List<OURole> roles)
+    {
+        using (var dc = new DataContext())
+        {
+            foreach (var role in roles)
             {
-                //-- exec usp_GetOUIdsNameForGeoCoordinates 29.973433, -95.243265, '1f82605d3fe666478f3f4f1ee25ae828'
-                var zapierOusList = await dc
-             .Database
-             .SqlQuery<zapierOus>("exec usp_GetOUIdsNameForGeoCoordinates @latitude, @longitude, @apiKey", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", apiKey))
-             .ToListAsync();
-
-                return zapierOusList;
+                var ourole = dc.OURoles.FirstOrDefault(a => a.Guid == role.Guid);
+                role.Permissions = ourole.Permissions;
+                ourole.Updated(role.Guid);
             }
+
+            dc.SaveChanges();
         }
+    }
 
-        public string GetApikeyByOU(Guid ouid)
+    public IEnumerable<GuidNamePair> SBGetOuRoles()
+    {
+        using (var dc = new DataContext())
         {
-            // validate apiKey
-            var sbSettings = _settingsService
-                                .Value
-                                .GetSettingsByOUID(ouid)
-                                ?.FirstOrDefault(x => x.Name == SolarTrackerResources.SelectedSettingName)
-                                ?.GetValue<ICollection<SelectedIntegrationOption>>()?
-                                .FirstOrDefault(s => s.Data?.SMARTBoard != null)?
-                                .Data?
-                                .SMARTBoard;
-
-            return sbSettings.ApiKey;
-        }
-
-        public async Task<IEnumerable<Territories>> GetTerritoriesListByOu(float? Lat, float? Lon, Guid ouid)
-        {
-            Lat = Lat == null ? 0 : Lat;
-            Lon = Lon == null ? 0 : Lon;
-            using (var dc = new DataContext())
+            var ouRoles = dc.OURoles.Where(a => a.IsActive == true).Select(o => new GuidNamePair
             {
-                //-- exec usp_GetTerritoryIdsNameByapiKey 29.920071,-95.498855,NULL,'1E9E5809-45F2-4CEE-AACB-6617DD232A40'
-                var TerritoriesList = await dc
-             .Database
-             .SqlQuery<Territories>("exec usp_GetTerritoryIdsNameByapiKey @latitude, @longitude, @apiKey, @ouid", new SqlParameter("@latitude", Lat), new SqlParameter("@longitude", Lon), new SqlParameter("@apiKey", "NULL"), new SqlParameter("@ouid", ouid))
-             .ToListAsync();
+                Guid = o.Guid,
+                Name = o.Name,
+            }).ToList();
 
-                return TerritoriesList;
-            }
+            return ouRoles;
         }
+    }
 
-        public async Task<IEnumerable<OURole>> GetOuRoles()
+
+    public async Task<OURole> GetOuRoleByID(Guid? roleid)
+    {
+        using (var dc = new DataContext())
         {
-            using (var dc = new DataContext())
+            var ouRoles = await dc.OURoles.FirstOrDefaultAsync(a => a.Guid == roleid);
+            if (ouRoles == null)
             {
-                var ouRoles = await dc.OURoles.Where(a => a.IsActive == true).AsNoTracking().ToListAsync();
-                return ouRoles;
+                throw new ApplicationException("OU does not exist!");
             }
-        }
 
-        public void UpdateOuRoles(List<OURole> roles)
+            return ouRoles;
+        }
+    }
+
+    public async Task<bool> UpdateOuRolesPermission(List<OURole> roles)
+    {
+        try
         {
             using (var dc = new DataContext())
             {
                 foreach (var role in roles)
                 {
-                    var ourole = dc.OURoles.FirstOrDefault(a => a.Guid == role.Guid);
-                    role.Permissions = ourole.Permissions;
-                    ourole.Updated(role.Guid);
+                    var ourole = await dc.OURoles.FirstOrDefaultAsync(a => a.Guid == role.Guid);
+                    ourole.Permissions = role.Permissions;
+                    ourole.Updated(ourole.Guid);
                 }
-
-                dc.SaveChanges();
-            }
-        }
-
-        public IEnumerable<GuidNamePair> SBGetOuRoles()
-        {
-            using (var dc = new DataContext())
-            {
-                var ouRoles = dc.OURoles.Where(a => a.IsActive == true).Select(o => new GuidNamePair
-                {
-                    Guid = o.Guid,
-                    Name = o.Name,
-                }).ToList();
-
-                return ouRoles;
-            }
-        }
-
-
-        public async Task<OURole> GetOuRoleByID(Guid? roleid)
-        {
-            using (var dc = new DataContext())
-            {
-                var ouRoles = await dc.OURoles.FirstOrDefaultAsync(a => a.Guid == roleid);
-                if (ouRoles == null)
-                {
-                    throw new ApplicationException("OU does not exist!");
-                }
-
-                return ouRoles;
-            }
-        }
-
-        public async Task<bool> UpdateOuRolesPermission(List<OURole> roles)
-        {
-            try
-            {
-                using (var dc = new DataContext())
-                {
-                    foreach (var role in roles)
-                    {
-                        var ourole = await dc.OURoles.FirstOrDefaultAsync(a => a.Guid == role.Guid);
-                        ourole.Permissions = role.Permissions;
-                        ourole.Updated(ourole.Guid);
-                    }
-
-                    await dc.SaveChangesAsync();
-
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> UpdateOuPermissions(List<OU> ous)
-        {
-            try
-            {
-                using (var dc = new DataContext())
-                {
-                    foreach (var item in ous)
-                    {
-                        var ou = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == item.Guid);
-                        ou.Permissions = item.Permissions;
-                        ou.Updated(ou.Guid);
-                    }
-
-                    await dc.SaveChangesAsync();
-
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        public async Task<OU> InheritsParentOuPermissions(OU request)
-        {
-            try
-            {
-                using (var dc = new DataContext())
-                {
-                    var ou = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == request.Guid);
-
-                    var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
-                    if (parentOu != null)
-                    {
-                        ou.Permissions = parentOu.Permissions;
-                    }
-
-                    ou.Updated(ou.Guid);
-                    await dc.SaveChangesAsync();
-
-                    return ou;
-                }
-            }
-            catch (Exception ex)
-            {
-                return new OU();
-            }
-        }
-
-
-        public async Task CreateNewOURole(OURole req)
-        {
-            using (var dc = new DataContext())
-            {
-                using (var transaction = dc.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        // Create the OU
-                        var ourole = new OURole
-                        {
-                            Name = req.Name,
-                            IsActive = req.IsActive,
-                            IsAdmin = req.IsAdmin
-                        };
-
-                        dc.OURoles.Add(ourole);
-                        await dc.SaveChangesAsync();
-
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-                }
-            }
-        }
-
-
-        public async Task EditOURole(Guid ouid, OURole req)
-        {
-            using (var dc = new DataContext())
-            {
-                var role = await dc
-                            .OURoles
-                            .FirstOrDefaultAsync(o => o.Guid == ouid);
-
-                if (role == null)
-                {
-                    throw new ApplicationException("OU Role does not exist!");
-                }
-
-                role.Name = req.Name;
-                role.IsActive = req.IsActive;
-                role.IsAdmin = req.IsAdmin;
-                role.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 await dc.SaveChangesAsync();
+
+                return true;
             }
         }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
 
-        /// <summary>
-        /// This method insert Ou as a Favorite 
-        /// </summary>
-        public async Task<FavouriteOu> InsertFavouriteOu(Guid ouID, Guid personID)
+    public async Task<bool> UpdateOuPermissions(List<OU> ous)
+    {
+        try
         {
             using (var dc = new DataContext())
             {
-                var FavouriteOu = await dc.FavouriteOus.FirstOrDefaultAsync(x => x.PersonID == personID && x.OUID == ouID);
-
-                if (FavouriteOu != null)
-                    throw new ApplicationException("Already Favourited");
-
-                var ou = new FavouriteOu
+                foreach (var item in ous)
                 {
-                    OUID = ouID,
-                    PersonID = personID,
-                    CreatedByID = SmartPrincipal.UserId
-                };
+                    var ou = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == item.Guid);
+                    ou.Permissions = item.Permissions;
+                    ou.Updated(ou.Guid);
+                }
 
-                dc.FavouriteOus.Add(ou);
+                await dc.SaveChangesAsync();
+
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+
+    public async Task<OU> InheritsParentOuPermissions(OU request)
+    {
+        try
+        {
+            using (var dc = new DataContext())
+            {
+                var ou = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == request.Guid);
+
+                var parentOu = await dc.OUs.FirstOrDefaultAsync(a => a.Guid == ou.ParentID);
+                if (parentOu != null)
+                {
+                    ou.Permissions = parentOu.Permissions;
+                }
+
+                ou.Updated(ou.Guid);
                 await dc.SaveChangesAsync();
 
                 return ou;
             }
         }
-
-        /// <summary>
-        /// This method remove Ou as a Favorite 
-        /// </summary>
-        public async Task RemoveFavouriteOu(Guid ouID, Guid personID)
+        catch (Exception ex)
         {
-            using (var dc = new DataContext())
+            return new OU();
+        }
+    }
+
+
+    public async Task CreateNewOURole(OURole req)
+    {
+        using (var dc = new DataContext())
+        {
+            using (var transaction = dc.Database.BeginTransaction())
             {
-                var FavouriteOu = await dc.FavouriteOus.FirstOrDefaultAsync(x => x.PersonID == personID && x.OUID == ouID);
+                try
+                {
+                    // Create the OU
+                    var ourole = new OURole
+                    {
+                        Name = req.Name,
+                        IsActive = req.IsActive,
+                        IsAdmin = req.IsAdmin
+                    };
 
-                if (FavouriteOu == null)
-                    throw new ApplicationException("OU not found");
+                    dc.OURoles.Add(ourole);
+                    await dc.SaveChangesAsync();
 
-                dc.FavouriteOus.Remove(FavouriteOu);
-                await dc.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
             }
         }
+    }
 
-        public async Task<List<OU>> FavouriteOusList(Guid personID, bool deletedItems = false)
+
+    public async Task EditOURole(Guid ouid, OURole req)
+    {
+        using (var dc = new DataContext())
         {
-            using (var dc = new DataContext())
+            var role = await dc
+                        .OURoles
+                        .FirstOrDefaultAsync(o => o.Guid == ouid);
+
+            if (role == null)
             {
-                var FavoriteOUS = await dc.FavouriteOus.Where(x => x.PersonID == personID).AsNoTracking().Select(a => a.OUID).ToListAsync();
+                throw new ApplicationException("OU Role does not exist!");
+            }
 
-                List<OU> ous = new List<OU>();
-                foreach (var item in FavoriteOUS)
+            role.Name = req.Name;
+            role.IsActive = req.IsActive;
+            role.IsAdmin = req.IsAdmin;
+            role.Updated(SmartPrincipal.UserId, "InternalPortal");
+
+            await dc.SaveChangesAsync();
+        }
+    }
+
+    /// <summary>
+    /// This method insert Ou as a Favorite 
+    /// </summary>
+    public async Task<FavouriteOu> InsertFavouriteOu(Guid ouID, Guid personID)
+    {
+        using (var dc = new DataContext())
+        {
+            var FavouriteOu = await dc.FavouriteOus.FirstOrDefaultAsync(x => x.PersonID == personID && x.OUID == ouID);
+
+            if (FavouriteOu != null)
+                throw new ApplicationException("Already Favourited");
+
+            var ou = new FavouriteOu
+            {
+                OUID = ouID,
+                PersonID = personID,
+                CreatedByID = SmartPrincipal.UserId
+            };
+
+            dc.FavouriteOus.Add(ou);
+            await dc.SaveChangesAsync();
+
+            return ou;
+        }
+    }
+
+    /// <summary>
+    /// This method remove Ou as a Favorite 
+    /// </summary>
+    public async Task RemoveFavouriteOu(Guid ouID, Guid personID)
+    {
+        using (var dc = new DataContext())
+        {
+            var FavouriteOu = await dc.FavouriteOus.FirstOrDefaultAsync(x => x.PersonID == personID && x.OUID == ouID);
+
+            if (FavouriteOu == null)
+                throw new ApplicationException("OU not found");
+
+            dc.FavouriteOus.Remove(FavouriteOu);
+            await dc.SaveChangesAsync();
+        }
+    }
+
+    public async Task<List<OU>> FavouriteOusList(Guid personID, bool deletedItems = false)
+    {
+        using (var dc = new DataContext())
+        {
+            var FavoriteOUS = await dc.FavouriteOus.Where(x => x.PersonID == personID).AsNoTracking().Select(a => a.OUID).ToListAsync();
+
+            List<OU> ous = new List<OU>();
+            foreach (var item in FavoriteOUS)
+            {
+                var ou = Get(item, "Settings,Children", deletedItems: deletedItems);
+                ou.WellKnownText = null;
+                ou.IsFavourite = true;
+                ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();
+
+                ous.Add(ou);
+            }
+
+            return ous;
+        }
+    }
+
+    public async Task<List<Territory>> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens,OU")
+    {
+        using (var context = new DataContext())
+        {
+            var favouriteTerritories = await context.FavouriteTerritories.Where(f => f.PersonID == personID).AsNoTracking().ToListAsync();
+            List<Territory> territory = new List<Territory>();
+            foreach (var item in favouriteTerritories)
+            {
+                var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.TerritoryID && !t.IsDeleted);
+
+                AssignIncludes(include, ref ouTerritoriesQuery);
+                var ouTerritories = await ouTerritoriesQuery.AsNoTracking().FirstOrDefaultAsync();
+
+                ouTerritories.IsFavourite = true;
+                ouTerritories.shapeWKT = ouTerritories.WellKnownText;
+
+                if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && ouTerritories.OU != null)
                 {
-                    var ou = Get(item, "Settings,Children", deletedItems: deletedItems);
-                    ou.WellKnownText = null;
-                    ou.IsFavourite = true;
-                    ou.Children = ou.Children?.Where(c => !c.IsArchived)?.ToList();
-
-                    ous.Add(ou);
+                    OUService.PopulateOUSummary(ouTerritories.OU);
                 }
 
-                return ous;
+                territory.Add(ouTerritories);
             }
+            return territory;
         }
+    }
 
-        public async Task<List<Territory>> FavouriteTerritoriesList(Guid personID, bool deletedItems = false, string include = "Assignments.Person,Prescreens,OU")
+    public async Task<string> InsertMasterTerritory()
+    {
+
+        using (var dc = new DataContext())
         {
-            using (var context = new DataContext())
+            using (var transaction = dc.Database.BeginTransaction())
             {
-                var favouriteTerritories = await context.FavouriteTerritories.Where(f => f.PersonID == personID).AsNoTracking().ToListAsync();
-                List<Territory> territory = new List<Territory>();
-                foreach (var item in favouriteTerritories)
+                try
                 {
-                    var ouTerritoriesQuery = context.Territories.Where(t => t.Guid == item.TerritoryID && !t.IsDeleted);
+                    //var Ous = dc.OUs.Include(a => a.Shapes).ToList();
+                    Guid ouid = Guid.Parse("7749729D-787E-49D2-83F1-E070597A152E");
+                    var Ous = await dc.OUs.Include(a => a.Shapes).Where(x => x.Guid == ouid).ToListAsync();
 
-                    AssignIncludes(include, ref ouTerritoriesQuery);
-                    var ouTerritories = await ouTerritoriesQuery.AsNoTracking().FirstOrDefaultAsync();
-
-                    ouTerritories.IsFavourite = true;
-                    ouTerritories.shapeWKT = ouTerritories.WellKnownText;
-
-                    if (include.IndexOf("OU", StringComparison.OrdinalIgnoreCase) >= 0 && ouTerritories.OU != null)
+                    foreach (var entity in Ous)
                     {
-                        OUService.PopulateOUSummary(ouTerritories.OU);
-                    }
+                        //insert master territory
 
-                    territory.Add(ouTerritories);
-                }
-                return territory;
-            }
-        }
-
-        public async Task<string> InsertMasterTerritory()
-        {
-
-            using (var dc = new DataContext())
-            {
-                using (var transaction = dc.Database.BeginTransaction())
-                {
-                    try
-                    {
-                        //var Ous = dc.OUs.Include(a => a.Shapes).ToList();
-                        Guid ouid = Guid.Parse("7749729D-787E-49D2-83F1-E070597A152E");
-                        var Ous = await dc.OUs.Include(a => a.Shapes).Where(x => x.Guid == ouid).ToListAsync();
-
-                        foreach (var entity in Ous)
+                        var territory = new Territory
                         {
-                            //insert master territory
+                            Name = entity.Name + " - ALL",
+                            OUID = entity.Guid,
+                            CreatedByID = SmartPrincipal.UserId,
+                            CreatedByName = SmartPrincipal.UserName,
+                            WellKnownText = entity.WellKnownText,
+                            CentroidLat = entity.CentroidLat,
+                            CentroidLon = entity.CentroidLon,
+                            Radius = entity.Radius,
+                            ShapesVersion = entity.ShapesVersion,
+                            Version = entity.Version,
+                            Status = TerritoryStatus.Master //Master Territory
+                        };
 
-                            var territory = new Territory
+                        List<TerritoryShape> tShape = new List<TerritoryShape>();
+                        foreach (var item in entity.Shapes)
+                        {
+                            tShape.Add(new TerritoryShape
                             {
-                                Name = entity.Name + " - ALL",
-                                OUID = entity.Guid,
-                                CreatedByID = SmartPrincipal.UserId,
-                                CreatedByName = SmartPrincipal.UserName,
-                                WellKnownText = entity.WellKnownText,
-                                CentroidLat = entity.CentroidLat,
-                                CentroidLon = entity.CentroidLon,
-                                Radius = entity.Radius,
-                                ShapesVersion = entity.ShapesVersion,
-                                Version = entity.Version,
-                                Status = TerritoryStatus.Master //Master Territory
-                            };
-
-                            List<TerritoryShape> tShape = new List<TerritoryShape>();
-                            foreach (var item in entity.Shapes)
-                            {
-                                tShape.Add(new TerritoryShape
-                                {
-                                    Radius = item.Radius,
-                                    ResidentCount = item.ResidentCount,
-                                    Name = item.Name,
-                                    CentroidLat = item.CentroidLat,
-                                    WellKnownText = item.WellKnownText,
-                                    CentroidLon = item.CentroidLon,
-                                    ParentID = item.ParentID,
-                                    ShapeID = item.ShapeID,
-                                    ShapeTypeID = item.ShapeTypeID,
-                                    IsDeleted = item.IsDeleted
-                                });
-                            }
-
-                            territory.Shapes = tShape;
-                            _territoryService.Insert(territory);
-
+                                Radius = item.Radius,
+                                ResidentCount = item.ResidentCount,
+                                Name = item.Name,
+                                CentroidLat = item.CentroidLat,
+                                WellKnownText = item.WellKnownText,
+                                CentroidLon = item.CentroidLon,
+                                ParentID = item.ParentID,
+                                ShapeID = item.ShapeID,
+                                ShapeTypeID = item.ShapeTypeID,
+                                IsDeleted = item.IsDeleted
+                            });
                         }
 
-                        transaction.Commit();
-
-                        return "success";
+                        territory.Shapes = tShape;
+                        _territoryService.Insert(territory);
 
                     }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
+
+                    transaction.Commit();
+
+                    return "success";
+
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
                 }
             }
         }
-
-        public async Task<OU> GetOuPermissions(Guid ouid)
-        {
-            using (var dc = new DataContext())
-            {
-                return await dc.OUs.FirstOrDefaultAsync(x => x.Guid == ouid);
-            }
-        }
-
-        //public void UpdateFinancing()
-        //{
-        //    using (var dc = new DataContext())
-        //    {
-        //        var ouIDs = dc
-        //                    .OUFinanceAssociations
-        //                    .Select(oua => oua.OUID)
-        //                    .Distinct()
-        //                    .ToList();
-
-        //        var plans = dc
-        //                    .OUFinanceAssociations
-        //                    .ToList();
-
-        //        var settings = dc
-        //                    .OUSettings
-        //                    .Where(ous => ouIDs.Contains(ous.Guid) && ous.Name == OUSetting.Financing_PlansOrder)
-        //                    .ToList();
-
-        //        var cashPlanId = dc
-        //                    .FinancePlaneDefinitions
-        //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Cash)
-        //                    .Guid;
-        //        var mortgagePlanId = dc
-        //                    .FinancePlaneDefinitions
-        //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Mortgage)
-        //                    .Guid;
-
-        //        var existingOUSettings = dc
-        //                    .OUSettings
-        //                    .Where(ous => ouIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options)
-        //                    .ToList();
-
-        //        var newOUSettings = new List<OUSetting>();
-
-        //        foreach (var id in ouIDs)
-        //        {
-        //            var ouSetting = settings
-        //                                .FirstOrDefault(s => s.OUID == id);
-        //            List<Guid> enabledPlans = null;
-
-        //            if (ouSetting != null)
-        //            {
-        //                try
-        //                {
-        //                    enabledPlans = JsonConvert.DeserializeObject<List<Guid>>(ouSetting.Value);
-        //                }
-        //                catch (Exception)
-        //                { }
-        //            }
-        //            var ouPlanIds = plans
-        //                        .Where(p => p.OUID == id)
-        //                        .Select(p => p.FinancePlanDefinitionID)
-        //                        .ToList();
-
-        //            var ouPlans = new HashSet<Guid>(ouPlanIds);
-        //            ouPlans.Add(cashPlanId);
-        //            ouPlans.Add(mortgagePlanId);
-
-        //            var data = ouPlans
-        //                    .Select(
-        //                    (p, idx) => new FinancingSettingsDataView(p, (enabledPlans == null || enabledPlans?.Count == 0) || (enabledPlans?.Count > 0 && enabledPlans?.Contains(p) == true), idx, p))
-        //                    .ToList();
-
-        //            var value = JsonConvert.SerializeObject(data);
-
-        //            existingOUSettings.HandleSetting(newOUSettings, OUSetting.Financing_Options, value, id, _auditService, OUSettingGroupType.DealerSettings);
-        //        }
-
-        //        if (newOUSettings.Count > 0)
-        //        {
-        //            dc.OUSettings.AddRange(newOUSettings);
-        //        }
-        //        dc.SaveChanges();
-        //    }
-        //}
     }
+
+    public async Task<OU> GetOuPermissions(Guid ouid)
+    {
+        using (var dc = new DataContext())
+        {
+            return await dc.OUs.FirstOrDefaultAsync(x => x.Guid == ouid);
+        }
+    }
+
+    //public void UpdateFinancing()
+    //{
+    //    using (var dc = new DataContext())
+    //    {
+    //        var ouIDs = dc
+    //                    .OUFinanceAssociations
+    //                    .Select(oua => oua.OUID)
+    //                    .Distinct()
+    //                    .ToList();
+
+    //        var plans = dc
+    //                    .OUFinanceAssociations
+    //                    .ToList();
+
+    //        var settings = dc
+    //                    .OUSettings
+    //                    .Where(ous => ouIDs.Contains(ous.Guid) && ous.Name == OUSetting.Financing_PlansOrder)
+    //                    .ToList();
+
+    //        var cashPlanId = dc
+    //                    .FinancePlaneDefinitions
+    //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Cash)
+    //                    .Guid;
+    //        var mortgagePlanId = dc
+    //                    .FinancePlaneDefinitions
+    //                    .FirstOrDefault(fp => fp.Type == FinancePlanType.Mortgage)
+    //                    .Guid;
+
+    //        var existingOUSettings = dc
+    //                    .OUSettings
+    //                    .Where(ous => ouIDs.Contains(ous.OUID) && ous.Name == OUSetting.Financing_Options)
+    //                    .ToList();
+
+    //        var newOUSettings = new List<OUSetting>();
+
+    //        foreach (var id in ouIDs)
+    //        {
+    //            var ouSetting = settings
+    //                                .FirstOrDefault(s => s.OUID == id);
+    //            List<Guid> enabledPlans = null;
+
+    //            if (ouSetting != null)
+    //            {
+    //                try
+    //                {
+    //                    enabledPlans = JsonConvert.DeserializeObject<List<Guid>>(ouSetting.Value);
+    //                }
+    //                catch (Exception)
+    //                { }
+    //            }
+    //            var ouPlanIds = plans
+    //                        .Where(p => p.OUID == id)
+    //                        .Select(p => p.FinancePlanDefinitionID)
+    //                        .ToList();
+
+    //            var ouPlans = new HashSet<Guid>(ouPlanIds);
+    //            ouPlans.Add(cashPlanId);
+    //            ouPlans.Add(mortgagePlanId);
+
+    //            var data = ouPlans
+    //                    .Select(
+    //                    (p, idx) => new FinancingSettingsDataView(p, (enabledPlans == null || enabledPlans?.Count == 0) || (enabledPlans?.Count > 0 && enabledPlans?.Contains(p) == true), idx, p))
+    //                    .ToList();
+
+    //            var value = JsonConvert.SerializeObject(data);
+
+    //            existingOUSettings.HandleSetting(newOUSettings, OUSetting.Financing_Options, value, id, _auditService, OUSettingGroupType.DealerSettings);
+    //        }
+
+    //        if (newOUSettings.Count > 0)
+    //        {
+    //            dc.OUSettings.AddRange(newOUSettings);
+    //        }
+    //        dc.SaveChanges();
+    //    }
+    //}
+}
 }

@@ -113,6 +113,7 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
         public bool IsTerritoryAdd { get; set; }
         public int MinModule { get; set; }
         public PermissionType Permissions { get; set; }
+        public Guid OURoleID { get; set; }
         public bool InheritRolesPermissionsSettings { get; set; }
         
     }
