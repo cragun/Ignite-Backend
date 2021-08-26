@@ -367,10 +367,8 @@ namespace DataReef.TM.Api.Controllers
             {
                 var errors = ModelState.Where(ms => ms.Value.Errors.Count > 0).SelectMany(ms => ms.Value.Errors.Select(e => e.ErrorMessage)).FirstOrDefault();
                 return new SaveResult { Success = false, ExceptionMessage = errors };
-            }
-
-        }
-
+            } 
+        } 
 
         #region Private
 
