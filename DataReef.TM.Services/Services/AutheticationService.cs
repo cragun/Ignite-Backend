@@ -876,9 +876,9 @@ namespace DataReef.Application.Services
                         var isExistCredentials = dc.Credentials.FirstOrDefault(cc => cc.PersonID == isExist.Guid);
                         if (isExistCredentials != null)
                         {
-                            //isExistCredentials.UserName = newUser.EmailAddress;
-                            //isExistCredentials.PasswordRaw = newUser.Password;
-                            //isExistCredentials.PerformHash();
+                            isExistCredentials.UserName = newUser.EmailAddress;
+                            isExistCredentials.PasswordRaw = newUser.Password;
+                            isExistCredentials.PerformHash();
 
                         }
                     }
@@ -887,9 +887,9 @@ namespace DataReef.Application.Services
 
                     if (newUser.RoleID != Guid.Empty && newUser.RoleID != null)
                     {
-                        //var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
-                        //dc.OUAssociations.RemoveRange(OUAssociations);
-                        //dc.SaveChanges();
+                        var OUAssociations = dc.OUAssociations.Where(oua => oua.PersonID == isExist.Guid);
+                        dc.OUAssociations.RemoveRange(OUAssociations);
+                        dc.SaveChanges();
 
                         using (var transaction = dc.Database.BeginTransaction())
                         {

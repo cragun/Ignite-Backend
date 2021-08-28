@@ -1818,6 +1818,12 @@ namespace DataReef.TM.Services.Services
                                     .OrderBy(gnp => gnp.Name)
                                     .ToList();
 
+                    ret.Roles = (await dc
+                              .OURoles.AsNoTracking().ToListAsync())
+                              .Where(o => !o.IsDeleted)
+                              .Select(sp => new GuidNamePair { Guid = sp.Guid, Name = sp.Name })
+                              .ToList();
+
                     ret.FinancePlans = (await dc
                                     .FinancePlaneDefinitions
                                     .Include(fp => fp.Provider)
@@ -1898,7 +1904,8 @@ namespace DataReef.TM.Services.Services
                             CreatedByName = "InternalPortal",
                             IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd,
                             MinModule = req.BasicInfo.MinModule,
-                            Permissions = req.BasicInfo.Permissions
+                            Permissions = req.BasicInfo.Permissions,
+                            OURoleID = req.BasicInfo.OURoleID
                         };
 
                         dc.OUs.Add(ou);
@@ -2092,7 +2099,7 @@ namespace DataReef.TM.Services.Services
                 ou.Name = req.BasicInfo.OUName;
                 ou.IsTerritoryAdd = req.BasicInfo.IsTerritoryAdd;
                 ou.MinModule = req.BasicInfo.MinModule;
-                
+                ou.OURoleID = req.BasicInfo.OURoleID;
                 ou.Updated(SmartPrincipal.UserId, "InternalPortal");
 
                 var wkt = await HandleOUStates(ouid, req.BasicInfo.States, dc);
