@@ -1867,8 +1867,9 @@ namespace DataReef.TM.Services.Services
                                     .OrderBy(gnp => gnp.Name)
                                     .ToList();
 
-                    ret.Roles = (await dc
+                      ret.Roles = (await dc
                                .OURoles.AsNoTracking().ToListAsync())
+                               .Where(o => !o.IsDeleted)
                                .Select(sp => new GuidNamePair { Guid = sp.Guid, Name = sp.Name })
                                .ToList();
 
