@@ -234,7 +234,9 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         //public decimal AmountToFinance => Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
 
         //as per new calculation
-        public decimal AmountToFinance => (decimal)TotalCostToCustomer + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
+        //public decimal AmountToFinance => (decimal)TotalCostToCustomer + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
+
+        public decimal AmountToFinance => (decimal)FinalLoanAmount + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
 
         public decimal AmountToFinanceUnreduced => AmountToFinance + AmountToFinanceReducer;
 

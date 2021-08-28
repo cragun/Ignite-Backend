@@ -1166,9 +1166,21 @@
     <Compile Include="Migrations\202107211126430_Add_IsHiResImg.Designer.cs">
       <DependentUpon>202107211126430_Add_IsHiResImg.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202108240904134_Add_IsDefaultProposal.cs" />
-    <Compile Include="Migrations\202108240904134_Add_IsDefaultProposal.Designer.cs">
-      <DependentUpon>202108240904134_Add_IsDefaultProposal.cs</DependentUpon>
+    <Compile Include="Migrations\202108280608524_Add_BlankMigration.cs" />
+    <Compile Include="Migrations\202108280608524_Add_BlankMigration.Designer.cs">
+      <DependentUpon>202108280608524_Add_BlankMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108280616029_Add_DeleteIsProposal.cs" />
+    <Compile Include="Migrations\202108280616029_Add_DeleteIsProposal.Designer.cs">
+      <DependentUpon>202108280616029_Add_DeleteIsProposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108280623492_Add_AddIsdefaultProposal.cs" />
+    <Compile Include="Migrations\202108280623492_Add_AddIsdefaultProposal.Designer.cs">
+      <DependentUpon>202108280623492_Add_AddIsdefaultProposal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108281410206_Add_AddOuRoleid.cs" />
+    <Compile Include="Migrations\202108281410206_Add_AddOuRoleid.Designer.cs">
+      <DependentUpon>202108281410206_Add_AddOuRoleid.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
@@ -2001,8 +2013,17 @@
     <EmbeddedResource Include="Migrations\202107211126430_Add_IsHiResImg.resx">
       <DependentUpon>202107211126430_Add_IsHiResImg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202108240904134_Add_IsDefaultProposal.resx">
-      <DependentUpon>202108240904134_Add_IsDefaultProposal.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202108280608524_Add_BlankMigration.resx">
+      <DependentUpon>202108280608524_Add_BlankMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108280616029_Add_DeleteIsProposal.resx">
+      <DependentUpon>202108280616029_Add_DeleteIsProposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108280623492_Add_AddIsdefaultProposal.resx">
+      <DependentUpon>202108280623492_Add_AddIsdefaultProposal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108281410206_Add_AddOuRoleid.resx">
+      <DependentUpon>202108281410206_Add_AddOuRoleid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

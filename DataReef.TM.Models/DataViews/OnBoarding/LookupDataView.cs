@@ -13,6 +13,7 @@ namespace DataReef.TM.Models.DataViews.OnBoarding
     {
         public List<GuidNamePair> Panels { get; set; }
         public List<GuidNamePair> Inverters { get; set; }
+        public List<GuidNamePair> Roles { get; set; }
         public List<FinancePlanDataView> FinancePlans { get; set; }
         public List<GuidNamePair> Templates { get; set; }
         public List<string> States { get; set; }
