@@ -1279,6 +1279,10 @@
     <Compile Include="Migrations\202108251525576_Add_Ous_OURoleID.Designer.cs">
       <DependentUpon>202108251525576_Add_Ous_OURoleID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202108280853465_Add_BlankMigration.cs" />
+    <Compile Include="Migrations\202108280853465_Add_BlankMigration.Designer.cs">
+      <DependentUpon>202108280853465_Add_BlankMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds.cs" />
     <Compile Include="Database\Interceptors\SoftDeleteQueryVisitor.cs" />
     <Compile Include="Database\Interceptors\Utils.cs" />
@@ -2197,6 +2201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202108251525576_Add_Ous_OURoleID.resx">
       <DependentUpon>202108251525576_Add_Ous_OURoleID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108280853465_Add_BlankMigration.resx">
+      <DependentUpon>202108280853465_Add_BlankMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
