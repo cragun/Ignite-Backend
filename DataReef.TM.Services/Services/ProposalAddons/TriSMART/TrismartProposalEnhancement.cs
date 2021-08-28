@@ -219,8 +219,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             //smarterRequest.SetAmountToFinanceReducer(request.FederalTaxIncentive + request.UpfrontRebate);
 
             var year1 = smartResponse.Years[0]; 
-            var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (stdPlan.Payment18M + year1.ElectricityBillWithSolar / 12);
-
+            var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (stdPlan.Payment18M + year1.ElectricityBillWithSolar / 12); 
             smarterRequest.SetAmountToFinanceReducer(smarterRequest.FederalTaxIncentive + smarterRequest.UpfrontRebate + (monthlySavings > 0 ? monthlySavings * 18 : 0));
 
             var smarterResponse = _loanCalculator.CalculateLoan(smarterRequest, planDefinition);
