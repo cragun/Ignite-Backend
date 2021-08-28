@@ -60,6 +60,7 @@ namespace DataReef.TM.Services.Tests
               () => _unitOfWorkMock.Object,
               new Lazy<IDeviceService>(() => _deviceServiceMock.Object),
               new Lazy<ISolarSalesTrackerAdapter>(() => _sbAdapter.Object),
+              null,
               new Lazy<IPropertyNotesAdapter>(() => _propertyNotesAdapter.Object),
               new Lazy<ISunlightAdapter>(() => _sunlightAdapter.Object),
               new Lazy<ISunnovaAdapter>(() => _sunnovaAdapter.Object),
