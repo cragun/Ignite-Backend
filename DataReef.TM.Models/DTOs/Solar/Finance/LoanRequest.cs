@@ -43,8 +43,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// <summary>
         /// annual system degredation rate
         /// </summary>
-        public double Derate { get; set; }
-
+        public double Derate { get; set; } 
 
         #region Adders
         /// TODO: to be renamed to TotalAddersCosts (also in response, update JSON in db with new name)
