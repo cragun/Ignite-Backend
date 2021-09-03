@@ -1493,6 +1493,11 @@
             Utility Base Fee per Month - amount paid by the customer as a base utility fee.
             </summary>
         </member>
+        <member name="P:DataReef.TM.Models.DTOs.Solar.Finance.LoanRequest.IsStandardPlan">
+            <summary>
+            If true, then include final loan amountin amount to finance else total cost to customer .
+            </summary> 
+        </member>
         <member name="P:DataReef.TM.Models.DTOs.Solar.Finance.LoanRequest.AmountToFinanceReducer">
             <summary>
             Property used to decrease the amount to finance.

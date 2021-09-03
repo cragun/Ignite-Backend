@@ -210,7 +210,25 @@ namespace DataReef.TM.Services
                 var ousQuery = context.OUs.AsNoTracking().FirstOrDefault(t => t.Guid == ouid);
                 var ouTerritoriesQuery = context.Territories.Where(t => t.OUID == ouid).AsNoTracking();
 
-                if (personID.HasValue)
+                var allAncestorIDs = context
+                       .Database
+                       .SqlQuery<Guid>($"select * from OUTreeUP('{ouid}')")
+                       .ToList(); 
+
+                var associationIds = context
+                                    .OUAssociations
+                                    .Where(oua => allAncestorIDs.Contains(oua.OUID) && oua.PersonID == SmartPrincipal.UserId && !oua.IsDeleted).AsNoTracking().ToList();
+
+                bool checkAssignment = true;
+                for (int i = 0; i < associationIds.Count; i++)
+                {
+                    if (associationIds[i].RoleType == OURoleType.Owner || associationIds[i].RoleType == OURoleType.SuperAdmin)
+                    {
+                        checkAssignment = false;
+                    }
+                }
+
+                if (personID.HasValue && checkAssignment)
                 {
                     if (!context.OUAssociations.AsNoTracking().Any(ou => ou.PersonID == personID && ou.OUID == ouid && !ou.IsDeleted && (ou.RoleType == OURoleType.Owner || ou.RoleType == OURoleType.SuperAdmin)))
                     {
