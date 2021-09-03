@@ -203,8 +203,7 @@ namespace DataReef.TM.Services
         }
 
         public ICollection<Territory> GetByShapesVersion(Guid ouid, Guid? personID, ICollection<TerritoryShapeVersion> territoryShapeVersions, bool deletedItems = false, string include = "")
-        {
-
+        { 
             using (var context = new DataContext())
             {
                 var ousQuery = context.OUs.AsNoTracking().FirstOrDefault(t => t.Guid == ouid);
