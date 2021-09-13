@@ -136,6 +136,7 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             stdRequest.UtilityInflationRate = param.UtilityInflationRate ?? stdRequest.UtilityInflationRate;
             stdRequest.ScenarioTermInYears = scenarioTermInYears;
             stdRequest.IncludeMonthsInResponse = true;
+            stdRequest.IsStandardPlan = true;
 
             // get the incentives for Standard plan.
 
@@ -221,7 +222,8 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
             var year1 = smartResponse.Years[0]; 
             var monthlySavings = (year1.ElectricityBillWithoutSolar / 12) - (stdPlan.Payment18M + year1.ElectricityBillWithSolar / 12);
 
-            smarterRequest.SetAmountToFinanceReducer(smarterRequest.FederalTaxIncentive + smarterRequest.UpfrontRebate + (monthlySavings > 0 ? monthlySavings * 18 : 0));
+            //smarterRequest.SetAmountToFinanceReducer(smarterRequest.FederalTaxIncentive + smarterRequest.UpfrontRebate + (monthlySavings > 0 ? monthlySavings * 18 : 0));
+            smarterRequest.SetAmountToFinanceReducer(smarterRequest.UpfrontRebate + smarterRequest.FederalTaxIncentive + (monthlySavings > 0 ? monthlySavings * 18 : 0) + smarterRequest.DownPayment);
 
             var smarterResponse = _loanCalculator.CalculateLoan(smarterRequest, planDefinition);
 
@@ -294,6 +296,8 @@ namespace DataReef.TM.Services.Services.ProposalAddons.TriSMART
                     // for cash ee use the Smart Amount to finance as NetCost.
                     //  #133 old formulla - 02-04-2020  proposal.ForecastScenario.NetCost = stdRequest.GrossSystemCostWithTaxAndDealerFee - stdRequest.FederalTaxIncentive - smarterIncentivesTotal;
                     proposal.ForecastScenario.NetCost = stdRequest.GrossSystemCostWithAddersTaxAndDealearFee - stdRequest.FederalTaxIncentive - smarterIncentivesTotal;
+                    //as per new calculation
+                    proposal.Financing.DownPayment = stdRequest.TotalCostToCustomer;
                 }
                 else
                 {

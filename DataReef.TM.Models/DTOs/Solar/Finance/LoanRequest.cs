@@ -234,7 +234,9 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         //public decimal AmountToFinance => Math.Max(Math.Round((GrossSystemCostWithTaxAndDealerFee + ExtraCostsWithTax + (IncludeAmountToRefinance? AmountToRefinance : 0)) - DownPayment - UpfrontRebate - AmountToFinanceReducer, 2), 0);
 
         //as per new calculation
-        public decimal AmountToFinance => (decimal)TotalCostToCustomer + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
+        //public decimal AmountToFinance => (decimal)TotalCostToCustomer + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
+
+        public decimal AmountToFinance => (IsStandardPlan ? FinalLoanAmount : TotalCostToCustomer) + (IncludeAmountToRefinance ? AmountToRefinance : 0) - AmountToFinanceReducer;
 
         public decimal AmountToFinanceUnreduced => AmountToFinance + AmountToFinanceReducer;
 
@@ -296,6 +298,11 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         /// Utility Base Fee per Month - amount paid by the customer as a base utility fee.
         /// </summary>
         public decimal? OverridenUtilityBaseFee { get; set; }
+
+        /// <summary>
+        /// If true, then include final loan amountin amount to finance else total cost to customer .
+        /// </summary> 
+        public bool IsStandardPlan { get; set; }
 
         #endregion optional parameters
 
