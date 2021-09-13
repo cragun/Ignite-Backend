@@ -501,8 +501,7 @@ namespace DataReef.TM.Api.Controllers
             if (obj == null)
             {
                 return null;
-            }
-
+            } 
             return JsonConvert.SerializeObject(obj);
         }
 
