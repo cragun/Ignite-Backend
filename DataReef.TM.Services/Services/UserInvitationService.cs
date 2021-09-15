@@ -322,6 +322,7 @@ namespace DataReef.TM.Services
                             };
                             dc.OUAssociations.Add(ouAssociation);
                             dc.SaveChanges();
+
                         }
                         else
                         {
