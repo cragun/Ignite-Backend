@@ -72,6 +72,7 @@ namespace DataReef.TM.Services.Tests
               null,
               null);
         }
+
         #region GetProperties
 
         [Test]
