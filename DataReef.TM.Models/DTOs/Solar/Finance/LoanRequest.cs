@@ -202,8 +202,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
 
         public decimal LeaseSystemCostWithTax => LeaseSystemCost * (1 + TaxRate);
 
-        public decimal LeaseSystemCostWithExtrasAndTax => LeaseSystemCostWithTax + ExtraCostsWithTax;
-
+        public decimal LeaseSystemCostWithExtrasAndTax => LeaseSystemCostWithTax + ExtraCostsWithTax; 
         //public decimal FederalTaxIncentive => (GrossSystemCostWithAddersTaxAndDealearFee - UpfrontRebateReducedFromITC) * FederalTaxIncentivePercentage;
 
         //as per new calculation
