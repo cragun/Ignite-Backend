@@ -26,6 +26,7 @@ namespace DataReef.TM.Services.Tests
         private Mock<IUnitOfWork> _unitOfWorkMock;
         private Mock<IDeviceService> _deviceServiceMock;
         private Mock<ISolarSalesTrackerAdapter> _sbAdapter;
+        private Mock<ISoloAdapter> _soloAdapter;
         private Mock<IPropertyNotesAdapter> _propertyNotesAdapter;
         private Mock<ISunlightAdapter> _sunlightAdapter;
         private Mock<ISunnovaAdapter> _sunnovaAdapter;
@@ -33,6 +34,9 @@ namespace DataReef.TM.Services.Tests
         private Mock<IOUService> _ouService;
         private Mock<IOUSettingService> _ouSettingService;
         private Mock<IPersonService> _peopleService;
+        private Mock<IAppointmentService> _appointmentService;
+        private Mock<IInquiryService> _inquiryService;
+        private Mock<ISmsService> _smsService;
 
         [SetUp]
         public void Init()
@@ -43,6 +47,7 @@ namespace DataReef.TM.Services.Tests
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _deviceServiceMock = new Mock<IDeviceService>();
             _sbAdapter = new Mock<ISolarSalesTrackerAdapter>();
+            _soloAdapter = new Mock<ISoloAdapter>(); 
             _propertyNotesAdapter = new Mock<IPropertyNotesAdapter>();
             _sunlightAdapter = new Mock<ISunlightAdapter>();
             _sunnovaAdapter = new Mock<ISunnovaAdapter>();
@@ -50,6 +55,9 @@ namespace DataReef.TM.Services.Tests
             _ouService = new Mock<IOUService>();
             _ouSettingService = new Mock<IOUSettingService>();
             _peopleService = new Mock<IPersonService>();
+            _appointmentService = new Mock<IAppointmentService>();
+            _inquiryService = new Mock<IInquiryService>();
+            _smsService = new Mock<ISmsService>(); 
         }
 
         private PropertyService GetService()
@@ -60,7 +68,7 @@ namespace DataReef.TM.Services.Tests
               () => _unitOfWorkMock.Object,
               new Lazy<IDeviceService>(() => _deviceServiceMock.Object),
               new Lazy<ISolarSalesTrackerAdapter>(() => _sbAdapter.Object),
-              null,
+              new Lazy<ISoloAdapter>(() => _soloAdapter.Object), 
               new Lazy<IPropertyNotesAdapter>(() => _propertyNotesAdapter.Object),
               new Lazy<ISunlightAdapter>(() => _sunlightAdapter.Object),
               new Lazy<ISunnovaAdapter>(() => _sunnovaAdapter.Object),
@@ -68,9 +76,9 @@ namespace DataReef.TM.Services.Tests
               new Lazy<IOUService>(() => _ouService.Object),
               new Lazy<IOUSettingService>(() => _ouSettingService.Object),
               new Lazy<IPersonService>(() => _peopleService.Object),
-              null,
-              null,
-              null);
+              new Lazy<IAppointmentService>(() => _appointmentService.Object),
+              new Lazy<IInquiryService>(() => _inquiryService.Object),
+              new Lazy<ISmsService>(() => _smsService.Object));
         }
 
         #region GetProperties
