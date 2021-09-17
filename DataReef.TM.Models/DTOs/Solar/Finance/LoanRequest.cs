@@ -245,8 +245,7 @@ namespace DataReef.TM.Models.DTOs.Solar.Finance
         public decimal FirstYearElectricityCosts => MonthlyPower?.Sum(mp => mp.PreSolarCost) ?? 0;
         public decimal FirstYearElectricityConsumption => MonthlyPower?.Sum(mp => mp.PostAddersConsumptionOrConsumption) ?? 0;
 
-        public decimal FirstYearElectricityProduction => MonthlyPower?.Sum(mp => mp.Production) ?? 0;
-
+        public decimal FirstYearElectricityProduction => MonthlyPower?.Sum(mp => mp.Production) ?? 0; 
         public decimal DealerFeeCost
         {
             get
