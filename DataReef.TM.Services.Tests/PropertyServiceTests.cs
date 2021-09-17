@@ -26,7 +26,7 @@ namespace DataReef.TM.Services.Tests
         private Mock<IUnitOfWork> _unitOfWorkMock;
         private Mock<IDeviceService> _deviceServiceMock;
         private Mock<ISolarSalesTrackerAdapter> _sbAdapter;
-        private Mock<ISoloAdapter> _soloAdapter;
+        //private Mock<ISoloAdapter> _soloAdapter;
         private Mock<IPropertyNotesAdapter> _propertyNotesAdapter;
         private Mock<ISunlightAdapter> _sunlightAdapter;
         private Mock<ISunnovaAdapter> _sunnovaAdapter;
@@ -47,7 +47,7 @@ namespace DataReef.TM.Services.Tests
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _deviceServiceMock = new Mock<IDeviceService>();
             _sbAdapter = new Mock<ISolarSalesTrackerAdapter>();
-            _soloAdapter = new Mock<ISoloAdapter>(); 
+            //_soloAdapter = new Mock<ISoloAdapter>(); 
             _propertyNotesAdapter = new Mock<IPropertyNotesAdapter>();
             _sunlightAdapter = new Mock<ISunlightAdapter>();
             _sunnovaAdapter = new Mock<ISunnovaAdapter>();
@@ -68,7 +68,7 @@ namespace DataReef.TM.Services.Tests
               () => _unitOfWorkMock.Object,
               new Lazy<IDeviceService>(() => _deviceServiceMock.Object),
               new Lazy<ISolarSalesTrackerAdapter>(() => _sbAdapter.Object),
-              new Lazy<ISoloAdapter>(() => _soloAdapter.Object), 
+              //new Lazy<ISoloAdapter>(() => _soloAdapter.Object), 
               new Lazy<IPropertyNotesAdapter>(() => _propertyNotesAdapter.Object),
               new Lazy<ISunlightAdapter>(() => _sunlightAdapter.Object),
               new Lazy<ISunnovaAdapter>(() => _sunnovaAdapter.Object),
