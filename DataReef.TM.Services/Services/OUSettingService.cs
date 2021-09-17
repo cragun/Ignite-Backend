@@ -170,8 +170,7 @@ namespace DataReef.TM.Services.Services
 
                 removedPlanIDs = removedPlanIDs
                                 .Union(newlyDisabledPlanIDs)
-                                .ToList();
-
+                                .ToList(); 
             }
 
             // get all ancestor OUIDs and exclude ouid
